@@ -39,14 +39,26 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
   const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
   const [connectionError, setConnectionError] = useState<string | null>(null);
+  const [connectionAttempts, setConnectionAttempts] = useState<number>(0);
   const socketRef = useRef<WebSocket | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const maxReconnectAttempts = 5; // محدود کردن تعداد تلاش‌ها
 
   // Initialize WebSocket connection
   const connectWebSocket = useCallback(() => {
     try {
+      // محدود کردن تعداد تلاش‌های مجدد برای جلوگیری از flood
+      if (connectionAttempts >= maxReconnectAttempts) {
+        console.log(`Maximum connection attempts (${maxReconnectAttempts}) reached. Stopping reconnection attempts.`);
+        setConnectionError("اتصال قطع شده. لطفا صفحه را رفرش کنید.");
+        return;
+      }
+      
+      // افزایش شمارنده تلاش‌ها
+      setConnectionAttempts(prev => prev + 1);
+      
       // If we already have an open connection, don't create a new one
       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
         return;
@@ -54,7 +66,12 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       
       // Clean up any existing connection that's not open
       if (socketRef.current) {
+        socketRef.current.onclose = null; // Remove event listeners to prevent potential memory leaks
+        socketRef.current.onerror = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.onopen = null;
         socketRef.current.close();
+        socketRef.current = null;
       }
 
       // Clear any pending reconnects
@@ -63,9 +80,11 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         reconnectTimeoutRef.current = null;
       }
 
-      // Determine WebSocket URL based on current protocol and host
+      // Determine WebSocket URL with a more unique identifier
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}/ws`;
+      const wsUrl = `${protocol}//${window.location.host}/ws?nocache=${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      
+      console.log(`Attempting WebSocket connection (attempt ${connectionAttempts+1}/${maxReconnectAttempts}):`, wsUrl);
       
       // Create new WebSocket connection
       const socket = new WebSocket(wsUrl);
@@ -215,13 +234,25 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     });
   }, [sendMessage]);
 
-  // Connect on mount and when user changes
+  // Reset connection attempts when user changes
+  useEffect(() => {
+    if (user) {
+      setConnectionAttempts(0);
+    }
+  }, [user]);
+
+  // Connect on mount
   useEffect(() => {
     let mounted = true;
     
+    console.log("Setting up initial WebSocket connection...");
     // Initial connection
     if (mounted) {
-      connectWebSocket();
+      // Reset connection attempts on mount
+      setConnectionAttempts(0);
+      setTimeout(() => {
+        connectWebSocket();
+      }, 500); // Small delay to let everything initialize
     }
     
     // Set up ping interval to keep connection alive
@@ -233,15 +264,21 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     
     // Cleanup on unmount
     return () => {
+      console.log("Cleaning up WebSocket connection...");
       mounted = false;
       
       if (socketRef.current) {
         socketRef.current.onclose = null; // Remove the auto-reconnect logic
+        socketRef.current.onerror = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.onopen = null;
         socketRef.current.close();
+        socketRef.current = null;
       }
       
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
+        reconnectTimeoutRef.current = null;
       }
       
       clearInterval(pingInterval);

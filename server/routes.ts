@@ -640,24 +640,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
 
-  // WebSocket Server Implementation - پیاده‌سازی وب‌سوکت سرور
+  // WebSocket Server Implementation - پیاده‌سازی وب‌سوکت سرور با پورت مجزا (ساده‌تر)
   const wss = new WebSocketServer({ 
     server: httpServer, 
     path: '/ws',
-    // Add heartbeat ping pong to detect dead connections
-    clientTracking: true,
-    perMessageDeflate: {
-      zlibDeflateOptions: {
-        chunkSize: 1024,
-        memLevel: 7,
-        level: 3
-      },
-      zlibInflateOptions: {
-        chunkSize: 10 * 1024
-      },
-      concurrencyLimit: 10,
-      threshold: 1024
-    }
+    // Use simpler config to avoid potential issues
+    clientTracking: true
   });
 
   // Store connected clients
