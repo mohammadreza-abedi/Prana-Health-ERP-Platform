@@ -3,7 +3,7 @@ import { User, UserBadge, UserChallenge } from "@/types";
 import { GlassCard } from "@/components/ui/glass-card";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/useAuth";
-import { getLevelTitle } from "@/lib/utils";
+import { getLevelTitle, formatDate, toPersianDigits } from "@/lib/utils";
 import {
   User as UserIcon,
   Trophy,
@@ -16,10 +16,16 @@ import {
   BarChart,
   Calendar,
   Clock,
-  CheckCircle
+  CheckCircle,
+  CreditCard,
+  Coins,
+  ArrowUpRight,
+  ArrowDownRight,
+  ReceiptText
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCredits, type CreditTransaction } from "@/hooks/use-credits";
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -43,11 +49,13 @@ export default function Profile() {
   const completedChallenges = userChallenges?.filter(uc => uc.completed).length || 0;
   const totalChallenges = userChallenges?.length || 0;
   
-  // Format dates
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('fa-IR').format(date);
-  };
+  // Use the credits hook
+  const { 
+    credits, 
+    isLoadingCredits,
+    transactions, 
+    isLoadingTransactions 
+  } = useCredits();
   
   // Get badge icon
   const getBadgeIcon = (icon: string) => {
@@ -174,10 +182,11 @@ export default function Profile() {
       
       {/* Tabs for different profile sections */}
       <Tabs defaultValue="stats" className="mt-6">
-        <TabsList className="grid grid-cols-3 mb-6">
+        <TabsList className="grid grid-cols-4 mb-6">
           <TabsTrigger value="stats" className="text-sm">آمار و دستاوردها</TabsTrigger>
           <TabsTrigger value="badges" className="text-sm">نشان‌ها</TabsTrigger>
           <TabsTrigger value="challenges" className="text-sm">چالش‌ها</TabsTrigger>
+          <TabsTrigger value="credits" className="text-sm">اعتبار</TabsTrigger>
         </TabsList>
         
         {/* Stats Tab */}
@@ -422,6 +431,128 @@ export default function Profile() {
                 <Calendar className="h-16 w-16 mx-auto text-slate-300 dark:text-slate-600 mb-4" />
                 <p>هنوز در چالشی شرکت نکرده‌اید.</p>
                 <p className="mt-2 text-sm">از بخش چالش‌ها یک چالش جدید را شروع کنید.</p>
+              </div>
+            )}
+          </GlassCard>
+        </TabsContent>
+        
+        {/* Credits Tab */}
+        <TabsContent value="credits">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <motion.div
+              className="glass p-5"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center">
+                  <Coins className="h-6 w-6 text-green-500" />
+                </div>
+                <div className="mr-3">
+                  <h3 className="font-medium">اعتبار فعلی</h3>
+                  <p className="text-2xl font-bold">{isLoadingCredits ? "..." : toPersianDigits(credits)}</p>
+                </div>
+              </div>
+              
+              <div className="h-px bg-slate-200 dark:bg-slate-700 mb-4"></div>
+              
+              <div className="text-sm text-slate-500 dark:text-slate-400">
+                اعتبار برای استفاده از خدمات پریمیوم و شرکت در آزمون‌های روانشناسی استفاده می‌شود
+              </div>
+            </motion.div>
+            
+            <motion.div
+              className="glass p-5"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+            >
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-tiffany/10 flex items-center justify-center">
+                  <ReceiptText className="h-6 w-6 text-tiffany" />
+                </div>
+                <div className="mr-3">
+                  <h3 className="font-medium">تراکنش‌های اخیر</h3>
+                  <p className="text-2xl font-bold">{isLoadingTransactions ? "..." : toPersianDigits(transactions.length)}</p>
+                </div>
+              </div>
+              
+              <div className="h-px bg-slate-200 dark:bg-slate-700 mb-4"></div>
+              
+              <div className="text-sm text-slate-500 dark:text-slate-400">
+                {transactions.length === 0 ? 
+                  'هنوز تراکنشی ثبت نشده است' : 
+                  `${toPersianDigits(transactions.filter(t => t.amount > 0).length)} تراکنش افزایش و ${toPersianDigits(transactions.filter(t => t.amount < 0).length)} تراکنش کاهش اعتبار`
+                }
+              </div>
+            </motion.div>
+          </div>
+          
+          {/* Transactions history */}
+          <GlassCard className="p-6">
+            <h3 className="text-lg font-bold mb-6 flex items-center">
+              <CreditCard className="h-5 w-5 ml-2 text-navy" />
+              تاریخچه تراکنش‌های اعتباری
+            </h3>
+            
+            {isLoadingTransactions ? (
+              <div className="flex justify-center py-10">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-tiffany"></div>
+              </div>
+            ) : transactions.length > 0 ? (
+              <div className="space-y-4">
+                {transactions.map((transaction, index) => (
+                  <motion.div
+                    key={transaction.id}
+                    className="glass p-4 rounded-lg flex items-center"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 + (index * 0.05) }}
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                      transaction.amount > 0 
+                        ? 'bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-400' 
+                        : 'bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-400'
+                    }`}>
+                      {transaction.amount > 0 ? (
+                        <ArrowUpRight className="h-5 w-5" />
+                      ) : (
+                        <ArrowDownRight className="h-5 w-5" />
+                      )}
+                    </div>
+                    
+                    <div className="mr-3 flex-1">
+                      <div className="flex justify-between">
+                        <h4 className="font-medium">{transaction.actionType}</h4>
+                        <div className={`font-medium ${
+                          transaction.amount > 0 
+                            ? 'text-green-600 dark:text-green-400' 
+                            : 'text-red-600 dark:text-red-400'
+                        }`}>
+                          {transaction.amount > 0 ? '+' : ''}{toPersianDigits(transaction.amount)}
+                        </div>
+                      </div>
+                      <div className="flex justify-between mt-1">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          {transaction.description}
+                        </p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500">
+                          موجودی: {toPersianDigits(transaction.balance)}
+                        </p>
+                      </div>
+                      <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                        {formatDate(new Date(transaction.createdAt))}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-10 text-slate-500 dark:text-slate-400">
+                <CreditCard className="h-16 w-16 mx-auto text-slate-300 dark:text-slate-600 mb-4" />
+                <p>هنوز تراکنشی ثبت نشده است.</p>
+                <p className="mt-2 text-sm">با استفاده از خدمات پلتفرم و مشارکت در فعالیت‌ها اعتبار کسب کنید.</p>
               </div>
             )}
           </GlassCard>
