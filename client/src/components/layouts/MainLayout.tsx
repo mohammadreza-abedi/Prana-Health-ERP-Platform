@@ -21,11 +21,14 @@ import {
   CreditCard,
   Bell,
   BellOff,
+  Settings,
 } from "lucide-react";
 import useIsMobile from "@/hooks/use-mobile";
 import Footer from "./Footer";
 import HealthReminders from "@/components/ui/health-reminder";
 import { useToast } from "@/hooks/use-toast";
+import { NotificationBar, useNotifications } from "@/components/ui/notification-bar";
+import PulsingLogo from "@/components/ui/pulsing-logo";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -42,6 +45,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
   );
   const [showHealthReminders, setShowHealthReminders] = useState(true);
   const { toast } = useToast();
+  
+  // نوتیفیکیشن‌های سیستم
+  const { 
+    notifications, 
+    unreadCount, 
+    addNotification, 
+    markAsRead, 
+    markAllAsRead, 
+    clearNotification, 
+    clearAllNotifications 
+  } = useNotifications();
 
   // Set initial expanded state based on screen size
   useEffect(() => {
@@ -100,6 +114,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
       icon: <Calendar className="h-5 w-5" />,
       path: "/events",
     },
+    {
+      title: "تنظیمات",
+      icon: <Settings className="h-5 w-5" />,
+      path: "/settings",
+    },
   ];
   
   // Additional links
@@ -143,10 +162,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 exit={{ opacity: 0 }}
                 className="flex items-center"
               >
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-tiffany to-aqua flex items-center justify-center">
-                  <span className="text-white font-black text-sm">پ</span>
-                </div>
-                <h1 className="text-lg font-bold mr-2 bg-gradient-to-r from-tiffany to-aqua bg-clip-text text-transparent">پرانا</h1>
+                <PulsingLogo size="sm" showText={true} />
               </motion.div>
             )}
             <button
@@ -329,10 +345,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </button>
             
             <div className="flex items-center">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-tiffany to-aqua flex items-center justify-center">
-                <span className="text-white font-black text-sm">پ</span>
-              </div>
-              <h1 className="text-lg font-bold mr-2 bg-gradient-to-r from-tiffany to-aqua bg-clip-text text-transparent">پرانا</h1>
+              <PulsingLogo size="sm" showText={true} />
             </div>
             
             <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
@@ -341,6 +354,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
         )}
 
+        {/* Notification Bar */}
+        <NotificationBar 
+          notifications={notifications}
+          unreadCount={unreadCount}
+          onMarkAsRead={markAsRead}
+          onMarkAllAsRead={markAllAsRead}
+          onClear={clearNotification}
+          onClearAll={clearAllNotifications}
+        />
+        
         {/* Page content */}
         <div className="flex-1 p-6">{children}</div>
         
@@ -355,7 +378,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               toast({
                 title: `${reminder.title} انجام شد`,
                 description: "این فعالیت در سوابق سلامتی شما ثبت شد",
-                variant: "success",
+                variant: "default",
               });
             }}
           />
