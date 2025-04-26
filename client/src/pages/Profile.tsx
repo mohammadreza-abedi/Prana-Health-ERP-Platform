@@ -712,6 +712,20 @@ export default function Profile() {
                     </div>
                   </TabsContent>
                   
+                  {/* تب کیف پول */}
+                  <TabsContent value="wallet" className="mt-4 space-y-6">
+                    <div className="w-full">
+                      <WalletWidget />
+                    </div>
+                  </TabsContent>
+                  
+                  {/* تب ابزارهای هوشمند */}
+                  <TabsContent value="smart-tools" className="mt-4 space-y-6">
+                    <div className="w-full">
+                      <SmartTools />
+                    </div>
+                  </TabsContent>
+                  
                   {/* تب تنظیمات */}
                   <TabsContent value="settings" className="mt-4 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

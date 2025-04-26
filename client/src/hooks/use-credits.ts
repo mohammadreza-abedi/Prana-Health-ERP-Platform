@@ -1,116 +1,172 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { queryClient, apiRequest } from '@/lib/queryClient';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 
 export interface CreditTransaction {
   id: number;
   userId: number;
   amount: number;
-  balance: number;
-  description: string;
   actionType: string;
+  description: string;
   resourceId?: number;
   resourceType?: string;
   createdAt: string;
-}
-
-export interface SpendCreditsParams {
-  amount: number;
-  actionType: string;
-  description: string;
-  resourceId?: number;
-  resourceType?: string;
+  updatedAt: string;
 }
 
 export function useCredits() {
+  const queryClient = useQueryClient();
   const { toast } = useToast();
-
-  // Get user credits
-  const {
-    data: creditsData,
-    isLoading: isLoadingCredits,
-    error: creditsError,
-  } = useQuery({
-    queryKey: ['/api/credits'],
-    retry: false,
+  
+  // Get user credit balance
+  const { data: credits, isLoading: isLoadingCredits } = useQuery<number>({
+    queryKey: ['/api/credits/balance'],
+    queryFn: async () => {
+      try {
+        const response = await apiRequest('GET', '/api/credits/balance');
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching credit balance:', error);
+        return 0; // Default to 0 if there's an error
+      }
+    },
   });
-
-  // Get credit transactions
-  const {
-    data: transactions,
-    isLoading: isLoadingTransactions,
-    error: transactionsError,
-  } = useQuery({
-    queryKey: ['/api/credit-transactions'],
-    retry: false,
+  
+  // Get credit transactions history
+  const { data: transactions, isLoading: isLoadingTransactions } = useQuery<CreditTransaction[]>({
+    queryKey: ['/api/credits/transactions'],
+    queryFn: async () => {
+      try {
+        const response = await apiRequest('GET', '/api/credits/transactions');
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+        return []; // Default to empty array if there's an error
+      }
+    },
   });
-
-  // Spend credits mutation
-  const spendCreditsMutation = useMutation({
-    mutationFn: async ({ amount, actionType, description, resourceId, resourceType }: SpendCreditsParams) => {
-      const res = await apiRequest('POST', '/api/credit-transactions', {
-        amount: -Math.abs(amount), // Always negative for spending
+  
+  // Add credits mutation
+  const { mutate: addCredits, isPending: isAddingCredits } = useMutation({
+    mutationFn: async ({ amount, actionType, description, resourceId, resourceType }: {
+      amount: number;
+      actionType: string;
+      description: string;
+      resourceId?: number;
+      resourceType?: string;
+    }) => {
+      const response = await apiRequest('POST', '/api/credits/add', {
+        amount,
         actionType,
         description,
         resourceId,
         resourceType,
       });
-      return await res.json();
+      return await response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/credits'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/credit-transactions'] });
-    },
-    onError: (error: Error) => {
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['/api/credits/balance'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/credits/transactions'] });
+      
       toast({
-        title: 'خطا در کسر اعتبار',
-        description: error.message === 'Insufficient credits' 
-          ? 'اعتبار شما برای انجام این عملیات کافی نیست.'
-          : 'مشکلی در کسر اعتبار بوجود آمد. لطفا دوباره تلاش کنید.',
-        variant: 'destructive',
+        title: 'اعتبار افزوده شد',
+        description: 'اعتبار با موفقیت به حساب شما اضافه شد.',
+        variant: 'default',
       });
     },
-  });
-
-  // Add credits mutation (admin only)
-  const addCreditsMutation = useMutation({
-    mutationFn: async ({ amount, actionType, description, resourceId, resourceType }: SpendCreditsParams) => {
-      const res = await apiRequest('POST', '/api/credit-transactions', {
-        amount: Math.abs(amount), // Always positive for adding
-        actionType,
-        description,
-        resourceId,
-        resourceType,
-      });
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/credits'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/credit-transactions'] });
-      toast({
-        title: 'اعتبار اضافه شد',
-        description: 'اعتبار با موفقیت به حساب کاربر اضافه شد.',
-      });
-    },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast({
         title: 'خطا در افزودن اعتبار',
-        description: 'مشکلی در افزودن اعتبار بوجود آمد. لطفا دوباره تلاش کنید.',
+        description: error.message || 'مشکلی در افزودن اعتبار پیش آمد. لطفا دوباره تلاش کنید.',
         variant: 'destructive',
       });
     },
   });
-
+  
+  // Spend credits mutation
+  const { mutate: spendCredits, isPending: isSpendingCredits } = useMutation({
+    mutationFn: async ({ amount, actionType, description, resourceId, resourceType }: {
+      amount: number;
+      actionType: string;
+      description: string;
+      resourceId?: number;
+      resourceType?: string;
+    }) => {
+      const response = await apiRequest('POST', '/api/credits/spend', {
+        amount: -Math.abs(amount), // Ensure amount is negative for spending
+        actionType,
+        description,
+        resourceId,
+        resourceType,
+      });
+      return await response.json();
+    },
+    onSuccess: () => {
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['/api/credits/balance'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/credits/transactions'] });
+      
+      toast({
+        title: 'اعتبار مصرف شد',
+        description: 'اعتبار با موفقیت از حساب شما کسر شد.',
+        variant: 'default',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'خطا در مصرف اعتبار',
+        description: error.message || 'مشکلی در کسر اعتبار پیش آمد. لطفا دوباره تلاش کنید.',
+        variant: 'destructive',
+      });
+    },
+  });
+  
+  // Convert XP to credits mutation
+  const { mutate: convertXpToCredits, isPending: isConvertingXpToCredits } = useMutation({
+    mutationFn: async (xpAmount: number) => {
+      const response = await apiRequest('POST', '/api/credits/convert-xp', {
+        xpAmount,
+      });
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['/api/credits/balance'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/credits/transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] }); // To update user XP
+      
+      toast({
+        title: 'تبدیل موفقیت‌آمیز',
+        description: `${data.xpAmount} امتیاز تجربه با موفقیت به ${data.creditsAmount} اعتبار تبدیل شد.`,
+        variant: 'default',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'خطا در تبدیل XP',
+        description: error.message || 'مشکلی در تبدیل امتیاز تجربه به اعتبار پیش آمد. لطفا دوباره تلاش کنید.',
+        variant: 'destructive',
+      });
+    },
+  });
+  
+  // Function to check if user has enough credits
+  const hasEnoughCredits = (amount: number): boolean => {
+    return (credits || 0) >= amount;
+  };
+  
   return {
-    credits: creditsData?.credits || 0,
+    credits,
+    transactions,
     isLoadingCredits,
-    creditsError,
-    transactions: transactions as CreditTransaction[] || [],
     isLoadingTransactions,
-    transactionsError,
-    spendCredits: spendCreditsMutation.mutate,
-    isPendingSpend: spendCreditsMutation.isPending,
-    addCredits: addCreditsMutation.mutate,
-    isPendingAdd: addCreditsMutation.isPending,
+    addCredits,
+    isAddingCredits,
+    spendCredits,
+    isSpendingCredits,
+    convertXpToCredits,
+    isConvertingXpToCredits,
+    hasEnoughCredits,
   };
 }

@@ -1,461 +1,366 @@
 import { useState } from 'react';
-import { useCredits } from '@/hooks/use-credits';
-import { useAuth } from '@/lib/useAuth';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Progress } from '@/components/ui/progress';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Loader2, CreditCard, Wallet, RefreshCw, TrendingUp, ArrowRight, Check, Sparkles, Trophy, Zap } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
-import {
-  Wallet,
-  CreditCard,
-  Coins,
-  ArrowUp,
-  ArrowDown,
-  Award,
-  Clock,
-  Star,
-  Plus,
-  BarChart,
-  Gift,
-  ArrowUpRight,
-  History,
-  RefreshCw,
-  Contact
-} from 'lucide-react';
-
-interface CreditPlan {
-  id: string;
-  title: string;
-  description: string;
-  amount: number;
-  price: number;
-  discount?: number;
-  popular?: boolean;
-  features?: string[];
-}
-
-const creditPlans: CreditPlan[] = [
-  {
-    id: 'basic',
-    title: 'بسته پایه',
-    description: 'مناسب برای استفاده شخصی',
-    amount: 100,
-    price: 10000,
-    features: [
-      'دسترسی به ابزارهای پایه',
-      'استفاده از چالش‌های روزانه',
-      'مشاهده وضعیت سلامت',
-    ]
-  },
-  {
-    id: 'premium',
-    title: 'بسته ویژه',
-    description: 'مناسب برای استفاده حرفه‌ای',
-    amount: 300,
-    price: 25000,
-    discount: 15,
-    popular: true,
-    features: [
-      'دسترسی به همه ابزارها',
-      'تحلیل پیشرفته داده‌های سلامت',
-      'پشتیبانی از چالش‌های گروهی',
-      'آنالیز هوشمند عملکرد',
-    ]
-  },
-  {
-    id: 'pro',
-    title: 'بسته حرفه‌ای',
-    description: 'مناسب برای مدیران ارشد',
-    amount: 800,
-    price: 60000,
-    discount: 20,
-    features: [
-      'دسترسی به همه امکانات پلتفرم',
-      'گزارش‌های اختصاصی سلامت',
-      'آنالیز هوشمند عملکرد تیمی',
-      'مشاوره آنلاین با متخصصین',
-      'ابزارهای پیش‌بینی روندها',
-    ]
-  }
-];
-
-// معادل امتیازات برای تبدیل
-const XP_TO_CREDIT_RATIO = 10; // هر 10 امتیاز = 1 اعتبار
+import { useCredits } from '@/hooks/use-credits';
+import { useAuth } from '@/lib/useAuth';
+import { formatDate, formatNumber } from '@/lib/utils';
+import { checkSecrets } from '@/lib/utils';
+import { askForStripeKeys } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
 
 export function WalletWidget() {
+  const { credits, transactions, convertXpToCredits, isConvertingXpToCredits } = useCredits();
   const { user } = useAuth();
-  const { credits, isLoadingCredits, transactions, spendCredits } = useCredits();
-  const [activeTab, setActiveTab] = useState('overview');
-  const [showConvertXP, setShowConvertXP] = useState(false);
-  const [convertAmount, setConvertAmount] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
-
-  // اطلاعات کاربر
-  const userXP = user?.xp || 0;
-  const userLevel = user?.level || 1;
+  const [xpAmount, setXpAmount] = useState<number>(0);
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [stripeKeysAvailable, setStripeKeysAvailable] = useState<boolean>(false);
   
-  // محاسبه حداکثر اعتباری که می‌توان از امتیازات تبدیل کرد
-  const maxConvertibleCredits = Math.floor(userXP / XP_TO_CREDIT_RATIO);
+  // بررسی وجود کلیدهای Stripe
+  useQuery({
+    queryKey: ['stripe-keys-check'],
+    queryFn: async () => {
+      const results = await checkSecrets(['VITE_STRIPE_PUBLIC_KEY', 'STRIPE_SECRET_KEY']);
+      setStripeKeysAvailable(results[0] && results[1]);
+      return results;
+    },
+    staleTime: Infinity, // این بررسی نیاز به اجرای مجدد ندارد
+  });
   
-  // آخرین تراکنش‌ها
-  const recentTransactions = transactions?.slice(0, 5) || [];
+  // طرح‌های خرید اعتبار
+  const creditPlans = [
+    {
+      id: 'basic',
+      name: 'پایه',
+      credits: 100,
+      price: 50000,
+      discount: 0,
+      features: ['دسترسی به ابزارهای پایه', 'پشتیبانی ۲۴/۷', 'به‌روزرسانی‌های رایگان'],
+      popular: false,
+      color: 'bg-gradient-to-br from-zinc-200 to-zinc-400 dark:from-zinc-800 dark:to-zinc-950',
+    },
+    {
+      id: 'standard',
+      name: 'استاندارد',
+      credits: 250,
+      price: 100000,
+      discount: 20,
+      features: ['همه موارد طرح پایه', 'دسترسی به ابزارهای پیشرفته', '۱۰٪ پاداش اضافی در چالش‌ها'],
+      popular: true,
+      color: 'bg-gradient-to-br from-blue-200 to-blue-400 dark:from-blue-800 dark:to-blue-950',
+    },
+    {
+      id: 'premium',
+      name: 'پریمیوم',
+      credits: 500,
+      price: 180000,
+      discount: 30,
+      features: ['همه موارد طرح استاندارد', 'نشان‌های انحصاری', '۲۰٪ پاداش اضافی در چالش‌ها', 'تحلیل پیشرفته سلامت'],
+      popular: false,
+      color: 'bg-gradient-to-br from-purple-200 to-purple-400 dark:from-purple-800 dark:to-purple-950',
+    },
+  ];
   
-  // تبدیل تاریخ به فرمت فارسی
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    // استفاده از Intl برای فرمت فارسی
-    return new Intl.DateTimeFormat('fa-IR', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
+  // محاسبه قیمت نهایی با تخفیف
+  const calculateFinalPrice = (plan: any) => {
+    if (!plan.discount) return plan.price;
+    return plan.price * (1 - plan.discount / 100);
   };
   
-  // دریافت نوع آیکون برای هر تراکنش
-  const getTransactionIcon = (type: string) => {
-    switch (type) {
-      case 'purchase':
-        return <CreditCard className="h-4 w-4 text-blue-500" />;
-      case 'spend':
-        return <ArrowDown className="h-4 w-4 text-red-500" />;
-      case 'reward':
-        return <Gift className="h-4 w-4 text-green-500" />;
-      case 'convert':
-        return <RefreshCw className="h-4 w-4 text-purple-500" />;
-      default:
-        return <History className="h-4 w-4 text-gray-500" />;
-    }
+  // محاسبه مقدار اعتبار حاصل از تبدیل XP
+  const calculateCreditsFromXP = () => {
+    return Math.floor(xpAmount / 10);
   };
   
-  // فرایند تبدیل XP به اعتبار
-  const handleConvertXP = async () => {
-    if (convertAmount <= 0 || convertAmount > maxConvertibleCredits) {
-      toast({
-        title: 'خطا در تبدیل',
-        description: 'مقدار وارد شده معتبر نیست',
-        variant: 'destructive',
-      });
+  // مدیریت تبدیل XP به اعتبار
+  const handleConvertXP = () => {
+    if (xpAmount <= 0 || !user || xpAmount > (user.xp || 0)) return;
+    convertXpToCredits(xpAmount);
+  };
+  
+  // مدیریت خرید اعتبار
+  const handleBuyCredits = () => {
+    if (!selectedPlan) return;
+    
+    if (!stripeKeysAvailable) {
+      askForStripeKeys(); // تابعی که از کاربر درخواست کلیدهای Stripe می‌کند
       return;
     }
     
-    setIsSubmitting(true);
-    
-    try {
-      // فراخوانی API برای تبدیل XP به اعتبار
-      const response = await apiRequest('POST', '/api/convert-xp', {
-        amount: convertAmount,
-        xpAmount: convertAmount * XP_TO_CREDIT_RATIO,
-      });
-      
-      if (response.ok) {
-        toast({
-          title: 'تبدیل موفقیت‌آمیز',
-          description: `${convertAmount * XP_TO_CREDIT_RATIO} امتیاز با موفقیت به ${convertAmount} اعتبار تبدیل شد`,
-        });
-        setShowConvertXP(false);
-        setConvertAmount(0);
-      } else {
-        throw new Error('خطا در تبدیل امتیاز به اعتبار');
-      }
-    } catch (error) {
-      toast({
-        title: 'خطا در تبدیل',
-        description: 'مشکلی در فرایند تبدیل رخ داد. لطفا دوباره تلاش کنید',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    // در اینجا فرآیند پرداخت با Stripe انجام می‌شود
+    // ...
   };
   
-  // خرید اعتبار
-  const handlePurchasePlan = async (plan: CreditPlan) => {
-    try {
-      // در اینجا به صفحه پرداخت منتقل می‌شویم
-      toast({
-        title: 'انتقال به درگاه پرداخت',
-        description: `در حال آماده‌سازی خرید بسته ${plan.title}`,
-      });
-      
-      // ارسال کاربر به صفحه پرداخت (شبیه‌سازی شده)
-      // در پروژه واقعی، اینجا باید ارتباط با درگاه پرداخت برقرار شود
-      setTimeout(() => {
-        toast({
-          title: 'خرید موفقیت‌آمیز',
-          description: `${plan.amount} اعتبار با موفقیت به حساب شما اضافه شد`,
-        });
-      }, 2000);
-    } catch (error) {
-      toast({
-        title: 'خطا در خرید',
-        description: 'مشکلی در فرایند خرید رخ داد. لطفا دوباره تلاش کنید',
-        variant: 'destructive',
-      });
-    }
-  };
-
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold flex items-center gap-2">
-          <Wallet className="h-5 w-5 text-tiffany" />
-          کیف پول دیجیتال
-        </h3>
-        <Badge variant="outline" className="bg-tiffany/10 text-tiffany border-tiffany/20">
-          {credits} اعتبار
-        </Badge>
-      </div>
-
-      <Card>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-3 mb-4">
-            <TabsTrigger value="overview" className="text-xs">
-              <BarChart className="h-4 w-4 ml-1" />
-              وضعیت کلی
-            </TabsTrigger>
-            <TabsTrigger value="buy" className="text-xs">
-              <CreditCard className="h-4 w-4 ml-1" />
-              خرید اعتبار
-            </TabsTrigger>
-            <TabsTrigger value="transactions" className="text-xs">
-              <Clock className="h-4 w-4 ml-1" />
-              تراکنش‌ها
-            </TabsTrigger>
-          </TabsList>
-          
-          {/* بخش وضعیت کلی */}
-          <TabsContent value="overview" className="mt-0 p-4 space-y-4">
-            <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 space-y-4">
-              <div className="flex justify-between">
-                <div>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">موجودی اعتبار</span>
-                  <div className="text-2xl font-bold text-tiffany flex items-center gap-1">
-                    <Coins className="h-5 w-5" />
-                    {credits}
-                  </div>
-                </div>
-                <div>
-                  <span className="text-sm text-slate-500 dark:text-slate-400">امتیاز (XP)</span>
-                  <div className="text-2xl font-bold text-amber-500 flex items-center gap-1">
-                    <Star className="h-5 w-5" />
-                    {userXP}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white dark:bg-slate-900 rounded-lg p-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <ArrowUpRight className="h-4 w-4 text-purple-500" />
-                    <span className="text-sm font-medium">تبدیل XP به اعتبار</span>
-                  </div>
-                  <Dialog open={showConvertXP} onOpenChange={setShowConvertXP}>
-                    <DialogTrigger asChild>
-                      <Button size="sm" variant="outline" className="text-xs">
-                        <RefreshCw className="h-3 w-3 ml-1" />
-                        تبدیل
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>تبدیل امتیاز به اعتبار</DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <div className="flex justify-between text-sm">
-                          <span>امتیاز قابل تبدیل:</span>
-                          <span className="font-bold">{userXP}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>حداکثر اعتبار قابل دریافت:</span>
-                          <span className="font-bold">{maxConvertibleCredits}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>نرخ تبدیل:</span>
-                          <span>هر {XP_TO_CREDIT_RATIO} امتیاز = ۱ اعتبار</span>
-                        </div>
-                        <Separator />
-                        <div className="space-y-2">
-                          <label htmlFor="convert-amount" className="text-sm font-medium">
-                            میزان اعتبار مورد نظر برای تبدیل:
-                          </label>
-                          <input
-                            id="convert-amount"
-                            type="number"
-                            min="1"
-                            max={maxConvertibleCredits}
-                            value={convertAmount}
-                            onChange={(e) => setConvertAmount(parseInt(e.target.value) || 0)}
-                            className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-md focus:outline-none focus:ring-2 focus:ring-tiffany"
-                          />
-                          <div className="text-sm text-slate-500">
-                            {convertAmount > 0 ? (
-                              <span>با این تبدیل، {convertAmount * XP_TO_CREDIT_RATIO} امتیاز مصرف خواهد شد.</span>
-                            ) : (
-                              <span>لطفاً مقدار مورد نظر خود را وارد کنید.</span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <Button 
-                          variant="outline" 
-                          onClick={() => setShowConvertXP(false)}
-                        >
-                          انصراف
-                        </Button>
-                        <Button 
-                          onClick={handleConvertXP} 
-                          disabled={convertAmount <= 0 || convertAmount > maxConvertibleCredits || isSubmitting}
-                        >
-                          {isSubmitting ? 'در حال پردازش...' : 'تبدیل امتیاز'}
-                        </Button>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                <div className="mt-2">
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
-                    می‌توانید امتیازات خود را به اعتبار تبدیل کنید و از آن برای استفاده از ابزارهای پیشرفته استفاده نمایید.
-                  </div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white dark:bg-slate-900 rounded-lg p-3">
-                  <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">تراکنش‌های اخیر</span>
-                    <span className="text-lg font-bold">{transactions?.length || 0}</span>
-                  </div>
-                </div>
-                <div className="bg-white dark:bg-slate-900 rounded-lg p-3">
-                  <div className="flex flex-col">
-                    <span className="text-xs text-slate-500">سطح کاربری</span>
-                    <span className="text-lg font-bold">{userLevel}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex justify-end">
-                <Button size="sm" variant="ghost" className="text-xs" onClick={() => setActiveTab('buy')}>
-                  خرید اعتبار بیشتر
-                  <ArrowUpRight className="h-3 w-3 mr-1" />
-                </Button>
-              </div>
+    <div className="space-y-6">
+      <div className="flex flex-col lg:flex-row gap-4">
+        <Card className="flex-1 bg-card/50 backdrop-blur-sm">
+          <CardHeader className="pb-3">
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-lg flex items-center">
+                <Wallet className="h-5 w-5 mr-2 text-primary" />
+                کیف پول
+              </CardTitle>
+              <Badge className="px-3 h-7 bg-primary/10 hover:bg-primary/20 text-primary border-primary/30">
+                {formatNumber(credits || 0)} اعتبار
+              </Badge>
             </div>
-          </TabsContent>
-          
-          {/* بخش خرید اعتبار */}
-          <TabsContent value="buy" className="mt-0 p-4 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {creditPlans.map((plan) => (
-                <div 
-                  key={plan.id} 
-                  className={`rounded-lg border ${plan.popular ? 'border-tiffany shadow-md dark:border-opacity-50' : 'border-slate-200 dark:border-slate-800'} overflow-hidden`}
-                >
-                  {plan.popular && (
-                    <div className="bg-tiffany text-white text-center py-1 text-xs font-medium">
-                      پیشنهاد ویژه
+            <CardDescription>
+              از اعتبار برای استفاده از ابزارهای هوشمند و ویژگی‌های پیشرفته استفاده کنید.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pb-3">
+            <div className="grid grid-cols-2 gap-3">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    خرید اعتبار
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[500px]">
+                  <DialogHeader>
+                    <DialogTitle>خرید اعتبار</DialogTitle>
+                    <DialogDescription>
+                      یکی از طرح‌های زیر را انتخاب کنید تا اعتبار به حساب شما اضافه شود.
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
+                    {creditPlans.map((plan) => (
+                      <Card 
+                        key={plan.id}
+                        className={`relative overflow-hidden ${
+                          selectedPlan?.id === plan.id 
+                            ? 'ring-2 ring-primary' 
+                            : 'ring-1 ring-border hover:ring-primary/50'
+                        } cursor-pointer transition-all`}
+                        onClick={() => setSelectedPlan(plan)}
+                      >
+                        {plan.popular && (
+                          <div className="absolute top-0 right-0 bg-primary text-xs px-2 py-1 text-primary-foreground">
+                            پرطرفدار
+                          </div>
+                        )}
+                        <div className={`${plan.color} h-12 flex items-center justify-center`}>
+                          <span className="font-bold text-white text-xl drop-shadow-md">
+                            {plan.name}
+                          </span>
+                        </div>
+                        <CardContent className="pt-4 px-3 text-center">
+                          <div className="text-3xl font-bold mb-1">
+                            {formatNumber(plan.credits)}
+                          </div>
+                          <div className="text-sm text-muted-foreground mb-3">اعتبار</div>
+                          
+                          <div className="mb-3">
+                            {plan.discount > 0 && (
+                              <div className="text-sm text-destructive line-through mb-1">
+                                {formatNumber(plan.price)} تومان
+                              </div>
+                            )}
+                            <div className="text-lg font-bold">
+                              {formatNumber(calculateFinalPrice(plan))} تومان
+                            </div>
+                          </div>
+                          
+                          {selectedPlan?.id === plan.id && (
+                            <div className="absolute bottom-3 right-3">
+                              <Check className="h-5 w-5 text-primary" />
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                  
+                  <DialogFooter>
+                    <Button variant="outline" type="button">
+                      انصراف
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      disabled={!selectedPlan}
+                      onClick={handleBuyCredits}
+                    >
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      پرداخت و خرید اعتبار
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    تبدیل XP به اعتبار
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>تبدیل امتیاز تجربه به اعتبار</DialogTitle>
+                    <DialogDescription>
+                      امتیاز تجربه (XP) خود را به اعتبار تبدیل کنید. هر 10 امتیاز تجربه معادل 1 اعتبار است.
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="grid gap-4 py-4">
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm font-medium flex items-center">
+                        <Trophy className="h-4 w-4 mr-1 text-amber-500" />
+                        امتیاز تجربه فعلی:
+                      </div>
+                      <div className="font-bold">{formatNumber(user?.xp || 0)} XP</div>
                     </div>
-                  )}
-                  <div className="p-4 space-y-4">
-                    <div className="space-y-1">
-                      <h3 className="font-bold text-lg">{plan.title}</h3>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">{plan.description}</p>
-                    </div>
-                    
-                    <div className="flex items-end gap-2">
-                      <span className="text-2xl font-extrabold">{plan.amount}</span>
-                      <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">اعتبار</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      {plan.discount ? (
-                        <>
-                          <span className="text-lg font-bold">{Math.round(plan.price * (1 - plan.discount / 100)).toLocaleString()}</span>
-                          <span className="text-slate-500 line-through text-sm">{plan.price.toLocaleString()} تومان</span>
-                          <Badge variant="outline" className="bg-red-50 text-red-500 border-red-100 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
-                            {plan.discount}٪ تخفیف
-                          </Badge>
-                        </>
-                      ) : (
-                        <span className="text-lg font-bold">{plan.price.toLocaleString()} تومان</span>
-                      )}
-                    </div>
-                    
-                    <Separator />
                     
                     <div className="space-y-2">
-                      <span className="text-sm font-medium">ویژگی‌ها:</span>
-                      <ul className="space-y-1">
-                        {plan.features?.map((feature, index) => (
-                          <li key={index} className="text-sm text-slate-700 dark:text-slate-300 flex items-start gap-2">
-                            <div className="rounded-full bg-green-100 dark:bg-green-900/30 p-0.5 text-green-600 dark:text-green-400 min-w-[18px] min-h-[18px] flex items-center justify-center mt-0.5">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
+                      <label className="text-sm font-medium">مقدار XP برای تبدیل:</label>
+                      <Input
+                        type="number"
+                        min="10"
+                        step="10"
+                        max={user?.xp || 0}
+                        value={xpAmount}
+                        onChange={(e) => setXpAmount(parseInt(e.target.value) || 0)}
+                        className="text-left"
+                      />
+                      <div className="text-xs text-muted-foreground">
+                        * حداقل 10 امتیاز و مضربی از 10
+                      </div>
                     </div>
                     
-                    <Button 
-                      className={`w-full ${plan.popular ? 'bg-tiffany hover:bg-tiffany/90' : ''}`}
-                      onClick={() => handlePurchasePlan(plan)}
-                    >
-                      خرید بسته
-                    </Button>
+                    <div className="flex items-center justify-between bg-primary/5 p-3 rounded-lg">
+                      <div className="text-sm font-medium flex items-center">
+                        <Zap className="h-4 w-4 mr-1 text-primary" />
+                        اعتبار دریافتی:
+                      </div>
+                      <div className="font-bold">{formatNumber(calculateCreditsFromXP())} اعتبار</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                  
+                  <DialogFooter>
+                    <Button variant="outline" type="button">
+                      انصراف
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      disabled={xpAmount <= 0 || xpAmount > (user?.xp || 0) || xpAmount % 10 !== 0 || isConvertingXpToCredits}
+                      onClick={handleConvertXP}
+                    >
+                      {isConvertingXpToCredits ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                      )}
+                      تبدیل به اعتبار
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
-          </TabsContent>
-          
-          {/* بخش تراکنش‌ها */}
-          <TabsContent value="transactions" className="mt-0 p-4">
-            <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
-              <h3 className="text-sm font-medium mb-3">تاریخچه تراکنش‌ها</h3>
-              
-              <ScrollArea className="h-[240px]">
+          </CardContent>
+        </Card>
+        
+        <Card className="flex-1 bg-card/50 backdrop-blur-sm">
+          <CardHeader className="pb-3">
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-lg flex items-center">
+                <TrendingUp className="h-5 w-5 mr-2 text-primary" />
+                گزارش تراکنش‌ها
+              </CardTitle>
+              <Badge variant="outline" className="px-3">
+                {transactions?.length || 0} تراکنش
+              </Badge>
+            </div>
+            <CardDescription>
+              تاریخچه خرید، مصرف و دریافت اعتبار در سیستم
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pb-3">
+            <ScrollArea className="h-[200px] rounded-md border p-2">
+              {transactions && transactions.length > 0 ? (
                 <div className="space-y-3">
-                  {recentTransactions.length > 0 ? (
-                    recentTransactions.map((transaction) => (
-                      <div key={transaction.id} className="bg-white dark:bg-slate-900 rounded-lg p-3 flex justify-between items-center">
-                        <div className="flex gap-3 items-center">
-                          <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-2">
-                            {getTransactionIcon(transaction.actionType)}
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium">{transaction.description}</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">{formatDate(transaction.createdAt)}</p>
-                          </div>
-                        </div>
-                        <div className={`font-bold ${transaction.amount > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                          {transaction.amount > 0 ? '+' : ''}{transaction.amount}
+                  {transactions.map((transaction) => (
+                    <div 
+                      key={transaction.id} 
+                      className={`flex justify-between items-center p-2 rounded-md border ${
+                        transaction.amount > 0 
+                          ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
+                          : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+                      }`}
+                    >
+                      <div>
+                        <div className="font-medium text-sm">{transaction.description}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatDate(transaction.createdAt)}
                         </div>
                       </div>
-                    ))
-                  ) : (
-                    <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                      <History className="h-10 w-10 mx-auto mb-2 opacity-20" />
-                      <p>هیچ تراکنشی ثبت نشده است</p>
+                      <div className={`font-bold ${transaction.amount > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                        {transaction.amount > 0 ? '+' : ''}{formatNumber(transaction.amount)}
+                      </div>
                     </div>
-                  )}
+                  ))}
                 </div>
-              </ScrollArea>
+              ) : (
+                <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+                  هیچ تراکنشی یافت نشد
+                </div>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <Card className="w-full overflow-hidden border bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-950 dark:to-indigo-950">
+        <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x rtl:divide-x-reverse">
+          <div className="p-6 flex flex-col items-center justify-center text-center">
+            <div className="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center mb-4">
+              <CreditCard className="h-6 w-6 text-blue-600" />
             </div>
-          </TabsContent>
-        </Tabs>
+            <h3 className="text-xl font-bold mb-2">خرید اعتبار</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              اعتبار خریداری کنید و از تمام امکانات پیشرفته پلتفرم استفاده کنید.
+            </p>
+            <Button className="w-full" variant="outline">
+              خرید آنی
+              <ArrowRight className="h-4 w-4 mr-2" />
+            </Button>
+          </div>
+          
+          <div className="p-6 flex flex-col items-center justify-center text-center">
+            <div className="h-12 w-12 rounded-full bg-purple-500/10 flex items-center justify-center mb-4">
+              <RefreshCw className="h-6 w-6 text-purple-600" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">تبدیل XP به اعتبار</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              از امتیازات خود برای تبدیل به اعتبار استفاده کنید. هر 10 امتیاز = 1 اعتبار
+            </p>
+            <Button className="w-full" variant="outline">
+              تبدیل سریع
+              <ArrowRight className="h-4 w-4 mr-2" />
+            </Button>
+          </div>
+          
+          <div className="p-6 flex flex-col items-center justify-center text-center">
+            <div className="h-12 w-12 rounded-full bg-amber-500/10 flex items-center justify-center mb-4">
+              <Sparkles className="h-6 w-6 text-amber-600" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">اعتبار رایگان</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              با تکمیل چالش‌های ویژه و مأموریت‌های پرانا، اعتبار رایگان دریافت کنید.
+            </p>
+            <Button className="w-full" variant="outline">
+              مشاهده چالش‌ها
+              <ArrowRight className="h-4 w-4 mr-2" />
+            </Button>
+          </div>
+        </div>
       </Card>
     </div>
   );

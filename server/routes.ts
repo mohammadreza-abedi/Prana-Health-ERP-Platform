@@ -24,6 +24,20 @@ import { ZodError } from "zod";
 const MemoryStore = memorystore(session);
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // API endpoint for checking if secrets/API keys are available
+  app.post('/api/check-secrets', (req, res) => {
+    const { secretKeys } = req.body;
+    
+    if (!Array.isArray(secretKeys)) {
+      return res.status(400).json({ error: 'secretKeys must be an array' });
+    }
+    
+    const results = secretKeys.map(key => {
+      return process.env[key] !== undefined && process.env[key] !== '';
+    });
+    
+    res.json({ results });
+  });
   // Set up session middleware
   app.use(session({
     cookie: { maxAge: 86400000 },
@@ -645,6 +659,150 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     next();
   }, gamificationRoutes);
+
+  // Credit API routes
+  app.get('/api/credits/balance', requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const credits = await storage.getUserCredits(userId);
+      
+      res.json(credits);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  app.get('/api/credits/transactions', requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const transactions = await storage.getUserCreditTransactions(userId, limit);
+      
+      res.json(transactions);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  app.post('/api/credits/add', requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const { amount, actionType, description, resourceId, resourceType } = req.body;
+      
+      if (!amount || amount <= 0) {
+        return res.status(400).json({ message: 'Invalid amount' });
+      }
+      
+      if (!actionType || !description) {
+        return res.status(400).json({ message: 'Action type and description are required' });
+      }
+      
+      const result = await storage.updateUserCredits(
+        userId,
+        amount,
+        actionType,
+        description,
+        resourceId,
+        resourceType
+      );
+      
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  app.post('/api/credits/spend', requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const { amount, actionType, description, resourceId, resourceType } = req.body;
+      
+      if (!amount || amount >= 0) {
+        return res.status(400).json({ message: 'Amount must be negative for spending' });
+      }
+      
+      if (!actionType || !description) {
+        return res.status(400).json({ message: 'Action type and description are required' });
+      }
+      
+      // First check if user has enough credits
+      const currentCredits = await storage.getUserCredits(userId);
+      if (currentCredits < Math.abs(amount)) {
+        return res.status(400).json({ message: 'Insufficient credits' });
+      }
+      
+      const result = await storage.updateUserCredits(
+        userId,
+        amount,
+        actionType,
+        description,
+        resourceId,
+        resourceType
+      );
+      
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  app.post('/api/credits/convert-xp', requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const { xpAmount } = req.body;
+      
+      if (!xpAmount || xpAmount <= 0 || !Number.isInteger(xpAmount)) {
+        return res.status(400).json({ message: 'Invalid XP amount' });
+      }
+      
+      // Get the user to check their XP
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      if (user.xp < xpAmount) {
+        return res.status(400).json({ message: 'Insufficient XP' });
+      }
+      
+      // Calculate credit amount (1 credit per 10 XP)
+      const creditsAmount = Math.floor(xpAmount / 10);
+      
+      // First reduce user's XP
+      const updatedUser = await storage.updateUser(userId, {
+        xp: user.xp - xpAmount,
+      });
+      
+      if (!updatedUser) {
+        return res.status(500).json({ message: 'Failed to update user XP' });
+      }
+      
+      // Then add credits
+      const creditResult = await storage.updateUserCredits(
+        userId,
+        creditsAmount,
+        'XP_CONVERT',
+        `تبدیل ${xpAmount} امتیاز تجربه به ${creditsAmount} اعتبار`
+      );
+      
+      res.json({ 
+        xpAmount, 
+        creditsAmount,
+        user: {
+          id: updatedUser.id,
+          username: updatedUser.username,
+          displayName: updatedUser.displayName,
+          avatar: updatedUser.avatar,
+          level: updatedUser.level,
+          xp: updatedUser.xp,
+          role: updatedUser.role
+        },
+        transaction: creditResult.transaction 
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
 
   // سرو فایل‌های استاتیک
   app.use('/assets', express.static(path.resolve(process.cwd(), 'client/public/assets')));
