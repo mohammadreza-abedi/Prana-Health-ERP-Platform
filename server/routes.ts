@@ -1,7 +1,8 @@
-import type { Express, Request, Response } from "express";
+import express, { type Express, type Request, type Response } from "express";
 import { createServer, type Server } from "http";
 import session from "express-session";
 import memorystore from "memorystore";
+import path from "path";
 import { storage } from "./storage";
 import { 
   insertUserSchema, 
@@ -548,6 +549,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Server error' });
     }
   });
+
+  // سرو فایل HTML ورود اتوماتیک
+  app.get('/auto-login', (req, res) => {
+    res.sendFile(path.resolve(process.cwd(), 'client/public/auto-login.html'));
+  });
+
+  // سرو فایل‌های استاتیک
+  app.use('/assets', express.static(path.resolve(process.cwd(), 'client/public/assets')));
 
   const httpServer = createServer(app);
 
