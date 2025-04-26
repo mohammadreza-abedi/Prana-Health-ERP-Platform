@@ -8,6 +8,7 @@ import LeaderboardCard from "@/components/dashboard/LeaderboardCard";
 import UpcomingEventsCard from "@/components/dashboard/UpcomingEventsCard";
 import HRAnalyticsCards from "@/components/dashboard/HRAnalyticsCards";
 import DepartmentalComparisonChart from "@/components/dashboard/DepartmentalComparisonChart";
+import ClientCarousel from "@/components/ui/client-carousel";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { 
@@ -328,6 +329,9 @@ export default function Dashboard() {
           
           <HRAnalyticsCards />
           <DepartmentalComparisonChart />
+          
+          {/* Client Carousel - لوگوی مشتریان */}
+          <ClientCarousel />
         </div>
       )}
     </>

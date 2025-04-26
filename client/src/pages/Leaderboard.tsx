@@ -187,57 +187,210 @@ export default function Leaderboard() {
         )}
       </div>
       
-      {/* Top 3 users */}
-      <div className="mb-8">
-        <h2 className="text-lg font-bold mb-4 flex items-center">
+      {/* Top 3 users - Premium Podium Style */}
+      <div className="mb-12">
+        <h2 className="text-lg font-bold mb-6 flex items-center">
           <Sparkles className="h-5 w-5 ml-2 text-yellow" />
           برترین‌های {getTimeframeLabel()}
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {leaderboard.slice(0, 3).map((entry, index) => (
-            <motion.div
-              key={entry.id}
-              className={`rounded-xl p-6 shadow-sm ${getBackgroundColor(index + 1)} ${getTextColor(index + 1)}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-            >
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border-2 border-white/50">
-                  {entry.avatar ? (
-                    <img 
-                      src={entry.avatar} 
-                      alt={entry.displayName}
-                      className="w-full h-full object-cover" 
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-slate-300 dark:bg-slate-600 flex items-center justify-center text-slate-700 dark:text-white text-lg font-bold">
-                      {entry.displayName[0]}
+        <div className="relative h-[400px] md:h-[500px] mt-14">
+          {/* Create podium display for top 3 */}
+          <div className="absolute bottom-0 left-0 right-0 flex justify-center items-end">
+            {/* Second Place */}
+            {leaderboard.length > 1 && (
+              <motion.div
+                className="relative mx-2 md:mx-4"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+              >
+                <div className="flex flex-col items-center">
+                  <div className="relative mb-3">
+                    <motion.div
+                      className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-slate-300 overflow-hidden"
+                      whileHover={{ scale: 1.05, borderColor: "rgba(160, 174, 192, 1)" }}
+                    >
+                      {leaderboard[1].avatar ? (
+                        <img 
+                          src={leaderboard[1].avatar} 
+                          alt={leaderboard[1].displayName}
+                          className="w-full h-full object-cover" 
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-slate-300 flex items-center justify-center text-slate-700 text-xl font-bold">
+                          {leaderboard[1].displayName[0]}
+                        </div>
+                      )}
+                    </motion.div>
+                    <div className="absolute -top-3 -right-3 bg-slate-300 w-8 h-8 rounded-full flex items-center justify-center text-slate-900 font-bold shadow-lg border-2 border-white">
+                      2
                     </div>
-                  )}
-                </div>
-                
-                <div>
-                  <h3 className="font-bold text-lg">{entry.displayName}</h3>
-                  <p className={`text-sm ${index < 3 ? 'text-white/80' : 'text-slate-500 dark:text-slate-400'}`}>
-                    سطح {entry.level}
-                  </p>
-                </div>
-                
-                <div className="ml-auto">
-                  <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center p-2">
-                    {getMedalIcon(index + 1)}
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 scale-150">
+                      <Medal className="h-7 w-7 text-slate-400" />
+                    </div>
                   </div>
+                  <h3 className="font-bold text-md text-center">{leaderboard[1].displayName}</h3>
+                  <div className="bg-slate-300/90 text-slate-800 rounded-full px-3 py-1 text-xs mt-1 font-medium">
+                    {leaderboard[1].xp} امتیاز
+                  </div>
+                  
+                  {/* Podium */}
+                  <motion.div 
+                    className="w-24 md:w-32 h-32 md:h-40 bg-gradient-to-b from-slate-300 to-slate-400 rounded-t-lg mt-3 flex items-center justify-center"
+                    initial={{ height: 0 }}
+                    animate={{ height: "160px" }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                  >
+                    <span className="text-white text-xl font-bold">2</span>
+                  </motion.div>
                 </div>
-              </div>
-              
-              <div className={`rounded-lg p-3 ${index < 3 ? 'bg-white/20' : 'bg-slate-100 dark:bg-slate-700'} flex justify-between items-center`}>
-                <span className="text-sm">امتیاز کسب شده</span>
-                <span className="text-lg font-bold">{entry.xp}</span>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            )}
+            
+            {/* First Place - Taller */}
+            {leaderboard.length > 0 && (
+              <motion.div
+                className="relative mx-2 md:mx-4 -mb-5 md:-mb-8 z-10"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className="flex flex-col items-center">
+                  <div className="relative mb-3">
+                    <motion.div
+                      className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-yellow-500 overflow-hidden"
+                      whileHover={{ scale: 1.05, borderColor: "rgba(245, 158, 11, 1)" }}
+                    >
+                      {leaderboard[0].avatar ? (
+                        <img 
+                          src={leaderboard[0].avatar} 
+                          alt={leaderboard[0].displayName}
+                          className="w-full h-full object-cover" 
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-yellow-200 flex items-center justify-center text-yellow-800 text-2xl font-bold">
+                          {leaderboard[0].displayName[0]}
+                        </div>
+                      )}
+                    </motion.div>
+                    <div className="absolute -top-4 -right-3 bg-yellow-500 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shadow-lg border-2 border-white">
+                      1
+                    </div>
+                    <motion.div 
+                      className="absolute -top-8 left-1/2 transform -translate-x-1/2"
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.7 }}
+                    >
+                      <Trophy className="h-10 w-10 text-yellow-500" />
+                    </motion.div>
+                    <motion.div 
+                      className="absolute -bottom-4 left-1/2 transform -translate-x-1/2"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1.5 }}
+                      transition={{ duration: 0.3, delay: 0.5 }}
+                    >
+                      <Trophy className="h-8 w-8 text-yellow" />
+                    </motion.div>
+                  </div>
+                  <h3 className="font-bold text-xl text-center">{leaderboard[0].displayName}</h3>
+                  <div className="bg-yellow-500/90 text-white rounded-full px-4 py-1 text-sm mt-1 font-medium">
+                    {leaderboard[0].xp} امتیاز
+                  </div>
+                  
+                  {/* Sparkling effects */}
+                  <motion.div 
+                    className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    animate={{ 
+                      opacity: [0, 1, 0],
+                      scale: [0.8, 1.2, 0.8],
+                      rotate: [0, 15, 0]
+                    }}
+                    transition={{ 
+                      repeat: Infinity,
+                      duration: 2,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <Sparkles className="h-8 w-8 text-yellow" />
+                  </motion.div>
+                  
+                  {/* Podium */}
+                  <motion.div 
+                    className="w-28 md:w-36 h-40 md:h-52 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-t-lg mt-3 flex items-center justify-center relative overflow-hidden"
+                    initial={{ height: 0 }}
+                    animate={{ height: "220px" }}
+                    transition={{ duration: 0.7, delay: 0.5 }}
+                  >
+                    <span className="text-white text-2xl font-bold">1</span>
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-t from-transparent to-yellow-300/30"
+                      animate={{ 
+                        opacity: [0.3, 0.7, 0.3]
+                      }}
+                      transition={{ 
+                        repeat: Infinity,
+                        duration: 3,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+            
+            {/* Third Place */}
+            {leaderboard.length > 2 && (
+              <motion.div
+                className="relative mx-2 md:mx-4"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.4 }}
+              >
+                <div className="flex flex-col items-center">
+                  <div className="relative mb-3">
+                    <motion.div
+                      className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-amber-700 overflow-hidden"
+                      whileHover={{ scale: 1.05, borderColor: "rgba(180, 83, 9, 1)" }}
+                    >
+                      {leaderboard[2].avatar ? (
+                        <img 
+                          src={leaderboard[2].avatar} 
+                          alt={leaderboard[2].displayName}
+                          className="w-full h-full object-cover" 
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-amber-200 flex items-center justify-center text-amber-800 text-xl font-bold">
+                          {leaderboard[2].displayName[0]}
+                        </div>
+                      )}
+                    </motion.div>
+                    <div className="absolute -top-3 -right-3 bg-amber-700 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold shadow-lg border-2 border-white">
+                      3
+                    </div>
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 scale-150">
+                      <Medal className="h-7 w-7 text-amber-700" />
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-md text-center">{leaderboard[2].displayName}</h3>
+                  <div className="bg-amber-700/90 text-white rounded-full px-3 py-1 text-xs mt-1 font-medium">
+                    {leaderboard[2].xp} امتیاز
+                  </div>
+                  
+                  {/* Podium */}
+                  <motion.div 
+                    className="w-24 md:w-32 h-24 md:h-32 bg-gradient-to-b from-amber-600 to-amber-800 rounded-t-lg mt-3 flex items-center justify-center"
+                    initial={{ height: 0 }}
+                    animate={{ height: "120px" }}
+                    transition={{ duration: 0.4, delay: 0.7 }}
+                  >
+                    <span className="text-white text-xl font-bold">3</span>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
       
