@@ -337,60 +337,109 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </nav>
           </div>
 
-          {/* Bottom actions */}
+          {/* Bottom actions - Windows 11 style */}
           <div className="p-3 space-y-2">
-            <button
-              onClick={toggleDarkMode}
-              className={`w-full flex items-center px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 ${
-                isExpanded ? "justify-start" : "justify-center"
-              }`}
-            >
-              {darkMode ? (
-                <Sun className="h-5 w-5 text-yellow-400" />
-              ) : (
-                <Moon className="h-5 w-5 text-slate-500" />
-              )}
-              {isExpanded && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="mr-3 font-medium"
-                >
-                  {darkMode ? "حالت روشن" : "حالت تیره"}
-                </motion.span>
-              )}
-            </button>
+            {/* Mode toggler with tooltip */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={toggleDarkMode}
+                    className={`w-full flex items-center px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all ${
+                      isExpanded ? "justify-start" : "justify-center"
+                    }`}
+                  >
+                    {darkMode ? (
+                      <Sun className="h-5 w-5 text-yellow-400" />
+                    ) : (
+                      <Moon className="h-5 w-5 text-slate-500" />
+                    )}
+                    {isExpanded && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="mr-3 font-medium"
+                      >
+                        {darkMode ? "حالت روشن" : "حالت تیره"}
+                      </motion.span>
+                    )}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="left">
+                  <p>{darkMode ? "تغییر به حالت روشن" : "تغییر به حالت تیره"}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             
-            <button
-              onClick={() => {
-                setShowHealthReminders(!showHealthReminders);
-                toast({
-                  title: showHealthReminders ? "یادآوری‌های سلامتی غیرفعال شد" : "یادآوری‌های سلامتی فعال شد",
-                  description: showHealthReminders ? "دیگر اعلان‌های سلامتی را دریافت نخواهید کرد" : "از این پس اعلان‌های سلامتی را دریافت خواهید کرد",
-                  variant: "default",
-                });
-              }}
-              className={`w-full flex items-center px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 ${
-                isExpanded ? "justify-start" : "justify-center"
-              }`}
-            >
-              {showHealthReminders ? (
-                <Bell className="h-5 w-5 text-tiffany" />
-              ) : (
-                <BellOff className="h-5 w-5 text-slate-500" />
-              )}
-              {isExpanded && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="mr-3 font-medium"
-                >
-                  {showHealthReminders ? "بدون یادآوری" : "فعال کردن یادآوری‌ها"}
-                </motion.span>
-              )}
-            </button>
+            {/* Health notifications toggler with tooltip */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => {
+                      setShowHealthReminders(!showHealthReminders);
+                      toast({
+                        title: showHealthReminders ? "یادآوری‌های سلامتی غیرفعال شد" : "یادآوری‌های سلامتی فعال شد",
+                        description: showHealthReminders ? "دیگر اعلان‌های سلامتی را دریافت نخواهید کرد" : "از این پس اعلان‌های سلامتی را دریافت خواهید کرد",
+                        variant: "default",
+                      });
+                    }}
+                    className={`w-full flex items-center px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all ${
+                      isExpanded ? "justify-start" : "justify-center"
+                    }`}
+                  >
+                    {showHealthReminders ? (
+                      <Bell className="h-5 w-5 text-tiffany" />
+                    ) : (
+                      <BellOff className="h-5 w-5 text-slate-500" />
+                    )}
+                    {isExpanded && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="mr-3 font-medium"
+                      >
+                        {showHealthReminders ? "بدون یادآوری" : "فعال کردن یادآوری‌ها"}
+                      </motion.span>
+                    )}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="left">
+                  <p>{showHealthReminders ? "غیرفعال کردن یادآوری‌های سلامتی" : "فعال کردن یادآوری‌های سلامتی"}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            {/* Logout button with tooltip */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={logout}
+                    className={`w-full flex items-center px-3 py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 hover:text-red-600 transition-all ${
+                      isExpanded ? "justify-start" : "justify-center"
+                    }`}
+                  >
+                    <LogOut className="h-5 w-5" />
+                    {isExpanded && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="mr-3 font-medium"
+                      >
+                        خروج از حساب
+                      </motion.span>
+                    )}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="left">
+                  <p>خروج از حساب کاربری</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </motion.aside>
       </AnimatePresence>
@@ -419,17 +468,51 @@ export default function MainLayout({ children }: MainLayoutProps) {
             
             {/* Right side - Action buttons */}
             <div className="flex items-center space-x-2 space-x-reverse">
-              {/* Search */}
-              <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-                <Search className="h-5 w-5" />
-              </button>
+              {/* Search with tooltip */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                      <Search className="h-5 w-5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <p>جستجوی کامل</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               
               {/* Messages */}
               <div className="relative">
-                <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-                  <MessageSquare className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">3</span>
-                </button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <MessageSquare className="h-5 w-5" />
+                        <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">3</span>
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>پیام‌های دریافتی</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              
+              {/* Quick links */}
+              <div className="relative hidden md:block">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <Bookmark className="h-5 w-5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>دسترسی سریع</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
               
               {/* Notifications */}
@@ -443,53 +526,220 @@ export default function MainLayout({ children }: MainLayoutProps) {
               />
               
               {/* Help */}
-              <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-                <HelpCircle className="h-5 w-5" />
-              </button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                      <HelpCircle className="h-5 w-5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <p>راهنما و پشتیبانی</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               
-              {/* User profile */}
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/20 to-aqua/10 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800">
-                <span>م</span>
-                <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white dark:border-slate-800"></div>
+              {/* Quick settings */}
+              <div className="relative hidden md:block">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <Command className="h-5 w-5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>تنظیمات سریع (Ctrl+K)</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
+              
+              {/* User profile dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="relative focus:outline-none">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/20 to-aqua/10 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800 transition-all hover:ring-2 hover:ring-offset-2 hover:ring-tiffany/20 dark:hover:ring-offset-slate-900">
+                      <span>{user?.displayName?.charAt(0) || "م"}</span>
+                      <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white dark:border-slate-800"></div>
+                    </div>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 rounded-xl p-1 mt-1 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800">
+                  <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+                    <p className="text-sm font-medium">{user?.displayName || "کاربر"}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{user?.username || "کاربر پرانا"}</p>
+                  </div>
+                  
+                  <div className="p-1">
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
+                      <User className="h-4 w-4 ml-2" />
+                      <span>پروفایل</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
+                      <Settings className="h-4 w-4 ml-2" />
+                      <span>تنظیمات</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
+                      <UserCog className="h-4 w-4 ml-2" />
+                      <span>مدیریت حساب</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="my-1 bg-slate-200 dark:bg-slate-700" />
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
+                      <Languages className="h-4 w-4 ml-2" />
+                      <span>زبان برنامه</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
+                      <Keyboard className="h-4 w-4 ml-2" />
+                      <span>میانبرهای کیبورد</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="my-1 bg-slate-200 dark:bg-slate-700" />
+                    <DropdownMenuItem 
+                      className="flex items-center cursor-pointer rounded-lg py-2 px-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600"
+                      onClick={logout}
+                    >
+                      <LogOut className="h-4 w-4 ml-2" />
+                      <span>خروج از حساب</span>
+                    </DropdownMenuItem>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           
-          {/* Bottom row with search, filters and sections */}
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            {/* Search bar */}
-            <div className="relative flex-grow max-w-md">
-              <Search className="h-4 w-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
-              <Input 
-                placeholder="جستجو..." 
-                className="pr-10 py-2 text-sm h-10 bg-slate-50 dark:bg-slate-800"
-              />
+          {/* Enhanced Bottom row with Windows 11-style toolbars */}
+          <div className="flex flex-col gap-3">
+            {/* Main searchbar with Windows 11-style design */}
+            <div className="relative flex-grow max-w-full">
+              <div className="flex items-center gap-2 p-1 bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-slate-200/50 dark:border-slate-700/50 rounded-xl shadow-sm">
+                <div className="relative flex-grow">
+                  <Search className="h-4 w-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+                  <Input 
+                    placeholder="جستجو در برنامه..." 
+                    className="pr-10 pl-4 py-2 text-sm h-10 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                  />
+                </div>
+                
+                <div className="flex items-center gap-1 pl-2 border-r border-slate-200 dark:border-slate-700 pr-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-700">
+                          <Command className="h-4 w-4 text-slate-500" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p>جستجوی پیشرفته با Ctrl+K</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-700">
+                          <Filter className="h-4 w-4 text-slate-500" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p>فیلترهای پیشرفته</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="rounded-full h-8 w-8 bg-transparent hover:bg-slate-100 dark:hover:bg-slate-700">
+                          <BookOpen className="h-4 w-4 text-slate-500" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        <p>جستجو در اسناد</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
             </div>
             
-            {/* Sections/Tabs */}
-            <div className="flex items-center space-x-1 space-x-reverse overflow-auto">
-              <Button variant="default" size="sm" className="rounded-lg">
-                میز کار
-              </Button>
-              <Button variant="ghost" size="sm" className="rounded-lg">
-                سلامت شغلی
-              </Button>
-              <Button variant="ghost" size="sm" className="rounded-lg">
-                آموزش
-              </Button>
-              <Button variant="ghost" size="sm" className="rounded-lg">
-                دستاوردها
-              </Button>
-              <Button variant="ghost" size="sm" className="rounded-lg">
-                دپارتمان
-              </Button>
+            {/* Windows 11-style Tab Group with Sections */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-1 space-x-reverse p-1 bg-white/50 dark:bg-slate-800/50 rounded-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm shadow-sm">
+                <Button variant="ghost" size="sm" className="rounded-lg bg-tiffany/10 text-tiffany">
+                  <LayoutDashboard className="h-4 w-4 ml-1" />
+                  میز کار
+                </Button>
+                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
+                  <Heart className="h-4 w-4 ml-1" />
+                  سلامت شغلی
+                </Button>
+                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
+                  <GraduationCap className="h-4 w-4 ml-1" />
+                  آموزش
+                </Button>
+                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
+                  <Trophy className="h-4 w-4 ml-1" />
+                  دستاوردها
+                </Button>
+                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
+                  <Users className="h-4 w-4 ml-1" />
+                  دپارتمان
+                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="sm" className="rounded-full w-8 h-8 p-0">
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>بخش‌های بیشتر</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              
+              {/* Quick Actions */}
+              <div className="hidden md:flex items-center gap-1">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="sm" className="rounded-lg h-9">
+                        <RefreshCw className="h-4 w-4 ml-1" />
+                        بروزرسانی
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      <p>بروزرسانی داده‌ها</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="rounded-lg h-9">
+                      <Sparkles className="h-4 w-4 ml-1" />
+                      عملیات سریع
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="rounded-xl w-56 p-1">
+                    <DropdownMenuItem className="rounded-lg cursor-pointer">
+                      <UserPlus className="h-4 w-4 ml-2" />
+                      <span>افزودن کاربر جدید</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg cursor-pointer">
+                      <FileText className="h-4 w-4 ml-2" />
+                      <span>ایجاد گزارش</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-lg cursor-pointer">
+                      <Database className="h-4 w-4 ml-2" />
+                      <span>سنکرون‌سازی داده‌ها</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
-            
-            {/* Advanced filter */}
-            <Button variant="outline" size="sm" className="rounded-lg whitespace-nowrap">
-              <Filter className="h-4 w-4 ml-1" />
-              فیلتر پیشرفته
-            </Button>
           </div>
         </div>
         
