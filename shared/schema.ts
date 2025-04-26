@@ -11,6 +11,7 @@ export const users = pgTable("users", {
   avatar: text("avatar"),
   level: integer("level").default(1).notNull(),
   xp: integer("xp").default(0).notNull(),
+  credits: integer("credits").default(1000).notNull(), // اعتبار کاربر
   role: text("role").default("user").notNull(), // user, hr, hse, admin
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -121,6 +122,19 @@ export const organizationalMetrics = pgTable("organizational_metrics", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Credit transactions model (for tracking user credit usage)
+export const creditTransactions = pgTable("credit_transactions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  amount: integer("amount").notNull(), // مقدار تراکنش (مثبت برای افزایش و منفی برای کاهش)
+  balance: integer("balance").notNull(), // مانده پس از تراکنش
+  description: text("description").notNull(), // توضیحات تراکنش
+  actionType: text("action_type").notNull(), // نوع عملیات: test, challenge, reward, purchase, etc.
+  resourceId: integer("resource_id"), // شناسه منبع مرتبط (تست، چالش و غیره)
+  resourceType: text("resource_type"), // نوع منبع: test, challenge, badge, etc.
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
 export const insertHealthMetricsSchema = createInsertSchema(healthMetrics).omit({ id: true, createdAt: true });
@@ -133,6 +147,7 @@ export const insertEventParticipantSchema = createInsertSchema(eventParticipants
 export const insertDepartmentSchema = createInsertSchema(departments).omit({ id: true, createdAt: true });
 export const insertDepartmentMemberSchema = createInsertSchema(departmentMembers).omit({ id: true, createdAt: true });
 export const insertOrganizationalMetricsSchema = createInsertSchema(organizationalMetrics).omit({ id: true, createdAt: true });
+export const insertCreditTransactionSchema = createInsertSchema(creditTransactions).omit({ id: true, createdAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -167,3 +182,6 @@ export type InsertDepartmentMember = z.infer<typeof insertDepartmentMemberSchema
 
 export type OrganizationalMetric = typeof organizationalMetrics.$inferSelect;
 export type InsertOrganizationalMetric = z.infer<typeof insertOrganizationalMetricsSchema>;
+
+export type CreditTransaction = typeof creditTransactions.$inferSelect;
+export type InsertCreditTransaction = z.infer<typeof insertCreditTransactionSchema>;

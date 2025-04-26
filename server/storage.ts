@@ -4,6 +4,7 @@ import { eq, desc, asc, and, gte, lte } from "drizzle-orm";
 import {
   badges,
   challenges,
+  creditTransactions,
   departments,
   departmentMembers,
   events,
@@ -16,6 +17,8 @@ import {
   type InsertBadge,
   type Challenge,
   type InsertChallenge,
+  type CreditTransaction,
+  type InsertCreditTransaction,
   type Department,
   type InsertDepartment,
   type DepartmentMember,
@@ -85,6 +88,12 @@ export interface IStorage {
   // Organizational metrics operations
   getOrganizationalMetrics(departmentId: number, date?: string): Promise<OrganizationalMetric[]>;
   createOrganizationalMetric(metric: InsertOrganizationalMetric): Promise<OrganizationalMetric>;
+  
+  // Credit transactions operations
+  getUserCredits(userId: number): Promise<number>;
+  getUserCreditTransactions(userId: number, limit?: number): Promise<CreditTransaction[]>;
+  createCreditTransaction(transaction: InsertCreditTransaction): Promise<CreditTransaction>;
+  updateUserCredits(userId: number, amount: number, actionType: string, description: string, resourceId?: number, resourceType?: string): Promise<{ user: User; transaction: CreditTransaction }>;
   
   // Leaderboard operations
   getLeaderboard(limit?: number): Promise<{ id: number; displayName: string; avatar?: string; xp: number; level: number }[]>;
