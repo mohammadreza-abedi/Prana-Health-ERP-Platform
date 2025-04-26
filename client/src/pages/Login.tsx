@@ -40,91 +40,121 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 p-4">
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-tiffany/10 to-aqua/10 pointer-events-none"></div>
+    <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden relative">
+      {/* Dynamic background with Windows 11 style */}
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-tiffany/5 to-aqua/5 dark:from-navy/20 dark:to-tiffany/10 pointer-events-none"></div>
+      
+      {/* Blurred circles like Windows 11 */}
+      <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-tiffany/20 blur-3xl"></div>
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-aqua/20 blur-3xl"></div>
+      <div className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full bg-yellow/10 blur-3xl"></div>
       
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md z-10"
       >
-        <div className="flex justify-center mb-8">
+        <motion.div 
+          className="flex justify-center mb-8"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
+        >
           <div className="flex items-center">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-tiffany to-aqua flex items-center justify-center">
-              <span className="text-navy font-bold text-2xl">پ</span>
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-tiffany to-aqua flex items-center justify-center shadow-lg">
+              <span className="text-white font-black text-3xl">پ</span>
             </div>
-            <h1 className="text-3xl font-bold mr-3 text-tiffany">پرانا</h1>
+            <h1 className="text-4xl font-black mr-3 bg-gradient-to-r from-tiffany to-aqua bg-clip-text text-transparent">پرانا</h1>
           </div>
-        </div>
+        </motion.div>
         
-        <Card className="glass dark:bg-slate-900/25 border-white/20 dark:border-white/5 shadow-lg">
-          <CardContent className="pt-6">
-            <h2 className="text-2xl font-bold mb-6 text-center">ورود به سامانه</h2>
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          <div className="acrylic p-8 dark:bg-slate-900/30">
+            <h2 className="text-2xl font-bold mb-8 text-center">ورود به دستیار هوشمند پرانا</h2>
             
             <form onSubmit={handleSubmit}>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="relative">
-                  <AtSign className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                  <AtSign className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
                   <Input
                     type="text"
                     placeholder="نام کاربری"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="pr-10 bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
+                    className="pr-12 py-6 bg-white/50 dark:bg-slate-800/50 border-white/30 dark:border-white/10 rounded-xl text-lg"
                   />
                 </div>
                 
                 <div className="relative">
-                  <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                  <Lock className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
                   <Input
                     type="password"
                     placeholder="رمز عبور"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pr-10 bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
+                    className="pr-12 py-6 bg-white/50 dark:bg-slate-800/50 border-white/30 dark:border-white/10 rounded-xl text-lg"
                   />
                 </div>
                 
-                <Button 
-                  type="submit" 
-                  className="w-full py-6 bg-tiffany hover:bg-tiffany-light"
-                  disabled={isLoading}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  {isLoading ? (
-                    <div className="flex items-center">
-                      <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></span>
-                      در حال ورود...
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center">
-                      <LogIn className="h-5 w-5 ml-2" />
-                      ورود
-                    </div>
-                  )}
-                </Button>
+                  <Button 
+                    type="submit" 
+                    className="w-full py-6 bg-gradient-to-r from-tiffany to-aqua hover:from-tiffany-light hover:to-aqua-light text-white rounded-xl text-lg font-bold shadow-md"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center justify-center">
+                        <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2"></span>
+                        در حال ورود...
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center">
+                        <LogIn className="h-5 w-5 ml-2" />
+                        ورود به سیستم
+                      </div>
+                    )}
+                  </Button>
+                </motion.div>
               </div>
             </form>
             
-            <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-              <p className="mb-2">کاربران نمونه برای تست:</p>
-              <div className="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
-                <div>
-                  <p className="font-medium text-slate-800 dark:text-slate-200">کاربر عادی:</p>
-                  <p>amir / password</p>
+            <motion.div 
+              className="mt-8 text-center text-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
+              <p className="mb-2 text-slate-600 dark:text-slate-300">کاربران نمونه برای تست:</p>
+              <div className="grid grid-cols-2 gap-3 glass p-4 rounded-xl">
+                <div className="p-3 mica rounded-lg">
+                  <p className="font-bold text-slate-800 dark:text-white">کاربر عادی:</p>
+                  <p className="text-slate-600 dark:text-slate-300">amir / password</p>
                 </div>
-                <div>
-                  <p className="font-medium text-slate-800 dark:text-slate-200">مدیر HR:</p>
-                  <p>hrmanager / password</p>
+                <div className="p-3 mica rounded-lg">
+                  <p className="font-bold text-slate-800 dark:text-white">مدیر HR:</p>
+                  <p className="text-slate-600 dark:text-slate-300">hrmanager / password</p>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </motion.div>
+          </div>
+        </motion.div>
         
-        <p className="text-sm text-center mt-6 text-slate-500 dark:text-slate-400">
+        <motion.p 
+          className="text-sm text-center mt-6 text-slate-500 dark:text-slate-400"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+        >
           دستیار هوشمند سلامت شغلی، سلامت فردی و ارتقاء منابع انسانی
-        </p>
+        </motion.p>
       </motion.div>
     </div>
   );
