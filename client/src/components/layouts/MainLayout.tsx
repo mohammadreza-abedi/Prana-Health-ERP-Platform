@@ -19,9 +19,13 @@ import {
   Brain,
   FileText,
   CreditCard,
+  Bell,
+  BellOff,
 } from "lucide-react";
 import useIsMobile from "@/hooks/use-mobile";
 import Footer from "./Footer";
+import HealthReminders from "@/components/ui/health-reminder";
+import { useToast } from "@/hooks/use-toast";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -36,6 +40,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       (!localStorage.getItem("theme") &&
         window.matchMedia("(prefers-color-scheme: dark)").matches)
   );
+  const [showHealthReminders, setShowHealthReminders] = useState(true);
+  const { toast } = useToast();
 
   // Set initial expanded state based on screen size
   useEffect(() => {
@@ -276,6 +282,36 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </motion.span>
               )}
             </button>
+            
+            <button
+              onClick={() => {
+                setShowHealthReminders(!showHealthReminders);
+                toast({
+                  title: showHealthReminders ? "یادآوری‌های سلامتی غیرفعال شد" : "یادآوری‌های سلامتی فعال شد",
+                  description: showHealthReminders ? "دیگر اعلان‌های سلامتی را دریافت نخواهید کرد" : "از این پس اعلان‌های سلامتی را دریافت خواهید کرد",
+                  variant: "default",
+                });
+              }}
+              className={`w-full flex items-center px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 ${
+                isExpanded ? "justify-start" : "justify-center"
+              }`}
+            >
+              {showHealthReminders ? (
+                <Bell className="h-5 w-5 text-tiffany" />
+              ) : (
+                <BellOff className="h-5 w-5 text-slate-500" />
+              )}
+              {isExpanded && (
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="mr-3 font-medium"
+                >
+                  {showHealthReminders ? "بدون یادآوری" : "فعال کردن یادآوری‌ها"}
+                </motion.span>
+              )}
+            </button>
           </div>
         </motion.aside>
       </AnimatePresence>
@@ -310,6 +346,20 @@ export default function MainLayout({ children }: MainLayoutProps) {
         
         {/* Footer */}
         <Footer />
+        
+        {/* Health Reminders */}
+        {showHealthReminders && (
+          <HealthReminders 
+            timeScale={5} // Speed up reminders for demo purposes
+            onAction={(reminder) => {
+              toast({
+                title: `${reminder.title} انجام شد`,
+                description: "این فعالیت در سوابق سلامتی شما ثبت شد",
+                variant: "success",
+              });
+            }}
+          />
+        )}
       </div>
     </div>
   );
