@@ -307,6 +307,8 @@ export default function Dashboard() {
         
         {/* Column 3: Leaderboard and Events */}
         <div className="space-y-6">
+          {/* اضافه کردن کامپوننت ارسال اطلاع‌رسانی */}
+          <NotificationSender />
           <LeaderboardCard />
           <UpcomingEventsCard />
           <SmartRecommendations />
