@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/lib/useAuth';
 import { useCredits } from '@/hooks/use-credits';
 import { GlassCard } from '@/components/ui/glass-card';
+import { WalletWidget } from '@/components/ui/wallet-widget';
+import { SmartTools } from '@/components/ui/smart-tools';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -50,6 +52,13 @@ import {
   Github,
   Linkedin,
   ExternalLink,
+  Wallet,
+  Coins,
+  Zap,
+  Sparkles,
+  CheckCircle,
+  Gift,
+  Plus,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -340,7 +349,7 @@ export default function Profile() {
               {/* اطلاعات کاربر - بخش راست */}
               <div className="flex-1">
                 <Tabs defaultValue="info" className="w-full">
-                  <TabsList>
+                  <TabsList className="grid grid-cols-6">
                     <TabsTrigger value="info" className="text-xs">
                       <User className="h-4 w-4 ml-1" />
                       اطلاعات پایه
@@ -352,6 +361,14 @@ export default function Profile() {
                     <TabsTrigger value="achievements" className="text-xs">
                       <Award className="h-4 w-4 ml-1" />
                       دستاوردها
+                    </TabsTrigger>
+                    <TabsTrigger value="wallet" className="text-xs">
+                      <Wallet className="h-4 w-4 ml-1" />
+                      کیف پول
+                    </TabsTrigger>
+                    <TabsTrigger value="smart-tools" className="text-xs">
+                      <Zap className="h-4 w-4 ml-1" />
+                      ابزارهای هوشمند
                     </TabsTrigger>
                     <TabsTrigger value="settings" className="text-xs">
                       <Settings className="h-4 w-4 ml-1" />
