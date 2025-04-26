@@ -48,20 +48,21 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const connectWebSocket = useCallback(() => {
     try {
       // Clean up any existing connection
-      if (socketRef.current) {
+      if (socketRef.current && socketRef.current.readyState !== WebSocket.CLOSED) {
         socketRef.current.close();
       }
 
       // Clear any pending reconnects
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
+        reconnectTimeoutRef.current = null;
       }
 
       // Determine WebSocket URL based on current protocol and host
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const wsUrl = `${protocol}//${window.location.host}/ws`;
       
-      // Create new WebSocket connection
+      // Create new WebSocket connection with error handling
       const socket = new WebSocket(wsUrl);
       socketRef.current = socket;
 
@@ -72,11 +73,13 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         setConnectionError(null);
         
         // If user is authenticated, send auth message
-        if (user) {
+        if (user && typeof user === 'object') {
+          // Type assertion for user object to access properties safely
+          const safeUser = user as { id?: number; username?: string };
           socket.send(JSON.stringify({
             type: 'auth',
-            userId: user.id,
-            username: user.username
+            userId: safeUser.id || 0,
+            username: safeUser.username || 'Guest'
           }));
         }
       });
@@ -233,7 +236,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       
       clearInterval(pingInterval);
     };
-  }, []);
+  }, [connectWebSocket, isConnected, sendPing]);
 
   return (
     <WebSocketContext.Provider
