@@ -640,23 +640,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
 
-  // WebSocket Server Implementation
-  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  // WebSocket Server Implementation - پیاده‌سازی وب‌سوکت سرور
+  const wss = new WebSocketServer({ 
+    server: httpServer, 
+    path: '/ws',
+    // Add heartbeat ping pong to detect dead connections
+    clientTracking: true,
+    perMessageDeflate: {
+      zlibDeflateOptions: {
+        chunkSize: 1024,
+        memLevel: 7,
+        level: 3
+      },
+      zlibInflateOptions: {
+        chunkSize: 10 * 1024
+      },
+      concurrencyLimit: 10,
+      threshold: 1024
+    }
+  });
 
   // Store connected clients
   const clients = new Map<string, { 
     ws: WebSocket, 
     userId?: number, 
-    username?: string 
+    username?: string,
+    isAlive: boolean
   }>();
-
+  
+  // Setup heartbeat interval to detect dead connections
+  const interval = setInterval(function ping() {
+    wss.clients.forEach(function each(ws: WebSocket) {
+      // Find client ID for this WebSocket
+      let foundClientId: string | null = null;
+      for (const [clientId, client] of clients.entries()) {
+        if (client.ws === ws) {
+          foundClientId = clientId;
+          if (client.isAlive === false) {
+            console.log(`Terminating stale connection: ${clientId}`);
+            clients.delete(clientId);
+            return ws.terminate();
+          }
+          
+          client.isAlive = false;
+          clients.set(clientId, client);
+          break;
+        }
+      }
+      
+      if (foundClientId) {
+        try {
+          ws.ping();
+        } catch (err) {
+          console.error(`Error sending ping to client ${foundClientId}:`, err);
+          clients.delete(foundClientId);
+          ws.terminate();
+        }
+      }
+    });
+  }, 30000);
+  
+  wss.on('close', function close() {
+    clearInterval(interval);
+  });
+  
   // WebSocket connection handler
   wss.on('connection', (ws) => {
     // Generate a unique ID for this connection
     const clientId = Math.random().toString(36).substring(2, 15);
-    clients.set(clientId, { ws });
+    clients.set(clientId, { ws, isAlive: true });
     
     console.log(`New WebSocket connection established: ${clientId}`);
+    
+    // Setup pong response
+    ws.on('pong', () => {
+      const client = clients.get(clientId);
+      if (client) {
+        client.isAlive = true;
+        clients.set(clientId, client);
+      }
+    });
     
     // Send welcome message
     ws.send(JSON.stringify({
@@ -679,7 +742,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               clients.set(clientId, { 
                 ...clients.get(clientId)!, 
                 userId: data.userId, 
-                username: data.username 
+                username: data.username,
+                isAlive: true
               });
               
               ws.send(JSON.stringify({
@@ -806,10 +870,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Send message to a specific user
   function sendToUser(userId: number, message: any) {
-    for (const [_, client] of clients) {
-      if (client.userId === userId && client.ws.readyState === WebSocket.OPEN) {
-        client.ws.send(JSON.stringify(message));
-        return true;
+    // Convert map entries to array for safer iteration
+    const clientEntries = Array.from(clients.entries());
+    for (const [_, client] of clientEntries) {
+      if (client.userId === userId && client.ws.readyState === WebSocket.OPEN && client.isAlive) {
+        try {
+          client.ws.send(JSON.stringify(message));
+          return true;
+        } catch (err) {
+          console.error(`Error sending message to user ${userId}:`, err);
+        }
       }
     }
     return false;
@@ -819,19 +889,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   function broadcastToRoles(roles: string[], message: any) {
     // This is a simplification. In a real app, you would check the user's role in a database
     // For now, we're broadcasting to all authenticated users
-    for (const [_, client] of clients) {
-      if (client.userId && client.ws.readyState === WebSocket.OPEN) {
-        client.ws.send(JSON.stringify(message));
+    const clientEntries = Array.from(clients.entries());
+    for (const [_, client] of clientEntries) {
+      if (client.userId && client.ws.readyState === WebSocket.OPEN && client.isAlive) {
+        try {
+          client.ws.send(JSON.stringify(message));
+        } catch (err) {
+          console.error('Error broadcasting to roles:', err);
+        }
       }
     }
   }
   
   // Broadcast message to all connected clients
   function broadcastToAll(message: any, excludeClientId?: string) {
-    for (const [clientId, client] of clients) {
+    const clientEntries = Array.from(clients.entries());
+    for (const [clientId, client] of clientEntries) {
       if ((!excludeClientId || clientId !== excludeClientId) && 
-          client.ws.readyState === WebSocket.OPEN) {
-        client.ws.send(JSON.stringify(message));
+          client.ws.readyState === WebSocket.OPEN && 
+          client.isAlive) {
+        try {
+          client.ws.send(JSON.stringify(message));
+        } catch (err) {
+          console.error(`Error broadcasting to client ${clientId}:`, err);
+        }
       }
     }
   }

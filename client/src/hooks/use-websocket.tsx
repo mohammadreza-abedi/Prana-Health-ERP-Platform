@@ -47,7 +47,12 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   // Initialize WebSocket connection
   const connectWebSocket = useCallback(() => {
     try {
-      // Clean up any existing connection
+      // If we already have an open connection, don't create a new one
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        return;
+      }
+      
+      // Clean up any existing connection that's not open
       if (socketRef.current) {
         socketRef.current.close();
       }
@@ -55,6 +60,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       // Clear any pending reconnects
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
+        reconnectTimeoutRef.current = null;
       }
 
       // Determine WebSocket URL based on current protocol and host
@@ -75,29 +81,36 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         if (user) {
           socket.send(JSON.stringify({
             type: 'auth',
-            userId: user.id,
-            username: user.username
+            userId: user?.id,
+            username: user?.username
           }));
         }
       });
 
-      // Connection closed
+      // Connection closed - use a flag to prevent multiple reconnection attempts
+      let reconnecting = false;
       socket.addEventListener('close', (event) => {
         console.log('WebSocket connection closed', event);
         setIsConnected(false);
         
-        // Attempt to reconnect after delay
-        reconnectTimeoutRef.current = setTimeout(() => {
-          console.log('Attempting to reconnect...');
-          connectWebSocket();
-        }, 5000);
+        // Prevent multiple reconnect timers
+        if (!reconnecting) {
+          reconnecting = true;
+          // Attempt to reconnect after delay
+          reconnectTimeoutRef.current = setTimeout(() => {
+            console.log('Attempting to reconnect...');
+            connectWebSocket();
+            reconnecting = false;
+          }, 5000);
+        }
       });
 
       // Connection error
       socket.addEventListener('error', (error) => {
         console.error('WebSocket error:', error);
         setConnectionError('Connection error occurred');
-        setIsConnected(false);
+        // Don't set isConnected to false here, let the close handler do it
+        // This prevents duplicate reconnection attempts
       });
 
       // Listen for messages
