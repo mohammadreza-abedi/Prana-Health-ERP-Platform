@@ -5,6 +5,7 @@ import memorystore from "memorystore";
 import path from "path";
 import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
+import gamificationRoutes from "./routes/gamification";
 import { 
   insertUserSchema, 
   insertHealthMetricsSchema, 

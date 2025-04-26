@@ -14,15 +14,20 @@ import {
   Award,
   BadgeCheck,
   Calendar,
+  CheckCircle,
   Clock,
+  Coins,
   Crown,
+  Droplets,
+  Dumbbell,
   Flame,
+  Footprints,
   GanttChart,
   Gift,
   Heart,
   Hourglass,
-  Lightning,
   Medal,
+  Moon,
   PartyPopper,
   Shield,
   Sparkles,
@@ -30,7 +35,9 @@ import {
   Swords,
   Timer,
   Trophy,
+  UserRound,
   Zap,
+  Bolt
 } from "lucide-react";
 
 // دستاوردها صفحه - Advanced Gamification Page
@@ -278,7 +285,7 @@ export default function Achievements() {
     
     switch (category) {
       case "physical":
-        return <Lightning className={className} />;
+        return <Bolt className={className} />;
       case "nutrition":
         return <Heart className={className} />;
       case "mental":
@@ -369,7 +376,7 @@ export default function Achievements() {
               <h4 className="text-sm font-medium mb-2">وضعیت روزانه</h4>
               <div className="grid grid-cols-3 gap-2">
                 <div className="flex flex-col items-center bg-white/50 dark:bg-slate-800/50 p-2 rounded-lg">
-                  <Lightning className="h-5 w-5 text-amber-500 mb-1" />
+                  <Bolt className="h-5 w-5 text-amber-500 mb-1" />
                   <span className="text-xs font-medium">فعالیت</span>
                   <span className="text-xl font-bold">۶۸<span className="text-xs">%</span></span>
                 </div>
@@ -848,6 +855,4 @@ export default function Achievements() {
   );
 }
 
-// Some additional components used in the page
-import { useState } from "react";
-import { Bookmark, BookOpen, CheckCircle, Coins, Droplets, Dumbbell, Footprints, Moon, UserRound } from "lucide-react";
+// No duplicate imports needed as they're all included above
