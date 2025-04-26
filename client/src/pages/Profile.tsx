@@ -6,6 +6,7 @@ import { useCredits } from '@/hooks/use-credits';
 import { GlassCard } from '@/components/ui/glass-card';
 import { WalletWidget } from '@/components/ui/wallet-widget';
 import { SmartTools } from '@/components/ui/smart-tools';
+import { BodyComposition } from '@/components/ui/body-composition';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -63,7 +64,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { BodyComposition } from '@/components/ui/body-composition';
 import AvatarBuilder from '@/components/ui/avatar-builder';
 
 interface UserBadge {
@@ -723,6 +723,11 @@ export default function Profile() {
                   <TabsContent value="smart-tools" className="mt-4 space-y-6">
                     <div className="w-full">
                       <SmartTools />
+                    </div>
+                    
+                    <div className="w-full mt-8">
+                      <h3 className="text-lg font-bold mb-4">پیگیری ترکیب بدنی</h3>
+                      <BodyComposition />
                     </div>
                   </TabsContent>
                   
