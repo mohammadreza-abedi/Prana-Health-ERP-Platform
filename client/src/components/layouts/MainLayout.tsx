@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { useAuth } from "@/lib/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
   Award,
   User,
   BarChart,
-  Settings,
-  LogOut,
   Menu,
   Moon,
   Sun,
@@ -20,8 +17,6 @@ import {
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import useIsMobile from "@/hooks/use-mobile";
 
 interface MainLayoutProps {
@@ -30,10 +25,7 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [, navigate] = useLocation();
   const [location] = useLocation();
-  const { user, logout } = useAuth();
-  const { toast } = useToast();
   const isMobile = useIsMobile();
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark" ||
@@ -61,83 +53,39 @@ export default function MainLayout({ children }: MainLayoutProps) {
     setDarkMode(!darkMode);
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate("/login");
-      toast({
-        title: "خروج موفقیت‌آمیز",
-        description: "با موفقیت از سیستم خارج شدید.",
-      });
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-  };
-
-  // Menu items based on user role
+  // Menu items
   const menuItems = [
     {
       title: "داشبورد",
       icon: <Home className="h-5 w-5" />,
       path: "/",
-      roles: ["user", "hr", "hse", "admin"],
     },
     {
       title: "چالش‌ها",
       icon: <Award className="h-5 w-5" />,
       path: "/challenges",
-      roles: ["user", "hr", "hse", "admin"],
     },
     {
       title: "جدول امتیازات",
       icon: <BarChart className="h-5 w-5" />,
       path: "/leaderboard",
-      roles: ["user", "hr", "hse", "admin"],
     },
     {
       title: "پروفایل من",
       icon: <User className="h-5 w-5" />,
       path: "/profile",
-      roles: ["user", "hr", "hse", "admin"],
     },
     {
       title: "داشبورد HR",
       icon: <Users className="h-5 w-5" />,
       path: "/hr-dashboard",
-      roles: ["hr", "admin"],
-    },
-    {
-      title: "داشبورد HSE",
-      icon: <Shield className="h-5 w-5" />,
-      path: "/hse-dashboard",
-      roles: ["hse", "admin"],
     },
     {
       title: "رویدادها",
       icon: <Calendar className="h-5 w-5" />,
       path: "/events",
-      roles: ["user", "hr", "hse", "admin"],
-    },
-    {
-      title: "گزارش‌ها",
-      icon: <TrendingUp className="h-5 w-5" />,
-      path: "/reports",
-      roles: ["hr", "hse", "admin"],
-    },
-    {
-      title: "پایش سلامت",
-      icon: <Activity className="h-5 w-5" />,
-      path: "/health-monitoring",
-      roles: ["user", "hse", "admin"],
     },
   ];
-
-  // Filter menu items based on user role
-  const filteredMenuItems = user
-    ? menuItems.filter((item) => item.roles.includes(user.role))
-    : [];
-
-  if (!user) return null;
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -178,15 +126,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           {/* User info */}
           <div className={`px-4 py-3 flex items-center ${isExpanded ? 'justify-start' : 'justify-center'}`}>
             <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/20 to-aqua/10 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800`}>
-              {user.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt={user.displayName}
-                  className="w-full h-full rounded-full object-cover"
-                />
-              ) : (
-                user.displayName[0]
-              )}
+              <span>م</span>
               <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white dark:border-slate-800"></div>
             </div>
             
@@ -197,11 +137,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 exit={{ opacity: 0 }}
                 className="mr-3 overflow-hidden"
               >
-                <h3 className="text-sm font-bold truncate">{user.displayName}</h3>
+                <h3 className="text-sm font-bold truncate">مدیر سیستم</h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                  {user.role === 'hr' ? 'مدیر منابع انسانی' : 
-                   user.role === 'hse' ? 'کارشناس HSE' : 
-                   user.role === 'admin' ? 'مدیر سیستم' : 'کاربر'}
+                  پرانا - دستیار هوشمند سلامت
                 </p>
               </motion.div>
             )}
@@ -211,12 +149,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <div className="flex-1 py-6 overflow-y-auto mica my-4 mx-2 rounded-xl">
             <nav className="px-2">
               <ul className="space-y-1">
-                {filteredMenuItems.map((item, idx) => {
+                {menuItems.map((item, idx) => {
                   const isActive = location === item.path;
                   return (
                     <li key={idx}>
                       <Link href={item.path}>
-                        <a
+                        <div
                           className={`flex items-center px-3 py-3 rounded-lg transition-all ${
                             isActive
                               ? "bg-tiffany/10 text-tiffany dark:bg-tiffany/20"
@@ -236,7 +174,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                               {item.title}
                             </motion.span>
                           )}
-                        </a>
+                        </div>
                       </Link>
                     </li>
                   );
@@ -254,7 +192,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               }`}
             >
               {darkMode ? (
-                <Sun className="h-5 w-5 text-yellow" />
+                <Sun className="h-5 w-5 text-yellow-400" />
               ) : (
                 <Moon className="h-5 w-5 text-slate-500" />
               )}
@@ -266,25 +204,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   className="mr-3 font-medium"
                 >
                   {darkMode ? "حالت روشن" : "حالت تیره"}
-                </motion.span>
-              )}
-            </button>
-            
-            <button
-              onClick={handleLogout}
-              className={`w-full flex items-center px-3 py-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 ${
-                isExpanded ? "justify-start" : "justify-center"
-              }`}
-            >
-              <LogOut className="h-5 w-5" />
-              {isExpanded && (
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="mr-3 font-medium"
-                >
-                  خروج
                 </motion.span>
               )}
             </button>
@@ -312,15 +231,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </div>
             
             <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-              {user.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt={user.displayName}
-                  className="w-full h-full rounded-full object-cover"
-                />
-              ) : (
-                <span className="text-tiffany font-bold">{user.displayName[0]}</span>
-              )}
+              <span className="text-tiffany font-bold">م</span>
             </div>
           </div>
         )}

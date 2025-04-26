@@ -41,22 +41,7 @@ function LoadingScreen() {
 }
 
 function Router() {
-  const { user, isLoading } = useAuth();
-  
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-  
-  if (!user) {
-    return (
-      <Switch>
-        <Route path="/" component={Login} />
-        <Route path="/auto-login" component={AutoLogin} />
-        <Route path="*" component={Login} />
-      </Switch>
-    );
-  }
-  
+  // بدون بررسی وضعیت ورود کاربر، مستقیم به داشبورد می‌رویم
   return (
     <MainLayout>
       <Switch>
@@ -65,6 +50,7 @@ function Router() {
         <Route path="/challenges" component={Challenges} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile" component={Profile} />
+        <Route path="/auto-login" component={AutoLogin} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
