@@ -13,7 +13,9 @@ import Leaderboard from "@/pages/Leaderboard";
 import Profile from "@/pages/Profile";
 import AutoLogin from "@/pages/auto-login";
 import PsychologicalTests from "@/pages/PsychologicalTests";
+import Settings from "@/pages/Settings";
 import MainLayout from "@/components/layouts/MainLayout";
+import PulsingLogo from "@/components/ui/pulsing-logo";
 
 function LoadingScreen() {
   return (
@@ -27,8 +29,8 @@ function LoadingScreen() {
       
       <div className="flex flex-col items-center justify-center z-10">
         {/* Logo Animation */}
-        <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-tiffany to-aqua flex items-center justify-center mb-8 shadow-lg animate-pulse neon-card">
-          <span className="text-white font-black text-4xl">پ</span>
+        <div className="mb-8">
+          <PulsingLogo size="xl" showText={true} />
         </div>
         
         {/* Loading Animation */}
@@ -73,6 +75,7 @@ function Router() {
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile" component={Profile} />
         <Route path="/psychological-tests" component={PsychologicalTests} />
+        <Route path="/settings" component={Settings} />
         <Route path="/auto-login" component={AutoLogin} />
         <Route component={NotFound} />
       </Switch>
