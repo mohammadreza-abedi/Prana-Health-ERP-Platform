@@ -18,7 +18,23 @@ import {
   Award,
   FileText,
   Sparkles,
-  AlertCircle
+  AlertCircle,
+  Brain,
+  Settings,
+  Handshake,
+  User,
+  Headphones,
+  Coffee,
+  Cloud,
+  Database,
+  Book,
+  BookOpen,
+  BarChart2,
+  Map,
+  Gift,
+  PieChart,
+  Laptop,
+  Smartphone
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -28,8 +44,50 @@ import { Badge } from "@/components/ui/badge";
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   
+  // مجموعه ویژگی های حرفه ای فوتر
+  const featuredItems = [
+    { icon: <Cloud className="h-4 w-4" />, label: "امنیت ابری" },
+    { icon: <Shield className="h-4 w-4" />, label: "حریم خصوصی" },
+    { icon: <Database className="h-4 w-4" />, label: "داده کاوی هوشمند" },
+    { icon: <BarChart2 className="h-4 w-4" />, label: "آنالیز پیشرفته" },
+    { icon: <Book className="h-4 w-4" />, label: "منابع آموزشی" },
+    { icon: <Headphones className="h-4 w-4" />, label: "پشتیبانی 24/7" },
+    { icon: <Globe2 className="h-4 w-4" />, label: "چندزبانه" },
+    { icon: <Coffee className="h-4 w-4" />, label: "محیط کاری سالم" },
+    { icon: <Gift className="h-4 w-4" />, label: "جوایز انگیزشی" },
+    { icon: <Map className="h-4 w-4" />, label: "نقشه راه سلامت" },
+    { icon: <PieChart className="h-4 w-4" />, label: "آمار پیشرفت" },
+    { icon: <BookOpen className="h-4 w-4" />, label: "مقالات علمی" },
+    { icon: <Laptop className="h-4 w-4" />, label: "دسترسی چندسکویی" },
+    { icon: <Smartphone className="h-4 w-4" />, label: "اپلیکیشن موبایل" },
+    { icon: <Heart className="h-4 w-4" />, label: "سلامت روان" },
+    { icon: <Award className="h-4 w-4" />, label: "گواهینامه معتبر" },
+    { icon: <ThumbsUp className="h-4 w-4" />, label: "رضایت کاربران" },
+    { icon: <AlertCircle className="h-4 w-4" />, label: "یادآوری هوشمند" },
+    { icon: <Sparkles className="h-4 w-4" />, label: "ویژگی‌های خلاقانه" },
+    { icon: <HelpCircle className="h-4 w-4" />, label: "راهنمای کاربری" },
+  ];
+  
   return (
     <footer className="bg-slate-50/50 dark:bg-slate-900/50 py-12 border-t backdrop-blur-md">
+      {/* نوار ویژگی‌های حرفه‌ای */}
+      <div className="container mx-auto mb-8">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            {featuredItems.map((item, index) => (
+              <div key={index} className="flex items-center space-x-2 space-x-reverse text-sm text-slate-600 dark:text-slate-300 hover:text-tiffany transition-colors group cursor-pointer">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-hover:bg-tiffany/10">
+                  <div className="text-slate-500 dark:text-slate-400 group-hover:text-tiffany">
+                    {item.icon}
+                  </div>
+                </div>
+                <span className="font-medium text-xs">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* ستون اول - درباره پرانا */}
@@ -286,74 +344,5 @@ export default function Footer() {
   );
 }
 
-// تعریف کامپوننت‌های لوسید که قبلاً موجود نبودند
-const Brain = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg 
-    {...props}
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-  >
-    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04Z" />
-    <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04Z" />
-  </svg>
-);
-
-const Handshake = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg 
-    {...props}
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-  >
-    <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
-  </svg>
-);
-
-const User = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg 
-    {...props}
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-  >
-    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-    <circle cx="12" cy="7" r="4" />
-  </svg>
-);
-
-const Settings = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg 
-    {...props}
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-  >
-    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
+// تعریف کامپوننت‌های ایکون اضافی که در lucide وجود ندارند
+// از آنجایی که قبلا این آیکون‌ها از lucide import شده‌اند، نیازی به تعریف مجدد نیست

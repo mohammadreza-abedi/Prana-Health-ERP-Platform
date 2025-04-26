@@ -22,6 +22,13 @@ import {
   Bell,
   BellOff,
   Settings,
+  Search,
+  Filter,
+  MessageSquare,
+  HelpCircle,
+  LogOut,
+  Globe,
+  BarChart2
 } from "lucide-react";
 import useIsMobile from "@/hooks/use-mobile";
 import Footer from "./Footer";
@@ -29,6 +36,9 @@ import HealthReminders from "@/components/ui/health-reminder";
 import { useToast } from "@/hooks/use-toast";
 import { NotificationBar, useNotifications } from "@/components/ui/notification-bar";
 import PulsingLogo from "@/components/ui/pulsing-logo";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -334,35 +344,101 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
       {/* Main content */}
       <div className="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-900 flex flex-col">
-        {/* Mobile header */}
-        {isMobile && (
-          <div className="sticky top-0 z-20 p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-            
+        {/* Fixed Header */}
+        <div className="sticky top-0 z-20 p-3 bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 backdrop-blur-md flex flex-col">
+          {/* Top row with logo, menu and actions */}
+          <div className="flex items-center justify-between mb-2">
+            {/* Left side - Logo and menu button (on mobile) */}
             <div className="flex items-center">
-              <PulsingLogo size="sm" showText={true} />
+              {isMobile && (
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 ml-2"
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
+              )}
+              
+              <div className="flex items-center">
+                <PulsingLogo size="sm" showText={true} />
+              </div>
             </div>
             
-            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-              <span className="text-tiffany font-bold">م</span>
+            {/* Right side - Action buttons */}
+            <div className="flex items-center space-x-2 space-x-reverse">
+              {/* Search */}
+              <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                <Search className="h-5 w-5" />
+              </button>
+              
+              {/* Messages */}
+              <div className="relative">
+                <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                  <MessageSquare className="h-5 w-5" />
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">3</span>
+                </button>
+              </div>
+              
+              {/* Notifications */}
+              <NotificationBar 
+                notifications={notifications}
+                unreadCount={unreadCount}
+                onMarkAsRead={markAsRead}
+                onMarkAllAsRead={markAllAsRead}
+                onClear={clearNotification}
+                onClearAll={clearAllNotifications}
+              />
+              
+              {/* Help */}
+              <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+                <HelpCircle className="h-5 w-5" />
+              </button>
+              
+              {/* User profile */}
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/20 to-aqua/10 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800">
+                <span>م</span>
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white dark:border-slate-800"></div>
+              </div>
             </div>
           </div>
-        )}
-
-        {/* Notification Bar */}
-        <NotificationBar 
-          notifications={notifications}
-          unreadCount={unreadCount}
-          onMarkAsRead={markAsRead}
-          onMarkAllAsRead={markAllAsRead}
-          onClear={clearNotification}
-          onClearAll={clearAllNotifications}
-        />
+          
+          {/* Bottom row with search, filters and sections */}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            {/* Search bar */}
+            <div className="relative flex-grow max-w-md">
+              <Search className="h-4 w-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+              <Input 
+                placeholder="جستجو..." 
+                className="pr-10 py-2 text-sm h-10 bg-slate-50 dark:bg-slate-800"
+              />
+            </div>
+            
+            {/* Sections/Tabs */}
+            <div className="flex items-center space-x-1 space-x-reverse overflow-auto">
+              <Button variant="default" size="sm" className="rounded-lg">
+                میز کار
+              </Button>
+              <Button variant="ghost" size="sm" className="rounded-lg">
+                سلامت شغلی
+              </Button>
+              <Button variant="ghost" size="sm" className="rounded-lg">
+                آموزش
+              </Button>
+              <Button variant="ghost" size="sm" className="rounded-lg">
+                دستاوردها
+              </Button>
+              <Button variant="ghost" size="sm" className="rounded-lg">
+                دپارتمان
+              </Button>
+            </div>
+            
+            {/* Advanced filter */}
+            <Button variant="outline" size="sm" className="rounded-lg whitespace-nowrap">
+              <Filter className="h-4 w-4 ml-1" />
+              فیلتر پیشرفته
+            </Button>
+          </div>
+        </div>
         
         {/* Page content */}
         <div className="flex-1 p-6">{children}</div>
