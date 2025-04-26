@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import session from "express-session";
 import memorystore from "memorystore";
 import path from "path";
+import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 import { 
   insertUserSchema, 
@@ -638,6 +639,202 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use('/assets', express.static(path.resolve(process.cwd(), 'client/public/assets')));
 
   const httpServer = createServer(app);
+
+  // WebSocket Server Implementation
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+
+  // Store connected clients
+  const clients = new Map<string, { 
+    ws: WebSocket, 
+    userId?: number, 
+    username?: string 
+  }>();
+
+  // WebSocket connection handler
+  wss.on('connection', (ws) => {
+    // Generate a unique ID for this connection
+    const clientId = Math.random().toString(36).substring(2, 15);
+    clients.set(clientId, { ws });
+    
+    console.log(`New WebSocket connection established: ${clientId}`);
+    
+    // Send welcome message
+    ws.send(JSON.stringify({
+      type: 'connection',
+      message: 'Connected to پرانا (Prana) WebSocket Server',
+      clientId
+    }));
+    
+    // Handle incoming messages
+    ws.on('message', async (message) => {
+      try {
+        const data = JSON.parse(message.toString());
+        console.log(`Received message from ${clientId}:`, data);
+        
+        // Handle different message types
+        switch (data.type) {
+          case 'auth':
+            // Authenticate user
+            if (data.userId && data.username) {
+              clients.set(clientId, { 
+                ...clients.get(clientId)!, 
+                userId: data.userId, 
+                username: data.username 
+              });
+              
+              ws.send(JSON.stringify({
+                type: 'auth',
+                status: 'success',
+                message: 'Authentication successful'
+              }));
+              
+              // Notify all users of new user online
+              broadcastToAll({
+                type: 'user_status',
+                status: 'online',
+                userId: data.userId,
+                username: data.username
+              }, clientId);
+            }
+            break;
+            
+          case 'health_update':
+            // Handle real-time health data updates
+            if (data.metric && clients.get(clientId)?.userId) {
+              // Broadcast to HR/admin users
+              broadcastToRoles(['admin', 'hr', 'hse'], {
+                type: 'health_data',
+                userId: clients.get(clientId)?.userId,
+                username: clients.get(clientId)?.username,
+                timestamp: new Date(),
+                data: data.metric
+              });
+              
+              ws.send(JSON.stringify({
+                type: 'health_update',
+                status: 'success',
+                message: 'Health data updated successfully'
+              }));
+            }
+            break;
+            
+          case 'notification':
+            // Handle sending notifications to specific users
+            if (data.targetUserId && data.message) {
+              sendToUser(data.targetUserId, {
+                type: 'notification',
+                message: data.message,
+                sender: clients.get(clientId)?.username || 'System',
+                timestamp: new Date()
+              });
+              
+              ws.send(JSON.stringify({
+                type: 'notification',
+                status: 'success',
+                message: 'Notification sent successfully'
+              }));
+            }
+            break;
+            
+          case 'challenge_progress':
+            // Handle real-time challenge progress updates
+            if (data.challengeId && data.progress && clients.get(clientId)?.userId) {
+              // Notify all users about the challenge progress
+              broadcastToAll({
+                type: 'challenge_update',
+                userId: clients.get(clientId)?.userId,
+                username: clients.get(clientId)?.username,
+                challengeId: data.challengeId,
+                progress: data.progress,
+                timestamp: new Date()
+              });
+            }
+            break;
+            
+          case 'ping':
+            // Simple ping-pong to keep connection alive
+            ws.send(JSON.stringify({
+              type: 'pong',
+              timestamp: new Date()
+            }));
+            break;
+            
+          default:
+            ws.send(JSON.stringify({
+              type: 'error',
+              message: 'Unknown message type'
+            }));
+        }
+        
+      } catch (error) {
+        console.error('Error processing WebSocket message:', error);
+        ws.send(JSON.stringify({
+          type: 'error',
+          message: 'Failed to process message'
+        }));
+      }
+    });
+    
+    // Handle disconnection
+    ws.on('close', () => {
+      const clientInfo = clients.get(clientId);
+      
+      if (clientInfo && clientInfo.userId) {
+        // Notify all users that this user is offline
+        broadcastToAll({
+          type: 'user_status',
+          status: 'offline',
+          userId: clientInfo.userId,
+          username: clientInfo.username
+        });
+      }
+      
+      // Remove client from connected clients
+      clients.delete(clientId);
+      console.log(`WebSocket connection closed: ${clientId}`);
+    });
+    
+    // Handle errors
+    ws.on('error', (error) => {
+      console.error(`WebSocket error for client ${clientId}:`, error);
+      // Remove client from connected clients on error
+      clients.delete(clientId);
+    });
+  });
+  
+  // Helper functions for WebSocket communication
+  
+  // Send message to a specific user
+  function sendToUser(userId: number, message: any) {
+    for (const [_, client] of clients) {
+      if (client.userId === userId && client.ws.readyState === WebSocket.OPEN) {
+        client.ws.send(JSON.stringify(message));
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  // Broadcast message to all users with specific roles
+  function broadcastToRoles(roles: string[], message: any) {
+    // This is a simplification. In a real app, you would check the user's role in a database
+    // For now, we're broadcasting to all authenticated users
+    for (const [_, client] of clients) {
+      if (client.userId && client.ws.readyState === WebSocket.OPEN) {
+        client.ws.send(JSON.stringify(message));
+      }
+    }
+  }
+  
+  // Broadcast message to all connected clients
+  function broadcastToAll(message: any, excludeClientId?: string) {
+    for (const [clientId, client] of clients) {
+      if ((!excludeClientId || clientId !== excludeClientId) && 
+          client.ws.readyState === WebSocket.OPEN) {
+        client.ws.send(JSON.stringify(message));
+      }
+    }
+  }
 
   return httpServer;
 }
