@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 172 71% 67%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 172 71% 67%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 214 32% 91%;
+    
+    --primary: 172 71% 67%;
+    --primary-foreground: 210 40% 98%;
+    
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 222 47% 11%;
+    
+    --radius: 0.5rem;
+    
+    /* Brand Colors */
+    --tiffany-blue: 172 71% 67%;
+    --tiffany-blue-light: 172 71% 77%;
+    --navy-blue: 240 100% 25%;
+    --navy-blue-light: 240 100% 35%;
+    --aqua: 180 100% 50%;
+    --aqua-light: 180 100% 80%;
+    --yellow: 60 100% 50%;
+    --yellow-light: 60 100% 70%;
+    
+    /* Chart Colors */
+    --chart-1: var(--tiffany-blue);
+    --chart-2: var(--navy-blue);
+    --chart-3: var(--aqua);
+    --chart-4: var(--yellow);
+    --chart-5: 120 100% 40%;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 172 71% 67%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 172 71% 67%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 217 33% 17%;
+    
+    --primary: 172 71% 67%;
+    --primary-foreground: 210 40% 98%;
+    
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+    
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 212 30% 80%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    @apply font-sans antialiased;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Glassmorphism effect */
+.glass {
+  @apply bg-white/25 backdrop-blur-md border border-white/20 rounded-xl;
+}
+
+.dark .glass {
+  @apply bg-slate-900/25 border-white/5;
+}
+
+.glass-card {
+  @apply hover:scale-[1.03] transition-transform;
+}
+
+/* Progress Ring */
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-700 rounded-sm;
+}
