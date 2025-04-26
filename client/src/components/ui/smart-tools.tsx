@@ -1,393 +1,945 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Slider } from '@/components/ui/slider';
+import { 
+  Activity, Brain, Calculator, Calendar, Clock, Cpu, FileText, 
+  Heart, LineChart, Zap, Search, User, Smile, BarChart, BookOpen,
+  Coffee, Compass, Droplet, Flame, GitBranch, Music, Sun, ThumbsUp, 
+  Umbrella, Video, Wind, MessageSquare, Pin, Thermometer, Globe
+} from 'lucide-react';
 import { useCredits } from '@/hooks/use-credits';
 import { useToast } from '@/hooks/use-toast';
-import {
-  Activity,
-  Brain,
-  Droplets,
-  Heart,
-  HeartPulse,
-  Moon,
-  Utensils,
-  Dumbbell,
-  Timer,
-  ListChecks,
-  RefreshCw,
-  ArrowRight,
-  Play,
-  Zap,
-  Lightbulb,
-  Apple,
-  Watch,
-  BarChart3,
-} from 'lucide-react';
+import { toPersianDigits } from '@/lib/utils';
+
+type ToolCategory = 'سلامت جسمی' | 'سلامت روانی' | 'سازمانی' | 'انگیزشی' | 'تحلیلی';
+
+interface SmartTool {
+  id: string;
+  name: string;
+  description: string;
+  icon: JSX.Element;
+  category: ToolCategory;
+  creditCost: number;
+  premium: boolean;
+  action: () => void;
+  actionLabel: string;
+}
 
 export function SmartTools() {
-  const { credits } = useCredits();
+  const { credits, spendCredits, hasEnoughCredits } = useCredits();
   const { toast } = useToast();
-  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [selectedTool, setSelectedTool] = useState<SmartTool | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [activeCategory, setActiveCategory] = useState<ToolCategory | 'همه'>('همه');
+  const [toolResults, setToolResults] = useState<{[key: string]: any}>({});
 
-  // ابزار های هوشمند پرانا
-  const smartTools = [
+  // آیکون‌ها با استایل یکسان
+  const renderIcon = (Icon: any) => (
+    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/10 to-primary/20 flex items-center justify-center">
+      <Icon className="h-5 w-5 text-primary" />
+    </div>
+  );
+
+  // لیست ابزارهای هوشمند
+  const smartTools: SmartTool[] = [
     {
-      id: 'health-metrics',
-      name: 'ثبت معیارهای سلامتی',
-      description: 'ثبت و پیگیری معیارهای سلامتی روزانه',
-      icon: <HeartPulse className="h-6 w-6 text-red-500" />,
-      cost: 2,
-      category: 'health',
+      id: 'physical-assessment',
+      name: 'ارزیابی وضعیت جسمانی',
+      description: 'تحلیل وضعیت سلامتی شما براساس داده‌های روزانه و ارائه پیشنهادهای بهبود',
+      icon: renderIcon(Activity),
+      category: 'سلامت جسمی',
+      creditCost: 25,
+      premium: false,
+      action: () => handleRunTool('physical-assessment'),
+      actionLabel: 'شروع ارزیابی'
     },
     {
-      id: 'water-reminder',
-      name: 'یادآور آب',
-      description: 'برنامه‌ریزی و یادآوری نوشیدن آب در طول روز',
-      icon: <Droplets className="h-6 w-6 text-blue-500" />,
-      cost: 1,
-      category: 'health',
+      id: 'stress-analyzer',
+      name: 'تحلیلگر استرس',
+      description: 'بررسی و تحلیل سطح استرس شما براساس الگوهای رفتاری و فیزیولوژیکی',
+      icon: renderIcon(Brain),
+      category: 'سلامت روانی',
+      creditCost: 30,
+      premium: false,
+      action: () => handleRunTool('stress-analyzer'),
+      actionLabel: 'شروع تحلیل'
     },
     {
-      id: 'sleep-tracker',
-      name: 'ردیاب خواب',
-      description: 'تحلیل کیفیت و مدت زمان خواب',
-      icon: <Moon className="h-6 w-6 text-indigo-500" />,
-      cost: 3,
-      category: 'health',
+      id: 'productivity-optimizer',
+      name: 'بهینه‌ساز بهره‌وری',
+      description: 'آنالیز الگوهای کاری و ارائه راهکارهای افزایش بهره‌وری فردی و تیمی',
+      icon: renderIcon(LineChart),
+      category: 'سازمانی',
+      creditCost: 40,
+      premium: true,
+      action: () => handleRunTool('productivity-optimizer'),
+      actionLabel: 'دریافت راهکارها'
     },
     {
-      id: 'nutrition-analyzer',
-      name: 'تحلیلگر تغذیه',
-      description: 'تحلیل و پیشنهاد رژیم غذایی متناسب',
-      icon: <Utensils className="h-6 w-6 text-green-500" />,
-      cost: 5,
-      category: 'health',
+      id: 'nutrition-planner',
+      name: 'برنامه‌ریز تغذیه',
+      description: 'طراحی برنامه تغذیه اختصاصی با توجه به اهداف سلامتی و عادات غذایی شما',
+      icon: renderIcon(Coffee),
+      category: 'سلامت جسمی',
+      creditCost: 35,
+      premium: false,
+      action: () => handleRunTool('nutrition-planner'),
+      actionLabel: 'دریافت برنامه'
     },
     {
-      id: 'workout-assistant',
-      name: 'دستیار تمرین',
-      description: 'برنامه‌ریزی و راهنمایی تمرینات ورزشی',
-      icon: <Dumbbell className="h-6 w-6 text-orange-500" />,
-      cost: 4,
-      category: 'fitness',
+      id: 'sleep-analyzer',
+      name: 'تحلیلگر خواب',
+      description: 'تحلیل الگوی خواب و ارائه راهکارهای بهبود کیفیت استراحت',
+      icon: renderIcon(Moon),
+      category: 'سلامت جسمی',
+      creditCost: 30,
+      premium: false,
+      action: () => handleRunTool('sleep-analyzer'),
+      actionLabel: 'تحلیل خواب'
     },
     {
-      id: 'mental-wellness',
-      name: 'سلامت روان',
-      description: 'تکنیک‌های مدیتیشن و کاهش استرس',
-      icon: <Brain className="h-6 w-6 text-purple-500" />,
-      cost: 3,
-      category: 'mental',
+      id: 'organizational-compatibility',
+      name: 'سازگاری سازمانی',
+      description: 'تحلیل میزان سازگاری شما با فرهنگ سازمانی و تیم کاری',
+      icon: renderIcon(Users),
+      category: 'سازمانی',
+      creditCost: 45,
+      premium: true,
+      action: () => handleRunTool('organizational-compatibility'),
+      actionLabel: 'شروع تحلیل'
     },
     {
-      id: 'focus-timer',
-      name: 'تایمر تمرکز',
-      description: 'افزایش بهره‌وری با تکنیک پومودورو',
-      icon: <Timer className="h-6 w-6 text-cyan-500" />,
-      cost: 2,
-      category: 'productivity',
+      id: 'mental-clarity',
+      name: 'تقویت ذهن',
+      description: 'مجموعه تمرین‌های تقویت تمرکز، حافظه و چابکی ذهنی',
+      icon: renderIcon(Zap),
+      category: 'سلامت روانی',
+      creditCost: 25,
+      premium: false,
+      action: () => handleRunTool('mental-clarity'),
+      actionLabel: 'مشاهده تمرین‌ها'
     },
     {
-      id: 'habit-tracker',
-      name: 'ردیاب عادت‌ها',
-      description: 'ایجاد و پیگیری عادت‌های سالم',
-      icon: <ListChecks className="h-6 w-6 text-teal-500" />,
-      cost: 3,
-      category: 'productivity',
+      id: 'work-life-balance',
+      name: 'تعادل کار و زندگی',
+      description: 'تحلیل تعادل بین زندگی شخصی و کاری و ارائه راهکارهای بهبود',
+      icon: renderIcon(Scale),
+      category: 'سازمانی',
+      creditCost: 35,
+      premium: false,
+      action: () => handleRunTool('work-life-balance'),
+      actionLabel: 'دریافت تحلیل'
     },
     {
-      id: 'smart-watch-sync',
-      name: 'همگام‌سازی ساعت هوشمند',
-      description: 'همگام‌سازی داده‌های سلامتی از ساعت هوشمند',
-      icon: <Watch className="h-6 w-6 text-slate-500" />,
-      cost: 5,
-      category: 'integration',
+      id: 'positivity-radar',
+      name: 'رادار مثبت‌اندیشی',
+      description: 'سنجش میزان مثبت‌اندیشی و نگرش شما به چالش‌های روزمره',
+      icon: renderIcon(Smile),
+      category: 'انگیزشی',
+      creditCost: 20,
+      premium: false,
+      action: () => handleRunTool('positivity-radar'),
+      actionLabel: 'سنجش نگرش'
     },
     {
-      id: 'health-ai',
-      name: 'هوش مصنوعی سلامت',
-      description: 'تحلیل هوشمند داده‌های سلامتی و ارائه پیشنهادات شخصی‌سازی شده',
-      icon: <Lightbulb className="h-6 w-6 text-yellow-500" />,
-      cost: 10,
-      category: 'ai',
+      id: 'performance-analytics',
+      name: 'تحلیل عملکرد',
+      description: 'آنالیز جامع عملکرد فردی و مقایسه با اهداف تعیین شده',
+      icon: renderIcon(BarChart),
+      category: 'تحلیلی',
+      creditCost: 50,
+      premium: true,
+      action: () => handleRunTool('performance-analytics'),
+      actionLabel: 'دریافت گزارش'
     },
+    {
+      id: 'breathing-exercises',
+      name: 'تمرین‌های تنفسی',
+      description: 'مجموعه تمرین‌های تنفسی برای کاهش استرس و افزایش تمرکز',
+      icon: renderIcon(Wind),
+      category: 'سلامت روانی',
+      creditCost: 15,
+      premium: false,
+      action: () => handleRunTool('breathing-exercises'),
+      actionLabel: 'شروع تمرین'
+    },
+    {
+      id: 'goal-tracker',
+      name: 'پیگیری اهداف',
+      description: 'تنظیم و پیگیری اهداف شخصی و سازمانی با دیدگاه ساختاریافته',
+      icon: renderIcon(Target),
+      category: 'انگیزشی',
+      creditCost: 30,
+      premium: false,
+      action: () => handleRunTool('goal-tracker'),
+      actionLabel: 'تنظیم اهداف'
+    },
+    {
+      id: 'team-dynamics',
+      name: 'پویایی تیمی',
+      description: 'تحلیل دینامیک تیمی و ارائه راهکارهای بهبود همکاری گروهی',
+      icon: renderIcon(GitBranch),
+      category: 'سازمانی',
+      creditCost: 45,
+      premium: true,
+      action: () => handleRunTool('team-dynamics'),
+      actionLabel: 'تحلیل تیم'
+    },
+    {
+      id: 'hydration-manager',
+      name: 'مدیریت آب‌رسانی',
+      description: 'محاسبه نیاز روزانه به آب و یادآوری نوشیدن آب در طول روز',
+      icon: renderIcon(Droplet),
+      category: 'سلامت جسمی',
+      creditCost: 15,
+      premium: false,
+      action: () => handleRunTool('hydration-manager'),
+      actionLabel: 'تنظیم برنامه'
+    },
+    {
+      id: 'career-compass',
+      name: 'قطب‌نمای شغلی',
+      description: 'تحلیل مسیر شغلی و شناسایی فرصت‌های رشد در سازمان',
+      icon: renderIcon(Compass),
+      category: 'تحلیلی',
+      creditCost: 40,
+      premium: true,
+      action: () => handleRunTool('career-compass'),
+      actionLabel: 'مشاهده مسیر'
+    }
   ];
 
-  // دسته بندی ابزارها
-  const categories = [
-    { id: 'all', name: 'همه', icon: <Zap className="h-4 w-4" /> },
-    { id: 'health', name: 'سلامت عمومی', icon: <Heart className="h-4 w-4" /> },
-    { id: 'fitness', name: 'تناسب اندام', icon: <Activity className="h-4 w-4" /> },
-    { id: 'mental', name: 'سلامت روان', icon: <Brain className="h-4 w-4" /> },
-    { id: 'productivity', name: 'بهره‌وری', icon: <BarChart3 className="h-4 w-4" /> },
-    { id: 'ai', name: 'هوش مصنوعی', icon: <Lightbulb className="h-4 w-4" /> },
-    { id: 'integration', name: 'اتصال دستگاه‌ها', icon: <RefreshCw className="h-4 w-4" /> },
-  ];
+  // آیکون‌های اضافی
+  const Moon = (props: any) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </svg>
+  );
 
-  // فیلتر ابزارها براساس دسته بندی
-  const filterTools = (category: string) => {
-    if (category === 'all') return smartTools;
-    return smartTools.filter(tool => tool.category === category);
-  };
+  const Users = (props: any) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
 
-  // استفاده از ابزار
-  const handleUseTool = (toolId: string) => {
+  const Scale = (props: any) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
+      <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
+      <path d="M7 21h10" />
+      <path d="M12 3v18" />
+      <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" />
+    </svg>
+  );
+
+  const Target = (props: any) => (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+    </svg>
+  );
+
+  // فیلتر ابزارها براساس جستجو و دسته
+  const filteredTools = smartTools.filter(tool => {
+    const matchesSearch = 
+      tool.name.includes(searchTerm) || 
+      tool.description.includes(searchTerm);
+    
+    const matchesCategory = 
+      activeCategory === 'همه' || 
+      tool.category === activeCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+
+  // اجرای ابزار هوشمند
+  const handleRunTool = (toolId: string) => {
     const tool = smartTools.find(t => t.id === toolId);
     if (!tool) return;
-
-    if (credits < tool.cost) {
+    
+    if (!hasEnoughCredits(tool.creditCost)) {
       toast({
-        title: 'اعتبار ناکافی',
-        description: `برای استفاده از این ابزار به ${tool.cost} اعتبار نیاز دارید.`,
-        variant: 'destructive',
+        title: "اعتبار ناکافی",
+        description: `برای استفاده از این ابزار به ${toPersianDigits(tool.creditCost)} اعتبار نیاز دارید.`,
+        variant: "destructive",
       });
       return;
     }
-
-    // در اینجا منطق استفاده از ابزار و کم کردن اعتبار اجرا می‌شود
-    // ...
-
-    toast({
-      title: 'ابزار فعال شد',
-      description: `ابزار ${tool.name} با موفقیت فعال شد و ${tool.cost} اعتبار از حساب شما کسر شد.`,
-    });
+    
+    // نمایش وضعیت اجرا
+    setToolResults({ ...toolResults, [toolId]: { status: 'running', progress: 0 } });
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 5;
+      setToolResults(prev => ({
+        ...prev,
+        [toolId]: { ...prev[toolId], progress }
+      }));
+      
+      if (progress >= 100) {
+        clearInterval(interval);
+        
+        // مصرف اعتبار پس از اتمام اجرا
+        spendCredits({
+          amount: tool.creditCost,
+          actionType: 'TOOL_USAGE',
+          description: `استفاده از ابزار ${tool.name}`,
+          resourceId: Date.now(),
+          resourceType: 'SMART_TOOL',
+        });
+        
+        // تولید نتیجه مصنوعی برای ابزار
+        const results = generateToolResults(toolId);
+        setToolResults(prev => ({
+          ...prev,
+          [toolId]: { 
+            status: 'completed', 
+            progress: 100,
+            results 
+          }
+        }));
+        
+        toast({
+          title: "ابزار با موفقیت اجرا شد",
+          description: `نتایج ابزار ${tool.name} آماده مشاهده است.`,
+          variant: "default",
+        });
+      }
+    }, 100);
   };
 
-  // نمایش جزئیات ابزار انتخاب شده
-  const renderToolDetails = () => {
-    if (!selectedTool) return null;
+  // تولید نتیجه تست برای هر ابزار
+  const generateToolResults = (toolId: string) => {
+    const results: any = {};
     
-    const tool = smartTools.find(t => t.id === selectedTool);
-    if (!tool) return null;
-
-    return (
-      <Card className="border-primary/20 bg-card/50 backdrop-blur-sm">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-full bg-primary/10">
-                {tool.icon}
-              </div>
-              <div>
-                <CardTitle>{tool.name}</CardTitle>
-                <CardDescription>{tool.description}</CardDescription>
-              </div>
-            </div>
-            <Badge variant="outline" className="bg-primary/10 text-primary">
-              {tool.cost} اعتبار
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {tool.id === 'health-metrics' && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="weight">وزن (کیلوگرم)</Label>
-                  <Input id="weight" type="number" min="30" max="200" placeholder="75" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="height">قد (سانتی‌متر)</Label>
-                  <Input id="height" type="number" min="100" max="220" placeholder="175" />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="bloodPressure">فشار خون (mmHg)</Label>
-                  <Input id="bloodPressure" placeholder="120/80" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="heartRate">ضربان قلب (bpm)</Label>
-                  <Input id="heartRate" type="number" min="40" max="200" placeholder="75" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sleepHours">ساعات خواب</Label>
-                <Input id="sleepHours" type="number" min="0" max="24" placeholder="8" />
-              </div>
-            </div>
-          )}
-
-          {tool.id === 'water-reminder' && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>هدف روزانه</Label>
-                <div className="flex items-center gap-4">
-                  <Input type="number" min="1" max="10" placeholder="2.5" />
-                  <span className="text-sm text-muted-foreground">لیتر</span>
-                </div>
-              </div>
-              <div>
-                <Label className="mb-2 block">پیشرفت امروز</Label>
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">0.8 لیتر</span>
-                  <span className="text-sm font-medium">2.5 لیتر</span>
-                </div>
-                <Progress value={32} className="h-2" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Button variant="outline" className="h-20 flex flex-col">
-                  <Droplets className="h-8 w-8 mb-1" />
-                  <span>250 میلی‌لیتر</span>
-                </Button>
-                <Button variant="outline" className="h-20 flex flex-col">
-                  <Droplets className="h-8 w-8 mb-1" />
-                  <span>500 میلی‌لیتر</span>
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {tool.id === 'habit-tracker' && (
-            <div className="space-y-4">
-              <div className="flex justify-between items-center bg-card p-3 rounded-lg border">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                    <Apple className="h-4 w-4 text-green-600" />
-                  </div>
-                  <span>خوردن میوه</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">5 روز پیاپی</Badge>
-                  <Button size="sm" variant="ghost">✓</Button>
-                </div>
-              </div>
-              <div className="flex justify-between items-center bg-card p-3 rounded-lg border">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Droplets className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <span>نوشیدن 2 لیتر آب</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">12 روز پیاپی</Badge>
-                  <Button size="sm" variant="ghost">✓</Button>
-                </div>
-              </div>
-              <div className="flex justify-between items-center bg-card p-3 rounded-lg border">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                    <Brain className="h-4 w-4 text-purple-600" />
-                  </div>
-                  <span>10 دقیقه مدیتیشن</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">3 روز پیاپی</Badge>
-                  <Button size="sm" variant="ghost">✓</Button>
-                </div>
-              </div>
-              <Button className="w-full" variant="outline">
-                افزودن عادت جدید
-              </Button>
-            </div>
-          )}
-
-          {![
-            'health-metrics',
-            'water-reminder',
-            'habit-tracker',
-          ].includes(tool.id) && (
-            <div className="py-8 text-center">
-              <div className="bg-primary/5 p-6 rounded-lg border border-primary/20 inline-block mb-4">
-                {tool.icon}
-              </div>
-              <p className="text-muted-foreground mb-4">
-                برای شروع استفاده از این ابزار، دکمه زیر را فشار دهید. {tool.cost} اعتبار از حساب شما کسر خواهد شد.
-              </p>
-              <Button>
-                <Play className="h-4 w-4 ml-2" />
-                شروع استفاده
-              </Button>
-            </div>
-          )}
-        </CardContent>
-        <CardFooter className="justify-between border-t pt-4">
-          <Button variant="ghost" onClick={() => setSelectedTool(null)}>
-            بازگشت به لیست ابزارها
-          </Button>
-          <Button onClick={() => handleUseTool(tool.id)} disabled={credits < tool.cost}>
-            {credits < tool.cost ? 'اعتبار ناکافی' : 'استفاده از ابزار'}
-            <ArrowRight className="h-4 w-4 mr-2" />
-          </Button>
-        </CardFooter>
-      </Card>
-    );
+    switch(toolId) {
+      case 'physical-assessment':
+        results.healthScore = Math.floor(Math.random() * 40) + 60; // 60-100
+        results.strengths = ['انعطاف‌پذیری خوب', 'استقامت قلبی-تنفسی مناسب'];
+        results.weakPoints = ['قدرت عضلانی کمتر از حد مطلوب', 'تعادل نیازمند بهبود'];
+        results.recommendations = [
+          'افزایش تمرینات قدرتی با وزنه (۳ بار در هفته)',
+          'انجام تمرینات تعادلی روزانه (۱۰ دقیقه)',
+          'حفظ برنامه هوازی فعلی'
+        ];
+        break;
+        
+      case 'stress-analyzer':
+        results.stressLevel = Math.floor(Math.random() * 60) + 20; // 20-80
+        results.physicalSigns = ['ضربان قلب بالاتر از حد نرمال در ساعات کاری', 'الگوی تنفس نامنظم'];
+        results.mentalSigns = ['تمرکز کمتر در ساعات عصر', 'نگرانی درباره مسائل کاری'];
+        results.recommendations = [
+          'انجام تمرینات تنفس عمیق (۵ دقیقه، ۳ بار در روز)',
+          'پیاده‌روی ۱۵ دقیقه‌ای در زمان استراحت ناهار',
+          'محدود کردن مصرف کافئین به صبح‌ها'
+        ];
+        break;
+        
+      case 'productivity-optimizer':
+        results.productivityScore = Math.floor(Math.random() * 30) + 65; // 65-95
+        results.peakHours = ['۹ تا ۱۱ صبح', '۴ تا ۵ عصر'];
+        results.distractions = ['چک کردن مکرر ایمیل', 'جلسات طولانی بدون دستور کار مشخص'];
+        results.recommendations = [
+          'تنظیم بلوک‌های زمانی ۹۰ دقیقه‌ای برای کارهای عمیق',
+          'محدود کردن چک کردن ایمیل به ۳ بار در روز',
+          'استفاده از تکنیک پومودورو برای وظایف کوچک‌تر'
+        ];
+        break;
+        
+      case 'nutrition-planner':
+        results.calorieNeeds = 2200 + Math.floor(Math.random() * 400);
+        results.macroRatio = {protein: '25%', carbs: '50%', fat: '25%'};
+        results.mealPlan = {
+          breakfast: 'املت سبزیجات + نان سبوس‌دار + چای سبز',
+          snack1: 'میوه فصل + مغزهای خام',
+          lunch: 'خوراک مرغ و سبزیجات + برنج قهوه‌ای',
+          snack2: 'ماست کم‌چرب + عسل + دانه چیا',
+          dinner: 'سالاد کینوا با سبزیجات و تخم مرغ'
+        };
+        break;
+        
+      // و سایر ابزارها...
+      
+      default:
+        results.score = Math.floor(Math.random() * 50) + 50;
+        results.summary = 'نتایج تحلیل نشان می‌دهد که وضعیت فعلی شما در سطح متوسط به بالا قرار دارد.';
+        results.recommendations = [
+          'پیشنهاد ۱: بهبود عادت‌های روزانه',
+          'پیشنهاد ۲: تنظیم اهداف کوتاه‌مدت واقع‌بینانه',
+          'پیشنهاد ۳: بررسی پیشرفت به صورت هفتگی'
+        ];
+    }
+    
+    return results;
   };
 
   return (
-    <div className="space-y-6">
-      {selectedTool ? (
-        renderToolDetails()
-      ) : (
-        <>
-          <Tabs defaultValue="all" className="w-full">
-            <TabsList className="mb-4 flex flex-nowrap overflow-x-auto p-1">
-              {categories.map(category => (
-                <TabsTrigger key={category.id} value={category.id} className="flex items-center gap-1 text-xs">
-                  {category.icon}
-                  {category.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            {categories.map(category => (
-              <TabsContent key={category.id} value={category.id} className="mt-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filterTools(category.id).map(tool => (
-                    <Card 
-                      key={tool.id} 
-                      className="hover:border-primary/50 transition-colors cursor-pointer" 
-                      onClick={() => setSelectedTool(tool.id)}
-                    >
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800">
-                            {tool.icon}
-                          </div>
-                          <div>
-                            <CardTitle className="text-base">{tool.name}</CardTitle>
-                            <CardDescription className="text-xs line-clamp-1">
-                              {tool.description}
-                            </CardDescription>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardFooter className="pt-0 pb-3 flex justify-between items-center">
-                        <Badge 
-                          variant="outline" 
-                          className={`${credits >= tool.cost ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive'}`}
-                        >
-                          {tool.cost} اعتبار
-                        </Badge>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <ArrowRight className="h-4 w-4" />
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-            ))}
-          </Tabs>
-
-          <div className="rounded-lg border p-4 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400">
-            <div className="flex gap-2">
-              <Lightbulb className="h-5 w-5 mt-0.5" />
-              <div className="text-sm">
-                <span className="font-semibold block mb-1">راهنما:</span>
-                <p>هر ابزار نیاز به اعتبار مشخصی برای استفاده دارد. اعتبار فعلی شما: <strong>{credits}</strong></p>
-                <p className="mt-1">برای افزایش اعتبار می‌توانید از بخش کیف پول اقدام به خرید یا تبدیل امتیاز XP به اعتبار کنید.</p>
-              </div>
-            </div>
+    <div className="space-y-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4">
+        <div className="flex-1">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              className="pl-10 pr-3" 
+              placeholder="جستجوی ابزار..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-        </>
-      )}
+        </div>
+        <div className="flex-shrink-0">
+          <TabsList className="grid grid-cols-3 md:grid-cols-6 gap-1">
+            <TabsTrigger value="همه" onClick={() => setActiveCategory('همه')}>همه</TabsTrigger>
+            <TabsTrigger value="سلامت جسمی" onClick={() => setActiveCategory('سلامت جسمی')}>جسمی</TabsTrigger>
+            <TabsTrigger value="سلامت روانی" onClick={() => setActiveCategory('سلامت روانی')}>روانی</TabsTrigger>
+            <TabsTrigger value="سازمانی" onClick={() => setActiveCategory('سازمانی')}>سازمانی</TabsTrigger>
+            <TabsTrigger value="انگیزشی" onClick={() => setActiveCategory('انگیزشی')}>انگیزشی</TabsTrigger>
+            <TabsTrigger value="تحلیلی" onClick={() => setActiveCategory('تحلیلی')}>تحلیلی</TabsTrigger>
+          </TabsList>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredTools.map((tool) => (
+          <Card 
+            key={tool.id} 
+            className={`overflow-hidden transition-all hover:shadow-md ${
+              tool.premium ? 'border-primary/30' : ''
+            }`}
+          >
+            {tool.premium && (
+              <div className="bg-primary text-primary-foreground text-xs text-center py-1">
+                ویژه
+              </div>
+            )}
+            <CardHeader className="pb-3">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  {tool.icon}
+                  <div>
+                    <CardTitle className="text-base">{tool.name}</CardTitle>
+                    <CardDescription className="text-xs mt-1">
+                      {tool.category}
+                    </CardDescription>
+                  </div>
+                </div>
+                <Badge 
+                  variant="outline" 
+                  className="flex gap-1 items-center"
+                >
+                  <Zap className="h-3 w-3 text-primary" />
+                  {toPersianDigits(tool.creditCost)}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="pb-3">
+              <p className="text-sm text-muted-foreground">{tool.description}</p>
+              
+              {toolResults[tool.id] && (
+                <div className="mt-3 space-y-2">
+                  {toolResults[tool.id].status === 'running' && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span>در حال تحلیل...</span>
+                        <span>{toPersianDigits(toolResults[tool.id].progress)}%</span>
+                      </div>
+                      <Progress value={toolResults[tool.id].progress} />
+                    </div>
+                  )}
+                  
+                  {toolResults[tool.id].status === 'completed' && (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="w-full">
+                          مشاهده نتایج
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[600px]">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2">
+                            {tool.icon}
+                            <span>نتایج {tool.name}</span>
+                          </DialogTitle>
+                          <DialogDescription>
+                            تحلیل و پیشنهادهای هوشمند براساس داده‌های شما
+                          </DialogDescription>
+                        </DialogHeader>
+                        
+                        <ScrollArea className="h-[60vh] rounded-md border p-4">
+                          <ToolResultContent toolId={tool.id} results={toolResults[tool.id].results} />
+                        </ScrollArea>
+                        
+                        <DialogFooter className="flex justify-between items-center">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="gap-1"
+                            onClick={() => {
+                              // اشتراک‌گذاری (در نسخه واقعی)
+                              toast({
+                                title: "اشتراک‌گذاری",
+                                description: "لینک نتایج کپی شد.",
+                              });
+                            }}
+                          >
+                            <Share className="h-4 w-4" />
+                            اشتراک‌گذاری
+                          </Button>
+                          <Button 
+                            size="sm"
+                            className="gap-1"
+                            onClick={() => {
+                              // دانلود (در نسخه واقعی)
+                              toast({
+                                title: "دانلود نتایج",
+                                description: "فایل PDF نتایج در حال دانلود است.",
+                              });
+                            }}
+                          >
+                            <Download className="h-4 w-4" />
+                            دانلود PDF
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                </div>
+              )}
+            </CardContent>
+            <CardFooter>
+              <Button 
+                className="w-full" 
+                size="sm"
+                variant={hasEnoughCredits(tool.creditCost) ? "default" : "outline"}
+                disabled={toolResults[tool.id]?.status === 'running'}
+                onClick={() => tool.action()}
+              >
+                {toolResults[tool.id]?.status === 'running' ? (
+                  <Loader className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  toolResults[tool.id]?.status === 'completed' ? (
+                    <Check className="h-4 w-4 mr-2" />
+                  ) : (
+                    <Cpu className="h-4 w-4 mr-2" />
+                  )
+                )}
+                {toolResults[tool.id]?.status === 'running' ? 'در حال اجرا...' : 
+                 toolResults[tool.id]?.status === 'completed' ? 'اجرا شده' : 
+                 tool.actionLabel}
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
+
+// کامپوننت نمایش نتایج ابزار
+function ToolResultContent({ toolId, results }: { toolId: string, results: any }) {
+  if (!results) return null;
+  
+  // نمایش متناسب با نوع ابزار
+  switch(toolId) {
+    case 'physical-assessment':
+      return (
+        <div className="space-y-6">
+          <div className="text-center">
+            <div className="relative w-32 h-32 mx-auto">
+              <div className="absolute inset-0 rounded-full border-8 border-muted"></div>
+              <div 
+                className="absolute inset-0 rounded-full border-8 border-transparent border-t-primary"
+                style={{ 
+                  transform: `rotate(${results.healthScore * 3.6}deg)`,
+                  transition: 'transform 1s ease-in-out'
+                }}
+              ></div>
+              <div className="absolute inset-0 flex items-center justify-center flex-col">
+                <span className="text-3xl font-bold">{toPersianDigits(results.healthScore)}</span>
+                <span className="text-xs text-muted-foreground">امتیاز سلامت</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-4">
+            <div>
+              <h4 className="text-sm font-semibold mb-2 flex items-center">
+                <ThumbsUp className="h-4 w-4 mr-2 text-green-500" />
+                نقاط قوت
+              </h4>
+              <ul className="list-disc list-inside space-y-1">
+                {results.strengths.map((item: string, i: number) => (
+                  <li key={i} className="text-sm">{item}</li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-semibold mb-2 flex items-center">
+                <AlertTriangle className="h-4 w-4 mr-2 text-amber-500" />
+                نقاط نیازمند بهبود
+              </h4>
+              <ul className="list-disc list-inside space-y-1">
+                {results.weakPoints.map((item: string, i: number) => (
+                  <li key={i} className="text-sm">{item}</li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-semibold mb-2 flex items-center">
+                <Lightbulb className="h-4 w-4 mr-2 text-blue-500" />
+                توصیه‌های هوشمند
+              </h4>
+              <ul className="list-decimal list-inside space-y-1">
+                {results.recommendations.map((item: string, i: number) => (
+                  <li key={i} className="text-sm">{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      );
+      
+    case 'stress-analyzer':
+      return (
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-sm font-semibold mb-2">سطح استرس شما</h4>
+            <div className="relative pt-1">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-xs text-green-600">پایین</div>
+                <div className="text-xs text-amber-500">متوسط</div>
+                <div className="text-xs text-red-500">بالا</div>
+              </div>
+              <div className="overflow-hidden h-2 flex rounded bg-slate-200">
+                <div
+                  style={{ width: `${results.stressLevel}%` }}
+                  className={`h-full rounded ${
+                    results.stressLevel < 33 ? 'bg-green-500' :
+                    results.stressLevel < 66 ? 'bg-amber-500' : 'bg-red-500'
+                  }`}
+                ></div>
+              </div>
+              <div className="mt-1 text-center">
+                <span className="text-sm font-medium">{toPersianDigits(results.stressLevel)}%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h4 className="text-sm font-semibold mb-2 flex items-center">
+                <Activity className="h-4 w-4 mr-2 text-red-400" />
+                نشانه‌های جسمی
+              </h4>
+              <ul className="list-disc list-inside space-y-1">
+                {results.physicalSigns.map((item: string, i: number) => (
+                  <li key={i} className="text-sm">{item}</li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-semibold mb-2 flex items-center">
+                <Brain className="h-4 w-4 mr-2 text-purple-400" />
+                نشانه‌های ذهنی
+              </h4>
+              <ul className="list-disc list-inside space-y-1">
+                {results.mentalSigns.map((item: string, i: number) => (
+                  <li key={i} className="text-sm">{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="text-sm font-semibold mb-2 flex items-center">
+              <HeartPulse className="h-4 w-4 mr-2 text-blue-500" />
+              توصیه‌های کاهش استرس
+            </h4>
+            <ul className="list-decimal list-inside space-y-1">
+              {results.recommendations.map((item: string, i: number) => (
+                <li key={i} className="text-sm">{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+      
+    case 'nutrition-planner':
+      return (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h4 className="text-sm font-semibold mb-2">نیاز کالری روزانه</h4>
+              <div className="bg-slate-100 dark:bg-slate-800 p-3 rounded-lg text-center">
+                <span className="text-2xl font-bold">{toPersianDigits(results.calorieNeeds)}</span>
+                <span className="text-sm text-muted-foreground"> کالری</span>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-semibold mb-2">نسبت درشت‌مغذی‌ها</h4>
+              <div className="flex h-8 rounded-md overflow-hidden">
+                <div 
+                  className="bg-blue-500 text-white text-xs flex items-center justify-center"
+                  style={{width: results.macroRatio.protein}}
+                >
+                  پروتئین
+                </div>
+                <div 
+                  className="bg-green-500 text-white text-xs flex items-center justify-center"
+                  style={{width: results.macroRatio.carbs}}
+                >
+                  کربوهیدرات
+                </div>
+                <div 
+                  className="bg-amber-500 text-white text-xs flex items-center justify-center"
+                  style={{width: results.macroRatio.fat}}
+                >
+                  چربی
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="text-sm font-semibold mb-2">برنامه غذایی پیشنهادی</h4>
+            <div className="space-y-3">
+              <div className="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
+                <div className="text-xs text-muted-foreground mb-1">صبحانه</div>
+                <div className="text-sm">{results.mealPlan.breakfast}</div>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
+                <div className="text-xs text-muted-foreground mb-1">میان‌وعده صبح</div>
+                <div className="text-sm">{results.mealPlan.snack1}</div>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
+                <div className="text-xs text-muted-foreground mb-1">ناهار</div>
+                <div className="text-sm">{results.mealPlan.lunch}</div>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
+                <div className="text-xs text-muted-foreground mb-1">میان‌وعده عصر</div>
+                <div className="text-sm">{results.mealPlan.snack2}</div>
+              </div>
+              <div className="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg">
+                <div className="text-xs text-muted-foreground mb-1">شام</div>
+                <div className="text-sm">{results.mealPlan.dinner}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+      
+    default:
+      return (
+        <div className="space-y-6">
+          <div className="text-center">
+            <div className="w-32 h-32 mx-auto relative">
+              <div className="absolute inset-0 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800">
+                <span className="text-4xl font-bold">{toPersianDigits(results.score)}%</span>
+              </div>
+            </div>
+            <div className="mt-4 text-sm">{results.summary}</div>
+          </div>
+          
+          <div>
+            <h4 className="text-sm font-semibold mb-2">توصیه‌ها</h4>
+            <ul className="list-disc list-inside space-y-1">
+              {results.recommendations.map((item: string, i: number) => (
+                <li key={i} className="text-sm">{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+  }
+}
+
+// کامپوننت‌های آیکون اضافی
+const AlertTriangle = (props: any) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+    <path d="M12 9v4" />
+    <path d="M12 17h.01" />
+  </svg>
+);
+
+const Lightbulb = (props: any) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+    <path d="M9 18h6" />
+    <path d="M10 22h4" />
+  </svg>
+);
+
+const HeartPulse = (props: any) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+    <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" />
+  </svg>
+);
+
+const Loader = (props: any) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+  </svg>
+);
+
+const Share = (props: any) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+    <polyline points="16 6 12 2 8 6" />
+    <line x1="12" x2="12" y1="2" y2="15" />
+  </svg>
+);
+
+const Download = (props: any) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" x2="12" y1="15" y2="3" />
+  </svg>
+);
+
+const Check = (props: any) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);

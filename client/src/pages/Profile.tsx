@@ -63,7 +63,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import BodyComposition from '@/components/ui/body-composition';
+import { BodyComposition } from '@/components/ui/body-composition';
 import AvatarBuilder from '@/components/ui/avatar-builder';
 
 interface UserBadge {
