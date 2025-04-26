@@ -640,19 +640,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
 
-  // WebSocket Server Implementation - ساده‌سازی شده برای رفع مشکل
+  // WebSocket Server Implementation - با پیاده‌سازی بسیار ساده و مستقیم (بدون پیچیدگی)
   const wss = new WebSocketServer({ 
     server: httpServer, 
-    path: '/ws'
+    path: '/ws',
+    clientTracking: true
   });
 
-  // تغییر به یک پیاده‌سازی ساده‌تر برای وب‌سوکت
-  // Store connected clients with simple structure
+  // یک پیاده‌سازی حداقلی برای رفع مشکل وب‌سوکت
   const clients: { [key: string]: { 
     ws: WebSocket, 
     userId?: number, 
     username?: string
   }} = {};
+  
+  // پاک کردن مشتریانی که دیگر متصل نیستند
+  setInterval(() => {
+    for (const clientId in clients) {
+      const client = clients[clientId];
+      if (client.ws.readyState !== WebSocket.OPEN) {
+        console.log(`Cleaning up disconnected client: ${clientId}`);
+        delete clients[clientId];
+      }
+    }
+  }, 60000); // هر یک دقیقه بررسی کن
   
   // WebSocket connection handler
   wss.on('connection', (ws) => {

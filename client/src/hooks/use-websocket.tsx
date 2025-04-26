@@ -210,14 +210,20 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   
   // Connect when component mounts
   useEffect(() => {
-    connectWebSocket();
+    // یک تأخیر کوتاه قبل از اتصال اولیه
+    setTimeout(() => {
+      connectWebSocket();
+    }, 1000);
     
-    // Set up ping interval
+    // Set up ping interval - ping more frequently (15 seconds instead of 30)
     const pingInterval = setInterval(() => {
-      if (isConnected) {
+      if (isConnected && socketRef.current?.readyState === WebSocket.OPEN) {
         sendPing();
+      } else if (socketRef.current?.readyState !== WebSocket.CONNECTING) {
+        // اگر اتصال قطع شد و در حال اتصال مجدد نبود، سعی کنید دوباره متصل شوید
+        connectWebSocket();
       }
-    }, 30000);
+    }, 15000);
     
     // Clean up on unmount
     return () => {
@@ -229,10 +235,14 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       
       if (socketRef.current) {
         socketRef.current.onclose = null;
+        socketRef.current.onerror = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.onopen = null;
         socketRef.current.close();
+        socketRef.current = null;
       }
     };
-  }, []);
+  }, [connectWebSocket]);
   
   // Reconnect when user changes
   useEffect(() => {
