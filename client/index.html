@@ -2,135 +2,43 @@
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#00adb5" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="پلتفرم جامع ارتقای سلامت و تندرستی سازمانی" />
-    <meta name="author" content="پرانا" />
-    <meta name="format-detection" content="telephone=no" />
-    <link rel="icon" type="image/png" href="/icons/icon-192x192.png" />
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-    <link rel="manifest" href="/manifest.json" />
-    
-    <!-- Apple PWA Meta Tags -->
-    <link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png" />
-    <link rel="apple-touch-icon" sizes="128x128" href="/icons/icon-128x128.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
-    <link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png" />
-    
-    <!-- Splash screen images for iOS -->
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-2732-2048.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-1668-2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-2388-1668.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-1536-2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-2048-1536.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-1242-2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-2688-1242.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-1125-2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-2436-1125.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-828-1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-1792-828.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-750-1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-1334-750.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-640-1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
-    <link rel="apple-touch-startup-image" href="/splashscreens/apple-splash-1136-640.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
-    
-    <title>پرانا | دستیار هوشمند سلامت</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>پرانا - دستیار هوشمند سلامت</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+      @font-face {
+        font-family: 'YekanBakh';
+        src: url('./attached_assets/YekanBakh-Regular.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: 'YekanBakh';
+        src: url('./attached_assets/YekanBakh-Light.ttf') format('truetype');
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: 'YekanBakh';
+        src: url('./attached_assets/YekanBakh-Black.ttf') format('truetype');
+        font-weight: 900;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      html, body {
+        font-family: 'YekanBakh', system-ui, sans-serif;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
-    
-    <!-- PWA Installation Promotion Banner -->
-    <div id="pwa-install-banner" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background-color: #00adb5; color: white; padding: 16px; text-align: center; z-index: 9999;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div style="flex: 1; text-align: right;">
-          <div style="font-weight: bold;">دستیار هوشمند پرانا</div>
-          <div style="font-size: 14px;">برای دسترسی سریع‌تر، برنامه را به صفحه اصلی خود اضافه کنید!</div>
-        </div>
-        <div style="display: flex; gap: 8px;">
-          <button id="pwa-install-button" style="background-color: white; color: #00adb5; border: none; padding: 8px 12px; border-radius: 4px; font-weight: bold; cursor: pointer;">نصب</button>
-          <button id="pwa-close-button" style="background-color: transparent; color: white; border: 1px solid white; padding: 8px 12px; border-radius: 4px; cursor: pointer;">بعداً</button>
-        </div>
-      </div>
-    </div>
-    
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      // Register Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', async () => {
-          try {
-            const registration = await navigator.serviceWorker.register('/service-worker.js');
-            console.log('Service Worker registered successfully with scope:', registration.scope);
-          } catch (error) {
-            console.error('Service Worker registration failed:', error);
-          }
-          
-          // PWA Installation
-          let deferredPrompt;
-          const pwaInstallBanner = document.getElementById('pwa-install-banner');
-          const pwaInstallButton = document.getElementById('pwa-install-button');
-          const pwaCloseButton = document.getElementById('pwa-close-button');
-          
-          // Check if user has already dismissed the banner
-          const hasUserDismissedBanner = localStorage.getItem('pwa_install_dismissed');
-          
-          window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent Chrome 67 and earlier from automatically showing the prompt
-            e.preventDefault();
-            // Stash the event so it can be triggered later
-            deferredPrompt = e;
-            
-            // Show the install banner if user hasn't dismissed it recently
-            if (!hasUserDismissedBanner) {
-              pwaInstallBanner.style.display = 'block';
-            }
-          });
-          
-          pwaInstallButton.addEventListener('click', async () => {
-            pwaInstallBanner.style.display = 'none';
-            
-            if (deferredPrompt) {
-              // Show the install prompt
-              deferredPrompt.prompt();
-              
-              // Wait for the user to respond to the prompt
-              const { outcome } = await deferredPrompt.userChoice;
-              console.log(`User ${outcome} the installation`);
-              
-              // We've used the prompt, and can't use it again, so set it to null
-              deferredPrompt = null;
-            }
-          });
-          
-          pwaCloseButton.addEventListener('click', () => {
-            pwaInstallBanner.style.display = 'none';
-            // Remember dismissal for 7 days
-            localStorage.setItem('pwa_install_dismissed', new Date().toISOString());
-          });
-          
-          // Clear dismissal after 7 days
-          const checkDismissalExpiration = () => {
-            if (hasUserDismissedBanner) {
-              const dismissedDate = new Date(hasUserDismissedBanner);
-              const now = new Date();
-              const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
-              
-              if (now - dismissedDate > sevenDaysInMs) {
-                localStorage.removeItem('pwa_install_dismissed');
-              }
-            }
-          };
-          
-          checkDismissalExpiration();
-        });
-      }
-    </script>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
   </body>
 </html>

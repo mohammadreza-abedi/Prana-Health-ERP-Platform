@@ -12,8 +12,6 @@ import HRDashboard from "@/pages/HRDashboard";
 import Challenges from "@/pages/Challenges";
 import Leaderboard from "@/pages/Leaderboard";
 import Profile from "@/pages/Profile";
-import AdvancedProfile from "@/pages/AdvancedProfile";
-import BodyComposition from "@/pages/BodyComposition";
 import AutoLogin from "@/pages/auto-login";
 import PsychologicalTests from "@/pages/PsychologicalTests";
 import Settings from "@/pages/Settings";
@@ -77,9 +75,6 @@ function Router() {
         <Route path="/challenges" component={Challenges} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile" component={Profile} />
-        <Route path="/advanced-profile" component={AdvancedProfile} />
-        <Route path="/advanced-profile/:id" component={AdvancedProfile} />
-        <Route path="/body-composition" component={BodyComposition} />
         <Route path="/psychological-tests" component={PsychologicalTests} />
         <Route path="/settings" component={Settings} />
         <Route path="/auto-login" component={AutoLogin} />
