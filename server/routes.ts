@@ -188,6 +188,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // مسیر API برای دریافت نمونه کاربران برای ورود خودکار
+  app.get('/api/users/sample', async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      
+      // ساخت لیست کاربران با حذف اطلاعات حساس
+      const sampleUsers = users.map(user => ({
+        id: user.id,
+        username: user.username,
+        displayName: user.displayName,
+        avatar: user.avatar,
+        level: user.level,
+        xp: user.xp,
+        role: user.role
+      }));
+      
+      res.json(sampleUsers);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
   app.get('/api/users/:id', requireAuth, async (req, res) => {
     try {
       const user = await storage.getUser(parseInt(req.params.id));
