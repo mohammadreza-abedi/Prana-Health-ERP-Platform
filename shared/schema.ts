@@ -1,34 +1,324 @@
-import { pgTable, text, serial, integer, boolean, timestamp, date, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, date, jsonb, real, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
 
-// User model
+// User model - بهبود یافته و کامل
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   displayName: text("display_name").notNull(),
   avatar: text("avatar"),
+  email: text("email").unique(),
+  phone: text("phone"),
+  bio: text("bio"),
   level: integer("level").default(1).notNull(),
   xp: integer("xp").default(0).notNull(),
   credits: integer("credits").default(1000).notNull(), // اعتبار کاربر
   role: text("role").default("user").notNull(), // user, hr, hse, admin
+  theme: text("theme").default("light"), // تم مورد علاقه کاربر
+  language: text("language").default("fa"), // زبان مورد علاقه کاربر
+  notifications: boolean("notifications").default(true), // آیا اعلان‌ها فعال هستند
+  lastActive: timestamp("last_active"), // آخرین زمان فعال بودن
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Health metrics model
+// روابط کاربر 
+export const usersRelations = relations(users, ({ many }) => ({
+  healthMetrics: many(healthMetrics),
+  userChallenges: many(userChallenges),
+  userBadges: many(userBadges),
+  creditTransactions: many(creditTransactions),
+  eventParticipations: many(eventParticipants),
+  departmentMemberships: many(departmentMembers),
+}));
+
+// مدل پروفایل کاربر برای اطلاعات گسترده‌تر
+export const userProfiles = pgTable("user_profiles", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id).unique(),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  birthDate: date("birth_date"),
+  gender: text("gender"),
+  height: real("height"), // سانتی‌متر
+  weight: real("weight"), // کیلوگرم
+  bloodType: text("blood_type"),
+  medicalConditions: text("medical_conditions").array(),
+  allergies: text("allergies").array(),
+  emergencyContact: text("emergency_contact"),
+  fitnessGoals: text("fitness_goals").array(),
+  dietPreferences: text("diet_preferences").array(),
+  occupation: text("occupation"),
+  employeeId: text("employee_id"),
+  hireDate: date("hire_date"),
+  position: text("position"),
+  address: text("address"),
+  city: text("city"),
+  province: text("province"),
+  postalCode: text("postal_code"),
+  country: text("country").default("Iran"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// روابط پروفایل کاربر
+export const userProfilesRelations = relations(userProfiles, ({ one }) => ({
+  user: one(users, {
+    fields: [userProfiles.userId],
+    references: [users.id],
+  }),
+}));
+
+// مدل اطلاعات بدنی کاربر - بادی کامپوزیشن
+export const bodyCompositions = pgTable("body_compositions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  date: date("date").notNull(),
+  weight: real("weight"), // کیلوگرم
+  height: real("height"), // سانتی‌متر
+  bmi: real("bmi"), // شاخص توده بدنی
+  bodyFatPercentage: real("body_fat_percentage"), // درصد چربی بدن
+  muscleMass: real("muscle_mass"), // توده عضلانی (کیلوگرم)
+  boneMass: real("bone_mass"), // توده استخوانی (کیلوگرم)
+  waterPercentage: real("water_percentage"), // درصد آب بدن
+  visceralFat: real("visceral_fat"), // چربی احشایی
+  metabolicAge: integer("metabolic_age"), // سن متابولیک (سال)
+  waistCircumference: real("waist_circumference"), // دور کمر (سانتی‌متر)
+  hipCircumference: real("hip_circumference"), // دور باسن (سانتی‌متر)
+  waistToHipRatio: real("waist_to_hip_ratio"), // نسبت دور کمر به باسن
+  chestCircumference: real("chest_circumference"), // دور سینه (سانتی‌متر)
+  armCircumference: real("arm_circumference"), // دور بازو (سانتی‌متر)
+  thighCircumference: real("thigh_circumference"), // دور ران (سانتی‌متر)
+  calfCircumference: real("calf_circumference"), // دور ساق پا (سانتی‌متر)
+  neckCircumference: real("neck_circumference"), // دور گردن (سانتی‌متر)
+  shoulderWidth: real("shoulder_width"), // عرض شانه (سانتی‌متر)
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// روابط اطلاعات بدنی
+export const bodyCompositionsRelations = relations(bodyCompositions, ({ one }) => ({
+  user: one(users, {
+    fields: [bodyCompositions.userId],
+    references: [users.id],
+  }),
+}));
+
+// Health metrics model - بهبود یافته
 export const healthMetrics = pgTable("health_metrics", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
   date: date("date").notNull(),
   steps: integer("steps").default(0),
-  sleepHours: integer("sleep_hours").default(0),
-  waterIntake: integer("water_intake").default(0), // in ml
+  distance: real("distance").default(0), // کیلومتر
+  calories: integer("calories").default(0), // کالری سوزانده شده
+  activeMinutes: integer("active_minutes").default(0), // دقایق فعالیت
+  heartRate: integer("heart_rate"), // ضربان قلب متوسط
+  heartRateMin: integer("heart_rate_min"), // حداقل ضربان قلب
+  heartRateMax: integer("heart_rate_max"), // حداکثر ضربان قلب
+  sleepHours: real("sleep_hours").default(0),
+  sleepQuality: integer("sleep_quality").default(50), // کیفیت خواب (0-100)
+  sleepDeepHours: real("sleep_deep_hours"), // ساعات خواب عمیق
+  sleepLightHours: real("sleep_light_hours"), // ساعات خواب سبک
+  sleepRemHours: real("sleep_rem_hours"), // ساعات خواب REM
+  waterIntake: integer("water_intake").default(0), // میلی‌لیتر
+  mealCount: integer("meal_count"), // تعداد وعده‌های غذایی
+  calorieIntake: integer("calorie_intake"), // کالری دریافتی
+  proteinIntake: integer("protein_intake"), // گرم پروتئین
+  carbIntake: integer("carb_intake"), // گرم کربوهیدرات
+  fatIntake: integer("fat_intake"), // گرم چربی
+  fiberIntake: integer("fiber_intake"), // گرم فیبر
   stressLevel: integer("stress_level").default(50), // 0-100
+  moodRating: integer("mood_rating"), // 0-100
+  o2Saturation: integer("o2_saturation"), // درصد اشباع اکسیژن
+  bloodPressureSystolic: integer("blood_pressure_systolic"), // فشار خون سیستولیک
+  bloodPressureDiastolic: integer("blood_pressure_diastolic"), // فشار خون دیاستولیک
+  bloodGlucose: integer("blood_glucose"), // قند خون
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// روابط سلامت جسمی
+export const healthMetricsRelations = relations(healthMetrics, ({ one }) => ({
+  user: one(users, {
+    fields: [healthMetrics.userId],
+    references: [users.id],
+  }),
+}));
+
+// مدل سلامت روانی و روحی
+export const mentalHealthMetrics = pgTable("mental_health_metrics", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  date: date("date").notNull(),
+  stressLevel: integer("stress_level").default(50), // 0-100
+  anxietyLevel: integer("anxiety_level").default(50), // 0-100
+  depressionLevel: integer("depression_level").default(50), // 0-100
+  moodRating: integer("mood_rating").default(50), // 0-100
+  sleepQuality: integer("sleep_quality").default(50), // 0-100
+  energyLevel: integer("energy_level").default(50), // 0-100
+  focusLevel: integer("focus_level").default(50), // 0-100
+  motivationLevel: integer("motivation_level").default(50), // 0-100
+  socialInteractionLevel: integer("social_interaction_level").default(50), // 0-100
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// روابط سلامت روانی
+export const mentalHealthMetricsRelations = relations(mentalHealthMetrics, ({ one }) => ({
+  user: one(users, {
+    fields: [mentalHealthMetrics.userId],
+    references: [users.id],
+  }),
+}));
+
+// مدل محتوای آموزشی
+export const educationalContents = pgTable("educational_contents", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(), // health, fitness, nutrition, etc.
+  type: text("type").notNull(), // video, article, infographic, quiz
+  content: text("content").notNull(), // URL or content
+  author: text("author"),
+  estimatedDuration: integer("estimated_duration"), // در دقیقه
+  points: integer("points").default(10),
+  tags: text("tags").array(),
+  level: text("level").default("beginner"), // beginner, intermediate, advanced
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// مدل آموزش‌های کاربر
+export const userEducations = pgTable("user_educations", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  contentId: integer("content_id").notNull().references(() => educationalContents.id),
+  completionDate: date("completion_date"),
+  progress: integer("progress").default(0), // 0-100
+  quizScore: integer("quiz_score"),
+  certificateEarned: boolean("certificate_earned").default(false),
+  feedback: text("feedback"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// روابط محتوای آموزشی
+export const educationalContentsRelations = relations(educationalContents, ({ many }) => ({
+  userEducations: many(userEducations),
+}));
+
+// روابط آموزش‌های کاربر
+export const userEducationsRelations = relations(userEducations, ({ one }) => ({
+  user: one(users, { 
+    fields: [userEducations.userId],
+    references: [users.id],
+  }),
+  content: one(educationalContents, {
+    fields: [userEducations.contentId],
+    references: [educationalContents.id],
+  }),
+}));
+
+// مدل یادآوری‌های سلامتی
+export const healthReminders = pgTable("health_reminders", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  title: text("title").notNull(),
+  description: text("description"),
+  type: text("type").notNull(), // water, stretching, posture, eye rest, etc.
+  recurrence: text("recurrence").notNull(), // daily, hourly, weekly
+  startTime: text("start_time").notNull(),
+  endTime: text("end_time"),
+  daysOfWeek: text("days_of_week").array(), // ["monday", "wednesday", "friday"]
+  interval: integer("interval"), // every X hours/minutes
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// روابط یادآوری‌های سلامتی
+export const healthRemindersRelations = relations(healthReminders, ({ one }) => ({
+  user: one(users, {
+    fields: [healthReminders.userId],
+    references: [users.id],
+  }),
+}));
+
+// مدل برنامه‌های تمرینی
+export const workoutPlans = pgTable("workout_plans", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  difficulty: text("difficulty").notNull(), // beginner, intermediate, advanced
+  targetArea: text("target_area").notNull(), // full body, upper body, core, etc.
+  estimatedDuration: integer("estimated_duration").notNull(), // در دقیقه
+  caloriesBurn: integer("calories_burn"),
+  createdBy: integer("created_by").references(() => users.id), // HR, HSE یا مدیر
+  isPublic: boolean("is_public").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// مدل تمرین‌ها
+export const exercises = pgTable("exercises", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  instructions: text("instructions").notNull(),
+  muscleGroups: text("muscle_groups").array(), // chest, back, legs, etc.
+  difficulty: text("difficulty").notNull(), // beginner, intermediate, advanced
+  media: text("media"), // URL to image or video
+  equipmentNeeded: text("equipment_needed").array(),
+  estimatedDuration: integer("estimated_duration"), // در ثانیه
+  caloriesBurn: integer("calories_burn"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// رابطه بین برنامه تمرینی و تمرین‌ها
+export const workoutExercises = pgTable("workout_exercises", {
+  id: serial("id").primaryKey(),
+  workoutPlanId: integer("workout_plan_id").notNull().references(() => workoutPlans.id),
+  exerciseId: integer("exercise_id").notNull().references(() => exercises.id),
+  setCount: integer("set_count").default(3),
+  repCount: integer("rep_count").default(10),
+  restTime: integer("rest_time").default(60), // در ثانیه
+  order: integer("order").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// Challenges model
+// روابط تمرین‌ها
+export const exercisesRelations = relations(exercises, ({ many }) => ({
+  workoutExercises: many(workoutExercises),
+}));
+
+// روابط برنامه‌های تمرینی
+export const workoutPlansRelations = relations(workoutPlans, ({ many, one }) => ({
+  workoutExercises: many(workoutExercises),
+  creator: one(users, {
+    fields: [workoutPlans.createdBy],
+    references: [users.id],
+  }),
+}));
+
+// روابط بین برنامه تمرینی و تمرین‌ها
+export const workoutExercisesRelations = relations(workoutExercises, ({ one }) => ({
+  workoutPlan: one(workoutPlans, {
+    fields: [workoutExercises.workoutPlanId],
+    references: [workoutPlans.id],
+  }),
+  exercise: one(exercises, {
+    fields: [workoutExercises.exerciseId],
+    references: [exercises.id],
+  }),
+}));
+
+// Challenges model - بهبود یافته
 export const challenges = pgTable("challenges", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -37,8 +327,19 @@ export const challenges = pgTable("challenges", {
   points: integer("points").default(10).notNull(),
   targetValue: integer("target_value").notNull(), // e.g., 10000 steps
   icon: text("icon").notNull(),
+  difficulty: text("difficulty").default("medium"), // easy, medium, hard
   duration: integer("duration").default(1).notNull(), // days
+  targetMetric: text("target_metric").default("steps"), // steps, water, sleep, etc.
+  rewardType: text("reward_type").default("xp"), // xp, credits, badge
+  rewardValue: integer("reward_value").default(100), // مقدار پاداش
+  category: text("category"), // دسته‌بندی چالش
+  startDate: date("start_date"), // تاریخ شروع (اختیاری، اگر چالش در زمان خاصی فعال است)
+  endDate: date("end_date"), // تاریخ پایان
+  isActive: boolean("is_active").default(true),
+  isTeamChallenge: boolean("is_team_challenge").default(false), // آیا چالش تیمی است
+  createdBy: integer("created_by").references(() => users.id), // توسط چه کسی ایجاد شده
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // User challenges (for tracking progress)
@@ -135,10 +436,153 @@ export const creditTransactions = pgTable("credit_transactions", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// Insert schemas
-export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
-export const insertHealthMetricsSchema = createInsertSchema(healthMetrics).omit({ id: true, createdAt: true });
-export const insertChallengeSchema = createInsertSchema(challenges).omit({ id: true, createdAt: true });
+// روابط بین چالش‌ها و کاربران
+export const challengesRelations = relations(challenges, ({ many, one }) => ({
+  userChallenges: many(userChallenges),
+  creator: one(users, {
+    fields: [challenges.createdBy],
+    references: [users.id],
+  }),
+}));
+
+// روابط بین کاربران و چالش‌ها
+export const userChallengesRelations = relations(userChallenges, ({ one }) => ({
+  user: one(users, {
+    fields: [userChallenges.userId],
+    references: [users.id],
+  }),
+  challenge: one(challenges, {
+    fields: [userChallenges.challengeId],
+    references: [challenges.id],
+  }),
+}));
+
+// روابط بین نشان‌ها و کاربران
+export const badgesRelations = relations(badges, ({ many }) => ({
+  userBadges: many(userBadges),
+}));
+
+// روابط بین کاربران و نشان‌ها
+export const userBadgesRelations = relations(userBadges, ({ one }) => ({
+  user: one(users, {
+    fields: [userBadges.userId],
+    references: [users.id],
+  }),
+  badge: one(badges, {
+    fields: [userBadges.badgeId],
+    references: [badges.id],
+  }),
+}));
+
+// روابط بین رویدادها و شرکت‌کنندگان
+export const eventsRelations = relations(events, ({ many }) => ({
+  participants: many(eventParticipants),
+}));
+
+// روابط بین کاربران و رویدادها
+export const eventParticipantsRelations = relations(eventParticipants, ({ one }) => ({
+  user: one(users, {
+    fields: [eventParticipants.userId],
+    references: [users.id],
+  }),
+  event: one(events, {
+    fields: [eventParticipants.eventId],
+    references: [events.id],
+  }),
+}));
+
+// روابط بین دپارتمان‌ها و اعضا
+export const departmentsRelations = relations(departments, ({ many }) => ({
+  members: many(departmentMembers),
+  metrics: many(organizationalMetrics),
+}));
+
+// روابط بین کاربران و دپارتمان‌ها
+export const departmentMembersRelations = relations(departmentMembers, ({ one }) => ({
+  user: one(users, {
+    fields: [departmentMembers.userId],
+    references: [users.id],
+  }),
+  department: one(departments, {
+    fields: [departmentMembers.departmentId],
+    references: [departments.id],
+  }),
+}));
+
+// روابط بین دپارتمان‌ها و معیارهای سازمانی
+export const organizationalMetricsRelations = relations(organizationalMetrics, ({ one }) => ({
+  department: one(departments, {
+    fields: [organizationalMetrics.departmentId],
+    references: [departments.id],
+  }),
+}));
+
+// روابط بین کاربران و تراکنش‌های اعتباری
+export const creditTransactionsRelations = relations(creditTransactions, ({ one }) => ({
+  user: one(users, {
+    fields: [creditTransactions.userId],
+    references: [users.id],
+  }),
+}));
+
+// مدل نظرسنجی‌ها
+export const surveys = pgTable("surveys", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  questions: jsonb("questions").notNull(), // آرایه‌ای از سوالات
+  startDate: date("start_date").notNull(),
+  endDate: date("end_date").notNull(),
+  isActive: boolean("is_active").default(true),
+  createdBy: integer("created_by").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// مدل پاسخ‌های نظرسنجی
+export const surveyResponses = pgTable("survey_responses", {
+  id: serial("id").primaryKey(),
+  surveyId: integer("survey_id").notNull().references(() => surveys.id),
+  userId: integer("user_id").notNull().references(() => users.id),
+  answers: jsonb("answers").notNull(), // آرایه‌ای از پاسخ‌ها
+  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// روابط بین نظرسنجی‌ها و پاسخ‌ها
+export const surveysRelations = relations(surveys, ({ many, one }) => ({
+  responses: many(surveyResponses),
+  creator: one(users, {
+    fields: [surveys.createdBy],
+    references: [users.id],
+  }),
+}));
+
+// روابط بین کاربران و پاسخ‌های نظرسنجی
+export const surveyResponsesRelations = relations(surveyResponses, ({ one }) => ({
+  user: one(users, {
+    fields: [surveyResponses.userId],
+    references: [users.id],
+  }),
+  survey: one(surveys, {
+    fields: [surveyResponses.surveyId],
+    references: [surveys.id],
+  }),
+}));
+
+// Insert schemas - تعریف اسکیماهای ورودی
+export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertUserProfileSchema = createInsertSchema(userProfiles).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertBodyCompositionSchema = createInsertSchema(bodyCompositions).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertHealthMetricsSchema = createInsertSchema(healthMetrics).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertMentalHealthMetricsSchema = createInsertSchema(mentalHealthMetrics).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertEducationalContentSchema = createInsertSchema(educationalContents).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertUserEducationSchema = createInsertSchema(userEducations).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertHealthReminderSchema = createInsertSchema(healthReminders).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertWorkoutPlanSchema = createInsertSchema(workoutPlans).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertExerciseSchema = createInsertSchema(exercises).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertWorkoutExerciseSchema = createInsertSchema(workoutExercises).omit({ id: true, createdAt: true });
+export const insertChallengeSchema = createInsertSchema(challenges).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertUserChallengeSchema = createInsertSchema(userChallenges).omit({ id: true, createdAt: true });
 export const insertBadgeSchema = createInsertSchema(badges).omit({ id: true, createdAt: true });
 export const insertUserBadgeSchema = createInsertSchema(userBadges).omit({ id: true, createdAt: true });
@@ -148,13 +592,42 @@ export const insertDepartmentSchema = createInsertSchema(departments).omit({ id:
 export const insertDepartmentMemberSchema = createInsertSchema(departmentMembers).omit({ id: true, createdAt: true });
 export const insertOrganizationalMetricsSchema = createInsertSchema(organizationalMetrics).omit({ id: true, createdAt: true });
 export const insertCreditTransactionSchema = createInsertSchema(creditTransactions).omit({ id: true, createdAt: true });
+export const insertSurveySchema = createInsertSchema(surveys).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertSurveyResponseSchema = createInsertSchema(surveyResponses).omit({ id: true, createdAt: true });
 
-// Types
+// Types - تعریف تایپ‌های خروجی و ورودی
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
+export type UserProfile = typeof userProfiles.$inferSelect;
+export type InsertUserProfile = z.infer<typeof insertUserProfileSchema>;
+
+export type BodyComposition = typeof bodyCompositions.$inferSelect;
+export type InsertBodyComposition = z.infer<typeof insertBodyCompositionSchema>;
+
 export type HealthMetric = typeof healthMetrics.$inferSelect;
 export type InsertHealthMetric = z.infer<typeof insertHealthMetricsSchema>;
+
+export type MentalHealthMetric = typeof mentalHealthMetrics.$inferSelect;
+export type InsertMentalHealthMetric = z.infer<typeof insertMentalHealthMetricsSchema>;
+
+export type EducationalContent = typeof educationalContents.$inferSelect;
+export type InsertEducationalContent = z.infer<typeof insertEducationalContentSchema>;
+
+export type UserEducation = typeof userEducations.$inferSelect;
+export type InsertUserEducation = z.infer<typeof insertUserEducationSchema>;
+
+export type HealthReminder = typeof healthReminders.$inferSelect;
+export type InsertHealthReminder = z.infer<typeof insertHealthReminderSchema>;
+
+export type WorkoutPlan = typeof workoutPlans.$inferSelect;
+export type InsertWorkoutPlan = z.infer<typeof insertWorkoutPlanSchema>;
+
+export type Exercise = typeof exercises.$inferSelect;
+export type InsertExercise = z.infer<typeof insertExerciseSchema>;
+
+export type WorkoutExercise = typeof workoutExercises.$inferSelect;
+export type InsertWorkoutExercise = z.infer<typeof insertWorkoutExerciseSchema>;
 
 export type Challenge = typeof challenges.$inferSelect;
 export type InsertChallenge = z.infer<typeof insertChallengeSchema>;
@@ -185,3 +658,9 @@ export type InsertOrganizationalMetric = z.infer<typeof insertOrganizationalMetr
 
 export type CreditTransaction = typeof creditTransactions.$inferSelect;
 export type InsertCreditTransaction = z.infer<typeof insertCreditTransactionSchema>;
+
+export type Survey = typeof surveys.$inferSelect;
+export type InsertSurvey = z.infer<typeof insertSurveySchema>;
+
+export type SurveyResponse = typeof surveyResponses.$inferSelect;
+export type InsertSurveyResponse = z.infer<typeof insertSurveyResponseSchema>;
