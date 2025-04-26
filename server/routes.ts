@@ -636,6 +636,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.resolve(process.cwd(), 'client/public/auto-login.html'));
   });
 
+  // Advanced Gamification Routes
+  // Use our gamification router with Express sessions, not Passport sessions
+  app.use('/api/gamification', (req: any, res: any, next: any) => {
+    // Add session userId to req.user to make it compatible with our gamification router
+    if (req.session.userId) {
+      req.user = { id: req.session.userId };
+    }
+    next();
+  }, gamificationRoutes);
+
   // سرو فایل‌های استاتیک
   app.use('/assets', express.static(path.resolve(process.cwd(), 'client/public/assets')));
 

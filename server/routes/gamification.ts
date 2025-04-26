@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { db } from "../db";
 import { 
   achievements, 
@@ -16,21 +16,26 @@ import {
   insertSeasonalChallengeSchema,
   insertUserSeasonalChallengeSchema
 } from "../../shared/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, lte, gte } from "drizzle-orm";
 import { z } from "zod";
+
+// Extended Request with user property
+interface ExtendedRequest extends Request {
+  user?: { id: number };
+}
 
 const router = Router();
 
 // Middleware to ensure user is authenticated
-const requireAuth = (req: any, res: any, next: any) => {
-  if (!req.isAuthenticated()) {
+const requireAuth = (req: ExtendedRequest, res: Response, next: Function) => {
+  if (!req.user?.id) {
     return res.status(401).json({ message: "Not authenticated" });
   }
   next();
 };
 
 // Get achievements for the authenticated user
-router.get("/user-achievements", requireAuth, async (req, res) => {
+router.get("/user-achievements", requireAuth, async (req: ExtendedRequest, res: Response) => {
   try {
     // First get all achievements
     const allAchievements = await db.select().from(achievements);
@@ -64,7 +69,7 @@ router.get("/user-achievements", requireAuth, async (req, res) => {
 });
 
 // Get all streaks for the authenticated user
-router.get("/streaks", requireAuth, async (req, res) => {
+router.get("/streaks", requireAuth, async (req: ExtendedRequest, res: Response) => {
   try {
     const userStreaks = await db.select()
       .from(streaks)
