@@ -28,6 +28,7 @@ import {
   Shield,
   User,
   Lock,
+  Heart,
   Eye,
   Clock,
   Globe,

@@ -9,6 +9,7 @@ import UpcomingEventsCard from "@/components/dashboard/UpcomingEventsCard";
 import HRAnalyticsCards from "@/components/dashboard/HRAnalyticsCards";
 import DepartmentalComparisonChart from "@/components/dashboard/DepartmentalComparisonChart";
 import ClientCarousel from "@/components/ui/client-carousel";
+import NotificationSender from "@/components/ui/notification-sender";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { 
