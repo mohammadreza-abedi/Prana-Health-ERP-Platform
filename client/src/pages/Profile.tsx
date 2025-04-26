@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/lib/useAuth';
 import { useCredits } from '@/hooks/use-credits';
 import { GlassCard } from '@/components/ui/glass-card';
 import { Button } from '@/components/ui/button';

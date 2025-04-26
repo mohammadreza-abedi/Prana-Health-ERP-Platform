@@ -28,7 +28,45 @@ import {
   HelpCircle,
   LogOut,
   Globe,
-  BarChart2
+  BarChart2,
+  ClipboardList,
+  PanelRight,
+  AppWindow,
+  Layers,
+  LucideIcon,
+  BookOpen,
+  UserRound,
+  History,
+  BadgeHelp,
+  LayoutDashboard,
+  GraduationCap,
+  Zap,
+  Heart,
+  Trophy,
+  Star,
+  Sparkles,
+  Languages,
+  ChevronDown,
+  Bookmark,
+  ArrowLeftRight,
+  CircleUser,
+  Lightbulb,
+  Info,
+  LifeBuoy,
+  Command,
+  Keyboard,
+  CircleCheck,
+  Clock,
+  Monitor,
+  Power,
+  MailOpen,
+  UserPlus,
+  UserCog,
+  RefreshCw,
+  Database,
+  CheckCircle2,
+  LockKeyhole,
+  X
 } from "lucide-react";
 import useIsMobile from "@/hooks/use-mobile";
 import Footer from "./Footer";
@@ -39,6 +77,20 @@ import PulsingLogo from "@/components/ui/pulsing-logo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/lib/useAuth";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -55,6 +107,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   );
   const [showHealthReminders, setShowHealthReminders] = useState(true);
   const { toast } = useToast();
+  const { user, logout } = useAuth();
   
   // نوتیفیکیشن‌های سیستم
   const { 
