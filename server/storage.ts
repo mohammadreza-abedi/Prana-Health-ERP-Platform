@@ -491,6 +491,90 @@ export class DatabaseStorage implements IStorage {
       throw error;
     }
   }
+  
+  // Credit transactions operations
+  async getUserCredits(userId: number): Promise<number> {
+    try {
+      const user = await this.getUser(userId);
+      if (!user) {
+        throw new Error(`User with ID ${userId} not found`);
+      }
+      return user.credits;
+    } catch (error) {
+      console.error("Error in getUserCredits:", error);
+      throw error;
+    }
+  }
+
+  async getUserCreditTransactions(userId: number, limit: number = 20): Promise<CreditTransaction[]> {
+    try {
+      return await db.select()
+        .from(creditTransactions)
+        .where(eq(creditTransactions.userId, userId))
+        .orderBy(desc(creditTransactions.createdAt))
+        .limit(limit);
+    } catch (error) {
+      console.error("Error in getUserCreditTransactions:", error);
+      return [];
+    }
+  }
+
+  async createCreditTransaction(transaction: InsertCreditTransaction): Promise<CreditTransaction> {
+    try {
+      const result = await db.insert(creditTransactions).values(transaction).returning();
+      return result[0];
+    } catch (error) {
+      console.error("Error in createCreditTransaction:", error);
+      throw error;
+    }
+  }
+
+  async updateUserCredits(
+    userId: number, 
+    amount: number, 
+    actionType: string, 
+    description: string, 
+    resourceId?: number, 
+    resourceType?: string
+  ): Promise<{ user: User; transaction: CreditTransaction }> {
+    try {
+      // Get current user to check current credits
+      const user = await this.getUser(userId);
+      if (!user) {
+        throw new Error(`User with ID ${userId} not found`);
+      }
+      
+      // Calculate new balance
+      const newBalance = user.credits + amount;
+      
+      // Don't allow negative balance
+      if (newBalance < 0) {
+        throw new Error("Insufficient credits");
+      }
+      
+      // Update user credits
+      const updatedUser = await this.updateUser(userId, { credits: newBalance });
+      if (!updatedUser) {
+        throw new Error(`Failed to update credits for user ${userId}`);
+      }
+      
+      // Create transaction record
+      const transaction = await this.createCreditTransaction({
+        userId,
+        amount,
+        balance: newBalance,
+        description,
+        actionType,
+        resourceId,
+        resourceType,
+      });
+      
+      return { user: updatedUser, transaction };
+    } catch (error) {
+      console.error("Error in updateUserCredits:", error);
+      throw error;
+    }
+  }
 
   async getLeaderboard(limit: number = 10): Promise<{ id: number; displayName: string; avatar?: string; xp: number; level: number }[]> {
     try {

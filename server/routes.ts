@@ -14,7 +14,8 @@ import {
   insertEventSchema,
   insertEventParticipantSchema,
   insertDepartmentSchema,
-  insertOrganizationalMetricsSchema
+  insertOrganizationalMetricsSchema,
+  insertCreditTransactionSchema
 } from "@shared/schema";
 import { ZodError } from "zod";
 
@@ -556,6 +557,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(error.status).json(error);
       }
       res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  // Credit transactions routes
+  app.get('/api/credits', requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const credits = await storage.getUserCredits(userId);
+      
+      res.json({ credits });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/credit-transactions', requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      
+      const transactions = await storage.getUserCreditTransactions(userId, limit);
+      
+      res.json(transactions);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/credit-transactions', requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const { amount, actionType, description, resourceId, resourceType } = req.body;
+      
+      if (typeof amount !== 'number') {
+        return res.status(400).json({ message: 'Amount must be a number' });
+      }
+      
+      if (!actionType || !description) {
+        return res.status(400).json({ message: 'Action type and description are required' });
+      }
+      
+      const result = await storage.updateUserCredits(
+        userId,
+        amount,
+        actionType,
+        description,
+        resourceId,
+        resourceType
+      );
+      
+      res.json(result);
+    } catch (error: any) {
+      if (error.message === 'Insufficient credits') {
+        return res.status(403).json({ message: 'Insufficient credits' });
+      }
+      res.status(500).json({ message: 'Server error', error: error.message });
     }
   });
 
