@@ -204,18 +204,26 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   // Connect on mount and when user changes
   useEffect(() => {
-    connectWebSocket();
+    let mounted = true;
+    
+    // Initial connection
+    if (mounted) {
+      connectWebSocket();
+    }
     
     // Set up ping interval to keep connection alive
     const pingInterval = setInterval(() => {
-      if (isConnected) {
+      if (isConnected && socketRef.current?.readyState === WebSocket.OPEN) {
         sendPing();
       }
     }, 30000); // 30 seconds
     
     // Cleanup on unmount
     return () => {
+      mounted = false;
+      
       if (socketRef.current) {
+        socketRef.current.onclose = null; // Remove the auto-reconnect logic
         socketRef.current.close();
       }
       
@@ -225,7 +233,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       
       clearInterval(pingInterval);
     };
-  }, [connectWebSocket, isConnected, sendPing]);
+  }, []);
 
   return (
     <WebSocketContext.Provider
