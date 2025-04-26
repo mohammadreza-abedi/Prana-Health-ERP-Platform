@@ -640,133 +640,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
 
-  // WebSocket Server Implementation - پیاده‌سازی وب‌سوکت سرور با پورت مجزا (ساده‌تر)
+  // WebSocket Server Implementation - ساده‌سازی شده برای رفع مشکل
   const wss = new WebSocketServer({ 
     server: httpServer, 
-    path: '/ws',
-    // Use simpler config to avoid potential issues
-    clientTracking: true
+    path: '/ws'
   });
 
-  // Store connected clients
-  const clients = new Map<string, { 
+  // تغییر به یک پیاده‌سازی ساده‌تر برای وب‌سوکت
+  // Store connected clients with simple structure
+  const clients: { [key: string]: { 
     ws: WebSocket, 
     userId?: number, 
-    username?: string,
-    isAlive: boolean
-  }>();
-  
-  // Setup heartbeat interval to detect dead connections
-  const interval = setInterval(function ping() {
-    wss.clients.forEach(function each(ws: WebSocket) {
-      // Find client ID for this WebSocket
-      let foundClientId: string | null = null;
-      for (const [clientId, client] of clients.entries()) {
-        if (client.ws === ws) {
-          foundClientId = clientId;
-          if (client.isAlive === false) {
-            console.log(`Terminating stale connection: ${clientId}`);
-            clients.delete(clientId);
-            return ws.terminate();
-          }
-          
-          client.isAlive = false;
-          clients.set(clientId, client);
-          break;
-        }
-      }
-      
-      if (foundClientId) {
-        try {
-          ws.ping();
-        } catch (err) {
-          console.error(`Error sending ping to client ${foundClientId}:`, err);
-          clients.delete(foundClientId);
-          ws.terminate();
-        }
-      }
-    });
-  }, 30000);
-  
-  wss.on('close', function close() {
-    clearInterval(interval);
-  });
+    username?: string
+  }} = {};
   
   // WebSocket connection handler
   wss.on('connection', (ws) => {
     // Generate a unique ID for this connection
     const clientId = Math.random().toString(36).substring(2, 15);
-    clients.set(clientId, { ws, isAlive: true });
+    clients[clientId] = { ws };
     
     console.log(`New WebSocket connection established: ${clientId}`);
     
-    // Setup pong response
-    ws.on('pong', () => {
-      const client = clients.get(clientId);
-      if (client) {
-        client.isAlive = true;
-        clients.set(clientId, client);
-      }
-    });
-    
     // Send welcome message
-    ws.send(JSON.stringify({
-      type: 'connection',
-      message: 'Connected to پرانا (Prana) WebSocket Server',
-      clientId
-    }));
+    try {
+      ws.send(JSON.stringify({
+        type: 'connection',
+        message: 'Connected to پرانا (Prana) WebSocket Server',
+        clientId
+      }));
+    } catch (error) {
+      console.error('Error sending welcome message:', error);
+    }
     
-    // Handle incoming messages
-    ws.on('message', async (message) => {
+    // Handle incoming messages with simple error handling
+    ws.on('message', (message) => {
       try {
         const data = JSON.parse(message.toString());
-        console.log(`Received message from ${clientId}:`, data);
+        console.log(`Received message from ${clientId}:`, data.type);
         
         // Handle different message types
         switch (data.type) {
           case 'auth':
             // Authenticate user
             if (data.userId && data.username) {
-              clients.set(clientId, { 
-                ...clients.get(clientId)!, 
+              clients[clientId] = { 
+                ...clients[clientId],
                 userId: data.userId, 
-                username: data.username,
-                isAlive: true
-              });
-              
-              ws.send(JSON.stringify({
-                type: 'auth',
-                status: 'success',
-                message: 'Authentication successful'
-              }));
-              
-              // Notify all users of new user online
-              broadcastToAll({
-                type: 'user_status',
-                status: 'online',
-                userId: data.userId,
                 username: data.username
-              }, clientId);
+              };
+              
+              try {
+                ws.send(JSON.stringify({
+                  type: 'auth',
+                  status: 'success',
+                  message: 'Authentication successful'
+                }));
+                
+                // Notify all users of new user online
+                broadcastToAll({
+                  type: 'user_status',
+                  status: 'online',
+                  userId: data.userId,
+                  username: data.username
+                }, clientId);
+              } catch (error) {
+                console.error('Error in auth response:', error);
+              }
             }
             break;
             
           case 'health_update':
             // Handle real-time health data updates
-            if (data.metric && clients.get(clientId)?.userId) {
-              // Broadcast to HR/admin users
-              broadcastToRoles(['admin', 'hr', 'hse'], {
+            if (data.metric && clients[clientId]?.userId) {
+              // Broadcast to HR/admin users (all authenticated users for simplicity)
+              broadcastToAllAuthenticated({
                 type: 'health_data',
-                userId: clients.get(clientId)?.userId,
-                username: clients.get(clientId)?.username,
+                userId: clients[clientId].userId,
+                username: clients[clientId].username,
                 timestamp: new Date(),
                 data: data.metric
               });
               
-              ws.send(JSON.stringify({
-                type: 'health_update',
-                status: 'success',
-                message: 'Health data updated successfully'
-              }));
+              try {
+                ws.send(JSON.stringify({
+                  type: 'health_update',
+                  status: 'success',
+                  message: 'Health data updated successfully'
+                }));
+              } catch (error) {
+                console.error('Error in health update response:', error);
+              }
             }
             break;
             
@@ -776,26 +740,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
               sendToUser(data.targetUserId, {
                 type: 'notification',
                 message: data.message,
-                sender: clients.get(clientId)?.username || 'System',
+                sender: clients[clientId]?.username || 'System',
                 timestamp: new Date()
               });
               
-              ws.send(JSON.stringify({
-                type: 'notification',
-                status: 'success',
-                message: 'Notification sent successfully'
-              }));
+              try {
+                ws.send(JSON.stringify({
+                  type: 'notification',
+                  status: 'success',
+                  message: 'Notification sent successfully'
+                }));
+              } catch (error) {
+                console.error('Error in notification response:', error);
+              }
             }
             break;
             
           case 'challenge_progress':
             // Handle real-time challenge progress updates
-            if (data.challengeId && data.progress && clients.get(clientId)?.userId) {
+            if (data.challengeId && data.progress && clients[clientId]?.userId) {
               // Notify all users about the challenge progress
               broadcastToAll({
                 type: 'challenge_update',
-                userId: clients.get(clientId)?.userId,
-                username: clients.get(clientId)?.username,
+                userId: clients[clientId].userId,
+                username: clients[clientId].username,
                 challengeId: data.challengeId,
                 progress: data.progress,
                 timestamp: new Date()
@@ -805,31 +773,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
             
           case 'ping':
             // Simple ping-pong to keep connection alive
-            ws.send(JSON.stringify({
-              type: 'pong',
-              timestamp: new Date()
-            }));
+            try {
+              ws.send(JSON.stringify({
+                type: 'pong',
+                timestamp: new Date()
+              }));
+            } catch (error) {
+              console.error('Error in ping response:', error);
+            }
             break;
             
           default:
-            ws.send(JSON.stringify({
-              type: 'error',
-              message: 'Unknown message type'
-            }));
+            try {
+              ws.send(JSON.stringify({
+                type: 'error',
+                message: 'Unknown message type'
+              }));
+            } catch (error) {
+              console.error('Error in default response:', error);
+            }
         }
         
       } catch (error) {
         console.error('Error processing WebSocket message:', error);
-        ws.send(JSON.stringify({
-          type: 'error',
-          message: 'Failed to process message'
-        }));
+        try {
+          ws.send(JSON.stringify({
+            type: 'error',
+            message: 'Failed to process message'
+          }));
+        } catch (sendError) {
+          console.error('Error sending error message:', sendError);
+        }
       }
     });
     
     // Handle disconnection
     ws.on('close', () => {
-      const clientInfo = clients.get(clientId);
+      const clientInfo = clients[clientId];
       
       if (clientInfo && clientInfo.userId) {
         // Notify all users that this user is offline
@@ -842,7 +822,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Remove client from connected clients
-      clients.delete(clientId);
+      delete clients[clientId];
       console.log(`WebSocket connection closed: ${clientId}`);
     });
     
@@ -850,18 +830,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     ws.on('error', (error) => {
       console.error(`WebSocket error for client ${clientId}:`, error);
       // Remove client from connected clients on error
-      clients.delete(clientId);
+      delete clients[clientId];
     });
   });
   
   // Helper functions for WebSocket communication
   
-  // Send message to a specific user
+  // Send message to a specific user - simplified version
   function sendToUser(userId: number, message: any) {
-    // Convert map entries to array for safer iteration
-    const clientEntries = Array.from(clients.entries());
-    for (const [_, client] of clientEntries) {
-      if (client.userId === userId && client.ws.readyState === WebSocket.OPEN && client.isAlive) {
+    for (const clientId in clients) {
+      const client = clients[clientId];
+      if (client.userId === userId && client.ws.readyState === WebSocket.OPEN) {
         try {
           client.ws.send(JSON.stringify(message));
           return true;
@@ -873,33 +852,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return false;
   }
   
-  // Broadcast message to all users with specific roles
-  function broadcastToRoles(roles: string[], message: any) {
-    // This is a simplification. In a real app, you would check the user's role in a database
-    // For now, we're broadcasting to all authenticated users
-    const clientEntries = Array.from(clients.entries());
-    for (const [_, client] of clientEntries) {
-      if (client.userId && client.ws.readyState === WebSocket.OPEN && client.isAlive) {
+  // Broadcast message to all authenticated users
+  function broadcastToAllAuthenticated(message: any) {
+    for (const clientId in clients) {
+      const client = clients[clientId];
+      if (client.userId && client.ws.readyState === WebSocket.OPEN) {
         try {
           client.ws.send(JSON.stringify(message));
         } catch (err) {
-          console.error('Error broadcasting to roles:', err);
+          console.error(`Error broadcasting to authenticated client ${clientId}:`, err);
         }
       }
     }
   }
   
-  // Broadcast message to all connected clients
+  // Broadcast message to all connected clients - simplified version
   function broadcastToAll(message: any, excludeClientId?: string) {
-    const clientEntries = Array.from(clients.entries());
-    for (const [clientId, client] of clientEntries) {
-      if ((!excludeClientId || clientId !== excludeClientId) && 
-          client.ws.readyState === WebSocket.OPEN && 
-          client.isAlive) {
-        try {
-          client.ws.send(JSON.stringify(message));
-        } catch (err) {
-          console.error(`Error broadcasting to client ${clientId}:`, err);
+    for (const clientId in clients) {
+      if ((!excludeClientId || clientId !== excludeClientId)) {
+        const client = clients[clientId];
+        if (client.ws.readyState === WebSocket.OPEN) {
+          try {
+            client.ws.send(JSON.stringify(message));
+          } catch (err) {
+            console.error(`Error broadcasting to client ${clientId}:`, err);
+          }
         }
       }
     }

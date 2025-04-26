@@ -35,256 +35,212 @@ interface WebSocketContextType {
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
 
+// Simplified WebSocket Provider
 export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [isConnected, setIsConnected] = useState(false);
   const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
   const [connectionError, setConnectionError] = useState<string | null>(null);
-  const [connectionAttempts, setConnectionAttempts] = useState<number>(0);
   const socketRef = useRef<WebSocket | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const maxReconnectAttempts = 5; // محدود کردن تعداد تلاش‌ها
+  const maxRetries = 3;
+  const [retryCount, setRetryCount] = useState(0);
 
-  // Initialize WebSocket connection
+  // Initialize or reconnect WebSocket
   const connectWebSocket = useCallback(() => {
     try {
-      // محدود کردن تعداد تلاش‌های مجدد برای جلوگیری از flood
-      if (connectionAttempts >= maxReconnectAttempts) {
-        console.log(`Maximum connection attempts (${maxReconnectAttempts}) reached. Stopping reconnection attempts.`);
-        setConnectionError("اتصال قطع شده. لطفا صفحه را رفرش کنید.");
+      // Check if we've tried too many times
+      if (retryCount >= maxRetries) {
+        setConnectionError("پیش نمایش در حال حاضر در دسترس نیست. لطفا صفحه را رفرش کنید.");
         return;
       }
       
-      // افزایش شمارنده تلاش‌ها
-      setConnectionAttempts(prev => prev + 1);
-      
-      // If we already have an open connection, don't create a new one
-      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        return;
-      }
-      
-      // Clean up any existing connection that's not open
+      // Clean up existing connection
       if (socketRef.current) {
-        socketRef.current.onclose = null; // Remove event listeners to prevent potential memory leaks
+        socketRef.current.onclose = null;
         socketRef.current.onerror = null;
         socketRef.current.onmessage = null;
         socketRef.current.onopen = null;
         socketRef.current.close();
         socketRef.current = null;
       }
-
-      // Clear any pending reconnects
+      
+      // Cancel any pending reconnect
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
         reconnectTimeoutRef.current = null;
       }
-
-      // Determine WebSocket URL with a more unique identifier
+      
+      // Create new connection
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}/ws?nocache=${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      const wsUrl = `${protocol}//${window.location.host}/ws?t=${Date.now()}`;
       
-      console.log(`Attempting WebSocket connection (attempt ${connectionAttempts+1}/${maxReconnectAttempts}):`, wsUrl);
-      
-      // Create new WebSocket connection
+      console.log(`Connecting to WebSocket (attempt ${retryCount + 1}/${maxRetries})...`);
       const socket = new WebSocket(wsUrl);
       socketRef.current = socket;
-
-      // Connection opened
-      socket.addEventListener('open', () => {
-        console.log('WebSocket connection established');
+      
+      // Set up event handlers
+      socket.onopen = () => {
+        console.log('WebSocket connected');
         setIsConnected(true);
         setConnectionError(null);
+        setRetryCount(0); // Reset retry count on success
         
-        // If user is authenticated, send auth message
+        // Authenticate if user is logged in
         if (user) {
-          socket.send(JSON.stringify({
-            type: 'auth',
-            userId: user?.id,
-            username: user?.username
-          }));
+          sendAuthMessage();
         }
-      });
-
-      // Connection closed - use a flag to prevent multiple reconnection attempts
-      let reconnecting = false;
-      socket.addEventListener('close', (event) => {
-        console.log('WebSocket connection closed', event);
+      };
+      
+      socket.onclose = () => {
+        console.log('WebSocket disconnected');
         setIsConnected(false);
         
-        // Prevent multiple reconnect timers
-        if (!reconnecting) {
-          reconnecting = true;
-          // Attempt to reconnect after delay
-          reconnectTimeoutRef.current = setTimeout(() => {
-            console.log('Attempting to reconnect...');
-            connectWebSocket();
-            reconnecting = false;
-          }, 5000);
-        }
-      });
-
-      // Connection error
-      socket.addEventListener('error', (error) => {
+        // Try to reconnect after delay
+        reconnectTimeoutRef.current = setTimeout(() => {
+          setRetryCount(prev => prev + 1);
+          connectWebSocket();
+        }, 3000);
+      };
+      
+      socket.onerror = (error) => {
         console.error('WebSocket error:', error);
-        setConnectionError('Connection error occurred');
-        // Don't set isConnected to false here, let the close handler do it
-        // This prevents duplicate reconnection attempts
-      });
-
-      // Listen for messages
-      socket.addEventListener('message', (event) => {
+      };
+      
+      socket.onmessage = (event) => {
         try {
-          const message = JSON.parse(event.data) as WebSocketMessage;
-          console.log('Received WebSocket message:', message);
+          const message = JSON.parse(event.data);
+          console.log('WebSocket message received:', message.type);
           setLastMessage(message);
-          
-          // Handle specific message types
-          handleIncomingMessage(message);
-        } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+          handleMessage(message);
+        } catch (err) {
+          console.error('Error parsing WebSocket message:', err);
         }
-      });
+      };
     } catch (error) {
-      console.error('Error creating WebSocket connection:', error);
-      setConnectionError('Failed to establish connection');
+      console.error('Failed to connect to WebSocket:', error);
+      setConnectionError('Connection failed');
+    }
+  }, [user, retryCount]);
+  
+  // Send authentication message
+  const sendAuthMessage = useCallback(() => {
+    if (user && socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      try {
+        socketRef.current.send(JSON.stringify({
+          type: 'auth',
+          userId: user.id,
+          username: user.username
+        }));
+      } catch (error) {
+        console.error('Failed to send auth message:', error);
+      }
     }
   }, [user]);
-
+  
   // Handle incoming messages
-  const handleIncomingMessage = useCallback((message: WebSocketMessage) => {
+  const handleMessage = useCallback((message: WebSocketMessage) => {
     switch (message.type) {
       case 'notification':
-        // Display toast notification
         toast({
-          title: `${message.sender || 'System'}`,
+          title: message.sender || 'سیستم',
           description: message.message,
           variant: "info"
         });
         break;
         
       case 'health_data':
-        // Handle incoming health data (for admin/HR users)
-        console.log('Received health data:', message);
+        // Just log in this simplified version
+        console.log('Health data received:', message);
         break;
         
       case 'challenge_update':
-        // Handle challenge updates
         toast({
-          title: 'Challenge Update',
-          description: `${message.username} made progress on a challenge!`,
+          title: 'بروزرسانی چالش',
+          description: `${message.username} در یک چالش پیشرفت کرد!`,
           variant: "default"
         });
         break;
         
       case 'user_status':
-        // Handle user status changes
         if (message.status === 'online') {
           toast({
-            title: 'User Online',
-            description: `${message.username} is now online`,
+            title: 'کاربر آنلاین',
+            description: `${message.username} اکنون آنلاین است`,
             variant: "success"
           });
         }
         break;
     }
   }, [toast]);
-
-  // Send message to server
+  
+  // Generic message sender
   const sendMessage = useCallback((message: WebSocketMessage) => {
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      socketRef.current.send(JSON.stringify(message));
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      try {
+        socketRef.current.send(JSON.stringify(message));
+      } catch (error) {
+        console.error('Failed to send message:', error);
+        // Try to reconnect
+        connectWebSocket();
+      }
     } else {
       console.warn('WebSocket not connected, cannot send message');
-      setConnectionError('Connection lost. Reconnecting...');
-      
-      // Try to reconnect
       connectWebSocket();
     }
   }, [connectWebSocket]);
-
-  // Convenience methods for common operations
+  
+  // Convenience methods for specific message types
   const sendHealthUpdate = useCallback((metric: any) => {
-    sendMessage({
-      type: 'health_update',
-      metric
-    });
+    sendMessage({ type: 'health_update', metric });
   }, [sendMessage]);
-
+  
   const sendChallengeProgress = useCallback((challengeId: number, progress: number) => {
-    sendMessage({
-      type: 'challenge_progress',
-      challengeId,
-      progress
-    });
+    sendMessage({ type: 'challenge_progress', challengeId, progress });
   }, [sendMessage]);
-
+  
   const sendNotification = useCallback((targetUserId: number, message: string) => {
-    sendMessage({
-      type: 'notification',
-      targetUserId,
-      message
-    });
+    sendMessage({ type: 'notification', targetUserId, message });
   }, [sendMessage]);
-
+  
   const sendPing = useCallback(() => {
-    sendMessage({
-      type: 'ping',
-      timestamp: new Date()
-    });
+    sendMessage({ type: 'ping', timestamp: new Date() });
   }, [sendMessage]);
-
-  // Reset connection attempts when user changes
+  
+  // Connect when component mounts
   useEffect(() => {
-    if (user) {
-      setConnectionAttempts(0);
-    }
-  }, [user]);
-
-  // Connect on mount
-  useEffect(() => {
-    let mounted = true;
+    connectWebSocket();
     
-    console.log("Setting up initial WebSocket connection...");
-    // Initial connection
-    if (mounted) {
-      // Reset connection attempts on mount
-      setConnectionAttempts(0);
-      setTimeout(() => {
-        connectWebSocket();
-      }, 500); // Small delay to let everything initialize
-    }
-    
-    // Set up ping interval to keep connection alive
+    // Set up ping interval
     const pingInterval = setInterval(() => {
-      if (isConnected && socketRef.current?.readyState === WebSocket.OPEN) {
+      if (isConnected) {
         sendPing();
       }
-    }, 30000); // 30 seconds
+    }, 30000);
     
-    // Cleanup on unmount
+    // Clean up on unmount
     return () => {
-      console.log("Cleaning up WebSocket connection...");
-      mounted = false;
-      
-      if (socketRef.current) {
-        socketRef.current.onclose = null; // Remove the auto-reconnect logic
-        socketRef.current.onerror = null;
-        socketRef.current.onmessage = null;
-        socketRef.current.onopen = null;
-        socketRef.current.close();
-        socketRef.current = null;
-      }
+      clearInterval(pingInterval);
       
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
-        reconnectTimeoutRef.current = null;
       }
       
-      clearInterval(pingInterval);
+      if (socketRef.current) {
+        socketRef.current.onclose = null;
+        socketRef.current.close();
+      }
     };
   }, []);
-
+  
+  // Reconnect when user changes
+  useEffect(() => {
+    if (user && isConnected) {
+      sendAuthMessage();
+    }
+  }, [user, isConnected, sendAuthMessage]);
+  
   return (
     <WebSocketContext.Provider
       value={{
