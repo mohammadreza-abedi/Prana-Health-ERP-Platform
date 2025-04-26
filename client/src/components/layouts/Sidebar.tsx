@@ -10,7 +10,14 @@ import {
   GiftIcon,
   CalendarIcon,
   BookOpenIcon,
-  LogOutIcon
+  LogOutIcon,
+  Brain,
+  LineChart,
+  Activity,
+  Sparkles,
+  BadgePercent,
+  Layers,
+  Settings
 } from "lucide-react";
 
 export default function Sidebar() {
