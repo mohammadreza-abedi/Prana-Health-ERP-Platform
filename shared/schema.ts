@@ -30,6 +30,10 @@ export const usersRelations = relations(users, ({ many }) => ({
   healthMetrics: many(healthMetrics),
   userChallenges: many(userChallenges),
   userBadges: many(userBadges),
+  userAchievements: many(userAchievements),
+  streaks: many(streaks),
+  userQuests: many(userQuests),
+  userSeasonalChallenges: many(userSeasonalChallenges),
   creditTransactions: many(creditTransactions),
   eventParticipations: many(eventParticipants),
   departmentMemberships: many(departmentMembers),
@@ -374,6 +378,128 @@ export const userBadges = pgTable("user_badges", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Achievement Types for the gamification system
+export const achievementTypes = pgTable("achievement_types", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  description: text("description").notNull(),
+  category: text("category").notNull(), // سلامت جسمی، سلامت روانی، تغذیه، فعالیت روزانه
+  icon: text("icon").notNull(),
+  color: text("color").notNull().default("tiffany"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Achievements for the gamification system
+export const achievements = pgTable("achievements", {
+  id: serial("id").primaryKey(),
+  typeId: integer("type_id").notNull().references(() => achievementTypes.id),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  requirement: text("requirement").notNull(),
+  targetValue: integer("target_value").notNull(),
+  metricType: text("metric_type").notNull(), // steps, water, sleep, exercise, etc.
+  icon: text("icon").notNull(),
+  level: integer("level").default(1).notNull(), // برخی از دستاوردها سطح‌های مختلف دارند
+  xpReward: integer("xp_reward").default(50).notNull(),
+  creditReward: integer("credit_reward").default(100),
+  rarity: text("rarity").default("common"), // common, uncommon, rare, epic, legendary
+  isSecret: boolean("is_secret").default(false), // آیا یک دستاورد مخفی است
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// User achievements
+export const userAchievements = pgTable("user_achievements", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  achievementId: integer("achievement_id").notNull().references(() => achievements.id),
+  earnedDate: date("earned_date").notNull(),
+  progress: integer("progress").default(0), // پیشرفت کاربر به سمت دستاورد (0-100)
+  isCompleted: boolean("is_completed").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Streaks system for tracking daily engagement
+export const streaks = pgTable("streaks", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  type: text("type").notNull(), // login, workout, meditation, water, nutrition
+  currentStreak: integer("current_streak").default(0).notNull(),
+  longestStreak: integer("longest_streak").default(0).notNull(),
+  lastUpdateDate: date("last_update_date").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Daily quests system
+export const quests = pgTable("quests", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(), // daily, weekly, social, workplace
+  difficulty: text("difficulty").default("easy"), // easy, medium, hard
+  requirement: text("requirement").notNull(),
+  targetValue: integer("target_value").notNull(),
+  metricType: text("metric_type").notNull(), // steps, water, meditation, etc.
+  xpReward: integer("xp_reward").default(20).notNull(),
+  creditReward: integer("credit_reward").default(50),
+  isActive: boolean("is_active").default(true),
+  refreshType: text("refresh_type").default("daily"), // daily, weekly, monthly, once
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// User quests
+export const userQuests = pgTable("user_quests", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  questId: integer("quest_id").notNull().references(() => quests.id),
+  issueDate: date("issue_date").notNull(),
+  expiryDate: date("expiry_date").notNull(),
+  currentValue: integer("current_value").default(0),
+  isCompleted: boolean("is_completed").default(false),
+  completedDate: date("completed_date"),
+  rewardClaimed: boolean("reward_claimed").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Seasonal challenges (limited-time events)
+export const seasonalChallenges = pgTable("seasonal_challenges", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  season: text("season").notNull(), // بهار 1403، تابستان 1403، etc.
+  startDate: date("start_date").notNull(),
+  endDate: date("end_date").notNull(),
+  points: integer("points").default(100).notNull(),
+  targetValue: integer("target_value").notNull(),
+  targetMetric: text("target_metric").notNull(),
+  theme: text("theme").notNull(), // تم فصل
+  bannerImage: text("banner_image"),
+  xpReward: integer("xp_reward").default(200).notNull(),
+  creditReward: integer("credit_reward").default(500),
+  badgeId: integer("badge_id").references(() => badges.id),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// User seasonal challenges
+export const userSeasonalChallenges = pgTable("user_seasonal_challenges", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  seasonalChallengeId: integer("seasonal_challenge_id").notNull().references(() => seasonalChallenges.id),
+  currentValue: integer("current_value").default(0),
+  isCompleted: boolean("is_completed").default(false),
+  completedDate: date("completed_date"),
+  rewardClaimed: boolean("reward_claimed").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Events model
 export const events = pgTable("events", {
   id: serial("id").primaryKey(),
@@ -525,6 +651,78 @@ export const creditTransactionsRelations = relations(creditTransactions, ({ one 
   }),
 }));
 
+// روابط دستاوردها
+export const achievementsRelations = relations(achievements, ({ one, many }) => ({
+  type: one(achievementTypes, {
+    fields: [achievements.typeId],
+    references: [achievementTypes.id],
+  }),
+  userAchievements: many(userAchievements),
+}));
+
+// روابط انواع دستاوردها
+export const achievementTypesRelations = relations(achievementTypes, ({ many }) => ({
+  achievements: many(achievements),
+}));
+
+// روابط دستاوردهای کاربر
+export const userAchievementsRelations = relations(userAchievements, ({ one }) => ({
+  user: one(users, {
+    fields: [userAchievements.userId],
+    references: [users.id],
+  }),
+  achievement: one(achievements, {
+    fields: [userAchievements.achievementId],
+    references: [achievements.id],
+  }),
+}));
+
+// روابط استریک‌ها
+export const streaksRelations = relations(streaks, ({ one }) => ({
+  user: one(users, {
+    fields: [streaks.userId],
+    references: [users.id],
+  }),
+}));
+
+// روابط کوئست‌ها
+export const questsRelations = relations(quests, ({ many }) => ({
+  userQuests: many(userQuests),
+}));
+
+// روابط کوئست‌های کاربر
+export const userQuestsRelations = relations(userQuests, ({ one }) => ({
+  user: one(users, {
+    fields: [userQuests.userId],
+    references: [users.id],
+  }),
+  quest: one(quests, {
+    fields: [userQuests.questId],
+    references: [quests.id],
+  }),
+}));
+
+// روابط چالش‌های فصلی
+export const seasonalChallengesRelations = relations(seasonalChallenges, ({ many, one }) => ({
+  userSeasonalChallenges: many(userSeasonalChallenges),
+  badge: one(badges, {
+    fields: [seasonalChallenges.badgeId],
+    references: [badges.id],
+  }),
+}));
+
+// روابط چالش‌های فصلی کاربر
+export const userSeasonalChallengesRelations = relations(userSeasonalChallenges, ({ one }) => ({
+  user: one(users, {
+    fields: [userSeasonalChallenges.userId],
+    references: [users.id],
+  }),
+  seasonalChallenge: one(seasonalChallenges, {
+    fields: [userSeasonalChallenges.seasonalChallengeId],
+    references: [seasonalChallenges.id],
+  }),
+}));
+
 // مدل نظرسنجی‌ها
 export const surveys = pgTable("surveys", {
   id: serial("id").primaryKey(),
@@ -595,6 +793,16 @@ export const insertCreditTransactionSchema = createInsertSchema(creditTransactio
 export const insertSurveySchema = createInsertSchema(surveys).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertSurveyResponseSchema = createInsertSchema(surveyResponses).omit({ id: true, createdAt: true });
 
+// New gamification schemas
+export const insertAchievementTypeSchema = createInsertSchema(achievementTypes).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertAchievementSchema = createInsertSchema(achievements).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertStreakSchema = createInsertSchema(streaks).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertQuestSchema = createInsertSchema(quests).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertUserQuestSchema = createInsertSchema(userQuests).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertSeasonalChallengeSchema = createInsertSchema(seasonalChallenges).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertUserSeasonalChallengeSchema = createInsertSchema(userSeasonalChallenges).omit({ id: true, createdAt: true, updatedAt: true });
+
 // Types - تعریف تایپ‌های خروجی و ورودی
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -664,3 +872,28 @@ export type InsertSurvey = z.infer<typeof insertSurveySchema>;
 
 export type SurveyResponse = typeof surveyResponses.$inferSelect;
 export type InsertSurveyResponse = z.infer<typeof insertSurveyResponseSchema>;
+
+// New gamification types
+export type AchievementType = typeof achievementTypes.$inferSelect;
+export type InsertAchievementType = z.infer<typeof insertAchievementTypeSchema>;
+
+export type Achievement = typeof achievements.$inferSelect;
+export type InsertAchievement = z.infer<typeof insertAchievementSchema>;
+
+export type UserAchievement = typeof userAchievements.$inferSelect;
+export type InsertUserAchievement = z.infer<typeof insertUserAchievementSchema>;
+
+export type Streak = typeof streaks.$inferSelect;
+export type InsertStreak = z.infer<typeof insertStreakSchema>;
+
+export type Quest = typeof quests.$inferSelect;
+export type InsertQuest = z.infer<typeof insertQuestSchema>;
+
+export type UserQuest = typeof userQuests.$inferSelect;
+export type InsertUserQuest = z.infer<typeof insertUserQuestSchema>;
+
+export type SeasonalChallenge = typeof seasonalChallenges.$inferSelect;
+export type InsertSeasonalChallenge = z.infer<typeof insertSeasonalChallengeSchema>;
+
+export type UserSeasonalChallenge = typeof userSeasonalChallenges.$inferSelect;
+export type InsertUserSeasonalChallenge = z.infer<typeof insertUserSeasonalChallengeSchema>;
