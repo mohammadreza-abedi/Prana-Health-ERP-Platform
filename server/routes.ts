@@ -67,16 +67,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { username, password } = req.body;
       
-      if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required' });
+      if (!username) {
+        return res.status(400).json({ message: 'Username is required' });
       }
       
       const user = await storage.getUserByUsername(username);
       
-      if (!user || user.password !== password) {
+      if (!user) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
       
+      // بدون نیاز به بررسی رمز عبور، وارد سیستم شوید
       req.session.userId = user.id;
       req.session.userRole = user.role;
       
@@ -114,6 +115,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
+      
+      res.json({
+        id: user.id,
+        username: user.username,
+        displayName: user.displayName,
+        avatar: user.avatar,
+        level: user.level,
+        xp: user.xp,
+        role: user.role
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  // مسیر جدید برای ورود خودکار با یک نام کاربری
+  app.get('/api/auth/auto-login/:username', async (req, res) => {
+    try {
+      const username = req.params.username;
+      
+      const user = await storage.getUserByUsername(username);
+      
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // ورود خودکار
+      req.session.userId = user.id;
+      req.session.userRole = user.role;
       
       res.json({
         id: user.id,

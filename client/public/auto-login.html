@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود خودکار به پرانا</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'YekanBakh';
+            src: url('/assets/YekanBakh-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'YekanBakh';
+            src: url('/assets/YekanBakh-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        
+        body {
+            font-family: 'YekanBakh', sans-serif;
+            background-color: #f0f2f5;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #4CC9F0, #4895EF);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, #4361EE, #3F37C9);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="glass rounded-2xl p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center mx-auto">
+                <span class="text-white font-black text-2xl">پ</span>
+            </div>
+            <h1 class="text-2xl font-bold mt-4 bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">پرانا - دستیار هوشمند سلامت</h1>
+            <p class="text-gray-600 mt-2">انتخاب کنید با کدام حساب کاربری می‌خواهید وارد شوید</p>
+        </div>
+        
+        <div class="space-y-4">
+            <button onclick="autoLogin('admin')" class="btn-primary w-full py-3 px-4 rounded-xl text-white font-bold flex items-center justify-between">
+                <span>مدیر سیستم</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v4.59l-2.22-2.22a.75.75 0 10-1.06 1.06l3.5 3.5a.75.75 0 001.06 0l3.5-3.5a.75.75 0 10-1.06-1.06L10.75 11.34V6.75z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            
+            <button onclick="autoLogin('hr_manager')" class="btn-primary w-full py-3 px-4 rounded-xl text-white font-bold flex items-center justify-between">
+                <span>مدیر منابع انسانی</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v4.59l-2.22-2.22a.75.75 0 10-1.06 1.06l3.5 3.5a.75.75 0 001.06 0l3.5-3.5a.75.75 0 10-1.06-1.06L10.75 11.34V6.75z" clip-rule="evenodd" />
+                </svg>
+            </button>
+            
+            <button onclick="autoLogin('test_user')" class="btn-primary w-full py-3 px-4 rounded-xl text-white font-bold flex items-center justify-between">
+                <span>کاربر عادی</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v4.59l-2.22-2.22a.75.75 0 10-1.06 1.06l3.5 3.5a.75.75 0 001.06 0l3.5-3.5a.75.75 0 10-1.06-1.06L10.75 11.34V6.75z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+        
+        <div class="mt-8 text-center">
+            <p class="text-sm text-gray-500">پرانا - مزایای سلامتی به شکل گیمیفیکیشن</p>
+        </div>
+    </div>
+    
+    <script>
+        function autoLogin(username) {
+            fetch(`/api/auth/auto-login/${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Login successful:', data);
+                    window.location.href = '/';
+                })
+                .catch(error => {
+                    console.error('Login error:', error);
+                    alert('خطا در ورود به سیستم. لطفا دوباره تلاش کنید.');
+                });
+        }
+    </script>
+</body>
+</html>
