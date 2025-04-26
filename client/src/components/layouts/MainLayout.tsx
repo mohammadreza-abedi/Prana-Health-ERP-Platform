@@ -16,8 +16,12 @@ import {
   Calendar,
   ChevronRight,
   ChevronLeft,
+  Brain,
+  FileText,
+  CreditCard,
 } from "lucide-react";
 import useIsMobile from "@/hooks/use-mobile";
+import Footer from "./Footer";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -61,6 +65,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
       path: "/",
     },
     {
+      title: "تست‌های روانشناسی",
+      icon: <Brain className="h-5 w-5" />,
+      path: "/psychological-tests",
+    },
+    {
       title: "چالش‌ها",
       icon: <Award className="h-5 w-5" />,
       path: "/challenges",
@@ -84,6 +93,25 @@ export default function MainLayout({ children }: MainLayoutProps) {
       title: "رویدادها",
       icon: <Calendar className="h-5 w-5" />,
       path: "/events",
+    },
+  ];
+  
+  // Additional links
+  const additionalLinks = [
+    {
+      title: "تعرفه‌ها",
+      icon: <CreditCard className="h-5 w-5" />,
+      path: "/pricing",
+    },
+    {
+      title: "درباره ما",
+      icon: <FileText className="h-5 w-5" />,
+      path: "/about",
+    },
+    {
+      title: "قوانین و مقررات",
+      icon: <FileText className="h-5 w-5" />,
+      path: "/terms",
     },
   ];
 
@@ -148,8 +176,49 @@ export default function MainLayout({ children }: MainLayoutProps) {
           {/* Navigation */}
           <div className="flex-1 py-6 overflow-y-auto mica my-4 mx-2 rounded-xl">
             <nav className="px-2">
-              <ul className="space-y-1">
+              <div className="mb-2 px-3">
+                <h2 className="text-xs font-medium text-slate-500 dark:text-slate-400">دسترسی سریع</h2>
+              </div>
+              
+              <ul className="space-y-1 mb-4">
                 {menuItems.map((item, idx) => {
+                  const isActive = location === item.path;
+                  return (
+                    <li key={idx}>
+                      <Link href={item.path}>
+                        <div
+                          className={`flex items-center px-3 py-3 rounded-lg transition-all ${
+                            isActive
+                              ? "bg-tiffany/10 text-tiffany dark:bg-tiffany/20"
+                              : "hover:bg-slate-100 dark:hover:bg-slate-800"
+                          }`}
+                        >
+                          <div className={`${isActive ? "text-tiffany" : "text-slate-500 dark:text-slate-400"}`}>
+                            {item.icon}
+                          </div>
+                          {isExpanded && (
+                            <motion.span
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className={`mr-3 font-medium ${isActive ? "text-tiffany" : ""}`}
+                            >
+                              {item.title}
+                            </motion.span>
+                          )}
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+              
+              <div className="mb-2 px-3">
+                <h2 className="text-xs font-medium text-slate-500 dark:text-slate-400">اطلاعات و قوانین</h2>
+              </div>
+              
+              <ul className="space-y-1">
+                {additionalLinks.map((item, idx) => {
                   const isActive = location === item.path;
                   return (
                     <li key={idx}>
@@ -212,7 +281,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       </AnimatePresence>
 
       {/* Main content */}
-      <div className="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-900">
+      <div className="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-900 flex flex-col">
         {/* Mobile header */}
         {isMobile && (
           <div className="sticky top-0 z-20 p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
@@ -237,7 +306,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
         )}
 
         {/* Page content */}
-        <div className="p-6">{children}</div>
+        <div className="flex-1 p-6">{children}</div>
+        
+        {/* Footer */}
+        <Footer />
       </div>
     </div>
   );
