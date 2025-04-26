@@ -1,16 +1,18 @@
 import { GlassCard } from "../ui/glass-card";
 import { motion } from "framer-motion";
-import { useAuth } from "@/lib/useAuth";
 import { formatDate } from "@/lib/utils";
 
 export default function DashboardUserSummary() {
-  const { user } = useAuth();
-  
-  if (!user) return null;
+  // تعریف داده‌های ثابت کاربر به جای استفاده از useAuth
+  const mockUser = {
+    displayName: "مدیر سیستم",
+    xp: 450,
+    level: 5
+  };
   
   // Calculate XP needed for next level (simple formula: current level * 100)
-  const xpForNextLevel = user.level * 100;
-  const xpNeeded = xpForNextLevel - user.xp % xpForNextLevel;
+  const xpForNextLevel = mockUser.level * 100;
+  const xpNeeded = xpForNextLevel - mockUser.xp % xpForNextLevel;
   
   return (
     <GlassCard className="p-6 rounded-xl mb-6">
@@ -20,7 +22,7 @@ export default function DashboardUserSummary() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <h2 className="text-xl font-bold mb-1">سلام، {user.displayName.split(' ')[0]}! 👋</h2>
+          <h2 className="text-xl font-bold mb-1">سلام، {mockUser.displayName.split(' ')[0]}! 👋</h2>
           <p className="text-slate-500 dark:text-slate-400">
             امروز <span className="text-tiffany font-medium">{formatDate(new Date())}</span> است. آماده‌ای که با انرژی روزت رو شروع کنی؟
           </p>
@@ -36,7 +38,7 @@ export default function DashboardUserSummary() {
             <path d="M18 3L21.3 13.2H32.1L23.4 19.5L26.7 29.7L18 23.4L9.3 29.7L12.6 19.5L3.9 13.2H14.7L18 3Z" fill="currentColor"/>
           </svg>
           <div className="mr-2">
-            <h3 className="text-md font-medium">{user.xp} امتیاز</h3>
+            <h3 className="text-md font-medium">{mockUser.xp} امتیاز</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">{xpNeeded} امتیاز تا سطح بعدی</p>
           </div>
         </motion.div>

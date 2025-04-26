@@ -9,10 +9,8 @@ import HRDashboard from "@/pages/HRDashboard";
 import Challenges from "@/pages/Challenges";
 import Leaderboard from "@/pages/Leaderboard";
 import Profile from "@/pages/Profile";
-import Login from "@/pages/Login";
 import AutoLogin from "@/pages/auto-login";
 import MainLayout from "@/components/layouts/MainLayout";
-import { useAuth } from "./lib/useAuth";
 
 function LoadingScreen() {
   return (
