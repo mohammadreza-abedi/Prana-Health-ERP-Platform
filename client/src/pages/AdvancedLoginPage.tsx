@@ -92,40 +92,41 @@ export default function AdvancedLoginPage() {
     },
   });
 
-  // ارسال فرم ورود
+  // ارسال فرم ورود - در نسخه دمو مستقیماً کاربر را هدایت می‌کند
   const onLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
     setIsLoading(true);
     try {
       console.log('Login values:', values);
       
-      // در اینجا باید اتصال به API واقعی انجام شود
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: values.username,
-          password: values.password,
-        }),
-      });
+      // در نسخه دمو نیازی به اتصال به API واقعی نیست
+      // به جای آن، مستقیماً کاربر را براساس نوع کاربری به صفحه مربوطه هدایت می‌کنیم
       
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-      
-      const data = await response.json();
-      
+      // نمایش پیام موفقیت
       toast({
         title: 'ورود موفقیت‌آمیز',
         description: 'در حال انتقال به داشبورد...',
         variant: 'default',
       });
       
-      // هدایت کاربر به صفحه داشبورد
+      // هدایت کاربر به صفحه داشبورد مربوطه براساس نوع کاربری
       setTimeout(() => {
-        navigate('/');
-      }, 1500);
+        switch(values.userType) {
+          case 'employee':
+            navigate('/');
+            break;
+          case 'customer':
+            navigate('/health-dashboard');
+            break;
+          case 'manager':
+            navigate('/hr-dashboard');
+            break;
+          case 'regular':
+            navigate('/enhanced-dashboard');
+            break;
+          default:
+            navigate('/');
+        }
+      }, 1200);
     } catch (error) {
       console.error('Login error:', error);
       toast({
@@ -138,32 +139,17 @@ export default function AdvancedLoginPage() {
     }
   };
 
-  // ارسال فرم ثبت‌نام
+  // ارسال فرم ثبت‌نام - در نسخه دمو مستقیماً کاربر را به تب ورود هدایت می‌کند
   const onRegisterSubmit = async (values: z.infer<typeof registerSchema>) => {
     setIsLoading(true);
     try {
       console.log('Register values:', values);
       
-      // در اینجا باید اتصال به API واقعی انجام شود
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: values.username,
-          displayName: values.displayName,
-          email: values.email,
-          password: values.password,
-        }),
-      });
+      // در نسخه دمو نیازی به اتصال به API واقعی نیست
+      // شبیه‌سازی تاخیر برای واقعی‌تر شدن تجربه کاربری
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      if (!response.ok) {
-        throw new Error('Registration failed');
-      }
-      
-      const data = await response.json();
-      
+      // نمایش پیام موفقیت
       toast({
         title: 'ثبت‌نام موفقیت‌آمیز',
         description: 'حساب کاربری شما با موفقیت ایجاد شد. اکنون می‌توانید وارد شوید.',
@@ -173,6 +159,7 @@ export default function AdvancedLoginPage() {
       // تغییر به تب ورود
       setActiveTab('login');
       loginForm.setValue('username', values.username);
+      loginForm.setValue('userType', values.userType);
     } catch (error) {
       console.error('Registration error:', error);
       toast({
