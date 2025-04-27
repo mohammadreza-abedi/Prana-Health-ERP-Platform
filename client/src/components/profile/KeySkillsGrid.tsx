@@ -60,7 +60,7 @@ export function KeySkillsGrid({ skills }: KeySkillsGridProps) {
     .sort((a, b) => b.level - a.level);
   
   // مقدارهای منحصر به فرد برای اندوزمنت ها
-  const uniqueEndorsementCounts = [...new Set(skills.map(s => s.endorsements))].filter(Boolean);
+  const uniqueEndorsementCounts = Array.from(new Set(skills.map(s => s.endorsements))).filter(Boolean);
   
   // گرفتن رنگ مهارت بر اساس سطح
   const getSkillColor = (level: number) => {

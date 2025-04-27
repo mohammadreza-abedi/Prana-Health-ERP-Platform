@@ -96,7 +96,7 @@ export function CareerTimeline({ experience, education }: CareerTimelineProps) {
   });
   
   // گرفتن سال‌های منحصر به فرد برای نمایش در خط زمانی
-  const years = [...new Set(
+  const years = Array.from(new Set(
     timelineEvents.flatMap(event => {
       const startYear = event.startDate.includes('/') 
         ? parseInt(event.startDate.split('/')[0]) 
@@ -114,7 +114,7 @@ export function CareerTimeline({ experience, education }: CareerTimelineProps) {
         (_, i) => startYear + i
       );
     })
-  )].sort((a, b) => b - a); // مرتب‌سازی نزولی
+  )).sort((a, b) => b - a); // مرتب‌سازی نزولی
   
   // فیلتر وقایع بر اساس نوع نمایش
   const filteredEvents = timelineEvents.filter(event => {
