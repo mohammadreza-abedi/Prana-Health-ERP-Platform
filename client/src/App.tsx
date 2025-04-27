@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Switch, Route } from "wouter";
+import { Switch, Route, Router } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -31,9 +31,9 @@ import PulsingLogo from "@/components/ui/pulsing-logo";
 // استفاده از کامپوننت LoadingScreen جداگانه
 import LoadingScreen from '@/components/ui/loading-screen';
 
-function Router() {
+// کامپوننت مسیریابی اصلی
+function AppRoutes() {
   const [isLoading, setIsLoading] = useState(true);
-  const [location, setLocation] = useState(window.location.pathname);
   
   // شبیه‌سازی بارگذاری اولیه
   useEffect(() => {
@@ -44,61 +44,163 @@ function Router() {
     return () => clearTimeout(timer);
   }, []);
   
-  // به‌روزرسانی مسیر با تغییر url
-  useEffect(() => {
-    const handleLocationChange = () => {
-      setLocation(window.location.pathname);
-    };
-    
-    window.addEventListener('popstate', handleLocationChange);
-    
-    return () => {
-      window.removeEventListener('popstate', handleLocationChange);
-    };
-  }, []);
-  
   // نمایش صفحه بارگذاری تا زمانی که داده‌ها آماده شوند
   if (isLoading) {
     return <LoadingScreen />;
   }
   
-  // بررسی می‌کنیم که آیا مسیر فعلی صفحه لاگین یا هوم است
-  const isPublicPage = location === '/login' || location === '/';
-  
-  // اگر صفحه عمومی است، بدون MainLayout نمایش می‌دهیم
-  if (isPublicPage) {
-    return (
-      <Switch>
-        <Route path="/" component={HomePage} />
-        <Route path="/login" component={AdvancedLoginPage} />
-      </Switch>
-    );
-  }
-  
-  // برای سایر صفحات داخلی، با لایه MainLayout نمایش داده می‌شوند
   return (
-    <MainLayout>
-      <Switch>
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/enhanced-dashboard" component={EnhancedDashboard} />
-        <Route path="/hr-dashboard" component={HRDashboard} />
-        <Route path="/health-dashboard" component={HealthDashboard} />
-        <Route path="/workout-dashboard" component={WorkoutDashboard} />
-        <Route path="/challenges" component={Challenges} />
-        <Route path="/achievements" component={Achievements} />
-        <Route path="/achievements-dashboard" component={AchievementsDashboard} />
-        <Route path="/medical-center" component={MedicalCenterPage} />
-        <Route path="/organizational-health" component={OrganizationalHealthPage} />
-        <Route path="/leaderboard" component={Leaderboard} />
-        <Route path="/profile" component={Profile} />
-        <Route path="/user-profile" component={UserProfile} />
-        <Route path="/avatar-customizer" component={AvatarCustomizer} />
-        <Route path="/psychological-tests" component={PsychologicalTests} />
-        <Route path="/settings" component={Settings} />
-        <Route path="/auto-login" component={AutoLogin} />
-        <Route component={NotFound} />
-      </Switch>
-    </MainLayout>
+    <>
+      {/* مسیرهای عمومی بدون MainLayout */}
+      <Route path="/" component={HomePage} />
+      <Route path="/login" component={AdvancedLoginPage} />
+      
+      {/* مسیرهای داخلی با MainLayout */}
+      <Route path="/dashboard">
+        {() => (
+          <MainLayout>
+            <Dashboard />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/enhanced-dashboard">
+        {() => (
+          <MainLayout>
+            <EnhancedDashboard />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/hr-dashboard">
+        {() => (
+          <MainLayout>
+            <HRDashboard />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/health-dashboard">
+        {() => (
+          <MainLayout>
+            <HealthDashboard />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/workout-dashboard">
+        {() => (
+          <MainLayout>
+            <WorkoutDashboard />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/challenges">
+        {() => (
+          <MainLayout>
+            <Challenges />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/achievements">
+        {() => (
+          <MainLayout>
+            <Achievements />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/achievements-dashboard">
+        {() => (
+          <MainLayout>
+            <AchievementsDashboard />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/medical-center">
+        {() => (
+          <MainLayout>
+            <MedicalCenterPage />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/organizational-health">
+        {() => (
+          <MainLayout>
+            <OrganizationalHealthPage />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/leaderboard">
+        {() => (
+          <MainLayout>
+            <Leaderboard />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/profile">
+        {() => (
+          <MainLayout>
+            <Profile />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/user-profile">
+        {() => (
+          <MainLayout>
+            <UserProfile />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/avatar-customizer">
+        {() => (
+          <MainLayout>
+            <AvatarCustomizer />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/psychological-tests">
+        {() => (
+          <MainLayout>
+            <PsychologicalTests />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/settings">
+        {() => (
+          <MainLayout>
+            <Settings />
+          </MainLayout>
+        )}
+      </Route>
+      
+      <Route path="/auto-login">
+        {() => (
+          <MainLayout>
+            <AutoLogin />
+          </MainLayout>
+        )}
+      </Route>
+      
+      {/* صفحه 404 */}
+      <Route>
+        {() => (
+          <MainLayout>
+            <NotFound />
+          </MainLayout>
+        )}
+      </Route>
+    </>
   );
 }
 
@@ -108,7 +210,11 @@ function App() {
       <WebSocketProvider>
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <Router>
+            <Switch>
+              <AppRoutes />
+            </Switch>
+          </Router>
         </TooltipProvider>
       </WebSocketProvider>
     </QueryClientProvider>

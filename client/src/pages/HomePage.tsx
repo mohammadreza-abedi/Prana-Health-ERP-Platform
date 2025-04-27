@@ -33,16 +33,12 @@ interface FeatureCardProps {
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, color, delay }) => {
-  // Convert color string (like "tiffany") to actual CSS class (like "border-tiffany")
-  const borderColorClass = `border-${color}`;
-  const textColorClass = `text-${color}`;
-  
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className={`glass h-full ${borderColorClass}`}
+      className={`glass h-full`}
     >
       <CardContent className="p-6 flex flex-col h-full">
         <div className="mb-4">
@@ -68,6 +64,7 @@ interface ModuleCardProps {
 const ModuleCard: React.FC<ModuleCardProps> = ({ title, description, icon, path, color, bgColor, delay }) => {
   const [, navigate] = useLocation();
   
+  // ساده‌سازی استایل‌ها برای عملکرد بهتر
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -78,13 +75,13 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ title, description, icon, path,
       onClick={() => navigate(path)}
     >
       <CardContent className="p-5 flex flex-col h-full">
-        <div className={`w-12 h-12 rounded-full ${color} flex items-center justify-center mb-4`}>
+        <div className="w-12 h-12 rounded-full bg-white/50 dark:bg-slate-800/50 flex items-center justify-center mb-4">
           {icon}
         </div>
         <CardTitle className="text-lg mb-2">{title}</CardTitle>
         <CardDescription className="text-sm mb-4">{description}</CardDescription>
         <div className="mt-auto flex justify-end">
-          <Button variant="ghost" size="sm" className={`text-xs text-${color.replace('bg-', '')}`}>
+          <Button variant="ghost" size="sm" className="text-xs text-tiffany">
             ورود به بخش <ArrowRight className="h-3 w-3 mr-1" />
           </Button>
         </div>
