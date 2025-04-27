@@ -12,7 +12,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BarChart, Search, Plus, Sparkles, Star, X, Award, MessageSquare, Code, Zap, ArrowRight } from "lucide-react";
+import { BarChart, Search, Plus, Sparkles, Star, X, Award, MessageSquare, Code, ArrowRight, Zap } from "lucide-react";
 import { 
   Tooltip, 
   TooltipContent, 

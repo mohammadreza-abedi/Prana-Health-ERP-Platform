@@ -25,6 +25,7 @@ import MedicalCenterPage from "@/pages/MedicalCenterPage";
 import OrganizationalHealthPage from "@/pages/OrganizationalHealthPage";
 import AdvancedLoginPage from "@/pages/AdvancedLoginPage";
 import HSESmartDashboard from "@/pages/HSESmartDashboard";
+import AdvancedProfilePage from "@/pages/AdvancedProfilePage";
 import MainLayout from "@/components/layouts/MainLayout";
 import PulsingLogo from "@/components/ui/pulsing-logo";
 
@@ -65,6 +66,7 @@ function Router() {
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile" component={Profile} />
         <Route path="/user-profile" component={UserProfile} />
+        <Route path="/advanced-profile" component={AdvancedProfilePage} />
         <Route path="/avatar-customizer" component={AvatarCustomizer} />
         <Route path="/psychological-tests" component={PsychologicalTests} />
         <Route path="/settings" component={Settings} />
