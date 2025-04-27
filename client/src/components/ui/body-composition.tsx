@@ -14,7 +14,8 @@ import { Progress } from '@/components/ui/progress';
 import { ProgressRing } from '@/components/ui/progress-ring';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Activity, BarChart3, Calendar, Edit, Plus, Save, Scale, Trash2, TrendingUp, FileText, Heart, Target, ArrowLeft, ArrowRight, Info, HelpCircle, LifeBuoy } from 'lucide-react';
+import { Activity, BarChart3, Calendar, Edit, Plus, Save, Scale, Trash2, TrendingUp, FileText, Heart, Target, ArrowLeft, ArrowRight, Info, HelpCircle, LifeBuoy, Ruler, Droplet } from 'lucide-react';
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip, Legend, ResponsiveContainer } from 'recharts';
 import { toPersianDigits, formatDate } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -320,6 +321,24 @@ export function BodyComposition() {
     return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
   });
   
+  // داده‌های نمودار
+  const chartData = [...measurements]
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .map(m => ({
+      date: m.date.split('-').reverse().join('/'),
+      weight: m.weight,
+      bodyFat: m.bodyFatPercentage,
+      muscle: m.musclePercentage,
+      water: m.waterPercentage,
+      bmi: m.bmi,
+      visceralFat: m.visceralFat,
+      waist: m.waistCircumference,
+      hip: m.hipCircumference
+    }));
+  
+  // انتخاب نوع نمودار
+  const [chartType, setChartType] = useState<'weight' | 'composition' | 'circumference'>('weight');
+  
   // انتخاب داده‌های مقایسه
   const comparisonData = selectedMeasurements.map(id => 
     measurements.find(m => m.id === id)
@@ -374,7 +393,7 @@ export function BodyComposition() {
                 
                 {/* درصد چربی */}
                 <div className="bg-card rounded-lg border p-4 flex flex-col items-center justify-center text-center">
-                  <Droplet className="h-6 w-6 text-yellow-500 mb-2" />
+                  <WaterDroplet className="h-6 w-6 text-yellow-500 mb-2" />
                   <div className="text-2xl font-bold">
                     {latestMeasurement.bodyFatPercentage ? toPersianDigits(latestMeasurement.bodyFatPercentage) : '-'}<span className="text-sm font-normal text-muted-foreground">%</span>
                   </div>
@@ -442,7 +461,7 @@ export function BodyComposition() {
                 {/* درصد آب */}
                 <div className="bg-card/50 rounded-lg border p-3 flex items-center gap-3">
                   <div className="shrink-0">
-                    <Droplet className="h-5 w-5 text-blue-500" />
+                    <WaterDroplet className="h-5 w-5 text-blue-500" />
                   </div>
                   <div>
                     <div className="text-sm font-medium">درصد آب</div>
@@ -1217,7 +1236,7 @@ function NewMeasurementForm({
 }
 
 // آیکون‌های اضافی
-const Droplet = (props: any) => (
+const WaterDroplet = (props: any) => (
   <svg
     {...props}
     xmlns="http://www.w3.org/2000/svg"
