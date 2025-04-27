@@ -1,0 +1,70 @@
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+
+export default function PranaGlassUI() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0b1d3a] via-[#0d223f] to-[#0f2845] p-8 font-sans">
+      <div className="max-w-6xl mx-auto flex flex-col gap-8">
+        <Tabs defaultValue="dashboard">
+          <TabsList className="glass bg-white/10 backdrop-blur-md border border-white/20 shadow-xl rounded-2xl p-2 flex justify-center mb-8">
+            <TabsTrigger value="dashboard" className="text-white hover:text-yellow-400">داشبورد</TabsTrigger>
+            <TabsTrigger value="profile" className="text-white hover:text-yellow-400">پروفایل</TabsTrigger>
+            <TabsTrigger value="club" className="text-white hover:text-yellow-400">کلاب</TabsTrigger>
+            <TabsTrigger value="settings" className="text-white hover:text-yellow-400">تنظیمات</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="dashboard">
+            <Card className="glass bg-white/10 backdrop-blur-xl p-6 border border-white/20 rounded-3xl shadow-2xl">
+              <CardContent>
+                <h1 className="text-3xl font-bold text-white mb-6">داشبورد اصلی</h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-white/5 backdrop-blur-lg rounded-xl p-4 flex flex-col gap-2">
+                    <span className="text-sm text-blue-300">پیشرفت پروژه</span>
+                    <Progress value={70} className="h-3 bg-white/10" />
+                  </div>
+                  <div className="bg-white/5 backdrop-blur-lg rounded-xl p-4 flex flex-col gap-2">
+                    <span className="text-sm text-blue-300">سلامت شغلی</span>
+                    <Progress value={85} className="h-3 bg-white/10" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="profile">
+            <Card className="glass bg-white/10 backdrop-blur-xl p-6 border border-white/20 rounded-3xl shadow-2xl">
+              <CardContent>
+                <h1 className="text-3xl font-bold text-white mb-6">پروفایل من</h1>
+                <Input placeholder="نام کامل" className="bg-white/5 text-white placeholder:text-white/50" />
+                <Input placeholder="ایمیل سازمانی" className="bg-white/5 text-white placeholder:text-white/50 mt-4" />
+                <Button className="mt-6 bg-blue-500 hover:bg-blue-600 text-white rounded-xl">ذخیره تغییرات</Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="club">
+            <Card className="glass bg-white/10 backdrop-blur-xl p-6 border border-white/20 rounded-3xl shadow-2xl">
+              <CardContent>
+                <h1 className="text-3xl font-bold text-white mb-6">کلاب مدیران</h1>
+                <Badge className="bg-yellow-400/80 text-black rounded-full px-4 py-2">بحث‌های فعال</Badge>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <Card className="glass bg-white/10 backdrop-blur-xl p-6 border border-white/20 rounded-3xl shadow-2xl">
+              <CardContent>
+                <h1 className="text-3xl font-bold text-white mb-6">تنظیمات کاربری</h1>
+                <Button className="bg-red-500 hover:bg-red-600 text-white rounded-xl">حذف حساب کاربری</Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+}

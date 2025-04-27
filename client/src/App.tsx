@@ -23,6 +23,7 @@ import Achievements from "@/pages/Achievements";
 import AchievementsDashboard from "@/pages/AchievementsDashboard";
 import MedicalCenterPage from "@/pages/MedicalCenterPage";
 import OrganizationalHealthPage from "@/pages/OrganizationalHealthPage";
+import AdvancedLoginPage from "@/pages/AdvancedLoginPage";
 import MainLayout from "@/components/layouts/MainLayout";
 import PulsingLogo from "@/components/ui/pulsing-logo";
 
@@ -67,6 +68,7 @@ function Router() {
         <Route path="/psychological-tests" component={PsychologicalTests} />
         <Route path="/settings" component={Settings} />
         <Route path="/auto-login" component={AutoLogin} />
+        <Route path="/login" component={AdvancedLoginPage} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
