@@ -565,7 +565,7 @@ const IncidentTypesCard: React.FC = () => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip formatter={(value) => [`${value} مورد`, 'تعداد']} />
+            <Tooltip formatter={(value: number) => [`${value} مورد`, 'تعداد']} />
             <Legend verticalAlign="bottom" layout="horizontal" />
           </PieChart>
         </ResponsiveContainer>

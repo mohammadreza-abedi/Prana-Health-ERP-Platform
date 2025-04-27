@@ -169,6 +169,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
       path: "/",
     },
     {
+      title: "داشبورد تحلیلی پیشرفته",
+      icon: <Zap className="h-5 w-5" />,
+      path: "/advanced-analytics",
+    },
+    {
       title: "تست‌های روانشناسی",
       icon: <Brain className="h-5 w-5" />,
       path: "/psychological-tests",
