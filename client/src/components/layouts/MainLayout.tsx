@@ -130,16 +130,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const { toast } = useToast();
   const { user, logout } = useAuth();
   
-  // نوتیفیکیشن‌های سیستم
-  const { 
-    notifications, 
-    unreadCount, 
-    addNotification, 
-    markAsRead, 
-    markAllAsRead, 
-    clearNotification, 
-    clearAllNotifications 
-  } = useNotifications();
+  // نوتیفیکیشن‌های سیستم - با مقادیر ساده‌شده
+  const notifications = [];
+  const unreadCount = 0;
+  const addNotification = () => {};
+  const markAsRead = () => {};
+  const markAllAsRead = () => {};
+  const clearNotification = () => {};
+  const clearAllNotifications = () => {};
 
   // Set initial expanded state based on screen size
   useEffect(() => {
