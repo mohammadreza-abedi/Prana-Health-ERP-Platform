@@ -24,6 +24,7 @@ import AchievementsDashboard from "@/pages/AchievementsDashboard";
 import MedicalCenterPage from "@/pages/MedicalCenterPage";
 import OrganizationalHealthPage from "@/pages/OrganizationalHealthPage";
 import AdvancedLoginPage from "@/pages/AdvancedLoginPage";
+import HomePage from "@/pages/HomePage";
 import MainLayout from "@/components/layouts/MainLayout";
 import PulsingLogo from "@/components/ui/pulsing-logo";
 
@@ -32,6 +33,7 @@ import LoadingScreen from '@/components/ui/loading-screen';
 
 function Router() {
   const [isLoading, setIsLoading] = useState(true);
+  const [location, setLocation] = useState(window.location.pathname);
   
   // شبیه‌سازی بارگذاری اولیه
   useEffect(() => {
@@ -42,15 +44,41 @@ function Router() {
     return () => clearTimeout(timer);
   }, []);
   
+  // به‌روزرسانی مسیر با تغییر url
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setLocation(window.location.pathname);
+    };
+    
+    window.addEventListener('popstate', handleLocationChange);
+    
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, []);
+  
   // نمایش صفحه بارگذاری تا زمانی که داده‌ها آماده شوند
   if (isLoading) {
     return <LoadingScreen />;
   }
   
+  // بررسی می‌کنیم که آیا مسیر فعلی صفحه لاگین یا هوم است
+  const isPublicPage = location === '/login' || location === '/';
+  
+  // اگر صفحه عمومی است، بدون MainLayout نمایش می‌دهیم
+  if (isPublicPage) {
+    return (
+      <Switch>
+        <Route path="/" component={HomePage} />
+        <Route path="/login" component={AdvancedLoginPage} />
+      </Switch>
+    );
+  }
+  
+  // برای سایر صفحات داخلی، با لایه MainLayout نمایش داده می‌شوند
   return (
     <MainLayout>
       <Switch>
-        <Route path="/" component={EnhancedDashboard} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/enhanced-dashboard" component={EnhancedDashboard} />
         <Route path="/hr-dashboard" component={HRDashboard} />
@@ -68,7 +96,6 @@ function Router() {
         <Route path="/psychological-tests" component={PsychologicalTests} />
         <Route path="/settings" component={Settings} />
         <Route path="/auto-login" component={AutoLogin} />
-        <Route path="/login" component={AdvancedLoginPage} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
