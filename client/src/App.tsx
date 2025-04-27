@@ -22,6 +22,7 @@ import Settings from "@/pages/Settings";
 import Achievements from "@/pages/Achievements";
 import AchievementsDashboard from "@/pages/AchievementsDashboard";
 import MedicalCenterPage from "@/pages/MedicalCenterPage";
+import OrganizationalHealthPage from "@/pages/OrganizationalHealthPage";
 import MainLayout from "@/components/layouts/MainLayout";
 import PulsingLogo from "@/components/ui/pulsing-logo";
 
