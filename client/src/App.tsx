@@ -1,52 +1,40 @@
-import { useState, useEffect, createContext } from "react";
-import { Switch, Route, Router } from "wouter";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { WebSocketProvider } from "@/hooks/use-websocket";
-import HomePage from "@/pages/HomePage";
 import NotFound from "@/pages/not-found";
-import LoadingScreen from "@/components/ui/loading-screen";
+import Dashboard from "@/pages/Dashboard";
+import EnhancedDashboard from "@/pages/EnhancedDashboard";
+import HRDashboard from "@/pages/HRDashboard";
+import HealthDashboard from "@/pages/HealthDashboard";
+import WorkoutDashboard from "@/pages/WorkoutDashboard";
+import Challenges from "@/pages/Challenges";
+import Leaderboard from "@/pages/Leaderboard";
+import Profile from "@/pages/Profile";
+import UserProfile from "@/pages/UserProfile";
+import AvatarCustomizer from "@/pages/AvatarCustomizer";
+import AutoLogin from "@/pages/auto-login";
+import PsychologicalTests from "@/pages/PsychologicalTests";
+import Settings from "@/pages/Settings";
+import Achievements from "@/pages/Achievements";
+import AchievementsDashboard from "@/pages/AchievementsDashboard";
+import MedicalCenterPage from "@/pages/MedicalCenterPage";
+import OrganizationalHealthPage from "@/pages/OrganizationalHealthPage";
+import AdvancedLoginPage from "@/pages/AdvancedLoginPage";
+import MainLayout from "@/components/layouts/MainLayout";
+import PulsingLogo from "@/components/ui/pulsing-logo";
 
-// Auth Context برای استفاده در سراسر برنامه
-interface AuthContextType {
-  user: any | null;
-  logout: () => void;
-}
+// استفاده از کامپوننت LoadingScreen جداگانه
+import LoadingScreen from '@/components/ui/loading-screen';
 
-export const AuthContext = createContext<AuthContextType>({
-  user: null,
-  logout: () => {}
-});
-
-// Auth Provider Component
-const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user] = useState({ 
-    id: 1, 
-    username: 'admin', 
-    displayName: 'مدیر سیستم',
-    role: 'admin' 
-  });
-  
-  const logout = () => {
-    console.log('خروج از سیستم انجام شد');
-  };
-  
-  return (
-    <AuthContext.Provider value={{ user, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-// اپلیکیشن با پشتیبانی از کامپوننت‌های اصلی و انیمیشن
-function App() {
-  // نمایش لودینگ اسکرین هنگام بارگذاری
+function Router() {
   const [isLoading, setIsLoading] = useState(true);
   
+  // شبیه‌سازی بارگذاری اولیه
   useEffect(() => {
-    // شبیه‌سازی بارگذاری
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
@@ -54,24 +42,47 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
   
+  // نمایش صفحه بارگذاری تا زمانی که داده‌ها آماده شوند
   if (isLoading) {
     return <LoadingScreen />;
   }
+  
+  return (
+    <MainLayout>
+      <Switch>
+        <Route path="/" component={EnhancedDashboard} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/enhanced-dashboard" component={EnhancedDashboard} />
+        <Route path="/hr-dashboard" component={HRDashboard} />
+        <Route path="/health-dashboard" component={HealthDashboard} />
+        <Route path="/workout-dashboard" component={WorkoutDashboard} />
+        <Route path="/challenges" component={Challenges} />
+        <Route path="/achievements" component={Achievements} />
+        <Route path="/achievements-dashboard" component={AchievementsDashboard} />
+        <Route path="/medical-center" component={MedicalCenterPage} />
+        <Route path="/organizational-health" component={OrganizationalHealthPage} />
+        <Route path="/leaderboard" component={Leaderboard} />
+        <Route path="/profile" component={Profile} />
+        <Route path="/user-profile" component={UserProfile} />
+        <Route path="/avatar-customizer" component={AvatarCustomizer} />
+        <Route path="/psychological-tests" component={PsychologicalTests} />
+        <Route path="/settings" component={Settings} />
+        <Route path="/auto-login" component={AutoLogin} />
+        <Route path="/login" component={AdvancedLoginPage} />
+        <Route component={NotFound} />
+      </Switch>
+    </MainLayout>
+  );
+}
 
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <WebSocketProvider>
-        <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Router>
-              <Switch>
-                <Route path="/" component={HomePage} />
-                <Route component={NotFound} />
-              </Switch>
-            </Router>
-          </TooltipProvider>
-        </AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
       </WebSocketProvider>
     </QueryClientProvider>
   );
