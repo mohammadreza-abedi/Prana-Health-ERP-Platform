@@ -118,7 +118,7 @@ export default function PulsingLogo({
             y: isHovered ? 0 : 1
           }}
         >
-          پرانا
+          پرانا - دستیار هوشمند سلامت
         </motion.h1>
       )}
     </div>
