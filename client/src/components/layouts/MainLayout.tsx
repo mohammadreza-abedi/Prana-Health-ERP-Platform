@@ -855,51 +855,81 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </TooltipProvider>
               </div>
               
-              {/* User profile dropdown */}
+              {/* Enhanced User profile dropdown with modern effects */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="relative focus:outline-none">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/20 to-aqua/10 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800 transition-all hover:ring-2 hover:ring-offset-2 hover:ring-tiffany/20 dark:hover:ring-offset-slate-900">
-                      <span>{user?.displayName?.charAt(0) || "م"}</span>
-                      <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white dark:border-slate-800"></div>
+                  <button className="relative focus:outline-none group">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/20 to-aqua/10 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800 transition-all duration-300 group-hover:ring-2 group-hover:ring-offset-2 group-hover:ring-tiffany/20 dark:group-hover:ring-offset-slate-900 group-hover:scale-105 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-tiffany/10 via-aqua/5 to-tiffany/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <span className="relative z-10 group-hover:animate-breathe-soft">{user?.displayName?.charAt(0) || "م"}</span>
+                      <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white dark:border-slate-800 shadow-sm">
+                        <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-75 duration-1000"></div>
+                      </div>
                     </div>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 rounded-xl p-1 mt-1 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800">
-                  <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
-                    <p className="text-sm font-medium">{user?.displayName || "کاربر"}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{user?.username || "کاربر پرانا"}</p>
+                <DropdownMenuContent align="end" className="w-60 rounded-xl p-1.5 mt-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 shadow-lg">
+                  <div className="px-4 py-3.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/15 to-navy/10 flex items-center justify-center text-tiffany font-bold relative border border-white/60 dark:border-slate-800/60">
+                      <span>{user?.displayName?.charAt(0) || "م"}</span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{user?.displayName || "کاربر"}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{user?.username || "کاربر پرانا"}</p>
+                    </div>
+                    <Badge variant="outline" className="mr-auto h-5 bg-tiffany/5 dark:bg-tiffany/10 text-tiffany-dark dark:text-tiffany-light text-[10px] px-1.5 border-tiffany/20">
+                      فعال
+                    </Badge>
                   </div>
                   
-                  <div className="p-1">
-                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
-                      <User className="h-4 w-4 ml-2" />
-                      <span>پروفایل</span>
+                  <div className="p-1.5 space-y-0.5">
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
+                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-tiffany/10 to-aqua/10 dark:from-tiffany/15 dark:to-aqua/15 group-hover/item:bg-gradient-to-r group-hover/item:from-tiffany/20 group-hover/item:to-aqua/20 dark:group-hover/item:from-tiffany/25 dark:group-hover/item:to-aqua/25 transition-all duration-200">
+                        <User className="h-4 w-4 text-tiffany/70 dark:text-tiffany-light/70 group-hover/item:text-tiffany dark:group-hover/item:text-tiffany-light transition-all duration-200" />
+                      </div>
+                      <span className="font-medium">پروفایل</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
-                      <Settings className="h-4 w-4 ml-2" />
-                      <span>تنظیمات</span>
+                    
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
+                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-navy/10 to-blue/10 dark:from-navy/15 dark:to-blue/15 group-hover/item:bg-gradient-to-r group-hover/item:from-navy/20 group-hover/item:to-blue/20 dark:group-hover/item:from-navy/25 dark:group-hover/item:to-blue/25 transition-all duration-200">
+                        <Settings className="h-4 w-4 text-navy/70 dark:text-blue/70 group-hover/item:text-navy dark:group-hover/item:text-blue transition-all duration-200" />
+                      </div>
+                      <span className="font-medium">تنظیمات</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
-                      <UserCog className="h-4 w-4 ml-2" />
-                      <span>مدیریت حساب</span>
+                    
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
+                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-yellow/10 to-yellow-light/10 dark:from-yellow/15 dark:to-yellow-light/15 group-hover/item:bg-gradient-to-r group-hover/item:from-yellow/20 group-hover/item:to-yellow-light/20 dark:group-hover/item:from-yellow/25 dark:group-hover/item:to-yellow-light/25 transition-all duration-200">
+                        <UserCog className="h-4 w-4 text-yellow/70 dark:text-yellow-light/70 group-hover/item:text-yellow dark:group-hover/item:text-yellow-light transition-all duration-200" />
+                      </div>
+                      <span className="font-medium">مدیریت حساب</span>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator className="my-1 bg-slate-200 dark:bg-slate-700" />
-                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
-                      <Languages className="h-4 w-4 ml-2" />
-                      <span>زبان برنامه</span>
+                    
+                    <DropdownMenuSeparator className="my-1.5 bg-slate-200/70 dark:bg-slate-700/70" />
+                    
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
+                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-violet-600/10 to-purple-500/10 dark:from-violet-600/15 dark:to-purple-500/15 group-hover/item:bg-gradient-to-r group-hover/item:from-violet-600/20 group-hover/item:to-purple-500/20 dark:group-hover/item:from-violet-600/25 dark:group-hover/item:to-purple-500/25 transition-all duration-200">
+                        <Languages className="h-4 w-4 text-violet-600/70 dark:text-purple-500/70 group-hover/item:text-violet-600 dark:group-hover/item:text-purple-500 transition-all duration-200" />
+                      </div>
+                      <span className="font-medium">زبان برنامه</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2 px-2">
-                      <Keyboard className="h-4 w-4 ml-2" />
-                      <span>میانبرهای کیبورد</span>
+                    
+                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
+                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-slate-500/10 to-gray-400/10 dark:from-slate-500/15 dark:to-gray-400/15 group-hover/item:bg-gradient-to-r group-hover/item:from-slate-500/20 group-hover/item:to-gray-400/20 dark:group-hover/item:from-slate-500/25 dark:group-hover/item:to-gray-400/25 transition-all duration-200">
+                        <Keyboard className="h-4 w-4 text-slate-600/70 dark:text-gray-400/70 group-hover/item:text-slate-600 dark:group-hover/item:text-gray-400 transition-all duration-200" />
+                      </div>
+                      <span className="font-medium">میانبرهای کیبورد</span>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator className="my-1 bg-slate-200 dark:bg-slate-700" />
+                    
+                    <DropdownMenuSeparator className="my-1.5 bg-slate-200/70 dark:bg-slate-700/70" />
+                    
                     <DropdownMenuItem 
-                      className="flex items-center cursor-pointer rounded-lg py-2 px-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600"
+                      className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-900/20 group/item"
                       onClick={logout}
                     >
-                      <LogOut className="h-4 w-4 ml-2" />
-                      <span>خروج از حساب</span>
+                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-red-500/10 to-rose-500/10 dark:from-red-500/15 dark:to-rose-500/15 group-hover/item:bg-gradient-to-r group-hover/item:from-red-500/20 group-hover/item:to-rose-500/20 dark:group-hover/item:from-red-500/25 dark:group-hover/item:to-rose-500/25 transition-all duration-200">
+                        <LogOut className="h-4 w-4 text-red-500/70 dark:text-red-400/70 group-hover/item:text-red-500 dark:group-hover/item:text-red-400 transition-all duration-200" />
+                      </div>
+                      <span className="font-medium group-hover/item:text-red-500 dark:group-hover/item:text-red-400 transition-colors duration-200">خروج از حساب</span>
                     </DropdownMenuItem>
                   </div>
                 </DropdownMenuContent>
