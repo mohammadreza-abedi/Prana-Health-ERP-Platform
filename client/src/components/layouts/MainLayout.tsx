@@ -186,7 +186,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
     {
       title: "پروفایل من",
       icon: <User className="h-5 w-5" />,
-      path: "/profile",
+      path: "/user-profile",
+    },
+    {
+      title: "سفارشی‌سازی آواتار",
+      icon: <UserRound className="h-5 w-5" />,
+      path: "/avatar-customizer",
     },
     {
       title: "داشبورد HR",

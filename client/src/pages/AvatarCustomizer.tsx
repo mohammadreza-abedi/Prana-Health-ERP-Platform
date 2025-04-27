@@ -13,6 +13,8 @@ import {
   Sparkles,
   Award,
   ShoppingBag,
+  Eye,
+  X
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
