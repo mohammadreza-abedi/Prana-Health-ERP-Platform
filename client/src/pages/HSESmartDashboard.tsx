@@ -1069,20 +1069,8 @@ const GlassCard: React.FC<GlassCardProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   
-  // افکت ظاهر شدن برای پنل تنظیمات
-  const settingsVariants = {
-    hidden: { opacity: 0, y: -20, scale: 0.9 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 400, damping: 25 } },
-    exit: { opacity: 0, y: -10, scale: 0.95, transition: { duration: 0.2 } }
-  };
-  
-  const cardVariants = {
-    normal: { scale: 1 },
-    hovered: { scale: 1.01, transition: { duration: 0.3, ease: "easeOut" } }
-  };
-  
   return (
-    <motion.div 
+    <div 
       className={`
         relative overflow-hidden rounded-xl 
         border border-slate-200/50 dark:border-slate-700/50
@@ -1093,120 +1081,109 @@ const GlassCard: React.FC<GlassCardProps> = ({
         ${isExpanded ? 'fixed inset-4 z-[100]' : ''}
         ${className}
       `}
-      variants={cardVariants}
-      initial="normal"
-      whileHover="hovered"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      layout
     >
       {isExpanded && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[-1]" onClick={() => setIsExpanded(false)}></div>
       )}
       
       {showControls && (
-        <div className="absolute top-2 right-2 z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex space-x-1 space-x-reverse scale-100 group-hover:scale-100">
-          <motion.button 
+        <div className="absolute top-2 right-2 z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex space-x-1 space-x-reverse">
+          <button 
             className="h-6 w-6 flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-tiffany/20 border border-slate-200/50 dark:border-slate-600/50 transition-all duration-200 shadow-sm hover:shadow-md"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.97 }}
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            <Maximize2 className="h-3 w-3 text-slate-600 dark:text-slate-300" />
-          </motion.button>
-          <motion.button 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600 dark:text-slate-300">
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <polyline points="9 21 3 21 3 15"></polyline>
+              <line x1="21" y1="3" x2="14" y2="10"></line>
+              <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+          </button>
+          <button 
             className="h-6 w-6 flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-amber-500/20 border border-slate-200/50 dark:border-slate-600/50 transition-all duration-200 shadow-sm hover:shadow-md"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.97 }}
             onClick={() => setShowSettings(!showSettings)}
           >
-            <Settings className="h-3 w-3 text-slate-600 dark:text-slate-300" />
-          </motion.button>
-          <motion.button 
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600 dark:text-slate-300">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+          <button 
             className="h-6 w-6 flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-rose-500/20 border border-slate-200/50 dark:border-slate-600/50 transition-all duration-200 shadow-sm hover:shadow-md"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.97 }}
           >
-            <X className="h-3 w-3 text-slate-600 dark:text-slate-300" />
-          </motion.button>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600 dark:text-slate-300">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
         </div>
       )}
       
       {/* پنل تنظیمات */}
-      <AnimatePresence>
-        {showSettings && (
-          <motion.div 
-            className="absolute top-10 right-2 z-50 w-64 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-lg shadow-lg p-3 border border-slate-200/70 dark:border-slate-700/70"
-            variants={settingsVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="text-xs font-medium text-slate-900 dark:text-slate-100">تنظیمات نمودار</h4>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-6 w-6 p-0 hover:bg-rose-100 dark:hover:bg-slate-700/80"
-                onClick={() => setShowSettings(false)}
-              >
-                <X className="h-3 w-3 text-slate-500" />
-              </Button>
+      {showSettings && (
+        <div 
+          className="absolute top-10 right-2 z-50 w-64 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-lg shadow-lg p-3 border border-slate-200/70 dark:border-slate-700/70 animate-slide-down"
+        >
+          <div className="flex justify-between items-center mb-2">
+            <h4 className="text-xs font-medium text-slate-900 dark:text-slate-100">تنظیمات نمودار</h4>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-6 w-6 p-0 hover:bg-rose-100 dark:hover:bg-slate-700/80"
+              onClick={() => setShowSettings(false)}
+            >
+              <X className="h-3 w-3 text-slate-500" />
+            </Button>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <label className="text-xs text-slate-500 dark:text-slate-400">نوع نمایش</label>
+              <div className="grid grid-cols-3 gap-1">
+                <button className="p-1.5 text-xs border border-tiffany/40 bg-tiffany/10 rounded-md">خطی</button>
+                <button className="p-1.5 text-xs border border-slate-200 dark:border-slate-700 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40">میله‌ای</button>
+                <button className="p-1.5 text-xs border border-slate-200 dark:border-slate-700 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40">ترکیبی</button>
+              </div>
             </div>
             
-            <div className="space-y-3">
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-500 dark:text-slate-400">نوع نمایش</label>
-                <div className="grid grid-cols-3 gap-1">
-                  <button className="p-1.5 text-xs border border-tiffany/40 bg-tiffany/10 rounded-md">خطی</button>
-                  <button className="p-1.5 text-xs border border-slate-200 dark:border-slate-700 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40">میله‌ای</button>
-                  <button className="p-1.5 text-xs border border-slate-200 dark:border-slate-700 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40">ترکیبی</button>
+            <div className="space-y-1.5">
+              <label className="text-xs text-slate-500 dark:text-slate-400">بازه زمانی</label>
+              <select className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <option>هفته اخیر</option>
+                <option>ماه اخیر</option>
+                <option selected>۳ ماه اخیر</option>
+                <option>سال جاری</option>
+              </select>
+            </div>
+            
+            <div className="space-y-1.5">
+              <label className="text-xs text-slate-500 dark:text-slate-400">اندازه فونت</label>
+              <div className="flex items-center space-x-2 space-x-reverse">
+                <button className="p-1 text-xs border border-slate-200 dark:border-slate-700 w-7 h-7 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40 flex items-center justify-center">-</button>
+                <div className="h-1 flex-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div className="h-full w-1/2 bg-tiffany rounded-full"></div>
                 </div>
-              </div>
-              
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-500 dark:text-slate-400">بازه زمانی</label>
-                <select className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                  <option>هفته اخیر</option>
-                  <option>ماه اخیر</option>
-                  <option selected>۳ ماه اخیر</option>
-                  <option>سال جاری</option>
-                </select>
-              </div>
-              
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-500 dark:text-slate-400">اندازه فونت</label>
-                <div className="flex items-center space-x-2 space-x-reverse">
-                  <button className="p-1 text-xs border border-slate-200 dark:border-slate-700 w-7 h-7 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40 flex items-center justify-center">-</button>
-                  <div className="h-1 flex-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                    <div className="h-full w-1/2 bg-tiffany rounded-full"></div>
-                  </div>
-                  <button className="p-1 text-xs border border-slate-200 dark:border-slate-700 w-7 h-7 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40 flex items-center justify-center">+</button>
-                </div>
-              </div>
-              
-              <div className="flex justify-end pt-1">
-                <Button 
-                  size="sm" 
-                  className="h-7 text-xs bg-tiffany hover:bg-tiffany-dark text-white rounded-lg shadow-md hover:shadow-tiffany/20"
-                >
-                  اعمال تغییرات
-                </Button>
+                <button className="p-1 text-xs border border-slate-200 dark:border-slate-700 w-7 h-7 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40 flex items-center justify-center">+</button>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            
+            <div className="flex justify-end pt-1">
+              <Button 
+                size="sm" 
+                className="h-7 text-xs bg-tiffany hover:bg-tiffany-dark text-white rounded-lg shadow-md hover:shadow-tiffany/20"
+              >
+                اعمال تغییرات
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       
-      {/* افکت هاله در گوشه‌ها - سه لایه با انیمیشن‌های مختلف */}
+      {/* افکت هاله در گوشه‌ها */}
       <div className={`absolute -top-20 -right-20 w-60 h-60 bg-gradient-radial from-tiffany/10 to-transparent rounded-full blur-3xl transition-opacity duration-500 animate-pulse-slow ${isHovered ? 'opacity-70' : 'opacity-20'}`}></div>
       <div className={`absolute -bottom-20 -left-20 w-60 h-60 bg-gradient-radial from-amber-500/10 to-transparent rounded-full blur-3xl transition-opacity duration-500 animate-pulse-slow animation-delay-1000 ${isHovered ? 'opacity-70' : 'opacity-20'}`}></div>
-      <div className={`absolute top-1/3 left-1/3 w-40 h-40 bg-gradient-radial from-blue-500/5 to-transparent rounded-full blur-3xl transition-opacity duration-500 animate-pulse-slow animation-delay-2000 ${isHovered ? 'opacity-60' : 'opacity-0'}`}></div>
-      
-      {/* نقطه‌های درخشان */}
-      <div className={`absolute top-[10%] right-[10%] w-1 h-1 bg-white rounded-full shadow-[0_0_8px_2px_rgba(46,196,182,0.6)] animate-pulse-slow transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}></div>
-      <div className={`absolute bottom-[15%] right-[30%] w-1 h-1 bg-white rounded-full shadow-[0_0_8px_2px_rgba(255,187,0,0.6)] animate-pulse-slow animation-delay-700 transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}></div>
-      <div className={`absolute top-[20%] left-[15%] w-1 h-1 bg-white rounded-full shadow-[0_0_8px_2px_rgba(79,70,229,0.6)] animate-pulse-slow animation-delay-1500 transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}></div>
       
       {/* خط تزئینی بالای کارت */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-tiffany/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -1218,10 +1195,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
       
       {/* افکت هاور - بوردر متحرک */}
       <div className="absolute inset-0 border-2 border-dashed border-tiffany/0 group-hover:border-tiffany/20 dark:group-hover:border-tiffany/30 opacity-0 group-hover:opacity-100 pointer-events-none rounded-xl transition-all duration-500"></div>
-      
-      {/* افکت گرادیانت متحرک در حاشیه (متا‌مورفیک) */}
-      <div className="absolute inset-[-1px] rounded-[13px] bg-gradient-to-tr from-tiffany/0 via-tiffany/0 to-amber-500/0 group-hover:from-tiffany/20 group-hover:via-blue-500/20 group-hover:to-amber-500/20 opacity-0 group-hover:opacity-100 transition-all duration-700 animate-gradient z-[-1]"></div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -1239,43 +1213,19 @@ const DraggableSection: React.FC<DraggableSectionProps> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showActions, setShowActions] = useState(false);
-  const dragConstraints = useRef(null);
-  
-  // افکت ظاهر شدن برای پنل تنظیمات
-  const settingsVariants = {
-    hidden: { opacity: 0, y: -20, scale: 0.9 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 400, damping: 25 } },
-    exit: { opacity: 0, y: -10, scale: 0.95, transition: { duration: 0.2 } }
-  };
-  
-  // سایه‌های انیمیشنی برای حالت درگ شدن
-  const activeShadow = `0 0 0 2px rgba(46, 196, 182, 0.3),
-                        0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                        0 2px 4px -1px rgba(0, 0, 0, 0.06),
-                        0 8px 24px -4px rgba(46, 196, 182, 0.25)`;
   
   return (
-    <motion.div 
+    <div 
       className={`relative transition-all duration-300 ${className} ${
         isCollapsed ? 'h-12' : ''
       } ${
         isDragging ? 'z-50' : 'z-auto'
-      } rounded-xl overflow-hidden group`}
-      drag={isDragging}
-      dragConstraints={dragConstraints}
-      whileDrag={{ scale: 1.02, boxShadow: activeShadow }}
-      animate={{ 
-        scale: isDragging ? 1.02 : 1,
-        boxShadow: isDragging ? activeShadow : 'none'
-      }}
+      } rounded-xl overflow-hidden group shadow-sm hover:shadow-md`}
       draggable={true}
       onDragStart={() => setIsDragging(true)}
       onDragEnd={() => setIsDragging(false)}
-      ref={dragConstraints}
-      layout
     >
       {/* هدر قابل کلیک برای کارت */}
       {title && (
@@ -1290,95 +1240,76 @@ const DraggableSection: React.FC<DraggableSectionProps> = ({
         >
           <h3 className="text-sm font-medium">{title}</h3>
           <button className="h-5 w-5 flex items-center justify-center rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-            {isCollapsed ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronUp className="h-4 w-4" />
-            )}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {isCollapsed ? (
+                <polyline points="6 9 12 15 18 9"></polyline>
+              ) : (
+                <polyline points="18 15 12 9 6 15"></polyline>
+              )}
+            </svg>
           </button>
         </div>
       )}
       
       {/* منوی کنترل سمت چپ */}
-      <div className="absolute top-2 left-2 z-30 opacity-0 group-hover:opacity-100 transition-all duration-300 scale-95 group-hover:scale-100">
+      <div className="absolute top-2 left-2 z-30 opacity-0 group-hover:opacity-100 transition-all duration-300">
         <div className="relative">
           <Button 
             size="sm" 
             variant="ghost"
-            className="h-6 w-6 p-0 rounded-full bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-slate-200/50 dark:border-slate-600/50 shadow-sm hover:shadow-md transition-all duration-200"
+            className="h-6 w-6 p-0 rounded-full bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-slate-200/50 dark:border-slate-600/50 shadow-sm"
             onClick={() => setShowActions(!showActions)}
           >
-            <MoreVertical className="h-3 w-3 text-slate-600 dark:text-slate-300" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600 dark:text-slate-300">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="12" cy="5" r="1"></circle>
+              <circle cx="12" cy="19" r="1"></circle>
+            </svg>
           </Button>
           
-          <AnimatePresence>
-            {showActions && (
-              <motion.div 
-                className="absolute -left-1 top-7 z-50 p-1.5 bg-white/95 dark:bg-slate-800/95 rounded-lg shadow-lg backdrop-blur-md border border-slate-200/70 dark:border-slate-700/70"
-                initial={{ opacity: 0, y: -10, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.9 }}
-                transition={{ duration: 0.15 }}
-              >
-                <div className="flex flex-col space-y-1 min-w-[140px]">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="h-7 text-xs justify-start px-2 hover:bg-slate-100 dark:hover:bg-slate-700/70 rounded-md"
-                    onClick={() => setShowSettings(!showSettings)}
-                  >
-                    <Settings className="h-3 w-3 mr-1 text-slate-500" />
-                    <span>تنظیمات</span>
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="h-7 text-xs justify-start px-2 hover:bg-slate-100 dark:hover:bg-slate-700/70 rounded-md"
-                    onClick={() => setIsMinimized(!isMinimized)}
-                  >
-                    {isMinimized ? (
-                      <>
-                        <Maximize2 className="h-3 w-3 mr-1 text-slate-500" />
-                        <span>بازگرداندن</span>
-                      </>
-                    ) : (
-                      <>
-                        <Minimize2 className="h-3 w-3 mr-1 text-slate-500" />
-                        <span>کوچک کردن</span>
-                      </>
-                    )}
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="h-7 text-xs justify-start px-2 hover:bg-slate-100 dark:hover:bg-slate-700/70 rounded-md"
-                  >
-                    <Copy className="h-3 w-3 mr-1 text-slate-500" />
-                    <span>تکثیر</span>
-                  </Button>
-                  
-                  <div className="h-px bg-slate-200 dark:bg-slate-700 my-1"></div>
-                  
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="h-7 text-xs justify-start px-2 hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-500 rounded-md"
-                  >
-                    <Trash2 className="h-3 w-3 mr-1" />
-                    <span>حذف</span>
-                  </Button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {showActions && (
+            <div 
+              className="absolute -left-1 top-7 z-50 p-1.5 bg-white/95 dark:bg-slate-800/95 rounded-lg shadow-lg backdrop-blur-md border border-slate-200/70 dark:border-slate-700/70 animate-slide-down"
+            >
+              <div className="flex flex-col space-y-1 min-w-[140px]">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-7 text-xs justify-start px-2 hover:bg-slate-100 dark:hover:bg-slate-700/70 rounded-md"
+                  onClick={() => setShowSettings(!showSettings)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1 text-slate-500"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <span>تنظیمات</span>
+                </Button>
+                
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-7 text-xs justify-start px-2 hover:bg-slate-100 dark:hover:bg-slate-700/70 rounded-md"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1 text-slate-500"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                  <span>تکثیر</span>
+                </Button>
+                
+                <div className="h-px bg-slate-200 dark:bg-slate-700 my-1"></div>
+                
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-7 text-xs justify-start px-2 hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-500 rounded-md"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+                  <span>حذف</span>
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       
       {/* نشانگر قابلیت درگ */}
-      <motion.div 
+      <div 
         className="absolute top-2 right-2 z-30 opacity-0 group-hover:opacity-50 hover:opacity-100 transition-all duration-300 cursor-move"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
         onMouseDown={() => setIsDragging(true)}
       >
         <div className="h-6 w-6 rounded-md flex items-center justify-center hover:bg-slate-100/70 dark:hover:bg-slate-700/70">
@@ -1391,151 +1322,126 @@ const DraggableSection: React.FC<DraggableSectionProps> = ({
             <path d="M16 22C17.1046 22 18 21.1046 18 20C18 18.8954 17.1046 18 16 18C14.8954 18 14 18.8954 14 20C14 21.1046 14.8954 22 16 22Z" fill="currentColor"/>
           </svg>
         </div>
-      </motion.div>
+      </div>
       
       {/* پنل تنظیمات کارت */}
-      <AnimatePresence>
-        {showSettings && (
-          <motion.div 
-            className="absolute top-10 left-2 z-50 w-72 bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg rounded-lg shadow-xl p-3 border border-slate-200/70 dark:border-slate-700/70"
-            variants={settingsVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-3">
-              <h4 className="text-xs font-medium text-slate-900 dark:text-slate-100">تنظیمات کارت</h4>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-6 w-6 p-0 hover:bg-rose-100 dark:hover:bg-slate-700/80"
-                onClick={() => setShowSettings(false)}
-              >
-                <X className="h-3 w-3 text-slate-500" />
-              </Button>
+      {showSettings && (
+        <div 
+          className="absolute top-10 left-2 z-50 w-72 bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg rounded-lg shadow-xl p-3 border border-slate-200/70 dark:border-slate-700/70 animate-slide-down"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex justify-between items-center mb-3">
+            <h4 className="text-xs font-medium text-slate-900 dark:text-slate-100">تنظیمات کارت</h4>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-6 w-6 p-0 hover:bg-rose-100 dark:hover:bg-slate-700/80"
+              onClick={() => setShowSettings(false)}
+            >
+              <X className="h-3 w-3 text-slate-500" />
+            </Button>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-600 dark:text-slate-300">اندازه کارت</label>
+              <div className="grid grid-cols-4 gap-1.5">
+                <Button variant="outline" size="sm" className="h-8 text-xs py-0 border-tiffany/40 bg-tiffany/5">کوچک</Button>
+                <Button variant="outline" size="sm" className="h-8 text-xs py-0 bg-transparent">متوسط</Button>
+                <Button variant="outline" size="sm" className="h-8 text-xs py-0 bg-transparent">بزرگ</Button>
+                <Button variant="outline" size="sm" className="h-8 text-xs py-0 bg-transparent">کامل</Button>
+              </div>
             </div>
             
-            <div className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-600 dark:text-slate-300">اندازه کارت</label>
-                <div className="grid grid-cols-4 gap-1.5">
-                  <Button variant="outline" size="sm" className="h-8 text-xs py-0 border-tiffany/40 bg-tiffany/5">کوچک</Button>
-                  <Button variant="outline" size="sm" className="h-8 text-xs py-0 bg-transparent">متوسط</Button>
-                  <Button variant="outline" size="sm" className="h-8 text-xs py-0 bg-transparent">بزرگ</Button>
-                  <Button variant="outline" size="sm" className="h-8 text-xs py-0 bg-transparent">کامل</Button>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-600 dark:text-slate-300">دوره زمانی</label>
+              <select className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <option>روزانه</option>
+                <option>هفتگی</option>
+                <option selected>ماهانه</option>
+                <option>سالانه</option>
+              </select>
+            </div>
+            
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-600 dark:text-slate-300">قالب نمایش</label>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex-1 relative">
+                  <input 
+                    type="radio" 
+                    id="template1" 
+                    name="template" 
+                    className="peer sr-only" 
+                    defaultChecked
+                  />
+                  <label 
+                    htmlFor="template1" 
+                    className="flex flex-col items-center justify-center h-16 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md peer-checked:border-tiffany peer-checked:bg-tiffany/5 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200 cursor-pointer"
+                  >
+                    <BarChart3 className="h-4 w-4 mb-1" />
+                    <span className="text-[10px]">میله‌ای</span>
+                  </label>
                 </div>
-              </div>
-              
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-600 dark:text-slate-300">دوره زمانی</label>
-                <select className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                  <option>روزانه</option>
-                  <option>هفتگی</option>
-                  <option selected>ماهانه</option>
-                  <option>سالانه</option>
-                </select>
-              </div>
-              
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-600 dark:text-slate-300">قالب نمایش</label>
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex-1 relative">
-                    <input 
-                      type="radio" 
-                      id="template1" 
-                      name="template" 
-                      className="peer sr-only" 
-                      defaultChecked
-                    />
-                    <label 
-                      htmlFor="template1" 
-                      className="flex flex-col items-center justify-center h-16 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md peer-checked:border-tiffany peer-checked:bg-tiffany/5 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200 cursor-pointer"
-                    >
-                      <BarChart3 className="h-4 w-4 mb-1" />
-                      <span className="text-[10px]">میله‌ای</span>
-                    </label>
-                    <div className="absolute -top-0.5 -right-0.5 opacity-0 peer-checked:opacity-100 transition-opacity">
-                      <div className="h-3 w-3 rounded-full bg-tiffany text-white flex items-center justify-center shadow-sm">
-                        <Check className="h-2 w-2" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex-1 relative">
-                    <input 
-                      type="radio" 
-                      id="template2" 
-                      name="template" 
-                      className="peer sr-only" 
-                    />
-                    <label 
-                      htmlFor="template2" 
-                      className="flex flex-col items-center justify-center h-16 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md peer-checked:border-tiffany peer-checked:bg-tiffany/5 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200 cursor-pointer"
-                    >
-                      <LineChartIcon className="h-4 w-4 mb-1" />
-                      <span className="text-[10px]">خطی</span>
-                    </label>
-                    <div className="absolute -top-0.5 -right-0.5 opacity-0 peer-checked:opacity-100 transition-opacity">
-                      <div className="h-3 w-3 rounded-full bg-tiffany text-white flex items-center justify-center shadow-sm">
-                        <Check className="h-2 w-2" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex-1 relative">
-                    <input 
-                      type="radio" 
-                      id="template3" 
-                      name="template" 
-                      className="peer sr-only" 
-                    />
-                    <label 
-                      htmlFor="template3" 
-                      className="flex flex-col items-center justify-center h-16 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md peer-checked:border-tiffany peer-checked:bg-tiffany/5 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200 cursor-pointer"
-                    >
-                      <PieChartIcon className="h-4 w-4 mb-1" />
-                      <span className="text-[10px]">دایره‌ای</span>
-                    </label>
-                    <div className="absolute -top-0.5 -right-0.5 opacity-0 peer-checked:opacity-100 transition-opacity">
-                      <div className="h-3 w-3 rounded-full bg-tiffany text-white flex items-center justify-center shadow-sm">
-                        <Check className="h-2 w-2" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="h-8 text-xs py-0"
-                  onClick={() => setShowSettings(false)}
-                >
-                  انصراف
-                </Button>
                 
-                <Button 
-                  size="sm" 
-                  className="h-8 px-3 text-xs bg-tiffany hover:bg-tiffany-dark text-white shadow-sm hover:shadow-md transition-all duration-300"
-                  onClick={() => setShowSettings(false)}
-                >
-                  اعمال تغییرات
-                </Button>
+                <div className="flex-1 relative">
+                  <input 
+                    type="radio" 
+                    id="template2" 
+                    name="template" 
+                    className="peer sr-only" 
+                  />
+                  <label 
+                    htmlFor="template2" 
+                    className="flex flex-col items-center justify-center h-16 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md peer-checked:border-tiffany peer-checked:bg-tiffany/5 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200 cursor-pointer"
+                  >
+                    <LineChartIcon className="h-4 w-4 mb-1" />
+                    <span className="text-[10px]">خطی</span>
+                  </label>
+                </div>
+                
+                <div className="flex-1 relative">
+                  <input 
+                    type="radio" 
+                    id="template3" 
+                    name="template" 
+                    className="peer sr-only" 
+                  />
+                  <label 
+                    htmlFor="template3" 
+                    className="flex flex-col items-center justify-center h-16 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md peer-checked:border-tiffany peer-checked:bg-tiffany/5 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200 cursor-pointer"
+                  >
+                    <PieChartIcon className="h-4 w-4 mb-1" />
+                    <span className="text-[10px]">دایره‌ای</span>
+                  </label>
+                </div>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="h-8 text-xs py-0"
+                onClick={() => setShowSettings(false)}
+              >
+                انصراف
+              </Button>
+              
+              <Button 
+                size="sm" 
+                className="h-8 px-3 text-xs bg-tiffany hover:bg-tiffany-dark text-white shadow-sm hover:shadow-md transition-all duration-300"
+                onClick={() => setShowSettings(false)}
+              >
+                اعمال تغییرات
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       
-      <motion.div
-        animate={{ height: isCollapsed ? 0 : 'auto', opacity: isCollapsed ? 0 : 1 }}
-        transition={{ duration: 0.3 }}
-        className={`${isCollapsed ? 'invisible' : 'visible'}`}
-      >
+      <div className={`transition-all duration-300 ${isCollapsed ? 'h-0 opacity-0 invisible' : 'opacity-100 visible'}`}>
         {children}
-      </motion.div>
+      </div>
       
       {/* سایه و افکت‌های ویژه */}
       <div className="absolute inset-0 pointer-events-none">
@@ -1550,7 +1456,7 @@ const DraggableSection: React.FC<DraggableSectionProps> = ({
           <div className="absolute inset-0 bg-gradient-to-tr from-tiffany/10 via-transparent to-transparent rounded-xl"></div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -1809,124 +1715,75 @@ export default function HSESmartDashboard() {
           </TabsList>
           
           <TabsContent value="overview" className="space-y-6">
-            {/* شاخص‌های کلیدی عملکرد با افکت ویژه گروهی */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
+            {/* شاخص‌های کلیدی عملکرد */}
+            <div className="animate-appear">
               <KeyPerformanceCards />
-            </motion.div>
+            </div>
             
             {/* لایه اصلی با گرید بندی پویا و پیشرفته */}
             <div className="grid grid-cols-12 auto-rows-min gap-6">
               {/* بخش نمودارهای اصلی - کامپوننت ۲/۳ */}
-              <motion.div 
-                className="col-span-12 lg:col-span-8" 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
-              >
+              <div className="col-span-12 lg:col-span-8">
                 <DraggableSection className="h-full">
                   <HealthMetricsCard />
                 </DraggableSection>
-              </motion.div>
+              </div>
               
               {/* بخش نمودار دایره‌ای - کامپوننت ۱/۳ */}
-              <motion.div 
-                className="col-span-12 lg:col-span-4" 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
-              >
+              <div className="col-span-12 lg:col-span-4">
                 <DraggableSection className="h-full">
                   <IncidentTypesCard />
                 </DraggableSection>
-              </motion.div>
+              </div>
               
               {/* بخش شاخص‌های زیست محیطی - کامپوننت ۱/۳ */}
-              <motion.div 
-                className="col-span-12 md:col-span-6 lg:col-span-4" 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.3 }}
-              >
+              <div className="col-span-12 md:col-span-6 lg:col-span-4">
                 <DraggableSection className="h-full">
                   <EnvironmentalMetricsCard />
                 </DraggableSection>
-              </motion.div>
+              </div>
               
               {/* بخش ارزیابی ریسک - کامپوننت ۲/۳ */}
-              <motion.div 
-                className="col-span-12 md:col-span-6 lg:col-span-8" 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.4 }}
-              >
+              <div className="col-span-12 md:col-span-6 lg:col-span-8">
                 <DraggableSection className="h-full">
                   <RiskAssessmentCard />
                 </DraggableSection>
-              </motion.div>
+              </div>
               
               {/* بخش رتبه‌بندی دپارتمان‌ها - کامپوننت ۲/۳ */}
-              <motion.div 
-                className="col-span-12 lg:col-span-8" 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
-              >
+              <div className="col-span-12 lg:col-span-8">
                 <DraggableSection className="h-full">
                   <DepartmentSafetyCard />
                 </DraggableSection>
-              </motion.div>
+              </div>
               
               {/* بخش هشدارها - کامپوننت ۱/۳ */}
-              <motion.div 
-                className="col-span-12 lg:col-span-4" 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.6 }}
-              >
+              <div className="col-span-12 lg:col-span-4">
                 <DraggableSection className="h-full">
                   <AlertsCard />
                 </DraggableSection>
-              </motion.div>
+              </div>
               
               {/* بخش فعالیت‌های اخیر - ۱/۳ */}
-              <motion.div 
-                className="col-span-12 md:col-span-6 lg:col-span-4" 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.7 }}
-              >
+              <div className="col-span-12 md:col-span-6 lg:col-span-4">
                 <DraggableSection className="h-full">
                   <ActivitiesCard />
                 </DraggableSection>
-              </motion.div>
+              </div>
               
               {/* بخش رویدادهای پیش رو - ۱/۳ */}
-              <motion.div 
-                className="col-span-12 md:col-span-6 lg:col-span-4" 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.8 }}
-              >
+              <div className="col-span-12 md:col-span-6 lg:col-span-4">
                 <DraggableSection className="h-full">
                   <UpcomingEventsCard />
                 </DraggableSection>
-              </motion.div>
+              </div>
               
               {/* بخش تخصیص بودجه - ۱/۳ */}
-              <motion.div 
-                className="col-span-12 md:col-span-6 lg:col-span-4" 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.9 }}
-              >
+              <div className="col-span-12 md:col-span-6 lg:col-span-4">
                 <DraggableSection className="h-full">
                   <BudgetAllocationCard />
                 </DraggableSection>
-              </motion.div>
+              </div>
             </div>
           </TabsContent>
           
