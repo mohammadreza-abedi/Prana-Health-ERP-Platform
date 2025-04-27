@@ -601,6 +601,148 @@ export function BodyComposition() {
                 ))}
               </ScrollArea>
             </div>
+            
+            {/* بخش نمودارها */}
+            {measurements.length > 0 && (
+              <div className="mt-8 space-y-5">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-medium flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5 text-primary" />
+                    نمودارهای تحلیلی
+                  </h3>
+                  
+                  <div className="flex space-x-1 space-x-reverse">
+                    <Button 
+                      variant={chartType === 'weight' ? 'default' : 'outline'} 
+                      size="sm"
+                      onClick={() => setChartType('weight')}
+                    >
+                      <Scale className="h-4 w-4 ml-1" />
+                      وزن و BMI
+                    </Button>
+                    <Button 
+                      variant={chartType === 'composition' ? 'default' : 'outline'} 
+                      size="sm"
+                      onClick={() => setChartType('composition')}
+                    >
+                      <Heart className="h-4 w-4 ml-1" />
+                      ترکیب بدن
+                    </Button>
+                    <Button 
+                      variant={chartType === 'circumference' ? 'default' : 'outline'} 
+                      size="sm"
+                      onClick={() => setChartType('circumference')}
+                    >
+                      <Ruler className="h-4 w-4 ml-1" />
+                      دور اندام
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="bg-card/60 border rounded-lg p-4">
+                  <div className="h-[300px]">
+                    {chartType === 'weight' && (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 20 }}>
+                          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                          <XAxis dataKey="date" tick={{ fontSize: 12 }} tickMargin={10} />
+                          <YAxis yAxisId="left" tick={{ fontSize: 12 }} tickMargin={5} />
+                          <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} tickMargin={5} />
+                          <ReTooltip 
+                            formatter={(value: number) => [`${value}`, '']}
+                            labelFormatter={(label) => `تاریخ: ${label}`}
+                          />
+                          <Legend verticalAlign="top" height={36} />
+                          <Line
+                            yAxisId="left"
+                            type="monotone"
+                            dataKey="weight"
+                            name="وزن (کیلوگرم)"
+                            stroke="#3b82f6"
+                            strokeWidth={2}
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 6 }}
+                          />
+                          <Line
+                            yAxisId="right"
+                            type="monotone"
+                            dataKey="bmi"
+                            name="شاخص BMI"
+                            stroke="#10b981"
+                            strokeWidth={2}
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 6 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    )}
+                    
+                    {chartType === 'composition' && (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 20 }}>
+                          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                          <XAxis dataKey="date" tick={{ fontSize: 12 }} tickMargin={10} />
+                          <YAxis tick={{ fontSize: 12 }} tickMargin={5} />
+                          <ReTooltip 
+                            formatter={(value: number) => [`${value}%`, '']}
+                            labelFormatter={(label) => `تاریخ: ${label}`}
+                          />
+                          <Legend verticalAlign="top" height={36} />
+                          <Area
+                            type="monotone"
+                            dataKey="bodyFat"
+                            name="درصد چربی"
+                            stroke="#f59e0b"
+                            fill="#f59e0b"
+                            fillOpacity={0.3}
+                            strokeWidth={2}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="muscle"
+                            name="درصد عضله"
+                            stroke="#8b5cf6"
+                            fill="#8b5cf6"
+                            fillOpacity={0.3}
+                            strokeWidth={2}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="water"
+                            name="درصد آب"
+                            stroke="#0ea5e9"
+                            fill="#0ea5e9"
+                            fillOpacity={0.3}
+                            strokeWidth={2}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    )}
+                    
+                    {chartType === 'circumference' && (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData} margin={{ top: 5, right: 5, left: 5, bottom: 20 }}>
+                          <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                          <XAxis dataKey="date" tick={{ fontSize: 12 }} tickMargin={10} />
+                          <YAxis tick={{ fontSize: 12 }} tickMargin={5} />
+                          <ReTooltip 
+                            formatter={(value: number) => [`${value} سانتی‌متر`, '']}
+                            labelFormatter={(label) => `تاریخ: ${label}`}
+                          />
+                          <Legend verticalAlign="top" height={36} />
+                          <Bar dataKey="waist" name="دور کمر" fill="#f97316" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="hip" name="دور باسن" fill="#ec4899" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    )}
+                  </div>
+                  
+                  <div className="mt-2 text-xs text-muted-foreground text-center">
+                    روند تغییرات شاخص‌های بدنی در طول زمان
+                  </div>
+                </div>
+              </div>
+            )}
           </TabsContent>
           
           {/* تب مقایسه */}
