@@ -76,12 +76,16 @@ function LoadingScreen() {
         
         {/* نوار پیشرفت و متن بارگذاری */}
         <div className="neon-card acrylic backdrop-blur-lg p-6 md:p-8 rounded-xl flex flex-col items-center justify-center w-full shadow-2xl shadow-tiffany/5 border border-white/10 dark:border-white/5">
-          {/* انیمیشن بارگذاری */}
+          {/* انیمیشن بارگذاری پیشرفته */}
           <div className="relative w-20 h-20 mb-6">
             <div className="absolute top-0 left-0 w-full h-full border-4 border-t-tiffany border-r-tiffany/70 border-b-aqua border-l-transparent rounded-full animate-spin"></div>
-            <div className="absolute top-3 left-3 right-3 bottom-3 border-4 border-t-transparent border-r-transparent border-b-transparent border-l-purple-500 rounded-full animate-spin animation-delay-500"></div>
+            <div className="absolute top-3 left-3 right-3 bottom-3 border-4 border-t-transparent border-r-transparent border-b-transparent border-l-purple-500 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
+            
+            {/* اضافه کردن حلقه سوم با انیمیشن متفاوت */}
+            <div className="absolute top-6 left-6 right-6 bottom-6 border-3 border-t-yellow-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin" style={{ animationDuration: '2.5s' }}></div>
+            
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-tiffany text-xs font-bold">پرانا</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-tiffany to-aqua animate-gradient text-xs font-bold">پرانا</span>
             </div>
           </div>
           
@@ -94,36 +98,37 @@ function LoadingScreen() {
             </p>
           </div>
           
-          {/* نوار پیشرفت */}
-          <div className="w-full h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden mb-4">
+          {/* نوار پیشرفت با انیمیشن جدید */}
+          <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden mb-4">
             <div className="h-full bg-gradient-to-r from-tiffany via-aqua to-tiffany rounded-full animate-progress"></div>
           </div>
           
-          {/* مراحل بارگذاری */}
+          {/* مراحل بارگذاری با انیمیشن‌های پیشرفته */}
           <div className="w-full mb-3">
             <div className="flex flex-wrap justify-center gap-2">
               {loadingSteps.map((step, index) => (
                 <div 
                   key={step.id}
-                  className="flex items-center bg-white/50 dark:bg-slate-800/50 px-3 py-1 rounded-full text-xs border border-slate-200 dark:border-slate-700 transition-all"
+                  className={`flex items-center bg-white/50 dark:bg-slate-800/50 px-3 py-1 rounded-full text-xs border border-slate-200 dark:border-slate-700 transition-all ${index === 0 ? 'animate-pulse-subtle' : ''}`}
                   style={{ 
                     opacity: 1 - (index * 0.15),
                     transform: `scale(${1 - (index * 0.05)})`,
                     animationDelay: `${index * 0.2}s`
                   }}
                 >
-                  <div className="w-2 h-2 rounded-full bg-tiffany animate-pulse mr-2"></div>
+                  <div className={`w-2 h-2 rounded-full mr-2 ${index === 0 ? 'bg-tiffany animate-beat' : 'bg-slate-400'}`}></div>
                   {step.text}
                 </div>
               ))}
             </div>
           </div>
           
-          <h3 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-tiffany to-aqua animate-gradient">
+          <h3 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-tiffany via-purple-500 to-aqua animate-gradient">
             در حال آماده‌سازی پرانا...
           </h3>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 text-center">
             پلتفرم هوشمند سلامت و ولنس با بیش از 60 ابزار پیشرفته
+            <span className="animate-subtle-bounce inline-block ml-1">🚀</span>
           </p>
         </div>
       </div>

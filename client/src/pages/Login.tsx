@@ -193,8 +193,9 @@ export default function Login() {
         : mode === "otp" 
         ? { username, otp } 
         : { username: "admin", authType: "biometric" };
-        
-      await login(credentials);
+      
+      // استفاده از API احراز هویت با پارامترهای مناسب
+      await login(credentials as any);
       
       // نمایش پیام موفقیت
       setLoginSuccess(true);
