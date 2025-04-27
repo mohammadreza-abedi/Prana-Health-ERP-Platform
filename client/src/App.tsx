@@ -12,6 +12,8 @@ import HRDashboard from "@/pages/HRDashboard";
 import Challenges from "@/pages/Challenges";
 import Leaderboard from "@/pages/Leaderboard";
 import Profile from "@/pages/Profile";
+import UserProfile from "@/pages/UserProfile";
+import AvatarCustomizer from "@/pages/AvatarCustomizer";
 import AutoLogin from "@/pages/auto-login";
 import PsychologicalTests from "@/pages/PsychologicalTests";
 import Settings from "@/pages/Settings";
@@ -77,6 +79,8 @@ function Router() {
         <Route path="/achievements" component={Achievements} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile" component={Profile} />
+        <Route path="/user-profile" component={UserProfile} />
+        <Route path="/avatar-customizer" component={AvatarCustomizer} />
         <Route path="/psychological-tests" component={PsychologicalTests} />
         <Route path="/settings" component={Settings} />
         <Route path="/auto-login" component={AutoLogin} />
