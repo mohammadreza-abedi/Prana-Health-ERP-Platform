@@ -66,7 +66,25 @@ import {
   Database,
   CheckCircle2,
   LockKeyhole,
-  X
+  X,
+  Volume2,
+  Bluetooth,
+  Wifi,
+  Eye,
+  Check,
+  CheckCheck,
+  AlertTriangle,
+  PlusCircle,
+  Send,
+  Phone,
+  Video,
+  Pin,
+  ArrowDown,
+  Smile,
+  Paperclip,
+  Mic,
+  File,
+  Image
 } from "lucide-react";
 import useIsMobile from "@/hooks/use-mobile";
 import Footer from "./Footer";
