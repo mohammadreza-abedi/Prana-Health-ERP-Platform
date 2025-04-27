@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation, Link } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,12 +33,16 @@ interface FeatureCardProps {
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, color, delay }) => {
+  // Convert color string (like "tiffany") to actual CSS class (like "border-tiffany")
+  const borderColorClass = `border-${color}`;
+  const textColorClass = `text-${color}`;
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className={`glass ${color} h-full`}
+      className={`glass h-full ${borderColorClass}`}
     >
       <CardContent className="p-6 flex flex-col h-full">
         <div className="mb-4">
@@ -70,7 +74,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ title, description, icon, path,
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, delay }}
       whileHover={{ scale: 1.03 }}
-      className={`glass-card cursor-pointer relative overflow-hidden ${bgColor} border border-white/20 dark:border-white/10 rounded-xl h-full`}
+      className="glass-card cursor-pointer relative overflow-hidden border border-white/20 dark:border-white/10 rounded-xl h-full"
       onClick={() => navigate(path)}
     >
       <CardContent className="p-5 flex flex-col h-full">
@@ -80,7 +84,7 @@ const ModuleCard: React.FC<ModuleCardProps> = ({ title, description, icon, path,
         <CardTitle className="text-lg mb-2">{title}</CardTitle>
         <CardDescription className="text-sm mb-4">{description}</CardDescription>
         <div className="mt-auto flex justify-end">
-          <Button variant="ghost" size="sm" className={`text-xs ${color.replace('bg-', 'text-')}`}>
+          <Button variant="ghost" size="sm" className={`text-xs text-${color.replace('bg-', '')}`}>
             ورود به بخش <ArrowRight className="h-3 w-3 mr-1" />
           </Button>
         </div>
