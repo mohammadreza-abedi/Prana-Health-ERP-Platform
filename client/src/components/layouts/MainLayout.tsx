@@ -290,10 +290,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 py-6 overflow-y-auto mica my-4 mx-2 rounded-xl">
+          <div className="flex-1 py-6 overflow-y-auto my-4 mx-2 rounded-xl bg-white/20 dark:bg-slate-900/20 backdrop-blur-sm">
             <nav className="px-2">
               <div className="mb-2 px-3">
-                <h2 className="text-xs font-medium text-slate-500 dark:text-slate-400">دسترسی سریع</h2>
+                <h2 className="text-xs font-semibold text-slate-600 dark:text-slate-300">دسترسی سریع</h2>
               </div>
               
               <ul className="space-y-2 mb-4">
@@ -350,8 +350,117 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 })}
               </ul>
               
+              {/* داشبوردهای پیشرفته */}
               <div className="mb-2 px-3">
-                <h2 className="text-xs font-medium text-slate-500 dark:text-slate-400">اطلاعات و قوانین</h2>
+                <h2 className="text-xs font-semibold text-slate-600 dark:text-slate-300">داشبوردهای پیشرفته</h2>
+              </div>
+              
+              <ul className="space-y-2 mb-4">
+                {/* دکمه داشبورد هوشمند HSE */}
+                <li>
+                  <Link href="/hse-smart-dashboard">
+                    <div className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 relative group
+                      ${location === '/hse-smart-dashboard' 
+                        ? "bg-gradient-to-l from-green-500/90 to-emerald-500 text-white shadow-lg shadow-green-500/20 dark:shadow-green-500/10 ring-1 ring-white/10"
+                        : "hover:bg-white dark:hover:bg-slate-800/80 hover:shadow-md hover:scale-[1.02] dark:hover:shadow-black/5"
+                      }`}
+                    >
+                      <div className={`relative z-10 transition-transform duration-300 group-hover:scale-110 ${
+                        location === '/hse-smart-dashboard' ? "text-white" : "text-slate-500 dark:text-slate-400"
+                      }`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                      </div>
+                      {isExpanded && (
+                        <motion.span
+                          initial={{ opacity: 0, x: -5 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -5 }}
+                          transition={{ duration: 0.3 }}
+                          className={`mr-3 font-medium tracking-wide ${location === '/hse-smart-dashboard' ? "text-white" : "group-hover:text-green-500 dark:group-hover:text-green-300"}`}
+                        >
+                          داشبورد هوشمند HSE
+                        </motion.span>
+                      )}
+                      {location === '/hse-smart-dashboard' && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-600 to-emerald-400 overflow-hidden"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px]"></div>
+                        </motion.div>
+                      )}
+                      {location !== '/hse-smart-dashboard' && (
+                        <div 
+                          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-400/5 to-white/30 dark:from-green-500/10 dark:to-slate-800/50"></div>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+                
+                {/* دکمه داشبورد تحلیل پیشرفته */}
+                <li>
+                  <Link href="/advanced-analysis-dashboard">
+                    <div className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 relative group
+                      ${location === '/advanced-analysis-dashboard' 
+                        ? "bg-gradient-to-l from-purple-500/90 to-violet-500 text-white shadow-lg shadow-purple-500/20 dark:shadow-purple-500/10 ring-1 ring-white/10"
+                        : "hover:bg-white dark:hover:bg-slate-800/80 hover:shadow-md hover:scale-[1.02] dark:hover:shadow-black/5"
+                      }`}
+                    >
+                      <div className={`relative z-10 transition-transform duration-300 group-hover:scale-110 ${
+                        location === '/advanced-analysis-dashboard' ? "text-white" : "text-slate-500 dark:text-slate-400"
+                      }`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                          <path d="M3 3v18h18"></path>
+                          <path d="M18.4 9.4a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8Z"></path>
+                          <path d="m8 12 4-4 4 4 4-4"></path>
+                          <path d="M4 16.5a2.5 2.5 0 0 1 5 0v.5h-5v-.5Z"></path>
+                          <path d="M4 11.5a2.5 2.5 0 0 1 5 0v5h-5v-5Z"></path>
+                        </svg>
+                      </div>
+                      {isExpanded && (
+                        <motion.span
+                          initial={{ opacity: 0, x: -5 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -5 }}
+                          transition={{ duration: 0.3 }}
+                          className={`mr-3 font-medium tracking-wide ${location === '/advanced-analysis-dashboard' ? "text-white" : "group-hover:text-purple-500 dark:group-hover:text-purple-300"}`}
+                        >
+                          داشبورد تحلیل پیشرفته
+                        </motion.span>
+                      )}
+                      {location === '/advanced-analysis-dashboard' && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600 to-violet-400 overflow-hidden"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px]"></div>
+                        </motion.div>
+                      )}
+                      {location !== '/advanced-analysis-dashboard' && (
+                        <div 
+                          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-400/5 to-white/30 dark:from-purple-500/10 dark:to-slate-800/50"></div>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+              </ul>
+              
+              <div className="mb-2 px-3">
+                <h2 className="text-xs font-semibold text-slate-600 dark:text-slate-300">اطلاعات و قوانین</h2>
               </div>
               
               <ul className="space-y-2">
@@ -410,42 +519,59 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </nav>
           </div>
 
-          {/* Bottom actions - Windows 11 style */}
+          {/* Bottom actions - پیشرفته و مدرن */}
           <div className="p-3 space-y-2">
-            {/* Mode toggler with tooltip */}
+            {/* Mode toggler with advanced effects */}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     onClick={toggleDarkMode}
-                    className={`w-full flex items-center px-4 py-3.5 rounded-xl bg-gradient-to-r hover:from-amber-50 hover:to-white dark:hover:from-slate-800/50 dark:hover:to-slate-900/50 backdrop-blur-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group
+                    className={`w-full flex items-center px-4 py-3.5 rounded-xl border border-slate-200/50 dark:border-slate-700/50 
+                      ${darkMode 
+                        ? "bg-gradient-to-r from-amber-500/10 to-yellow-400/5 dark:from-amber-500/20 dark:to-yellow-400/10" 
+                        : "bg-gradient-to-r from-blue-500/10 to-indigo-400/5 dark:from-blue-500/20 dark:to-indigo-400/10"
+                      }
+                      backdrop-blur-sm hover:shadow-lg hover:shadow-amber-500/10 dark:hover:shadow-amber-500/5
+                      transition-all duration-300 relative overflow-hidden group
                       ${isExpanded ? "justify-start" : "justify-center"}
                     `}
                   >
-                    {darkMode ? (
-                      <Sun className="h-5 w-5 text-yellow-400" />
-                    ) : (
-                      <Moon className="h-5 w-5 text-slate-500" />
-                    )}
+                    <div className="relative z-10 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
+                      {darkMode ? (
+                        <Sun className="h-5 w-5 text-amber-500" />
+                      ) : (
+                        <Moon className="h-5 w-5 text-blue-500" />
+                      )}
+                    </div>
                     {isExpanded && (
                       <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="mr-3 font-medium"
+                        initial={{ opacity: 0, x: -5 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -5 }}
+                        transition={{ duration: 0.3 }}
+                        className={`mr-3 font-medium ${darkMode ? "text-amber-600 dark:text-amber-400" : "text-blue-600 dark:text-blue-400"}`}
                       >
                         {darkMode ? "حالت روشن" : "حالت تیره"}
                       </motion.span>
                     )}
+                    
+                    {/* پس‌زمینه متحرک */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ zIndex: -1 }}>
+                      <div className="absolute inset-0 bg-grid-slate-300/[0.04] dark:bg-grid-slate-100/[0.03] bg-[size:20px_20px]"></div>
+                    </div>
+                    
+                    {/* افکت درخشش */}
+                    <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-amber-500/10 dark:from-amber-600/10 dark:via-amber-600/5 dark:to-amber-600/10 blur-md opacity-0 group-hover:opacity-100 animate-pulse-slow"></div>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="left">
+                <TooltipContent side="left" className="bg-white/95 dark:bg-slate-800/95 border border-slate-200/50 dark:border-slate-700/50 shadow-lg backdrop-blur-sm">
                   <p>{darkMode ? "تغییر به حالت روشن" : "تغییر به حالت تیره"}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
             
-            {/* Health notifications toggler with tooltip */}
+            {/* Health notifications toggler with advanced effects */}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -458,59 +584,88 @@ export default function MainLayout({ children }: MainLayoutProps) {
                         variant: "default",
                       });
                     }}
-                    className={`w-full flex items-center px-4 py-3.5 rounded-xl bg-gradient-to-r hover:from-tiffany-50 hover:to-white dark:hover:from-tiffany-900/20 dark:hover:to-slate-900/50 backdrop-blur-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group
-                     ${isExpanded ? "justify-start" : "justify-center"}
+                    className={`w-full flex items-center px-4 py-3.5 rounded-xl border border-slate-200/50 dark:border-slate-700/50 
+                      ${showHealthReminders 
+                        ? "bg-gradient-to-r from-tiffany/10 to-green-400/5 dark:from-tiffany/20 dark:to-green-400/10" 
+                        : "bg-gradient-to-r from-slate-300/10 to-slate-400/5 dark:from-slate-500/20 dark:to-slate-400/10"
+                      }
+                      backdrop-blur-sm hover:shadow-lg hover:shadow-tiffany/10 dark:hover:shadow-tiffany/5
+                      transition-all duration-300 relative overflow-hidden group
+                      ${isExpanded ? "justify-start" : "justify-center"}
                     `}
                   >
-                    {showHealthReminders ? (
-                      <Bell className="h-5 w-5 text-tiffany" />
-                    ) : (
-                      <BellOff className="h-5 w-5 text-slate-500" />
-                    )}
+                    <div className="relative z-10 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
+                      {showHealthReminders ? (
+                        <Bell className="h-5 w-5 text-tiffany" />
+                      ) : (
+                        <BellOff className="h-5 w-5 text-slate-500" />
+                      )}
+                    </div>
                     {isExpanded && (
                       <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="mr-3 font-medium"
+                        initial={{ opacity: 0, x: -5 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -5 }}
+                        transition={{ duration: 0.3 }}
+                        className={`mr-3 font-medium ${showHealthReminders ? "text-tiffany dark:text-tiffany-light" : "text-slate-600 dark:text-slate-400"}`}
                       >
                         {showHealthReminders ? "بدون یادآوری" : "فعال کردن یادآوری‌ها"}
                       </motion.span>
                     )}
+                    
+                    {/* پس‌زمینه متحرک */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ zIndex: -1 }}>
+                      <div className="absolute inset-0 bg-grid-slate-300/[0.04] dark:bg-grid-slate-100/[0.03] bg-[size:20px_20px]"></div>
+                    </div>
+                    
+                    {/* افکت درخشش */}
+                    <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-tiffany/10 via-tiffany/5 to-tiffany/10 dark:from-tiffany/10 dark:via-tiffany/5 dark:to-tiffany/10 blur-md opacity-0 group-hover:opacity-100 animate-pulse-slow"></div>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="left">
+                <TooltipContent side="left" className="bg-white/95 dark:bg-slate-800/95 border border-slate-200/50 dark:border-slate-700/50 shadow-lg backdrop-blur-sm">
                   <p>{showHealthReminders ? "غیرفعال کردن یادآوری‌های سلامتی" : "فعال کردن یادآوری‌های سلامتی"}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
             
-            {/* Logout button with tooltip */}
+            {/* Logout button with advanced effects */}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     onClick={logout}
-                    className={`w-full flex items-center px-4 py-3.5 rounded-xl bg-white/50 dark:bg-slate-900/50 text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 group 
-                      hover:bg-gradient-to-r hover:from-red-50 hover:to-white dark:hover:from-red-900/30 dark:hover:to-slate-900/70 
-                      backdrop-blur-sm hover:shadow-md transition-all duration-300 relative overflow-hidden
+                    className={`w-full flex items-center px-4 py-3.5 rounded-xl border border-slate-200/50 dark:border-slate-700/50 
+                      bg-gradient-to-r from-red-500/10 to-rose-400/5 dark:from-red-500/15 dark:to-rose-400/10
+                      backdrop-blur-sm hover:shadow-lg hover:shadow-red-500/10 dark:hover:shadow-red-500/5
+                      transition-all duration-300 relative overflow-hidden group
                       ${isExpanded ? "justify-start" : "justify-center"}
                     `}
                   >
-                    <LogOut className="h-5 w-5" />
+                    <div className="relative z-10 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
+                      <LogOut className="h-5 w-5 text-red-500 dark:text-red-400" />
+                    </div>
                     {isExpanded && (
                       <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="mr-3 font-medium"
+                        initial={{ opacity: 0, x: -5 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -5 }}
+                        transition={{ duration: 0.3 }}
+                        className="mr-3 font-medium text-red-600 dark:text-red-400"
                       >
                         خروج از حساب
                       </motion.span>
                     )}
+                    
+                    {/* پس‌زمینه متحرک */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ zIndex: -1 }}>
+                      <div className="absolute inset-0 bg-grid-slate-300/[0.04] dark:bg-grid-slate-100/[0.03] bg-[size:20px_20px]"></div>
+                    </div>
+                    
+                    {/* افکت درخشش */}
+                    <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-red-500/10 via-red-500/5 to-red-500/10 dark:from-red-600/10 dark:via-red-600/5 dark:to-red-600/10 blur-md opacity-0 group-hover:opacity-100 animate-pulse-slow"></div>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="left">
+                <TooltipContent side="left" className="bg-white/95 dark:bg-slate-800/95 border border-slate-200/50 dark:border-slate-700/50 shadow-lg backdrop-blur-sm">
                   <p>خروج از حساب کاربری</p>
                 </TooltipContent>
               </Tooltip>
