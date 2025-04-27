@@ -470,10 +470,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </motion.aside>
       </AnimatePresence>
 
-      {/* Main content */}
-      <div className="flex-1 overflow-y-auto relative bg-slate-50 dark:bg-slate-900 flex flex-col">
-        {/* Fixed Header */}
-        <div className="sticky top-0 z-20 p-3 bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 backdrop-blur-md flex flex-col">
+      {/* Enhanced Main content area with modernized glass effect */}
+      <div className="flex-1 overflow-y-auto relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 flex flex-col transition-all duration-300 ease-in-out">
+        {/* Enhanced Fixed Header with improved glassmorphism */}
+        <div className="sticky top-0 z-20 p-3 bg-white/85 dark:bg-slate-900/85 border-b border-slate-200/50 dark:border-slate-800/50 backdrop-blur-2xl shadow-sm flex flex-col motion-safe:animate-fade-in transition-all duration-300">
           {/* Top row with logo, menu and actions */}
           <div className="flex items-center justify-between mb-2">
             {/* Left side - Logo and menu button (on mobile) */}
@@ -492,17 +492,18 @@ export default function MainLayout({ children }: MainLayoutProps) {
               </div>
             </div>
             
-            {/* Right side - Action buttons */}
-            <div className="flex items-center space-x-2 space-x-reverse">
-              {/* Search with tooltip */}
+            {/* Enhanced Right side - Action buttons with interactive effects */}
+            <div className="flex items-center space-x-3 space-x-reverse">
+              {/* Modernized Search with 3D tooltip effect */}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-                      <Search className="h-5 w-5" />
+                    <button className="p-2 rounded-full text-slate-500 hover:text-tiffany hover:bg-slate-100/80 hover:shadow-sm dark:hover:bg-slate-800/80 dark:hover:text-tiffany-light transition-all duration-200 ease-out transform hover:scale-105 active:scale-95">
+                      <Search className="h-5 w-5 transition-transform duration-200" />
+                      <span className="absolute inset-0 rounded-full bg-tiffany/5 dark:bg-tiffany/10 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ease-elastic"></span>
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom">
+                  <TooltipContent side="bottom" className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800/95 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-xl">
                     <p>جستجوی کامل</p>
                   </TooltipContent>
                 </Tooltip>
@@ -614,16 +615,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 }}
               />
               
-              {/* Quick links */}
+              {/* Enhanced Quick Access with hover effects and animation */}
               <div className="relative hidden md:block">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <Bookmark className="h-5 w-5" />
+                      <button className="group p-2 rounded-full text-slate-500 hover:text-tiffany hover:bg-slate-100/80 hover:shadow-sm dark:hover:bg-slate-800/80 dark:hover:text-tiffany-light transition-all duration-200 ease-out transform hover:scale-105 active:scale-95 relative overflow-hidden">
+                        <Bookmark className="h-5 w-5 transition-transform duration-200 group-hover:rotate-[-5deg]" />
+                        <span className="absolute inset-0 rounded-full bg-gradient-to-br from-tiffany/5 to-aqua/10 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ease-elastic"></span>
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">
+                    <TooltipContent side="bottom" className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800/95 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-xl">
                       <p>دسترسی سریع</p>
                     </TooltipContent>
                   </Tooltip>
@@ -818,31 +820,36 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 notificationsEnabled={true}
               />
               
-              {/* Help */}
+              {/* Enhanced Help button with animation */}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-                      <HelpCircle className="h-5 w-5" />
+                    <button className="group p-2 rounded-full text-slate-500 hover:text-aqua hover:bg-slate-100/80 hover:shadow-sm dark:hover:bg-slate-800/80 dark:hover:text-aqua-light transition-all duration-200 ease-out transform hover:scale-105 active:scale-95 relative overflow-hidden">
+                      <HelpCircle className="h-5 w-5 transition-transform duration-200 group-hover:rotate-12" />
+                      <span className="absolute inset-0 rounded-full bg-gradient-to-br from-aqua/5 to-tiffany/10 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ease-elastic"></span>
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom">
+                  <TooltipContent side="bottom" className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800/95 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-xl">
                     <p>راهنما و پشتیبانی</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
               
-              {/* Quick settings */}
+              {/* Quick settings with visual effects */}
               <div className="relative hidden md:block">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <Command className="h-5 w-5" />
+                      <button className="group p-2 rounded-full text-slate-500 hover:text-yellow hover:bg-slate-100/80 hover:shadow-sm dark:hover:bg-slate-800/80 dark:hover:text-yellow-light transition-all duration-200 ease-out transform hover:scale-105 active:scale-95 relative overflow-hidden">
+                        <Command className="h-5 w-5 transition-transform duration-200 group-hover:rotate-[-5deg]" />
+                        <span className="absolute inset-0 rounded-full bg-gradient-to-br from-yellow/5 to-yellow/10 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ease-elastic"></span>
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                      <p>تنظیمات سریع (Ctrl+K)</p>
+                    <TooltipContent side="bottom" className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800/95 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-xl">
+                      <div className="flex items-center">
+                        <p>تنظیمات سریع</p>
+                        <kbd className="mr-1.5 px-1.5 py-0.5 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded">Ctrl+K</kbd>
+                      </div>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -902,14 +909,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
           
           {/* Enhanced Bottom row with Windows 11-style toolbars */}
           <div className="flex flex-col gap-3">
-            {/* Main searchbar with Windows 11-style design */}
+            {/* Enhanced searchbar with modern glassmorphism and animations */}
             <div className="relative flex-grow max-w-full">
-              <div className="flex items-center gap-2 p-1 bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-slate-200/50 dark:border-slate-700/50 rounded-xl shadow-sm">
+              <div className="flex items-center gap-2 p-1 bg-white/80 dark:bg-slate-800/75 backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/40 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 group">
                 <div className="relative flex-grow">
-                  <Search className="h-4 w-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 group-hover:text-tiffany transition-colors duration-300 w-5 h-5 flex items-center justify-center">
+                    <Search className="h-4 w-4 absolute group-hover:animate-pulse" />
+                    <div className="absolute inset-0 bg-tiffany/5 dark:bg-tiffany/10 rounded-full scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300"></div>
+                  </div>
                   <Input 
                     placeholder="جستجو در برنامه..." 
-                    className="pr-10 pl-4 py-2 text-sm h-10 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="pr-10 pl-4 py-2 text-sm h-10 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-slate-400 dark:placeholder:text-slate-500 placeholder:transition-colors placeholder:duration-300 focus:placeholder:text-tiffany/70 dark:focus:placeholder:text-tiffany-light/70"
                   />
                 </div>
                 
@@ -956,54 +966,71 @@ export default function MainLayout({ children }: MainLayoutProps) {
               </div>
             </div>
             
-            {/* Windows 11-style Tab Group with Sections */}
+            {/* Enhanced modern fluid tab navigation with improved aesthetics */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1 space-x-reverse p-1 bg-white/50 dark:bg-slate-800/50 rounded-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm shadow-sm">
-                <Button variant="ghost" size="sm" className="rounded-lg bg-tiffany/10 text-tiffany">
-                  <LayoutDashboard className="h-4 w-4 ml-1" />
-                  میز کار
+              <div className="flex items-center space-x-1 space-x-reverse p-1.5 bg-white/70 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-700/40 backdrop-blur-xl shadow-sm relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-r from-tiffany/3 via-aqua/2 to-tiffany/3 dark:from-tiffany/5 dark:via-aqua/3 dark:to-tiffany/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                
+                <Button variant="ghost" size="sm" className="rounded-lg bg-tiffany/10 dark:bg-tiffany/15 text-tiffany dark:text-tiffany-light relative overflow-hidden z-10 font-medium transition-all duration-300 shadow-sm">
+                  <div className="absolute inset-0 bg-gradient-to-r from-tiffany/10 to-aqua/10 dark:from-tiffany/20 dark:to-aqua/15 opacity-50"></div>
+                  <LayoutDashboard className="h-4 w-4 ml-1.5 relative z-10" />
+                  <span className="relative z-10">میز کار</span>
                 </Button>
-                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
-                  <Heart className="h-4 w-4 ml-1" />
-                  سلامت شغلی
+                
+                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100/80 dark:hover:bg-slate-700/80 transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden">
+                  <Heart className="h-4 w-4 ml-1.5 group-hover/btn:text-rose-500 transition-colors duration-300" />
+                  <span className="group-hover/btn:font-medium transition-all duration-300">سلامت شغلی</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-rose-500/5 to-rose-400/5 dark:from-rose-500/10 dark:to-rose-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                 </Button>
-                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
-                  <GraduationCap className="h-4 w-4 ml-1" />
-                  آموزش
+                
+                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100/80 dark:hover:bg-slate-700/80 transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden">
+                  <GraduationCap className="h-4 w-4 ml-1.5 group-hover/btn:text-blue-500 transition-colors duration-300" />
+                  <span className="group-hover/btn:font-medium transition-all duration-300">آموزش</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-blue-400/5 dark:from-blue-500/10 dark:to-blue-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                 </Button>
-                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
-                  <Trophy className="h-4 w-4 ml-1" />
-                  دستاوردها
+                
+                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100/80 dark:hover:bg-slate-700/80 transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden">
+                  <Trophy className="h-4 w-4 ml-1.5 group-hover/btn:text-yellow-500 transition-colors duration-300" />
+                  <span className="group-hover/btn:font-medium transition-all duration-300">دستاوردها</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-yellow-400/5 dark:from-yellow-500/10 dark:to-yellow-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                 </Button>
-                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">
-                  <Users className="h-4 w-4 ml-1" />
-                  دپارتمان
+                
+                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100/80 dark:hover:bg-slate-700/80 transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden">
+                  <Users className="h-4 w-4 ml-1.5 group-hover/btn:text-violet-500 transition-colors duration-300" />
+                  <span className="group-hover/btn:font-medium transition-all duration-300">دپارتمان</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-violet-400/5 dark:from-violet-500/10 dark:to-violet-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                 </Button>
+                
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="ghost" size="sm" className="rounded-full w-8 h-8 p-0">
-                        <ChevronDown className="h-4 w-4" />
+                      <Button variant="ghost" size="sm" className="rounded-full w-8 h-8 p-0 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-all duration-300">
+                        <ChevronDown className="h-4 w-4 transition-transform duration-300 hover:scale-110" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">
+                    <TooltipContent side="bottom" className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800/95 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-xl">
                       <p>بخش‌های بیشتر</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
               
-              {/* Quick Actions */}
-              <div className="hidden md:flex items-center gap-1">
+              {/* Enhanced Quick Actions with modern UI effects */}
+              <div className="hidden md:flex items-center gap-2">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="outline" size="sm" className="rounded-lg h-9">
-                        <RefreshCw className="h-4 w-4 ml-1" />
-                        بروزرسانی
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="relative overflow-hidden rounded-lg h-9 border-slate-200/70 dark:border-slate-700/60 bg-white/80 dark:bg-slate-800/60 backdrop-blur-md hover:bg-white/90 dark:hover:bg-slate-800/80 transition-all duration-300 shadow-sm hover:shadow group"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-tiffany/5 to-tiffany-light/5 dark:from-tiffany/10 dark:to-tiffany-light/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <RefreshCw className="h-4 w-4 ml-1.5 mr-0.5 group-hover:text-tiffany dark:group-hover:text-tiffany-light transition-colors duration-300 group-hover:rotate-180 transition-transform ease-in-out duration-700" />
+                        <span className="font-medium group-hover:text-tiffany dark:group-hover:text-tiffany-light transition-colors duration-300 relative z-10">بروزرسانی</span>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="bottom">
+                    <TooltipContent side="bottom" className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800/95 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-xl">
                       <p>بروزرسانی داده‌ها</p>
                     </TooltipContent>
                   </Tooltip>
@@ -1011,23 +1038,34 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="rounded-lg h-9">
-                      <Sparkles className="h-4 w-4 ml-1" />
-                      عملیات سریع
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="relative overflow-hidden rounded-lg h-9 border-slate-200/70 dark:border-slate-700/60 bg-white/80 dark:bg-slate-800/60 backdrop-blur-md hover:bg-white/90 dark:hover:bg-slate-800/80 transition-all duration-300 shadow-sm hover:shadow group"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-yellow/5 to-yellow-light/5 dark:from-yellow/10 dark:to-yellow-light/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <Sparkles className="h-4 w-4 ml-1.5 mr-0.5 group-hover:text-yellow dark:group-hover:text-yellow-light transition-colors duration-300 group-hover:animate-pulse" />
+                      <span className="font-medium group-hover:text-yellow dark:group-hover:text-yellow-light transition-colors duration-300 relative z-10">عملیات سریع</span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="rounded-xl w-56 p-1">
-                    <DropdownMenuItem className="rounded-lg cursor-pointer">
-                      <UserPlus className="h-4 w-4 ml-2" />
-                      <span>افزودن کاربر جدید</span>
+                  <DropdownMenuContent className="rounded-xl w-60 p-1.5 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/40 shadow-lg">
+                    <DropdownMenuItem className="rounded-lg cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-700/80 py-2.5 px-3 transition-all duration-200 group/item">
+                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-tiffany/10 to-aqua/10 dark:from-tiffany/15 dark:to-aqua/15 group-hover/item:bg-gradient-to-r group-hover/item:from-tiffany/20 group-hover/item:to-aqua/20 dark:group-hover/item:from-tiffany/25 dark:group-hover/item:to-aqua/25 transition-all duration-200">
+                        <UserPlus className="h-4 w-4 text-tiffany/70 dark:text-tiffany-light/70 group-hover/item:text-tiffany dark:group-hover/item:text-tiffany-light transition-all duration-200" />
+                      </div>
+                      <span className="font-medium">افزودن کاربر جدید</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="rounded-lg cursor-pointer">
-                      <FileText className="h-4 w-4 ml-2" />
-                      <span>ایجاد گزارش</span>
+                    <DropdownMenuItem className="rounded-lg cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-700/80 py-2.5 px-3 transition-all duration-200 group/item">
+                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-navy/10 to-blue/10 dark:from-navy/15 dark:to-blue/15 group-hover/item:bg-gradient-to-r group-hover/item:from-navy/20 group-hover/item:to-blue/20 dark:group-hover/item:from-navy/25 dark:group-hover/item:to-blue/25 transition-all duration-200">
+                        <FileText className="h-4 w-4 text-navy/70 dark:text-blue/70 group-hover/item:text-navy dark:group-hover/item:text-blue transition-all duration-200" />
+                      </div>
+                      <span className="font-medium">ایجاد گزارش</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="rounded-lg cursor-pointer">
-                      <Database className="h-4 w-4 ml-2" />
-                      <span>سنکرون‌سازی داده‌ها</span>
+                    <DropdownMenuItem className="rounded-lg cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-700/80 py-2.5 px-3 transition-all duration-200 group/item">
+                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-violet-600/10 to-purple-500/10 dark:from-violet-600/15 dark:to-purple-500/15 group-hover/item:bg-gradient-to-r group-hover/item:from-violet-600/20 group-hover/item:to-purple-500/20 dark:group-hover/item:from-violet-600/25 dark:group-hover/item:to-purple-500/25 transition-all duration-200">
+                        <Database className="h-4 w-4 text-violet-600/70 dark:text-purple-500/70 group-hover/item:text-violet-600 dark:group-hover/item:text-purple-500 transition-all duration-200" />
+                      </div>
+                      <span className="font-medium">سنکرون‌سازی داده‌ها</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -1036,10 +1074,19 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
         </div>
         
-        {/* Page content */}
-        <div className="flex-1 p-6">{children}</div>
+        {/* Page content with enhanced container and subtle decoration */}
+        <div className="flex-1 p-6 relative">
+          <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/20 dark:from-slate-800/30 to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/3 right-0 w-96 h-96 bg-tiffany/3 dark:bg-tiffany/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift"></div>
+            <div className="absolute top-2/3 left-0 w-64 h-64 bg-aqua/3 dark:bg-aqua/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift-slow"></div>
+          </div>
+          <div className="relative z-10">
+            {children}
+          </div>
+        </div>
         
-        {/* Footer */}
+        {/* Enhanced Footer with improved visualization */}
         <Footer />
         
         {/* Health Reminders */}
