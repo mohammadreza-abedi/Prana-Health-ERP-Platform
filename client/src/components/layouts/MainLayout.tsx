@@ -239,13 +239,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {/* Sidebar */}
       <AnimatePresence>
         <motion.aside
-          initial={{ width: isMobile ? 0 : 240 }}
-          animate={{ width: isExpanded ? 240 : 72 }}
+          initial={{ width: isMobile ? 0 : 280 }}
+          animate={{ width: isExpanded ? 280 : 80 }}
           transition={{ 
-            duration: 0.3, 
-            ease: [0.3, 0.1, 0.3, 1] 
+            duration: 0.4, 
+            ease: [0.19, 1, 0.22, 1] // Expo ease for smooth animation
           }}
-          className="h-full bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 relative z-30 flex flex-col"
+          className="h-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950 border-l border-slate-200/60 dark:border-slate-800/40 relative z-30 flex flex-col shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.05)] dark:shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.2)] backdrop-blur-sm"
         >
           {/* Sidebar Header */}
           <div className="p-4 flex items-center justify-between">
@@ -296,31 +296,52 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <h2 className="text-xs font-medium text-slate-500 dark:text-slate-400">دسترسی سریع</h2>
               </div>
               
-              <ul className="space-y-1 mb-4">
+              <ul className="space-y-2 mb-4">
                 {menuItems.map((item, idx) => {
                   const isActive = location === item.path;
                   return (
                     <li key={idx}>
                       <Link href={item.path}>
                         <div
-                          className={`flex items-center px-3 py-3 rounded-lg transition-all ${
-                            isActive
-                              ? "bg-tiffany/10 text-tiffany dark:bg-tiffany/20"
-                              : "hover:bg-slate-100 dark:hover:bg-slate-800"
-                          }`}
+                          className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 relative group
+                            ${isActive
+                              ? "bg-gradient-to-l from-tiffany/90 to-tiffany text-white shadow-lg shadow-tiffany/20 dark:shadow-tiffany/10 ring-1 ring-white/10"
+                              : "hover:bg-white dark:hover:bg-slate-800/80 hover:shadow-md hover:scale-[1.02] dark:hover:shadow-black/5"
+                            }`}
                         >
-                          <div className={`${isActive ? "text-tiffany" : "text-slate-500 dark:text-slate-400"}`}>
+                          <div className={`relative z-10 transition-transform duration-300 group-hover:scale-110 ${
+                            isActive ? "text-white" : "text-slate-500 dark:text-slate-400"
+                          }`}>
                             {item.icon}
                           </div>
                           {isExpanded && (
                             <motion.span
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className={`mr-3 font-medium ${isActive ? "text-tiffany" : ""}`}
+                              initial={{ opacity: 0, x: -5 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -5 }}
+                              transition={{ duration: 0.3 }}
+                              className={`mr-3 font-medium tracking-wide ${isActive ? "text-white" : "group-hover:text-tiffany dark:group-hover:text-tiffany-light"}`}
                             >
                               {item.title}
                             </motion.span>
+                          )}
+                          {isActive && (
+                            <motion.div 
+                              className="absolute inset-0 rounded-xl bg-gradient-to-r from-tiffany-dark to-tiffany overflow-hidden"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              style={{ zIndex: -1 }}
+                            >
+                              <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px]"></div>
+                            </motion.div>
+                          )}
+                          {!isActive && (
+                            <div 
+                              className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                              style={{ zIndex: -1 }}
+                            >
+                              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-tiffany/5 to-white/30 dark:from-tiffany/10 dark:to-slate-800/50"></div>
+                            </div>
                           )}
                         </div>
                       </Link>
@@ -333,31 +354,52 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <h2 className="text-xs font-medium text-slate-500 dark:text-slate-400">اطلاعات و قوانین</h2>
               </div>
               
-              <ul className="space-y-1">
+              <ul className="space-y-2">
                 {additionalLinks.map((item, idx) => {
                   const isActive = location === item.path;
                   return (
                     <li key={idx}>
                       <Link href={item.path}>
                         <div
-                          className={`flex items-center px-3 py-3 rounded-lg transition-all ${
-                            isActive
-                              ? "bg-tiffany/10 text-tiffany dark:bg-tiffany/20"
-                              : "hover:bg-slate-100 dark:hover:bg-slate-800"
-                          }`}
+                          className={`flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative group
+                            ${isActive
+                              ? "bg-gradient-to-l from-blue-500/90 to-sky-500 text-white shadow-lg shadow-blue-500/20 dark:shadow-blue-500/10 ring-1 ring-white/10"
+                              : "hover:bg-white dark:hover:bg-slate-800/80 hover:shadow-md hover:scale-[1.02] dark:hover:shadow-black/5"
+                            }`}
                         >
-                          <div className={`${isActive ? "text-tiffany" : "text-slate-500 dark:text-slate-400"}`}>
+                          <div className={`relative z-10 transition-transform duration-300 group-hover:scale-110 ${
+                            isActive ? "text-white" : "text-slate-500 dark:text-slate-400"
+                          }`}>
                             {item.icon}
                           </div>
                           {isExpanded && (
                             <motion.span
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className={`mr-3 font-medium ${isActive ? "text-tiffany" : ""}`}
+                              initial={{ opacity: 0, x: -5 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: -5 }}
+                              transition={{ duration: 0.3 }}
+                              className={`mr-3 font-medium tracking-wide ${isActive ? "text-white" : "group-hover:text-blue-500 dark:group-hover:text-blue-300"}`}
                             >
                               {item.title}
                             </motion.span>
+                          )}
+                          {isActive && (
+                            <motion.div 
+                              className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-600 to-sky-400 overflow-hidden"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              style={{ zIndex: -1 }}
+                            >
+                              <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px]"></div>
+                            </motion.div>
+                          )}
+                          {!isActive && (
+                            <div 
+                              className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                              style={{ zIndex: -1 }}
+                            >
+                              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/5 to-white/30 dark:from-blue-500/10 dark:to-slate-800/50"></div>
+                            </div>
                           )}
                         </div>
                       </Link>
@@ -376,9 +418,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <TooltipTrigger asChild>
                   <button
                     onClick={toggleDarkMode}
-                    className={`w-full flex items-center px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all ${
-                      isExpanded ? "justify-start" : "justify-center"
-                    }`}
+                    className={`w-full flex items-center px-4 py-3.5 rounded-xl bg-gradient-to-r hover:from-amber-50 hover:to-white dark:hover:from-slate-800/50 dark:hover:to-slate-900/50 backdrop-blur-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group
+                      ${isExpanded ? "justify-start" : "justify-center"}
+                    `}
                   >
                     {darkMode ? (
                       <Sun className="h-5 w-5 text-yellow-400" />
@@ -416,9 +458,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                         variant: "default",
                       });
                     }}
-                    className={`w-full flex items-center px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all ${
-                      isExpanded ? "justify-start" : "justify-center"
-                    }`}
+                    className={`w-full flex items-center px-4 py-3.5 rounded-xl bg-gradient-to-r hover:from-tiffany-50 hover:to-white dark:hover:from-tiffany-900/20 dark:hover:to-slate-900/50 backdrop-blur-sm hover:shadow-md transition-all duration-300 relative overflow-hidden group
+                     ${isExpanded ? "justify-start" : "justify-center"}
+                    `}
                   >
                     {showHealthReminders ? (
                       <Bell className="h-5 w-5 text-tiffany" />
@@ -449,9 +491,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <TooltipTrigger asChild>
                   <button
                     onClick={logout}
-                    className={`w-full flex items-center px-3 py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 hover:text-red-600 transition-all ${
-                      isExpanded ? "justify-start" : "justify-center"
-                    }`}
+                    className={`w-full flex items-center px-4 py-3.5 rounded-xl bg-white/50 dark:bg-slate-900/50 text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 group 
+                      hover:bg-gradient-to-r hover:from-red-50 hover:to-white dark:hover:from-red-900/30 dark:hover:to-slate-900/70 
+                      backdrop-blur-sm hover:shadow-md transition-all duration-300 relative overflow-hidden
+                      ${isExpanded ? "justify-start" : "justify-center"}
+                    `}
                   >
                     <LogOut className="h-5 w-5" />
                     {isExpanded && (
@@ -477,8 +521,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
       {/* Enhanced Main content area with modernized glass effect */}
       <div className="flex-1 overflow-y-auto relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 flex flex-col transition-all duration-300 ease-in-out">
-        {/* Enhanced Fixed Header with improved glassmorphism */}
-        <div className="sticky top-0 z-20 p-3 bg-white/85 dark:bg-slate-900/85 border-b border-slate-200/50 dark:border-slate-800/50 backdrop-blur-2xl shadow-sm flex flex-col motion-safe:animate-fade-in transition-all duration-300">
+        {/* Enhanced Fixed Header with advanced glassmorphism */}
+        <div className="sticky top-0 z-20 p-4 bg-white/80 dark:bg-slate-900/75 border-b border-slate-200/30 dark:border-slate-800/30 backdrop-blur-xl shadow-[0_4px_30px_-10px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_30px_-10px_rgba(0,0,0,0.2)] flex flex-col motion-safe:animate-fade-in transition-all duration-300">
           {/* Top row with logo, menu and actions */}
           <div className="flex items-center justify-between mb-2">
             {/* Left side - Logo and menu button (on mobile) */}
@@ -503,9 +547,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button className="p-2 rounded-full text-slate-500 hover:text-tiffany hover:bg-slate-100/80 hover:shadow-sm dark:hover:bg-slate-800/80 dark:hover:text-tiffany-light transition-all duration-200 ease-out transform hover:scale-105 active:scale-95">
-                      <Search className="h-5 w-5 transition-transform duration-200" />
-                      <span className="absolute inset-0 rounded-full bg-tiffany/5 dark:bg-tiffany/10 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ease-elastic"></span>
+                    <button className="group p-2 rounded-full bg-white/50 dark:bg-slate-800/30 text-slate-500 dark:text-slate-400 hover:text-tiffany dark:hover:text-tiffany-light hover:shadow-md dark:hover:shadow-tiffany/5 transition-all duration-300 ease-out transform hover:scale-110 active:scale-95 relative overflow-hidden">
+                      <Search className="h-5 w-5 transition-transform duration-200 group-hover:rotate-[-5deg]" />
+                      <span className="absolute inset-0 rounded-full bg-gradient-to-br from-tiffany/10 to-aqua/5 dark:from-tiffany/20 dark:to-aqua/10 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out"></span>
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800/95 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-xl">
@@ -625,9 +669,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button className="group p-2 rounded-full text-slate-500 hover:text-tiffany hover:bg-slate-100/80 hover:shadow-sm dark:hover:bg-slate-800/80 dark:hover:text-tiffany-light transition-all duration-200 ease-out transform hover:scale-105 active:scale-95 relative overflow-hidden">
+                      <button className="group p-2 rounded-full bg-white/50 dark:bg-slate-800/30 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 hover:shadow-md dark:hover:shadow-amber/5 transition-all duration-300 ease-out transform hover:scale-110 active:scale-95 relative overflow-hidden">
                         <Bookmark className="h-5 w-5 transition-transform duration-200 group-hover:rotate-[-5deg]" />
-                        <span className="absolute inset-0 rounded-full bg-gradient-to-br from-tiffany/5 to-aqua/10 scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ease-elastic"></span>
+                        <span className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-500/10 to-yellow-400/5 dark:from-amber-500/20 dark:to-yellow-400/10 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out"></span>
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom" className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800/95 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-xl">
