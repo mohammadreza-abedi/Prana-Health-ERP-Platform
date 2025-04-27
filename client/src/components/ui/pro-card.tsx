@@ -39,7 +39,7 @@ const proCardVariants = cva('pro-card', {
 });
 
 export interface ProCardProps 
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'>,
     VariantProps<typeof proCardVariants> {
   hideIndicator?: boolean;
   glassmorphism?: boolean;
@@ -59,7 +59,12 @@ const ProCard = React.forwardRef<HTMLDivElement, ProCardProps>(
     children,
     ...props
   }, ref) => {
-    let cardClasses = proCardVariants({ variant, color, size, hover });
+    let cardClasses = proCardVariants({ 
+      variant, 
+      color: color as "default" | "tiffany" | "navy" | "aqua" | "yellow" | null | undefined, 
+      size, 
+      hover 
+    });
     
     if (glassmorphism) {
       cardClasses = cn(cardClasses, 'backdrop-blur-md bg-white/70 dark:bg-slate-900/70');
