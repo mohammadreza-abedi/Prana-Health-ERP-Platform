@@ -21,6 +21,7 @@ import PsychologicalTests from "@/pages/PsychologicalTests";
 import Settings from "@/pages/Settings";
 import Achievements from "@/pages/Achievements";
 import AchievementsDashboard from "@/pages/AchievementsDashboard";
+import MedicalCenterPage from "@/pages/MedicalCenterPage";
 import MainLayout from "@/components/layouts/MainLayout";
 import PulsingLogo from "@/components/ui/pulsing-logo";
 
@@ -179,6 +180,7 @@ function Router() {
         <Route path="/challenges" component={Challenges} />
         <Route path="/achievements" component={Achievements} />
         <Route path="/achievements-dashboard" component={AchievementsDashboard} />
+        <Route path="/medical-center" component={MedicalCenterPage} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile" component={Profile} />
         <Route path="/user-profile" component={UserProfile} />
