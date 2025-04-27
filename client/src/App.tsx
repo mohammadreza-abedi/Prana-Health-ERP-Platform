@@ -181,6 +181,7 @@ function Router() {
         <Route path="/achievements" component={Achievements} />
         <Route path="/achievements-dashboard" component={AchievementsDashboard} />
         <Route path="/medical-center" component={MedicalCenterPage} />
+        <Route path="/organizational-health" component={OrganizationalHealthPage} />
         <Route path="/leaderboard" component={Leaderboard} />
         <Route path="/profile" component={Profile} />
         <Route path="/user-profile" component={UserProfile} />
