@@ -14,7 +14,9 @@ import {
   Award,
   ShoppingBag,
   Eye,
-  X
+  X,
+  Trophy,
+  FileText
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -246,7 +248,44 @@ const AvatarCustomizer: React.FC = () => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showShop, setShowShop] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
+  const [showRandomizer, setShowRandomizer] = useState(false);
+  const [animateAvatar, setAnimateAvatar] = useState(false);
+  const [showSavedAvatars, setShowSavedAvatars] = useState(false);
+  const [savedAvatars, setSavedAvatars] = useState<{id: string, name: string, svg: string, createdAt: string}[]>([
+    {id: "1", name: "آواتار کاری", svg: "", createdAt: "2023-11-10T14:30:00"},
+    {id: "2", name: "آواتار تفریحی", svg: "", createdAt: "2023-12-05T10:15:00"},
+  ]);
+  const [achievementUnlocked, setAchievementUnlocked] = useState<string | null>(null);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialStep, setTutorialStep] = useState(0);
+  const [customColorMode, setCustomColorMode] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportFormat, setExportFormat] = useState<"svg" | "png">("svg");
+  const [currentXpEarned, setCurrentXpEarned] = useState(0);
+  const [customColorPalette, setCustomColorPalette] = useState<string[]>(["#FFDBAC", "#F1C27D", "#E0AC69", "#C68642", "#8D5524"]);
+  const [showQuestSystem, setShowQuestSystem] = useState(false);
   const { toast } = useToast();
+  
+  // سیستم کوئست‌ها - بخش جدید
+  const [quests, setQuests] = useState([
+    { id: 'q1', title: 'آواتار خلاق', description: 'یک آواتار با ترکیبات خلاقانه بسازید', reward: 200, completed: false, requirements: { selections: 10 } },
+    { id: 'q2', title: 'طراح رنگ', description: '5 رنگ سفارشی در آواتار خود استفاده کنید', reward: 150, completed: false, requirements: { colors: 5 } },
+    { id: 'q3', title: 'کلکسیونر نخبه', description: 'تمام آیتم‌های ویژه را باز کنید', reward: 500, completed: false, requirements: { premiumItems: 5 } },
+    { id: 'q4', title: 'ذخیره‌ساز حرفه‌ای', description: '3 آواتار مختلف ذخیره کنید', reward: 250, completed: false, requirements: { savedAvatars: 3 } },
+    { id: 'q5', title: 'شخصی‌ساز ماهر', description: 'از تمام امکانات ویرایش استفاده کنید', reward: 300, completed: false, requirements: { editFeatures: 8 } },
+  ]);
+  
+  // آمار استفاده از ویژگی‌های آواتار - برای گیمیفیکیشن
+  const [usageStats, setUsageStats] = useState({
+    itemsChanged: 0,
+    colorsChanged: 0,
+    avatarsSaved: 0,
+    featuresUsed: new Set<string>(),
+    premiumItemsUnlocked: 0,
+    timeSpent: 0,
+    dailyStreak: 1,
+    lastUsed: new Date().toISOString(),
+  });
   
   // داده‌های دمو برای کاربر
   const userDetails: UserDetails = {
@@ -449,17 +488,225 @@ const AvatarCustomizer: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
+  // بررسی وضعیت کوئست‌ها و به‌روزرسانی آنها
+  const checkQuestProgress = () => {
+    const updatedQuests = [...quests];
+    
+    // بررسی کوئست آواتار خلاق
+    if (!updatedQuests[0].completed && usageStats.itemsChanged >= 10) {
+      updatedQuests[0].completed = true;
+      showQuestCompletionReward('آواتار خلاق', 200);
+    }
+    
+    // بررسی کوئست طراح رنگ
+    if (!updatedQuests[1].completed && usageStats.colorsChanged >= 5) {
+      updatedQuests[1].completed = true;
+      showQuestCompletionReward('طراح رنگ', 150);
+    }
+    
+    // بررسی کوئست کلکسیونر نخبه
+    if (!updatedQuests[2].completed && usageStats.premiumItemsUnlocked >= 5) {
+      updatedQuests[2].completed = true;
+      showQuestCompletionReward('کلکسیونر نخبه', 500);
+    }
+    
+    // بررسی کوئست ذخیره‌ساز حرفه‌ای
+    if (!updatedQuests[3].completed && usageStats.avatarsSaved >= 3) {
+      updatedQuests[3].completed = true;
+      showQuestCompletionReward('ذخیره‌ساز حرفه‌ای', 250);
+    }
+    
+    // بررسی کوئست شخصی‌ساز ماهر
+    if (!updatedQuests[4].completed && usageStats.featuresUsed.size >= 8) {
+      updatedQuests[4].completed = true;
+      showQuestCompletionReward('شخصی‌ساز ماهر', 300);
+    }
+    
+    setQuests(updatedQuests);
+  };
+  
+  // نمایش پیام پاداش کوئست
+  const showQuestCompletionReward = (questTitle: string, reward: number) => {
+    toast({
+      title: `کوئست ${questTitle} تکمیل شد!`,
+      description: `شما ${reward} کردیت و ${reward} XP دریافت کردید.`,
+      variant: "default",
+    });
+    
+    setAchievementUnlocked(questTitle);
+    
+    // افزایش XP و کردیت کاربر
+    userDetails.xp += reward;
+    userDetails.credits += reward;
+    
+    // تایمر برای حذف پیام دستاورد بعد از چند ثانیه
+    setTimeout(() => {
+      setAchievementUnlocked(null);
+    }, 3000);
+  };
+  
+  // رندوم‌سازی آواتار
+  const randomizeAvatar = () => {
+    // استفاده از ویژگی رندوم‌سازی
+    usageStats.featuresUsed.add('randomize');
+    
+    // انتخاب تصادفی برای هر بخش
+    const newSelections = { ...selections };
+    
+    avatarCategories.forEach(category => {
+      if (category.items.length > 0) {
+        // انتخاب تصادفی یک آیتم از هر دسته
+        const availableItems = category.items.filter(item => isItemAvailable(item));
+        if (availableItems.length > 0) {
+          const randomIndex = Math.floor(Math.random() * availableItems.length);
+          const randomItem = availableItems[randomIndex];
+          
+          // اگر دسته صورت یا مو باشد، رنگ نیز تصادفی انتخاب شود
+          if (category.id === 'face') {
+            const randomSkinColorIndex = Math.floor(Math.random() * skinColors.length);
+            newSelections[category.id] = {
+              selectedItemId: randomItem.id,
+              color: skinColors[randomSkinColorIndex]
+            };
+          } else if (category.id === 'hair' || category.id === 'facial_hair') {
+            const randomHairColorIndex = Math.floor(Math.random() * hairColors.length);
+            newSelections[category.id] = {
+              selectedItemId: randomItem.id,
+              color: hairColors[randomHairColorIndex]
+            };
+          } else {
+            newSelections[category.id] = {
+              ...newSelections[category.id],
+              selectedItemId: randomItem.id
+            };
+          }
+        }
+      }
+    });
+    
+    setSelections(newSelections);
+    
+    // افزایش آمار استفاده از ویژگی‌ها
+    setUsageStats(prev => ({
+      ...prev,
+      featuresUsed: prev.featuresUsed.add('randomize'),
+      itemsChanged: prev.itemsChanged + 5 // افزایش تعداد آیتم‌های تغییر داده شده
+    }));
+    
+    // به‌روزرسانی کوئست‌ها
+    checkQuestProgress();
+    
+    // نمایش پیام موفقیت
+    toast({
+      title: "آواتار تصادفی",
+      description: "یک آواتار تصادفی برای شما ساخته شد!",
+      variant: "default",
+    });
+    
+    // پاداش XP برای استفاده از ویژگی رندوم‌سازی
+    addXp(50);
+  };
+  
+  // افزودن XP به کاربر با انیمیشن
+  const addXp = (amount: number) => {
+    setCurrentXpEarned(amount);
+    
+    // تایمر برای حذف نمایش XP بعد از چند ثانیه
+    setTimeout(() => {
+      setCurrentXpEarned(0);
+    }, 2000);
+    
+    // افزودن XP به کاربر
+    userDetails.xp += amount;
+  };
+  
+  // ذخیره آواتار پیشرفته
+  const saveAvatarAdvanced = () => {
+    const name = `آواتار ${savedAvatars.length + 1}`;
+    const newAvatar = {
+      id: Date.now().toString(),
+      name,
+      svg: svgData,
+      createdAt: new Date().toISOString()
+    };
+    
+    setSavedAvatars([...savedAvatars, newAvatar]);
+    
+    // افزایش آمار آواتارهای ذخیره شده
+    setUsageStats(prev => ({
+      ...prev,
+      avatarsSaved: prev.avatarsSaved + 1,
+      featuresUsed: prev.featuresUsed.add('save')
+    }));
+    
+    // بررسی کوئست‌ها
+    checkQuestProgress();
+    
+    // نمایش پیام موفقیت
+    toast({
+      title: "ذخیره‌سازی موفق",
+      description: `آواتار "${name}" با موفقیت ذخیره شد`,
+      variant: "default",
+    });
+    
+    // پاداش XP برای ذخیره آواتار
+    addXp(25);
+  };
+  
+  // تغییر حالت آواتار (انیمیشن)
+  const toggleAvatarAnimation = () => {
+    // استفاده از ویژگی انیمیشن
+    setUsageStats(prev => ({
+      ...prev, 
+      featuresUsed: prev.featuresUsed.add('animate')
+    }));
+    
+    setAnimateAvatar(!animateAvatar);
+    
+    // بررسی کوئست‌ها
+    checkQuestProgress();
+    
+    // پاداش XP برای استفاده از قابلیت انیمیشن
+    if (!usageStats.featuresUsed.has('animate')) {
+      addXp(15);
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-slate-900 min-h-screen">
+      {/* نمایش دستاورد باز شده */}
+      {achievementUnlocked && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-6 py-4 rounded-xl shadow-xl animate-bounce flex items-center gap-3">
+          <Sparkles className="h-6 w-6" />
+          <div>
+            <div className="font-bold">دستاورد جدید!</div>
+            <div>{achievementUnlocked}</div>
+          </div>
+        </div>
+      )}
+      
+      {/* نمایش XP دریافتی */}
+      {currentXpEarned > 0 && (
+        <div className="fixed top-20 right-10 transform z-50 bg-tiffany text-white px-4 py-2 rounded-full shadow-xl animate-float-up">
+          <div className="font-bold flex items-center gap-1">
+            <Sparkles className="h-4 w-4" />
+            +{currentXpEarned} XP
+          </div>
+        </div>
+      )}
+      
       <div className="container max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* پنل سمت راست - پیش‌نمایش آواتار */}
           <div className="w-full lg:w-5/12 flex flex-col">
             <div className="sticky top-20">
-              <Card className="relative shadow-lg border-slate-200 dark:border-slate-800 overflow-hidden">
+              <Card className="relative shadow-lg border-slate-200 dark:border-slate-800 overflow-hidden bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-900/95">
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl">آواتار شما</CardTitle>
+                    <CardTitle className="text-xl flex items-center">
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-tiffany to-blue-500">آواتار شما</span>
+                      <Badge variant="outline" className="mr-2 bg-amber-100 dark:bg-amber-900/20 text-amber-800 dark:text-amber-400 text-xs">جدید</Badge>
+                    </CardTitle>
                     <div className="flex items-center gap-2">
                       <TooltipProvider>
                         <Tooltip>
@@ -486,6 +733,24 @@ const AvatarCustomizer: React.FC = () => {
                               variant="outline"
                               size="sm"
                               className="h-8 w-8 p-0 rounded-full"
+                              onClick={randomizeAvatar}
+                            >
+                              <Sparkles className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>آواتار تصادفی</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 w-8 p-0 rounded-full"
                               onClick={() => setPreviewMode(!previewMode)}
                             >
                               <Eye className="h-4 w-4" />
@@ -499,7 +764,7 @@ const AvatarCustomizer: React.FC = () => {
                     </div>
                   </div>
                   <CardDescription>
-                    شخصیت خود را با انتخاب ویژگی‌های دلخواه بسازید
+                    شخصیت خود را با انتخاب ویژگی‌های دلخواه بسازید و جوایز را دریافت کنید
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center">
@@ -508,15 +773,26 @@ const AvatarCustomizer: React.FC = () => {
                       previewMode
                         ? "w-64 h-64 rounded-full overflow-hidden"
                         : "w-96 h-96 border border-dashed border-slate-300 dark:border-slate-700 rounded-lg"
-                    }`}
+                    } ${animateAvatar ? 'animate-subtle-bounce' : ''}`}
                     style={{
                       transform: `scale(${scale}) rotate(${rotation}deg)`,
+                      boxShadow: animateAvatar ? '0 0 15px rgba(0, 150, 150, 0.5)' : 'none'
                     }}
                   >
                     <div
-                      className="w-full h-full"
+                      className={`w-full h-full ${animateAvatar ? 'animate-pulse-subtle' : ''}`}
                       dangerouslySetInnerHTML={{ __html: svgData }}
                     />
+                    
+                    {/* افکت‌های ویژه روی آواتار */}
+                    {animateAvatar && (
+                      <div className="absolute inset-0 pointer-events-none">
+                        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-500 rounded-full animate-ping-slow opacity-75"></div>
+                        <div className="absolute top-3/4 right-1/3 w-2 h-2 bg-blue-500 rounded-full animate-ping-slow opacity-75" style={{ animationDelay: '0.5s' }}></div>
+                        <div className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-tiffany rounded-full animate-ping-slow opacity-75" style={{ animationDelay: '1s' }}></div>
+                        <div className="absolute top-1/2 left-1/3 w-2 h-2 bg-purple-500 rounded-full animate-ping-slow opacity-75" style={{ animationDelay: '1.5s' }}></div>
+                      </div>
+                    )}
                   </div>
                   
                   {!previewMode && (
@@ -849,13 +1125,281 @@ const AvatarCustomizer: React.FC = () => {
         </div>
       )}
       
+      {/* سیستم کوئست */}
+      {showQuestSystem && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+          <Card className="w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
+            <CardHeader className="bg-gradient-to-r from-amber-500/10 to-yellow-500/10">
+              <CardTitle className="flex items-center">
+                <Trophy className="mr-2 h-5 w-5 text-amber-500" />
+                کوئست‌های آواتار
+              </CardTitle>
+              <CardDescription>
+                کوئست‌ها را تکمیل کنید و XP و کردیت دریافت کنید
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow overflow-y-auto p-6">
+              <div className="space-y-6">
+                {quests.map((quest) => (
+                  <div 
+                    key={quest.id} 
+                    className={`border rounded-lg p-4 transition-all ${
+                      quest.completed 
+                        ? "bg-green-100 dark:bg-green-900/20 border-green-300 dark:border-green-800" 
+                        : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-700"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-bold text-lg flex items-center">
+                          {quest.title}
+                          {quest.completed && (
+                            <Check className="h-5 w-5 text-green-500 ml-2" />
+                          )}
+                        </h3>
+                        <p className="text-slate-600 dark:text-slate-400 mt-1">{quest.description}</p>
+                      </div>
+                      <Badge variant={quest.completed ? "default" : "outline"} className={quest.completed ? "bg-green-500" : ""}>
+                        {quest.reward} XP + {quest.reward} کردیت
+                      </Badge>
+                    </div>
+                    
+                    {!quest.completed && (
+                      <div className="mt-4">
+                        <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
+                          <span>پیشرفت:</span>
+                          <span>
+                            {quest.id === 'q1' && `${Math.min(usageStats.itemsChanged, 10)} / 10`}
+                            {quest.id === 'q2' && `${Math.min(usageStats.colorsChanged, 5)} / 5`}
+                            {quest.id === 'q3' && `${Math.min(usageStats.premiumItemsUnlocked, 5)} / 5`}
+                            {quest.id === 'q4' && `${Math.min(usageStats.avatarsSaved, 3)} / 3`}
+                            {quest.id === 'q5' && `${Math.min(usageStats.featuresUsed.size, 8)} / 8`}
+                          </span>
+                        </div>
+                        <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full"
+                            style={{ 
+                              width: 
+                                quest.id === 'q1' ? `${Math.min(usageStats.itemsChanged / 10 * 100, 100)}%` :
+                                quest.id === 'q2' ? `${Math.min(usageStats.colorsChanged / 5 * 100, 100)}%` :
+                                quest.id === 'q3' ? `${Math.min(usageStats.premiumItemsUnlocked / 5 * 100, 100)}%` :
+                                quest.id === 'q4' ? `${Math.min(usageStats.avatarsSaved / 3 * 100, 100)}%` :
+                                quest.id === 'q5' ? `${Math.min(usageStats.featuresUsed.size / 8 * 100, 100)}%` : '0%'
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-between border-t p-4">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="rounded-full px-3 py-1">
+                  <Trophy className="h-4 w-4 ml-2 text-amber-500" />
+                  <span>{quests.filter(q => q.completed).length} / {quests.length}</span>
+                </Badge>
+              </div>
+              <Button 
+                variant="default" 
+                onClick={() => setShowQuestSystem(false)}
+                className="rounded-full"
+              >
+                بستن
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      )}
+      
+      {/* مودال آواتارهای ذخیره‌شده */}
+      {showSavedAvatars && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+          <Card className="w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Save className="mr-2 h-5 w-5" />
+                آواتارهای ذخیره‌شده
+              </CardTitle>
+              <CardDescription>
+                مجموعه آواتارهای ذخیره شده شما
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow overflow-y-auto">
+              {savedAvatars.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <Save className="h-16 w-16 text-slate-300 dark:text-slate-700 mb-4" />
+                  <h3 className="text-lg font-bold text-slate-500 dark:text-slate-400">هنوز آواتاری ذخیره نکرده‌اید</h3>
+                  <p className="text-slate-400 dark:text-slate-500 max-w-md mt-2">
+                    آواتار خود را سفارشی کنید و با کلیک روی دکمه ذخیره آن را به کالکشن خود اضافه کنید
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {savedAvatars.map((avatar) => (
+                    <div key={avatar.id} className="border rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800">
+                      <div className="aspect-square bg-white dark:bg-slate-900 flex items-center justify-center p-4">
+                        <div dangerouslySetInnerHTML={{ __html: avatar.svg || svgData }} className="w-full h-full" />
+                      </div>
+                      <div className="p-3 flex flex-col">
+                        <div className="flex items-center justify-between mb-1">
+                          <h4 className="font-medium">{avatar.name}</h4>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            {new Date(avatar.createdAt).toLocaleDateString('fa-IR')}
+                          </p>
+                        </div>
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => {
+                              // به‌روزرسانی آواتار فعلی با آواتار ذخیره شده
+                              toast({
+                                title: "آواتار بارگذاری شد",
+                                description: `آواتار "${avatar.name}" بارگذاری شد`,
+                              });
+                            }}
+                          >
+                            بارگذاری
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-red-500 border-red-200 hover:bg-red-50 dark:border-red-900 dark:hover:bg-red-900/20 w-10 p-0"
+                            onClick={() => {
+                              // حذف آواتار
+                              setSavedAvatars(savedAvatars.filter(a => a.id !== avatar.id));
+                              toast({
+                                title: "آواتار حذف شد",
+                                description: `آواتار "${avatar.name}" با موفقیت حذف شد`,
+                              });
+                            }}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+            <CardFooter className="flex justify-between border-t p-4">
+              <div className="text-sm text-slate-500 dark:text-slate-400">
+                {savedAvatars.length} آواتار ذخیره شده
+              </div>
+              <Button 
+                variant="default" 
+                onClick={() => setShowSavedAvatars(false)}
+                className="rounded-full"
+              >
+                بستن
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      )}
+      
+      {/* مودال خروجی گرفتن */}
+      {isExporting && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle>خروجی گرفتن از آواتار</CardTitle>
+              <CardDescription>
+                فرمت و تنظیمات خروجی را انتخاب کنید
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium mb-2">فرمت خروجی</h3>
+                  <div className="flex gap-4">
+                    <div 
+                      className={`border rounded-lg p-3 flex-1 text-center cursor-pointer transition-all ${exportFormat === "svg" ? "border-tiffany bg-tiffany/5" : "hover:border-slate-300"}`}
+                      onClick={() => setExportFormat("svg")}
+                    >
+                      <FileText className="h-8 w-8 mx-auto mb-1 text-slate-500" />
+                      <div className="font-medium">SVG</div>
+                      <div className="text-xs text-slate-500">قابل ویرایش</div>
+                    </div>
+                    <div 
+                      className={`border rounded-lg p-3 flex-1 text-center cursor-pointer transition-all ${exportFormat === "png" ? "border-tiffany bg-tiffany/5" : "hover:border-slate-300"}`}
+                      onClick={() => setExportFormat("png")}
+                    >
+                      <Image className="h-8 w-8 mx-auto mb-1 text-slate-500" />
+                      <div className="font-medium">PNG</div>
+                      <div className="text-xs text-slate-500">تصویر با کیفیت</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">اندازه</h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="border rounded-lg p-2 text-center cursor-pointer hover:border-slate-300">
+                      <div className="font-medium">128px</div>
+                      <div className="text-xs text-slate-500">کوچک</div>
+                    </div>
+                    <div className="border rounded-lg p-2 text-center cursor-pointer border-tiffany bg-tiffany/5">
+                      <div className="font-medium">256px</div>
+                      <div className="text-xs text-slate-500">متوسط</div>
+                    </div>
+                    <div className="border rounded-lg p-2 text-center cursor-pointer hover:border-slate-300">
+                      <div className="font-medium">512px</div>
+                      <div className="text-xs text-slate-500">بزرگ</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsExporting(false)}
+              >
+                لغو
+              </Button>
+              <Button 
+                onClick={() => {
+                  if (exportFormat === "svg") {
+                    downloadAvatarSvg();
+                  } else {
+                    // در اینجا می‌توانید کد تبدیل SVG به PNG را اضافه کنید
+                    toast({
+                      title: "خروجی PNG",
+                      description: "خروجی PNG در حال حاضر در دسترس نیست",
+                    });
+                  }
+                  setIsExporting(false);
+                  
+                  // اضافه کردن به آمار
+                  setUsageStats(prev => ({
+                    ...prev,
+                    featuresUsed: prev.featuresUsed.add('export')
+                  }));
+                  
+                  // بررسی کوئست‌ها
+                  checkQuestProgress();
+                }}
+              >
+                دانلود
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      )}
+      
       {/* مودال فروشگاه */}
       {showShop && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center">
           <Card className="w-full max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
-            <CardHeader>
+            <CardHeader className="bg-gradient-to-r from-amber-500/5 to-yellow-500/10">
               <CardTitle className="flex items-center">
-                <ShoppingBag className="mr-2 h-5 w-5" />
+                <ShoppingBag className="mr-2 h-5 w-5 text-amber-500" />
                 فروشگاه آیتم‌های آواتار
               </CardTitle>
               <CardDescription>
