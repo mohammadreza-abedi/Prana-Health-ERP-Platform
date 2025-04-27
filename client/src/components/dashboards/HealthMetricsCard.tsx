@@ -190,8 +190,11 @@ export function HealthMetricsCard({ metric, variant = 'default', className = '',
                 <span className="text-gray-500 dark:text-gray-400">هدف</span>
                 <span className="font-medium">{goal.current} / {goal.target} {goal.unit}</span>
               </div>
-              <Progress value={progressPercent} className={`h-1.5 bg-${color}/10 dark:bg-${color}/5`} 
-                indicatorClassName={`bg-${color} dark:bg-${color}-light`} />
+              <Progress 
+                value={progressPercent} 
+                className={`h-1.5 bg-${color}/10 dark:bg-${color}/5`} 
+                indicatorClassName={`bg-${color} dark:bg-${color}-light`} 
+              />
             </div>
           )}
           

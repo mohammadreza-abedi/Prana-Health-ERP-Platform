@@ -9,6 +9,8 @@ import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/Dashboard";
 import EnhancedDashboard from "@/pages/EnhancedDashboard";
 import HRDashboard from "@/pages/HRDashboard";
+import HealthDashboard from "@/pages/HealthDashboard";
+import WorkoutDashboard from "@/pages/WorkoutDashboard";
 import Challenges from "@/pages/Challenges";
 import Leaderboard from "@/pages/Leaderboard";
 import Profile from "@/pages/Profile";
@@ -171,6 +173,8 @@ function Router() {
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/enhanced-dashboard" component={EnhancedDashboard} />
         <Route path="/hr-dashboard" component={HRDashboard} />
+        <Route path="/health-dashboard" component={HealthDashboard} />
+        <Route path="/workout-dashboard" component={WorkoutDashboard} />
         <Route path="/challenges" component={Challenges} />
         <Route path="/achievements" component={Achievements} />
         <Route path="/leaderboard" component={Leaderboard} />

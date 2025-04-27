@@ -1460,6 +1460,155 @@
   z-index: 1;
 }
 
+/* 2025 Pro Cards */
+.pro-card {
+  @apply bg-white dark:bg-slate-900 relative overflow-hidden border border-slate-200/70 dark:border-slate-800/70;
+  border-radius: 1rem;
+  box-shadow: 
+    0 2px 12px -4px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow, background-color;
+}
+
+.dark .pro-card {
+  box-shadow: 
+    0 2px 12px -3px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
+.pro-card:hover {
+  box-shadow: 
+    0 4px 20px -4px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+  transform: translateY(-2px);
+}
+
+.dark .pro-card:hover {
+  box-shadow: 
+    0 4px 20px -3px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+/* Acrylic card effect */
+.pro-card.acrylic {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .pro-card.acrylic {
+  background-color: rgba(15, 23, 42, 0.75);
+}
+
+/* Premium card effect */
+.pro-card.premium {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.85));
+  box-shadow: 
+    0 4px 24px -8px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.dark .pro-card.premium {
+  background: linear-gradient(135deg, rgba(22, 33, 58, 0.9), rgba(15, 23, 42, 0.85));
+  box-shadow: 
+    0 4px 24px -8px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.pro-card.premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, hsl(var(--tiffany)), hsl(var(--aqua)));
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.pro-card.premium::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, 
+    rgba(var(--tiffany-rgb), 0.07) 0%, 
+    rgba(var(--aqua-rgb), 0.03) 100%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.pro-card.premium:hover::after {
+  opacity: 1;
+}
+
+/* Brand color cards */
+.pro-card.tiffany {
+  border-color: rgba(var(--tiffany-rgb), 0.2);
+}
+
+.pro-card.tiffany::before {
+  background: linear-gradient(90deg, hsl(var(--tiffany)), hsl(var(--tiffany-light)));
+}
+
+.pro-card.navy {
+  border-color: rgba(var(--navy-rgb), 0.2);
+}
+
+.pro-card.navy::before {
+  background: linear-gradient(90deg, hsl(var(--navy)), hsl(var(--navy-light)));
+}
+
+.pro-card.aqua {
+  border-color: rgba(var(--aqua-rgb), 0.2);
+}
+
+.pro-card.aqua::before {
+  background: linear-gradient(90deg, hsl(var(--aqua)), hsl(var(--aqua-light)));
+}
+
+.pro-card.yellow {
+  border-color: rgba(var(--yellow-rgb), 0.2);
+}
+
+.pro-card.yellow::before {
+  background: linear-gradient(90deg, hsl(var(--yellow)), hsl(var(--yellow-light)));
+}
+
+/* Neon card effect */
+.neon-card {
+  box-shadow: 
+    0 5px 25px -5px rgba(var(--tiffany-rgb), 0.15),
+    0 10px 20px -5px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.dark .neon-card {
+  box-shadow: 
+    0 5px 25px -5px rgba(var(--tiffany-rgb), 0.2),
+    0 10px 20px -5px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
+.neon-card.aqua {
+  box-shadow: 
+    0 5px 25px -5px rgba(var(--aqua-rgb), 0.15),
+    0 10px 20px -5px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.dark .neon-card.aqua {
+  box-shadow: 
+    0 5px 25px -5px rgba(var(--aqua-rgb), 0.2),
+    0 10px 20px -5px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
 /* 2025 Premium Avatar System */
 .avatar {
   @apply relative inline-flex items-center justify-center rounded-full overflow-hidden;
