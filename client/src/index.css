@@ -4,6 +4,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+  .animation-delay-700 {
+    animation-delay: 700ms;
+  }
+  .animation-delay-1000 {
+    animation-delay: 1000ms;
+  }
+  .animation-delay-1500 {
+    animation-delay: 1500ms;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2000ms;
+  }
+  .animation-delay-3000 {
+    animation-delay: 3000ms;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4000ms;
+  }
+  
+  /* Glass effect utilities */
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/70 dark:bg-slate-800/70 border border-slate-200/50 dark:border-slate-700/50;
+  }
+  
+  .glass-card {
+    @apply rounded-xl glass-effect shadow-sm hover:shadow-lg transition-all duration-300;
+  }
+}
+
 @layer base {
   :root {
     /* Professional 2025 Color System 
