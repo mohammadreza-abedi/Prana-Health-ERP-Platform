@@ -206,36 +206,84 @@ const budgetAllocationData = [
 
 const keyPerformanceIndicators = [
   { 
-    title: 'شاخص ایمنی', 
-    value: 92, 
-    change: 8, 
-    trend: 'up',
-    description: 'بهبود 8% نسبت به دوره قبل',
-    icon: <ShieldCheck className="h-5 w-5 text-emerald-500" />
-  },
-  { 
-    title: 'حوادث گزارش شده', 
-    value: 14, 
-    change: -22, 
-    trend: 'down',
-    description: 'کاهش 22% نسبت به دوره قبل',
-    icon: <AlertCircle className="h-5 w-5 text-amber-500" />
-  },
-  { 
-    title: 'آموزش‌های تکمیل شده', 
-    value: 85, 
+    title: 'شاخص HSE سازمانی', 
+    value: 94, 
     change: 12, 
     trend: 'up',
     description: 'بهبود 12% نسبت به دوره قبل',
-    icon: <Award className="h-5 w-5 text-cyan-500" />
+    icon: <ShieldCheck className="h-5 w-5 text-emerald-500" />,
+    color: 'emerald',
+    isPrimary: true
   },
   { 
-    title: 'بازرسی‌های به موقع', 
-    value: 96, 
+    title: 'حوادث بدون توقف کار', 
+    value: 5, 
+    change: -35, 
+    trend: 'down',
+    description: 'کاهش 35% نسبت به دوره قبل',
+    icon: <AlertCircle className="h-5 w-5 text-amber-500" />,
+    color: 'amber',
+    details: '2 مورد کمتر از ماه گذشته'
+  },
+  { 
+    title: 'روزهای بدون حادثه', 
+    value: 183, 
+    change: 15, 
+    trend: 'up',
+    description: '6 ماه بدون حادثه اصلی',
+    icon: <Clock className="h-5 w-5 text-blue-500" />,
+    color: 'blue',
+    details: 'رکورد جدید برای واحد تولید'
+  },
+  { 
+    title: 'شاخص زیست محیطی', 
+    value: 89, 
+    change: 8, 
+    trend: 'up',
+    description: 'بهبود 8% نسبت به دوره قبل',
+    icon: <TreePine className="h-5 w-5 text-tiffany" />,
+    color: 'tiffany',
+    details: 'کاهش کربن در تمام واحدها'
+  },
+  { 
+    title: 'تکمیل آموزش‌های HSE', 
+    value: 92, 
+    change: 7, 
+    trend: 'up',
+    description: 'بهبود 7% نسبت به دوره قبل',
+    icon: <Award className="h-5 w-5 text-violet-500" />,
+    color: 'violet',
+    details: '24 دوره آموزشی تکمیل شده'
+  },
+  { 
+    title: 'ممیزی‌های داخلی', 
+    value: 97, 
     change: 4, 
     trend: 'up',
     description: 'بهبود 4% نسبت به دوره قبل',
-    icon: <Clipboard className="h-5 w-5 text-violet-500" />
+    icon: <Clipboard className="h-5 w-5 text-indigo-500" />,
+    color: 'indigo',
+    details: '32 مورد ممیزی کامل شده'
+  },
+  { 
+    title: 'گزارش‌های شبه حادثه', 
+    value: 76, 
+    change: 18, 
+    trend: 'up',
+    description: '18% افزایش گزارش‌دهی',
+    icon: <Flag className="h-5 w-5 text-rose-500" />,
+    color: 'rose',
+    details: 'مشارکت فعال کارکنان'
+  },
+  { 
+    title: 'شاخص کیفیت هوا', 
+    value: 87, 
+    change: 5, 
+    trend: 'up',
+    description: 'بهبود 5% نسبت به دوره قبل',
+    icon: <Wind className="h-5 w-5 text-cyan-500" />,
+    color: 'cyan',
+    details: 'کاهش آلاینده‌های صنعتی'
   }
 ];
 
@@ -475,43 +523,160 @@ const DashboardHeader: React.FC = () => {
   );
 };
 
-// کارت‌های شاخص‌های کلیدی عملکرد
-const KeyPerformanceCards: React.FC = () => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    {keyPerformanceIndicators.map((kpi, index) => (
-      <Card key={index} className="glass kpi-card overflow-hidden">
-        <CardContent className="p-5">
-          <div className="flex justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{kpi.title}</p>
-              <h3 className="text-3xl font-bold mt-1">
-                {kpi.value}
-                {kpi.title.includes('درصد') && '%'}
-              </h3>
-              <p className={`text-xs font-medium flex items-center mt-1.5 ${
-                kpi.trend === 'up' ? 'text-emerald-500' : 'text-rose-500'
-              }`}>
-                {kpi.trend === 'up' ? (
-                  <ArrowUp className="h-3.5 w-3.5 ml-1" />
-                ) : (
-                  <ArrowDown className="h-3.5 w-3.5 ml-1" />
-                )}
-                {Math.abs(kpi.change)}%
-                <span className="text-slate-400 dark:text-slate-500 mr-1">{kpi.description}</span>
-              </p>
-            </div>
-            <div className="p-3 rounded-full bg-slate-100 dark:bg-slate-800">
-              {kpi.icon}
-            </div>
-          </div>
-          <div className="mt-4">
-            <Progress value={kpi.value} className="h-1.5 bg-slate-100 dark:bg-slate-700" />
-          </div>
-        </CardContent>
-      </Card>
-    ))}
-  </div>
-);
+// کارت‌های شاخص‌های کلیدی عملکرد HSE
+const KeyPerformanceCards: React.FC = () => {
+  // جدا کردن کارت اصلی و فرعی‌ها
+  const primaryKPI = keyPerformanceIndicators.find(kpi => kpi.isPrimary);
+  const secondaryKPIs = keyPerformanceIndicators.filter(kpi => !kpi.isPrimary).slice(0, 7);
+  
+  return (
+    <div className="mb-6">
+      {/* شاخص اصلی در نوار بالایی با طراحی متمایز */}
+      {primaryKPI && (
+        <div className="mb-4">
+          <Card className="glass overflow-hidden border border-emerald-100 dark:border-emerald-900/30 bg-gradient-to-br from-white/80 to-emerald-50/30 dark:from-slate-800/90 dark:to-emerald-900/10 shadow-md">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center">
+                    <div className="p-3 mr-4 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/40 dark:to-emerald-800/20 shadow-sm">
+                      {primaryKPI.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-200 flex items-center">
+                        {primaryKPI.title}
+                        <Badge className="mr-2 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-100 border-none text-xs">اصلی</Badge>
+                      </h3>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">{primaryKPI.description}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-center px-4">
+                    <div className="text-4xl font-black text-emerald-600 dark:text-emerald-400">{primaryKPI.value}</div>
+                    <div className={`flex items-center justify-center text-sm font-medium ${
+                      primaryKPI.trend === 'up' ? 'text-emerald-500' : 'text-rose-500'
+                    }`}>
+                      {primaryKPI.trend === 'up' ? (
+                        <ArrowUp className="h-4 w-4 ml-1" />
+                      ) : (
+                        <ArrowDown className="h-4 w-4 ml-1" />
+                      )}
+                      {Math.abs(primaryKPI.change)}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                <div className="relative pt-2">
+                  <div className="absolute top-0 right-0 left-0 flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                    <span>0</span>
+                    <span>50</span>
+                    <span>100</span>
+                  </div>
+                  <div className="relative h-2.5 mt-4 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                    <div
+                      className="absolute top-0 left-0 bottom-0 bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-500 ease-in-out"
+                      style={{ width: `${primaryKPI.value}%` }}
+                    />
+                  </div>
+                </div>
+                
+                <div className="mt-3 text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                  <span className="flex items-center">
+                    <span className="inline-block w-3 h-3 bg-emerald-500 rounded-full mr-1"></span>
+                    امتیاز فعلی: {primaryKPI.value}
+                  </span>
+                  <span className="flex items-center">
+                    <span className="inline-block w-3 h-3 bg-slate-300 dark:bg-slate-600 rounded-full mr-1"></span>
+                    هدف: 100
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+      
+      {/* سایر شاخص‌ها در گرید */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {secondaryKPIs.map((kpi, index) => {
+          type ColorKey = 'emerald' | 'amber' | 'blue' | 'tiffany' | 'violet' | 'indigo' | 'rose' | 'cyan';
+          
+          const colorMap: Record<ColorKey, string> = {
+            emerald: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/20',
+            amber: 'text-amber-500 bg-amber-50 dark:bg-amber-900/20',
+            blue: 'text-blue-500 bg-blue-50 dark:bg-blue-900/20',
+            tiffany: 'text-tiffany bg-tiffany/10 dark:bg-tiffany/5',
+            violet: 'text-violet-500 bg-violet-50 dark:bg-violet-900/20',
+            indigo: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-900/20',
+            rose: 'text-rose-500 bg-rose-50 dark:bg-rose-900/20',
+            cyan: 'text-cyan-500 bg-cyan-50 dark:bg-cyan-900/20',
+          };
+          
+          const progressColorMap: Record<ColorKey, string> = {
+            emerald: 'from-emerald-500 to-emerald-400',
+            amber: 'from-amber-500 to-amber-400',
+            blue: 'from-blue-500 to-blue-400',
+            tiffany: 'from-tiffany to-tiffany-light',
+            violet: 'from-violet-500 to-violet-400',
+            indigo: 'from-indigo-500 to-indigo-400',
+            rose: 'from-rose-500 to-rose-400',
+            cyan: 'from-cyan-500 to-cyan-400',
+          };
+          
+          const safeColor = (kpi.color as ColorKey) || 'tiffany';
+          const iconBgColor = colorMap[safeColor];
+          const progressColor = progressColorMap[safeColor];
+          
+          return (
+            <Card 
+              key={index} 
+              className="glass overflow-hidden border border-slate-200/60 dark:border-slate-700/40 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm hover:shadow-md transition-shadow duration-300"
+            >
+              <CardContent className="p-5">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{kpi.title}</p>
+                    <h3 className="text-3xl font-bold mt-1 flex items-baseline">
+                      {kpi.value}
+                      <span className="text-base ml-1 text-slate-400 dark:text-slate-500 font-normal">
+                        {kpi.title.includes('درصد') ? '%' : kpi.title.includes('روز') ? 'روز' : ''}
+                      </span>
+                    </h3>
+                    <p className={`text-xs font-medium flex items-center mt-1.5 ${
+                      kpi.trend === 'up' ? 'text-emerald-500' : 'text-rose-500'
+                    }`}>
+                      {kpi.trend === 'up' ? (
+                        <ArrowUp className="h-3.5 w-3.5 ml-1" />
+                      ) : (
+                        <ArrowDown className="h-3.5 w-3.5 ml-1" />
+                      )}
+                      {Math.abs(kpi.change)}%
+                    </p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                      {kpi.details || kpi.description}
+                    </p>
+                  </div>
+                  <div className={`p-2.5 rounded-lg ${iconBgColor}`}>
+                    {kpi.icon}
+                  </div>
+                </div>
+                <div className="mt-4 relative h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div
+                    className={`absolute top-0 left-0 bottom-0 rounded-full transition-all duration-500 ease-in-out bg-gradient-to-r ${progressColor}`}
+                    style={{ width: `${kpi.value}%` }}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 // کارت نمودار ترکیبی شاخص‌های سلامت
 const HealthMetricsCard: React.FC = () => {
