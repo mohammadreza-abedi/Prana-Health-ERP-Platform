@@ -79,10 +79,56 @@ export default {
             height: "0",
           },
         },
+        "progress": {
+          "0%": { 
+            backgroundPosition: "0% 50%", 
+            width: "0%" 
+          },
+          "50%": { 
+            width: "60%" 
+          },
+          "100%": { 
+            backgroundPosition: "100% 50%", 
+            width: "100%" 
+          },
+        },
+        "gradient": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
+        "float-up": {
+          "0%": { transform: "translateY(0)", opacity: "1" },
+          "100%": { transform: "translateY(-20px)", opacity: "0" },
+        },
+        "subtle-bounce": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
+        "pulse-subtle": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.85" },
+        },
+        "ping-slow": {
+          "0%": { transform: "scale(1)", opacity: "0.5" },
+          "70%": { transform: "scale(2)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "0" },
+        },
+        "beat": {
+          "0%, 100%": { transform: "scale(1)" },
+          "25%": { transform: "scale(1.1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "progress": "progress 3s ease-in-out infinite",
+        "gradient": "gradient 5s ease infinite",
+        "float-up": "float-up 1s ease-out forwards",
+        "subtle-bounce": "subtle-bounce 2s ease-in-out infinite",
+        "pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
+        "ping-slow": "ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite",
+        "beat": "beat 1s ease-in-out infinite",
       },
     },
   },

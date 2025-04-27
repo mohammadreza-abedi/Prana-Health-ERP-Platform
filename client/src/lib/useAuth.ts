@@ -28,7 +28,12 @@ export function useAuth() {
 
   // تابع ورود کاربر
   const loginMutation = useMutation({
-    mutationFn: async (credentials: { username: string; password: string }) => {
+    mutationFn: async (credentials: { 
+      username: string; 
+      password?: string; 
+      otp?: string;
+      authType?: string;
+    }) => {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
