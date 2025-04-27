@@ -1,0 +1,81 @@
+**Canvas: 100 Ultra-Advanced Visual and Color UX/UI Prompts for Prana**
+
+**Expanded & Professionalized Palette Base:**
+- Tiffany Blue: #2EC4B6 (Primary Action / Trust / Focus)
+- Navy Blue: #002B45 (Secondary Action / Deep Background)
+- Aqua: #52C4B9 (Complementary / Calm Surfaces)
+- Yellow Accent: #FFBB00 (Warning / Attention / Highlights)
+- Success Green: #22C55E (Success State / Confirmations)
+- Error Red: #EF4444 (Error State / Critical Alerts)
+- Info Blue: #3B82F6 (Informational Highlights / Non-urgent)
+- Soft White: #F9FAFB (Primary Background)
+- Soft Gray: #CBD5E1 (Neutral Surfaces / Input Backgrounds)
+- Dark Gray: #1F2937 (Alternative Text Color)
+- Muted Aqua: #A5F3FC (Low-emphasis CTA / Background Accent)
+- Deep Navy: #0F172A (Card/Panel Heavy Background)
+- Light Yellow: #FEF08A (Mild Attention / Banners)
+- Pale Red: #FCA5A5 (Subtle Warnings)
+- Pale Green: #BBF7D0 (Soft Success Notifications)
+
+**Color Interaction Layers:**
+- **Primary System:** Tiffany Blue, Aqua, Navy Blue
+- **Alert System:** Green (Success), Red (Error), Yellow (Warning), Blue (Info)
+- **Neutral System:** Soft White, Soft Gray, Dark Gray, Deep Navy
+- **Accent System:** Yellow Accent, Muted Aqua, Light Yellow
+
+**Extended Professional Notes:**
+- Full semantic color alignment for international readability.
+- Extended focus states: inner glow + slight background blur (for WCAG AAA compatibility).
+- Depth layering: Soft elevation with multi-layered shadows (max 2 levels) based on background brightness.
+- Pastel neon overlays: Only on success, warning, and info banners for minimal visual fatigue.
+- Universal mobile/desktop alignment for hover, focus, active states with optimized tap feedback.
+
+---
+
+**Refined 100 UX/UI Rules Summary:**
+
+1–10: Core Accessibility & Contrast (4.5:1+, typographic scaling, dark/light mode enforcement).
+11–20: Button Systems (States clarity, color, hover/active transitions, separation of primary/destructive).
+21–30: Form Fields & Inputs (Placeholder differentiation, focus indicators, disabled clarity).
+31–40: Interactive Elements (Icons, menus, links with visible state changes and animations).
+41–50: Card/Panel Design (Color-coded top borders, soft background contrasts, hover elevations).
+51–60: Visual Hierarchy (Titles, section dividers, important color-coded notices).
+61–70: Microinteractions (Animation standards, touch feedback timing, easing curves).
+71–80: Notifications & Toasts (Color-coded, urgency levels, vibration/flash optional).
+81–90: Data Visualization (Desaturated default palettes, highlight outliers with vibrant accents).
+91–100: Thematic Consistency (Consistent action colors, UX/UI color balance, error-proof visual flows).
+
+---
+
+**Detailed Key Upgrades:**
+- **Loading States:** Branded shimmer + pastel reflections, max 2s animation.
+- **Empty States:** Aqua-White gradients with minimal illustrated guidance.
+- **Success Messages:** Green + Pale Green blends with icon emphasis.
+- **Warning Banners:** Yellow base + Light Yellow shadow, bold navy text.
+- **Critical Errors:** Red overlays with strong call-to-action separation.
+- **Table Differentiation:** Alternating row colors using Aqua/White, stronger hover rows.
+- **Dashboard Design:** Primary info in muted tones; urgent insights pop with accent colors.
+- **Modal Dialogs:** Semi-transparent backgrounds, colored focus rings (Tiffany/Aqua).
+- **Graphs/Charts:** Color schemes optimized for print/digital modes (muted base, vibrant highlight).
+- **Typography Rules:**
+  - Headings: Navy Blue.
+  - Primary text: Dark Gray.
+  - Links: Tiffany/Aqua gradient hover.
+
+**Motion and Interaction Enhancements:**
+- **Hover States:** Color transitions over 200–300ms with soft lift/scale.
+- **Focus States:** Colored halo + slight enlargement (+2–4px boundary offset).
+- **Click States:** Darkened shade (10–15%); tactile-like compression animations.
+- **Disabled States:** 50% opacity minimum, gray-toned text and icons.
+- **Micro-shadows:** Added dynamically for hover-active surfaces.
+
+**Accessibility Priority:**
+- WCAG 2.2 AA+ compliance for text/background contrast.
+- Alt-color schemes tested against deuteranopia, protanopia, and tritanopia.
+- Every color-coded message backed by icons/text redundancy.
+
+---
+
+🔧 **Prana UX/UI Visual Language 2.0: Harmonizing Beauty, Precision, and Global-Standard Accessibility for 2025 and Beyond.**
+
+(Next Phase: Creation of JSON Design Tokens, Advanced Theme Switcher, Full Responsive Adaptive Color Logic System.)

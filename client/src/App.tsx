@@ -50,21 +50,21 @@ function LoadingScreen() {
   ];
   
   return (
-    <div className="flex items-center justify-center h-screen relative overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* افکت‌های پس‌زمینه - استایل ویندوز 11 */}
+    <div className="flex items-center justify-center h-screen relative overflow-hidden bg-gradient-to-br from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+      {/* افکت‌های پس‌زمینه - استایل مدرن 2025 */}
       <div className="absolute inset-0">
-        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-tiffany/20 blur-3xl"></div>
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-aqua/20 blur-3xl"></div>
-        <div className="absolute top-1/3 right-1/4 w-80 h-80 rounded-full bg-purple-500/10 blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-72 h-72 rounded-full bg-rose-500/10 blur-3xl"></div>
+        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-tiffany-alpha blur-3xl animate-pulse-subtle" style={{ animationDuration: '15s' }}></div>
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-aqua-alpha blur-3xl animate-pulse-subtle" style={{ animationDuration: '18s', animationDelay: '1s' }}></div>
+        <div className="absolute top-1/3 right-1/4 w-80 h-80 rounded-full bg-info-alpha blur-3xl animate-pulse-subtle" style={{ animationDuration: '12s', animationDelay: '0.5s' }}></div>
+        <div className="absolute bottom-1/4 left-1/3 w-72 h-72 rounded-full bg-success-alpha blur-3xl animate-pulse-subtle" style={{ animationDuration: '20s', animationDelay: '1.5s' }}></div>
         
-        {/* افکت‌های متحرک پس‌زمینه */}
-        <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden opacity-20">
-          <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-tiffany rounded-full animate-ping-slow"></div>
-          <div className="absolute top-2/3 right-1/4 w-3 h-3 bg-aqua rounded-full animate-ping-slow" style={{ animationDelay: '0.5s' }}></div>
-          <div className="absolute bottom-1/4 left-1/2 w-2 h-2 bg-yellow-500 rounded-full animate-ping-slow" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 right-1/3 w-2 h-2 bg-purple-500 rounded-full animate-ping-slow" style={{ animationDelay: '1.5s' }}></div>
-          <div className="absolute top-2/3 left-1/5 w-3 h-3 bg-rose-500 rounded-full animate-ping-slow" style={{ animationDelay: '2s' }}></div>
+        {/* پارتیکل‌های متحرک با طراحی 2025 */}
+        <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden opacity-30 pointer-events-none">
+          <div className="absolute top-1/4 left-1/3 w-1.5 h-1.5 bg-tiffany-light rounded-full animate-ping-slow"></div>
+          <div className="absolute top-2/3 right-1/4 w-2 h-2 bg-aqua-light rounded-full animate-ping-slow" style={{ animationDelay: '0.7s' }}></div>
+          <div className="absolute bottom-1/4 left-1/2 w-1.5 h-1.5 bg-yellow-light rounded-full animate-ping-slow" style={{ animationDelay: '1.4s' }}></div>
+          <div className="absolute top-1/2 right-1/3 w-2 h-2 bg-info-light rounded-full animate-ping-slow" style={{ animationDelay: '2.1s' }}></div>
+          <div className="absolute top-3/4 left-1/4 w-1.5 h-1.5 bg-success-light rounded-full animate-ping-slow" style={{ animationDelay: '2.8s' }}></div>
         </div>
       </div>
       
