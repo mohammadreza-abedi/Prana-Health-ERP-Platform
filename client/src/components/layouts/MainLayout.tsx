@@ -74,6 +74,9 @@ import HealthReminders from "@/components/ui/health-reminder";
 import { useToast } from "@/hooks/use-toast";
 import { NotificationBar, useNotifications } from "@/components/ui/notification-bar";
 import PulsingLogo from "@/components/ui/pulsing-logo";
+import AdvancedNotificationBar from "@/components/ui/advanced-notification-bar";
+import MessageBox from "@/components/ui/message-box";
+import AlertControlCenter from "@/components/ui/alert-control-center";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -482,22 +485,111 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </Tooltip>
               </TooltipProvider>
               
-              {/* Messages */}
-              <div className="relative">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-                        <MessageSquare className="h-5 w-5" />
-                        <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">3</span>
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                      <p>پیام‌های دریافتی</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
+              {/* Messages - Enhanced */}
+              <MessageBox 
+                conversations={[
+                  {
+                    id: '1',
+                    participants: [
+                      { id: '1', name: 'کاربر فعلی', status: 'online' },
+                      { id: '2', name: 'سارا احمدی', status: 'online', avatar: 'https://i.pravatar.cc/150?img=1' }
+                    ],
+                    messages: [
+                      { 
+                        id: 'm1', 
+                        senderId: '2', 
+                        receiverId: '1', 
+                        content: 'سلام، گزارش اچ اس ای این ماه کامل شد؟', 
+                        timestamp: new Date(Date.now() - 3600000), 
+                        status: 'read'
+                      },
+                      { 
+                        id: 'm2', 
+                        senderId: '1', 
+                        receiverId: '2', 
+                        content: 'بله، تکمیل شده و برای بررسی ارسال کردم', 
+                        timestamp: new Date(Date.now() - 1800000), 
+                        status: 'read'
+                      },
+                      { 
+                        id: 'm3', 
+                        senderId: '2', 
+                        receiverId: '1', 
+                        content: 'عالی، ممنون از پیگیری', 
+                        timestamp: new Date(Date.now() - 900000), 
+                        status: 'delivered'
+                      }
+                    ],
+                    unreadCount: 1,
+                    lastMessageAt: new Date(Date.now() - 900000),
+                    isPinned: true
+                  },
+                  {
+                    id: '2',
+                    participants: [
+                      { id: '1', name: 'کاربر فعلی', status: 'online' },
+                      { id: '3', name: 'علی محمدی', status: 'away', avatar: 'https://i.pravatar.cc/150?img=2' }
+                    ],
+                    messages: [
+                      { 
+                        id: 'm4', 
+                        senderId: '1', 
+                        receiverId: '3', 
+                        content: 'جلسه ارزیابی ایمنی فردا ساعت ۱۰ برگزار میشه', 
+                        timestamp: new Date(Date.now() - 86400000), 
+                        status: 'delivered'
+                      }
+                    ],
+                    unreadCount: 0,
+                    lastMessageAt: new Date(Date.now() - 86400000)
+                  },
+                  {
+                    id: '3',
+                    isGroup: true,
+                    groupName: 'گروه HSE',
+                    participants: [
+                      { id: '1', name: 'کاربر فعلی', status: 'online' },
+                      { id: '2', name: 'سارا احمدی', status: 'online', avatar: 'https://i.pravatar.cc/150?img=1' },
+                      { id: '3', name: 'علی محمدی', status: 'away', avatar: 'https://i.pravatar.cc/150?img=2' },
+                      { id: '4', name: 'مریم کریمی', status: 'offline', avatar: 'https://i.pravatar.cc/150?img=3' }
+                    ],
+                    messages: [
+                      { 
+                        id: 'm5', 
+                        senderId: '2', 
+                        receiverId: 'group', 
+                        content: 'گزارش ماهانه آماده بررسی است', 
+                        timestamp: new Date(Date.now() - 172800000), 
+                        status: 'read'
+                      },
+                      { 
+                        id: 'm6', 
+                        senderId: '3', 
+                        receiverId: 'group', 
+                        content: 'من امروز بررسی می‌کنم', 
+                        timestamp: new Date(Date.now() - 86400000), 
+                        status: 'read'
+                      }
+                    ],
+                    unreadCount: 2,
+                    lastMessageAt: new Date(Date.now() - 86400000)
+                  }
+                ]}
+                currentUser={{ id: '1', name: 'کاربر فعلی', status: 'online' }}
+                onSendMessage={(conversationId, content) => {
+                  console.log('Message sent:', { conversationId, content });
+                  toast({
+                    title: 'پیام ارسال شد',
+                    description: content,
+                  });
+                }}
+                onMarkAsRead={(conversationId) => {
+                  console.log('Conversation marked as read:', conversationId);
+                }}
+                onCreateConversation={(participants) => {
+                  console.log('New conversation created with:', participants);
+                }}
+              />
               
               {/* Quick links */}
               <div className="relative hidden md:block">
@@ -515,14 +607,192 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </TooltipProvider>
               </div>
               
-              {/* Notifications */}
-              <NotificationBar 
-                notifications={notifications}
-                unreadCount={unreadCount}
-                onMarkAsRead={markAsRead}
-                onMarkAllAsRead={markAllAsRead}
-                onClear={clearNotification}
-                onClearAll={clearAllNotifications}
+              {/* Enhanced Notifications */}
+              <AdvancedNotificationBar 
+                notifications={[
+                  {
+                    id: '1',
+                    title: 'زمان استراحت چشم‌ها',
+                    message: 'لطفا ۲۰ ثانیه به فاصله ۲۰ متری نگاه کنید',
+                    type: 'info',
+                    priority: 'medium',
+                    timestamp: new Date(Date.now() - 300000),
+                    read: false,
+                    actionable: true,
+                    actions: [
+                      { label: 'انجام شد', action: () => {} },
+                      { label: 'یادآوری بعدی', action: () => {} }
+                    ],
+                    source: {
+                      name: 'سیستم سلامت چشم',
+                      department: 'سلامت شغلی'
+                    }
+                  },
+                  {
+                    id: '2',
+                    title: 'نوبت ارزیابی سلامت ماهانه',
+                    message: 'فرم ارزیابی سلامت دوره‌ای شما آماده تکمیل است',
+                    type: 'system',
+                    priority: 'high',
+                    timestamp: new Date(Date.now() - 3600000),
+                    read: false,
+                    link: '/health/assessment'
+                  },
+                  {
+                    id: '3',
+                    title: 'دستاورد جدید!',
+                    message: 'شما به مدت ۳۰ روز متوالی فعالیت بدنی داشته‌اید',
+                    type: 'success',
+                    priority: 'low',
+                    timestamp: new Date(Date.now() - 86400000),
+                    read: true
+                  },
+                  {
+                    id: '4',
+                    title: 'هشدار ارگونومی',
+                    message: 'الگوی نشستن شما نیاز به اصلاح دارد',
+                    type: 'warning',
+                    priority: 'high',
+                    timestamp: new Date(Date.now() - (86400000 * 2)),
+                    read: false,
+                    actionable: true,
+                    actions: [
+                      { label: 'مشاهده راهنما', action: () => {} }
+                    ]
+                  },
+                  {
+                    id: '5',
+                    title: 'خطر گرمازدگی',
+                    message: 'دمای محیط کار بیش از حد مجاز است. لطفا مایعات بیشتری مصرف کنید.',
+                    type: 'error',
+                    priority: 'critical',
+                    timestamp: new Date(Date.now() - (86400000 * 3)),
+                    read: true
+                  },
+                ]}
+                onMarkAsRead={(id) => {
+                  console.log('Notification marked as read:', id);
+                }}
+                onMarkAllAsRead={() => {
+                  console.log('All notifications marked as read');
+                }}
+                onClearNotification={(id) => {
+                  console.log('Notification cleared:', id);
+                }}
+                onClearAllNotifications={() => {
+                  console.log('All notifications cleared');
+                }}
+                onAction={(id, actionIndex) => {
+                  console.log('Notification action triggered:', { id, actionIndex });
+                  toast({
+                    title: 'اقدام انجام شد',
+                    description: `عملیات روی اعلان ${id} انجام شد`,
+                    variant: 'default',
+                  });
+                }}
+              />
+              
+              {/* Alert Control Center */}
+              <AlertControlCenter 
+                alerts={[
+                  {
+                    id: '1',
+                    title: 'اضطراری: آلودگی هوا',
+                    description: 'شاخص کیفیت هوا به سطح خطرناک رسیده است. لطفاً از ماسک استفاده کنید.',
+                    type: 'error',
+                    timestamp: new Date(Date.now() - 1800000),
+                    isRead: false,
+                    source: 'سیستم پایش کیفیت هوا'
+                  },
+                  {
+                    id: '2',
+                    title: 'بازنشانی رمز عبور',
+                    description: 'رمز عبور شما با موفقیت بازنشانی شد.',
+                    type: 'success',
+                    timestamp: new Date(Date.now() - 86400000),
+                    isRead: true,
+                    source: 'سیستم امنیت'
+                  },
+                  {
+                    id: '3',
+                    title: 'بروزرسانی سیستم',
+                    description: 'بروزرسانی جدید سیستم نصب شد.',
+                    type: 'info',
+                    timestamp: new Date(Date.now() - 172800000),
+                    isRead: false,
+                    source: 'سیستم بروزرسانی'
+                  },
+                  {
+                    id: '4',
+                    title: 'هشدار دمای بالا',
+                    description: 'دمای سرور به سطح هشدار رسیده است.',
+                    type: 'warning',
+                    timestamp: new Date(Date.now() - 259200000),
+                    isRead: false,
+                    source: 'سیستم مانیتورینگ تجهیزات',
+                    actionable: true,
+                    actionLabel: 'بررسی سیستم',
+                    onAction: () => {
+                      console.log('Server temperature check');
+                    }
+                  },
+                ]}
+                systemControls={[
+                  {
+                    id: 'brightness',
+                    name: 'روشنایی صفحه',
+                    type: 'slider',
+                    icon: <Sun className="h-4 w-4" />,
+                    value: 70,
+                    options: { min: 0, max: 100, step: 1 }
+                  },
+                  {
+                    id: 'volume',
+                    name: 'صدای سیستم',
+                    type: 'slider',
+                    icon: <Volume2 className="h-4 w-4" />,
+                    value: 50,
+                    options: { min: 0, max: 100, step: 1 }
+                  },
+                  {
+                    id: 'bluetoothToggle',
+                    name: 'بلوتوث',
+                    type: 'toggle',
+                    icon: <Bluetooth className="h-4 w-4" />,
+                    value: true
+                  },
+                  {
+                    id: 'wifiToggle',
+                    name: 'وای‌فای',
+                    type: 'toggle',
+                    icon: <Wifi className="h-4 w-4" />,
+                    value: true
+                  },
+                  {
+                    id: 'screenTime',
+                    name: 'زمان استراحت چشم',
+                    type: 'toggle',
+                    icon: <Eye className="h-4 w-4" />,
+                    value: true
+                  },
+                ]}
+                onAlertRead={(id) => {
+                  console.log('Alert read:', id);
+                }}
+                onAlertDismiss={(id) => {
+                  console.log('Alert dismissed:', id);
+                }}
+                onControlChange={(id, value) => {
+                  console.log('Control changed:', { id, value });
+                  toast({
+                    title: 'تنظیمات بروز شد',
+                    description: `تنظیم ${id} به مقدار ${value} تغییر کرد`,
+                  });
+                }}
+                onToggleNotifications={(enabled) => {
+                  console.log('Notifications toggled:', enabled);
+                }}
+                notificationsEnabled={true}
               />
               
               {/* Help */}
