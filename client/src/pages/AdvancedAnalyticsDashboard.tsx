@@ -372,7 +372,7 @@ const DashboardHeader: React.FC = () => {
           </div>
           <Select defaultValue="فروردین - اسفند 1403">
             <SelectTrigger className="h-10 pl-3 pr-10 min-w-[240px] border-slate-200 dark:border-slate-700">
-              <SelectValue />
+              <SelectValue placeholder="انتخاب بازه زمانی" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="فروردین - اسفند 1403">فروردین - اسفند 1403</SelectItem>
@@ -478,53 +478,59 @@ const HealthMetricsCard: React.FC = () => {
       <CardContent className="px-6 pb-6">
         <div className="h-80 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            {chartType === 'bar' && (
-              <BarChart
-                data={healthMetricsData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis yAxisId="left" orientation="left" />
-                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
-                <Tooltip />
-                <Legend />
-                <Bar yAxisId="left" dataKey="کارخانه_A" fill="#2EC4B6" radius={[4, 4, 0, 0]} />
-                <Bar yAxisId="left" dataKey="کارخانه_B" fill="#52C4B9" radius={[4, 4, 0, 0]} />
-                <Bar yAxisId="right" dataKey="امتیاز_ایمنی" fill="#FFBB00" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            )}
-            {chartType === 'line' && (
-              <LineChart
-                data={healthMetricsData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis yAxisId="left" orientation="left" />
-                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
-                <Tooltip />
-                <Legend />
-                <Line yAxisId="left" type="monotone" dataKey="کارخانه_A" stroke="#2EC4B6" activeDot={{ r: 8 }} />
-                <Line yAxisId="left" type="monotone" dataKey="کارخانه_B" stroke="#52C4B9" />
-                <Line yAxisId="right" type="monotone" dataKey="امتیاز_ایمنی" stroke="#FFBB00" />
-              </LineChart>
-            )}
-            {chartType === 'area' && (
-              <AreaChart
-                data={healthMetricsData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Area type="monotone" dataKey="کارخانه_A" stroke="#2EC4B6" fill="#2EC4B6" fillOpacity={0.4} />
-                <Area type="monotone" dataKey="کارخانه_B" stroke="#52C4B9" fill="#52C4B9" fillOpacity={0.4} />
-                <Area type="monotone" dataKey="امتیاز_ایمنی" stroke="#FFBB00" fill="#FFBB00" fillOpacity={0.4} />
-              </AreaChart>
-            )}
+            {(() => {
+              if (chartType === 'bar') {
+                return (
+                  <BarChart
+                    data={healthMetricsData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis yAxisId="left" orientation="left" />
+                    <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar yAxisId="left" dataKey="کارخانه_A" fill="#2EC4B6" radius={[4, 4, 0, 0]} />
+                    <Bar yAxisId="left" dataKey="کارخانه_B" fill="#52C4B9" radius={[4, 4, 0, 0]} />
+                    <Bar yAxisId="right" dataKey="امتیاز_ایمنی" fill="#FFBB00" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                );
+              } else if (chartType === 'line') {
+                return (
+                  <LineChart
+                    data={healthMetricsData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis yAxisId="left" orientation="left" />
+                    <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
+                    <Tooltip />
+                    <Legend />
+                    <Line yAxisId="left" type="monotone" dataKey="کارخانه_A" stroke="#2EC4B6" activeDot={{ r: 8 }} />
+                    <Line yAxisId="left" type="monotone" dataKey="کارخانه_B" stroke="#52C4B9" />
+                    <Line yAxisId="right" type="monotone" dataKey="امتیاز_ایمنی" stroke="#FFBB00" />
+                  </LineChart>
+                );
+              } else {
+                return (
+                  <AreaChart
+                    data={healthMetricsData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Area type="monotone" dataKey="کارخانه_A" stroke="#2EC4B6" fill="#2EC4B6" fillOpacity={0.4} />
+                    <Area type="monotone" dataKey="کارخانه_B" stroke="#52C4B9" fill="#52C4B9" fillOpacity={0.4} />
+                    <Area type="monotone" dataKey="امتیاز_ایمنی" stroke="#FFBB00" fill="#FFBB00" fillOpacity={0.4} />
+                  </AreaChart>
+                );
+              }
+            })()}
           </ResponsiveContainer>
         </div>
       </CardContent>
