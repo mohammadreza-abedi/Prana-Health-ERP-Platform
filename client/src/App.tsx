@@ -5,6 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { WebSocketProvider } from "@/hooks/use-websocket";
+import PWAManager from "@/components/pwa/PWAManager";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/Dashboard";
 import EnhancedDashboard from "@/pages/EnhancedDashboard";
@@ -85,6 +86,7 @@ function App() {
       <WebSocketProvider>
         <TooltipProvider>
           <Toaster />
+          <PWAManager />
           <Router />
         </TooltipProvider>
       </WebSocketProvider>

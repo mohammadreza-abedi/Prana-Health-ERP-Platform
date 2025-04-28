@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
+import PWAInstallButton from "@/components/pwa/PWAInstallButton";
 import {
   Home,
   Award,
@@ -521,6 +522,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
           {/* Bottom actions - پیشرفته و مدرن */}
           <div className="p-3 space-y-2">
+            {/* دکمه نصب PWA */}
+            <div className={`w-full ${isExpanded ? 'px-2' : 'flex justify-center'}`}>
+              <PWAInstallButton 
+                variant="outline" 
+                className={`w-full ${!isExpanded && 'p-2 h-10 w-10'}`} 
+              />
+            </div>
+            
             {/* Mode toggler with advanced effects */}
             <TooltipProvider>
               <Tooltip>

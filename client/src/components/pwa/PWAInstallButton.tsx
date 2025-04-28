@@ -28,6 +28,7 @@ export const PWAInstallButton = ({
   useEffect(() => {
     // بررسی کنیم که آیا اپلیکیشن قبلاً نصب شده است
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    // @ts-ignore - navigator.standalone در Safari iOS وجود دارد
     const isInstalledIOS = window.navigator.standalone;
     const isPWAInstalled = isStandalone || Boolean(isInstalledIOS);
     

@@ -29,6 +29,7 @@ export const PWAManager = () => {
   useEffect(() => {
     const checkPWAInstalled = () => {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      // @ts-ignore - navigator.standalone در Safari iOS وجود دارد
       const isInstalledIOS = window.navigator.standalone;
       setIsPWAInstalled(isStandalone || Boolean(isInstalledIOS));
     };
