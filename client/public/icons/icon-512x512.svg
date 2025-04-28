@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2EC4B6" />
+      <stop offset="100%" stop-color="#20AFA2" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" />
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#gradient)" />
+  <circle cx="256" cy="256" r="200" fill="#FFFFFF" opacity="0.1" filter="url(#shadow)" />
+  
+  <!-- پ -->
+  <path d="M175 170 Q213 170 230 200 Q247 230 230 260 Q213 290 175 290 L175 350 L145 350 L145 170 L175 170 Z" fill="#FFFFFF" />
+  <path d="M175 200 L175 260 Q195 260 205 245 Q215 230 205 215 Q195 200 175 200 Z" fill="url(#gradient)" />
+  
+  <!-- ر -->
+  <path d="M285 190 L285 275 Q300 275 310 265 Q320 255 320 240 L320 190 L350 190 L350 240 Q350 270 335 290 Q320 310 285 310 L285 350 L255 350 L255 190 L285 190 Z" fill="#FFFFFF" />
+  
+  <!-- نقطه‌ها -->
+  <circle cx="175" cy="150" r="12" fill="#FFFFFF" />
+  <circle cx="285" cy="170" r="12" fill="#FFFFFF" />
+</svg>
