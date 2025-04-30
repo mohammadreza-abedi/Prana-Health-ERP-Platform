@@ -1395,10 +1395,96 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <div className="absolute inset-0 bg-noise opacity-[0.015] dark:opacity-[0.03] mix-blend-overlay"></div>
           </div>
           
-          {/* Content with glassmorphism container */}
+          {/* Advanced Island Content Layout with Grid System */}
           <div className="relative z-10">
-            <div className="glass-card mx-auto my-4 rounded-xl overflow-hidden max-w-[95%] md:max-w-[90%] backdrop-blur-md border border-white/20 dark:border-slate-700/30">
-              {children}
+            <div className="islands-container mx-auto my-4 max-w-[95%] md:max-w-[92%] grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* Main Content Island */}
+              <div className="glass-card col-span-1 lg:col-span-9 p-6 rounded-2xl backdrop-blur-xl border border-white/20 dark:border-slate-700/30 shadow-2xl shadow-tiffany/5 dark:shadow-tiffany/10 hover:shadow-tiffany/10 transition-all duration-300">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"></div>
+                {children}
+              </div>
+              
+              {/* Right Sidebar Island with Features */}
+              <div className="lg:col-span-3 space-y-6">
+                {/* User Stats Island */}
+                <div className="glass-card rounded-2xl backdrop-blur-xl border border-white/20 dark:border-slate-700/30 shadow-xl shadow-amber-500/5 p-4 relative overflow-hidden hover:shadow-amber-500/10 transition-all duration-300">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    آمار امروز شما
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="glass p-2 rounded-lg flex flex-col items-center">
+                      <span className="text-slate-500 dark:text-slate-400">قدم‌ها</span>
+                      <span className="text-lg font-bold text-tiffany">۶,۵۴۲</span>
+                    </div>
+                    <div className="glass p-2 rounded-lg flex flex-col items-center">
+                      <span className="text-slate-500 dark:text-slate-400">کالری</span>
+                      <span className="text-lg font-bold text-purple-500">۸۵۴</span>
+                    </div>
+                    <div className="glass p-2 rounded-lg flex flex-col items-center">
+                      <span className="text-slate-500 dark:text-slate-400">آب</span>
+                      <span className="text-lg font-bold text-aqua">۴/۸</span>
+                    </div>
+                    <div className="glass p-2 rounded-lg flex flex-col items-center">
+                      <span className="text-slate-500 dark:text-slate-400">خواب</span>
+                      <span className="text-lg font-bold text-amber-500">۷:۲۵</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Quick Tasks Island */}
+                <div className="glass-card rounded-2xl backdrop-blur-xl border border-white/20 dark:border-slate-700/30 shadow-xl shadow-tiffany/5 p-4 relative overflow-hidden hover:shadow-tiffany/10 transition-all duration-300">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-aqua/30 to-transparent"></div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 text-aqua" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                      <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                    </svg>
+                    وظایف امروز
+                  </h3>
+                  <div className="space-y-2 text-xs">
+                    <div className="glass p-2 rounded-lg flex items-center justify-between">
+                      <span className="text-slate-700 dark:text-slate-300">ارزیابی سلامت ماهانه</span>
+                      <div className="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">۱</div>
+                    </div>
+                    <div className="glass p-2 rounded-lg flex items-center justify-between">
+                      <span className="text-slate-700 dark:text-slate-300">تست استرس هفتگی</span>
+                      <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">۲</div>
+                    </div>
+                    <div className="glass p-2 rounded-lg flex items-center justify-between">
+                      <span className="text-slate-700 dark:text-slate-300">چالش پیاده‌روی تیمی</span>
+                      <div className="w-6 h-6 rounded-full bg-tiffany-100 dark:bg-tiffany-900/30 flex items-center justify-center text-tiffany dark:text-tiffany-light">۳</div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* HSE Status Island */}
+                <div className="glass-card rounded-2xl backdrop-blur-xl border border-white/20 dark:border-slate-700/30 shadow-xl shadow-emerald-500/5 p-4 relative overflow-hidden hover:shadow-emerald-500/10 transition-all duration-300">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    وضعیت HSE دپارتمان
+                  </h3>
+                  <div className="space-y-2 text-xs">
+                    <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-emerald-500 to-tiffany h-2 rounded-full" style={{ width: "92%" }}></div>
+                    </div>
+                    <div className="flex justify-between text-slate-500 dark:text-slate-400">
+                      <span>امتیاز ایمنی: ۹۲٪</span>
+                      <span>وضعیت: عالی</span>
+                    </div>
+                    <div className="mt-2 flex items-center justify-between glass p-2 rounded-lg">
+                      <span className="text-slate-700 dark:text-slate-300">گزارش حوادث</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">۰ مورد</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

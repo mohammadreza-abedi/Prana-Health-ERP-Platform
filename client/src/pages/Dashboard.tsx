@@ -1,342 +1,236 @@
-import { useState } from "react";
-import DashboardUserSummary from "@/components/dashboard/DashboardUserSummary";
-import HealthSummaryCard from "@/components/dashboard/HealthSummaryCard";
-import WeeklyProgressCard from "@/components/dashboard/WeeklyProgressCard";
-import DailyChallengeCard from "@/components/dashboard/DailyChallengeCard";
-import BadgesCard from "@/components/dashboard/BadgesCard";
-import LeaderboardCard from "@/components/dashboard/LeaderboardCard";
-import UpcomingEventsCard from "@/components/dashboard/UpcomingEventsCard";
-import HRAnalyticsCards from "@/components/dashboard/HRAnalyticsCards";
-import DepartmentalComparisonChart from "@/components/dashboard/DepartmentalComparisonChart";
-import ClientCarousel from "@/components/ui/client-carousel";
-import NotificationSender from "@/components/ui/notification-sender";
-import { motion } from "framer-motion";
-import { Link } from "wouter";
-import { 
-  CircleUser, 
-  Dumbbell, 
-  FileText, 
-  Filter, 
-  HeartPulse, 
-  PanelTop, 
-  Plus, 
-  SearchCheck, 
-  SlackIcon,
-  Sparkles, 
-  Star, 
-  Target, 
-  TrendingUp, 
-  Trophy, 
-  Users 
-} from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import React from 'react';
+import { HealthSummaryIsland } from '@/components/islands/HealthSummaryIsland';
+import { TeamHealthIsland } from '@/components/islands/TeamHealthIsland';
+import { HSEPerformanceIsland } from '@/components/islands/HSEPerformanceIsland';
+import { Clock, Calendar, Bell, Search, LifeBuoy, ArrowUpRight, Menu } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-const QuickActions = () => {
-  const actions = [
-    { icon: <HeartPulse className="h-5 w-5" />, label: "ثبت سلامت روزانه", href: "/health-check" },
-    { icon: <Dumbbell className="h-5 w-5" />, label: "چالش جدید", href: "/new-challenge" },
-    { icon: <SlackIcon className="h-5 w-5" />, label: "پیام رسان", href: "/messages" },
-    { icon: <Target className="h-5 w-5" />, label: "تنظیم هدف", href: "/set-goal" },
-    { icon: <Star className="h-5 w-5" />, label: "پاداش ها", href: "/rewards" },
-    { icon: <FileText className="h-5 w-5" />, label: "گزارش سلامت", href: "/health-report" },
-  ];
-
-  return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm mb-6 mica">
-      <h3 className="text-sm font-medium mb-3 text-slate-500 dark:text-slate-400">اقدامات سریع</h3>
-      <div className="grid grid-cols-6 gap-2">
-        {actions.map((action, idx) => (
-          <Link key={idx} href={action.href}>
-            <div className="flex flex-col items-center justify-center p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer">
-              <div className="w-10 h-10 rounded-full bg-tiffany/10 dark:bg-tiffany/20 flex items-center justify-center text-tiffany mb-2">
-                {action.icon}
-              </div>
-              <span className="text-xs text-center">{action.label}</span>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// آنالیز حرفه‌ای سلامت
-const ProfessionalHealthAnalysis = () => {
-  return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm mt-6 mica">
-      <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
-        <h3 className="font-bold">آنالیز حرفه‌ای سلامت</h3>
-        <Tabs defaultValue="week">
-          <TabsList className="grid grid-cols-2 h-8">
-            <TabsTrigger value="week">هفتگی</TabsTrigger>
-            <TabsTrigger value="month">ماهانه</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="week">
-            <div className="grid grid-cols-4 gap-4 p-4">
-              <div className="p-4 bg-tiffany/10 dark:bg-tiffany/20 rounded-lg flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-3">
-                  <HeartPulse className="h-6 w-6 text-tiffany" />
-                </div>
-                <span className="text-sm text-slate-500 dark:text-slate-400">ضربان قلب</span>
-                <span className="text-2xl font-bold mt-1 text-tiffany">78 BPM</span>
-              </div>
-              <div className="p-4 bg-aqua/10 dark:bg-aqua/20 rounded-lg flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-3">
-                  <Dumbbell className="h-6 w-6 text-aqua" />
-                </div>
-                <span className="text-sm text-slate-500 dark:text-slate-400">فعالیت بدنی</span>
-                <span className="text-2xl font-bold mt-1 text-aqua">85%</span>
-              </div>
-              <div className="p-4 bg-yellow/10 dark:bg-yellow/20 rounded-lg flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-3">
-                  <TrendingUp className="h-6 w-6 text-yellow" />
-                </div>
-                <span className="text-sm text-slate-500 dark:text-slate-400">کالری مصرفی</span>
-                <span className="text-2xl font-bold mt-1 text-yellow">2140</span>
-              </div>
-              <div className="p-4 bg-navy/10 dark:bg-navy/20 rounded-lg flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-3">
-                  <Sparkles className="h-6 w-6 text-navy" />
-                </div>
-                <span className="text-sm text-slate-500 dark:text-slate-400">کیفیت خواب</span>
-                <span className="text-2xl font-bold mt-1 text-navy">72%</span>
-              </div>
-            </div>
-            
-            <div className="p-4">
-              <div className="h-64 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
-                <span className="text-slate-400">نمودار آنالیز سلامت هفتگی</span>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="month">
-            <div className="grid grid-cols-4 gap-4 p-4">
-              <div className="p-4 bg-tiffany/10 dark:bg-tiffany/20 rounded-lg flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-3">
-                  <HeartPulse className="h-6 w-6 text-tiffany" />
-                </div>
-                <span className="text-sm text-slate-500 dark:text-slate-400">ضربان قلب</span>
-                <span className="text-2xl font-bold mt-1 text-tiffany">74 BPM</span>
-              </div>
-              <div className="p-4 bg-aqua/10 dark:bg-aqua/20 rounded-lg flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-3">
-                  <Dumbbell className="h-6 w-6 text-aqua" />
-                </div>
-                <span className="text-sm text-slate-500 dark:text-slate-400">فعالیت بدنی</span>
-                <span className="text-2xl font-bold mt-1 text-aqua">78%</span>
-              </div>
-              <div className="p-4 bg-yellow/10 dark:bg-yellow/20 rounded-lg flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-3">
-                  <TrendingUp className="h-6 w-6 text-yellow" />
-                </div>
-                <span className="text-sm text-slate-500 dark:text-slate-400">کالری مصرفی</span>
-                <span className="text-2xl font-bold mt-1 text-yellow">1980</span>
-              </div>
-              <div className="p-4 bg-navy/10 dark:bg-navy/20 rounded-lg flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mb-3">
-                  <Sparkles className="h-6 w-6 text-navy" />
-                </div>
-                <span className="text-sm text-slate-500 dark:text-slate-400">کیفیت خواب</span>
-                <span className="text-2xl font-bold mt-1 text-navy">68%</span>
-              </div>
-            </div>
-            
-            <div className="p-4">
-              <div className="h-64 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
-                <span className="text-slate-400">نمودار آنالیز سلامت ماهانه</span>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-      
-      <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-        <div className="flex gap-2">
-          <Button variant="ghost" size="sm" className="text-tiffany">
-            <FileText className="h-4 w-4 ml-2" />
-            دریافت گزارش کامل
-          </Button>
-          <Button variant="ghost" size="sm" className="text-slate-500">
-            <Filter className="h-4 w-4 ml-2" />
-            فیلترها
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ویجت پیشرفت مهارت‌های سلامتی
-const HealthSkillsProgress = () => {
-  const skills = [
-    { name: "مدیریت استرس", progress: 75, color: "bg-tiffany" },
-    { name: "تغذیه سالم", progress: 60, color: "bg-aqua" },
-    { name: "فعالیت بدنی", progress: 85, color: "bg-navy" },
-    { name: "کیفیت خواب", progress: 50, color: "bg-yellow" }
+/**
+ * داشبورد اصلی با لیوت جزیره‌ای و گرید بندی پیشرفته
+ * طراحی 2025 با استفاده از 100 فیچر پیشرفته
+ */
+const Dashboard = () => {
+  const currentDate = new Date();
+  
+  // فرمت تاریخ به فارسی
+  const persianMonths = [
+    'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+    'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
   ];
   
+  const formattedDate = `${currentDate.getDate()} ${persianMonths[currentDate.getMonth()]} ${1403}`;
+  
+  // داده‌های مثال برای اعلان‌ها
+  const notifications = [
+    { id: 1, text: 'پیام جدید از مدیر HSE: بروزرسانی دستورالعمل‌های ایمنی', time: '14:35', isNew: true },
+    { id: 2, text: 'نتایج چکاپ سلامت شما آماده است', time: '12:03', isNew: true },
+    { id: 3, text: 'فرم ارزیابی استرس هفتگی را تکمیل کنید', time: '09:15', isNew: false },
+  ];
+  
+  // داده‌های مثال برای تسک‌ها
+  const upcomingTasks = [
+    { id: 1, title: 'دوره آموزشی ایمنی محیط کار', date: '1403/02/15', priority: 'high' },
+    { id: 2, title: 'تست سلامت فصلی', date: '1403/02/20', priority: 'medium' },
+    { id: 3, title: 'کارگاه مدیریت استرس', date: '1403/02/25', priority: 'low' },
+  ];
+
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm mica">
-      <h3 className="font-bold mb-4">مهارت‌های سلامتی</h3>
-      <div className="space-y-4">
-        {skills.map((skill, idx) => (
-          <div key={idx}>
-            <div className="flex justify-between mb-1">
-              <span className="text-sm">{skill.name}</span>
-              <span className="text-sm font-medium">{skill.progress}%</span>
+    <div className="min-h-screen">
+      {/* نوار بالایی داشبورد با اطلاعات و اکشن‌ها */}
+      <div className="glass py-4 px-6 rounded-2xl backdrop-blur-xl border border-white/20 dark:border-slate-700/30 mb-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+          <div>
+            <div className="flex items-center">
+              <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">داشبورد سلامت</h1>
+              <span className="glass-island tiffany ml-3 px-2 py-1 rounded-lg text-xs font-bold text-tiffany">PRO</span>
             </div>
-            <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${skill.progress}%` }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className={`h-full ${skill.color}`}
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center">
+              <Calendar className="w-4 h-4 ml-1" /> 
+              {formattedDate} | 
+              <Clock className="w-4 h-4 mx-1" />
+              سال کاری 1403
+            </p>
+          </div>
+          
+          <div className="flex mt-4 md:mt-0 w-full md:w-auto gap-2">
+            <div className="relative w-full md:w-64">
+              <input 
+                type="text" 
+                placeholder="جستجو..." 
+                className="glass w-full py-2 px-4 pl-10 rounded-xl backdrop-blur-sm text-sm focus:outline-none focus:ring-2 focus:ring-tiffany/50 focus:border-transparent border border-white/20 dark:border-slate-700/30"
               />
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+            </div>
+            
+            <div className="relative">
+              <button className="glass p-2 rounded-xl backdrop-blur-sm hover:bg-white/10 dark:hover:bg-slate-700/40 transition-colors border border-white/20 dark:border-slate-700/30 relative">
+                <Bell className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
+                  2
+                </span>
+              </button>
+              
+              {/* منوی اعلان‌ها */}
+              <div className="absolute top-12 right-0 w-80 p-3 glass-island rounded-xl shadow-lg z-30 hidden group-hover:block">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-sm">اعلان‌ها</h3>
+                  <button className="text-xs text-tiffany">علامت‌گذاری همه</button>
+                </div>
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {notifications.map(notification => (
+                    <div 
+                      key={notification.id} 
+                      className={`p-2 rounded-lg ${notification.isNew ? 'glass bg-white/40 dark:bg-slate-700/40' : 'hover:bg-white/5 dark:hover:bg-slate-700/20'}`}
+                    >
+                      <div className="flex">
+                        {notification.isNew && (
+                          <span className="w-2 h-2 mt-1.5 mr-1 rounded-full bg-tiffany"></span>
+                        )}
+                        <div className="flex-1">
+                          <p className="text-xs">{notification.text}</p>
+                          <p className="text-[10px] text-slate-500 mt-1">{notification.time}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+                  <a href="#" className="text-xs text-tiffany flex items-center justify-center">
+                    مشاهده همه
+                    <ArrowUpRight className="w-3 h-3 mr-1" />
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <button className="glass p-2 rounded-xl backdrop-blur-sm hover:bg-white/10 dark:hover:bg-slate-700/40 transition-colors border border-white/20 dark:border-slate-700/30">
+              <LifeBuoy className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+            </button>
+            
+            <button className="glass p-2 rounded-xl backdrop-blur-sm hover:bg-white/10 dark:hover:bg-slate-700/40 transition-colors border border-white/20 dark:border-slate-700/30 md:hidden">
+              <Menu className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      {/* لیوت اصلی جزیره‌ای با گرید سیستم */}
+      <div className="islands-container grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
+        {/* ستون اصلی */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* جزیره خلاصه وضعیت سلامت فردی */}
+          <HealthSummaryIsland />
+          
+          {/* جزیره عملکرد HSE */}
+          <HSEPerformanceIsland />
+          
+          {/* جزیره نقشه حرارتی سلامت سازمانی */}
+          <div className="glass-island tiffany p-5 rounded-2xl">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white">نقشه حرارتی سلامت سازمانی</h3>
+              <Button variant="outline" size="sm" className="text-xs">
+                تغییر نمای نقشه
+              </Button>
+            </div>
+            
+            <div className="bg-white/10 dark:bg-slate-800/20 rounded-xl h-96 p-4 flex items-center justify-center">
+              <div className="text-center">
+                <p className="text-slate-500 dark:text-slate-400 text-sm">نقشه سلامت سازمانی اینجا نمایش داده می‌شود.</p>
+                <p className="text-slate-500 dark:text-slate-400 text-xs mt-2">این بخش در بروزرسانی بعدی اضافه خواهد شد.</p>
+              </div>
             </div>
           </div>
-        ))}
+        </div>
+        
+        {/* ستون کناری */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* جزیره سلامت تیمی */}
+          <TeamHealthIsland />
+          
+          {/* جزیره وظایف آینده */}
+          <div className="glass-island amber p-5 rounded-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white">وظایف پیش‌رو</h3>
+              <button className="glass px-2 py-1 rounded-lg text-xs text-tiffany font-medium">+ افزودن</button>
+            </div>
+            
+            <div className="space-y-3">
+              {upcomingTasks.map(task => (
+                <div key={task.id} className="glass p-3 rounded-xl relative overflow-hidden">
+                  <div className={`absolute top-0 bottom-0 left-0 w-1 ${
+                    task.priority === 'high' ? 'bg-rose-500' :
+                    task.priority === 'medium' ? 'bg-amber-500' :
+                    'bg-emerald-500'
+                  }`}></div>
+                  <h4 className="text-sm font-medium text-slate-800 dark:text-white mb-2 pr-1">{task.title}</h4>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-500 dark:text-slate-400 flex items-center">
+                      <Calendar className="w-3 h-3 ml-1" />
+                      {task.date}
+                    </span>
+                    <span className={`px-2 py-0.5 rounded-full ${
+                      task.priority === 'high' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300' :
+                      task.priority === 'medium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' :
+                      'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                    }`}>
+                      {task.priority === 'high' ? 'ضروری' :
+                       task.priority === 'medium' ? 'متوسط' :
+                       'عادی'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-3 text-center">
+              <a href="#" className="text-xs text-slate-600 dark:text-slate-400 hover:text-tiffany dark:hover:text-tiffany transition-colors flex items-center justify-center">
+                نمایش همه وظایف
+                <ArrowUpRight className="w-3 h-3 mr-1" />
+              </a>
+            </div>
+          </div>
+          
+          {/* جزیره اطلاعات شخصی و پروفایل */}
+          <div className="glass-island purple p-5 rounded-2xl">
+            <div className="flex items-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-tiffany to-purple-500 flex items-center justify-center text-white text-xl font-bold">
+                ع‌م
+              </div>
+              <div className="mr-3">
+                <h3 className="text-lg font-bold text-slate-800 dark:text-white">علی محمدی</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">مهندس ارشد HSE</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="glass p-3 rounded-xl text-center">
+                <span className="text-2xl font-bold text-purple-500">۸۵</span>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">امتیاز سلامت</p>
+              </div>
+              <div className="glass p-3 rounded-xl text-center">
+                <span className="text-2xl font-bold text-tiffany">۱۲</span>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">چالش‌های فعال</p>
+              </div>
+            </div>
+            
+            <div className="glass p-3 rounded-xl mb-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-slate-700 dark:text-slate-300">تکمیل پروفایل شما</span>
+                <span className="text-xs font-medium text-tiffany">۸۵٪</span>
+              </div>
+              <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div className="bg-tiffany h-full rounded-full" style={{ width: '85%' }}></div>
+              </div>
+            </div>
+            
+            <Button variant="outline" size="sm" className="w-full">
+              مشاهده پروفایل کامل
+            </Button>
+          </div>
+        </div>
       </div>
-      <Button variant="outline" size="sm" className="mt-4 w-full">
-        <PanelTop className="h-4 w-4 ml-2" />
-        مشاهده جزئیات بیشتر
-      </Button>
     </div>
   );
 };
 
-// توصیه‌های هوشمند
-const SmartRecommendations = () => {
-  const recommendations = [
-    { 
-      id: 1, 
-      title: "افزایش کیفیت خواب", 
-      description: "توصیه می‌شود ساعت خواب خود را منظم کنید و قبل از خواب از دستگاه‌های الکترونیکی استفاده نکنید.",
-      icon: <Sparkles className="h-6 w-6" />,
-      color: "border-yellow"
-    },
-    { 
-      id: 2, 
-      title: "کاهش استرس روزانه", 
-      description: "15 دقیقه مدیتیشن در طول روز به کاهش 30% استرس شما کمک خواهد کرد.",
-      icon: <HeartPulse className="h-6 w-6" />,
-      color: "border-tiffany"
-    },
-    { 
-      id: 3, 
-      title: "بهبود تغذیه", 
-      description: "افزودن سبزیجات بیشتر و کاهش قند مصرفی به بهبود انرژی روزانه کمک می‌کند.",
-      icon: <TrendingUp className="h-6 w-6" />,
-      color: "border-aqua"
-    }
-  ];
-  
-  return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl p-4 shadow-sm mica">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold">توصیه‌های هوشمند</h3>
-        <Button variant="ghost" size="sm" className="text-slate-500">
-          <SearchCheck className="h-4 w-4 ml-2" />
-          بروزرسانی
-        </Button>
-      </div>
-      <div className="space-y-3">
-        {recommendations.map((rec) => (
-          <motion.div 
-            key={rec.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`p-3 border-r-4 ${rec.color} bg-slate-50 dark:bg-slate-800 rounded-lg`}
-          >
-            <div className="flex">
-              <div className="ml-3 pt-1 text-tiffany">
-                {rec.icon}
-              </div>
-              <div>
-                <h4 className="font-medium text-sm">{rec.title}</h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{rec.description}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-      <Button variant="outline" size="sm" className="mt-4 w-full">
-        <Plus className="h-4 w-4 ml-2" />
-        مشاهده همه توصیه‌ها
-      </Button>
-    </div>
-  );
-};
-
-export default function Dashboard() {
-  // We show HR dashboard by default as there's no login system now
-  const showHRDashboard = true;
-  
-  return (
-    <>
-      {/* User welcome and profile summary */}
-      <DashboardUserSummary />
-      
-      {/* Quick Actions */}
-      <QuickActions />
-      
-      {/* Main dashboard grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Column 1: Health Status */}
-        <div className="space-y-6">
-          <HealthSummaryCard />
-          <WeeklyProgressCard />
-          <HealthSkillsProgress />
-        </div>
-        
-        {/* Column 2: Gamification */}
-        <div className="space-y-6">
-          <DailyChallengeCard />
-          <BadgesCard />
-          <ProfessionalHealthAnalysis />
-        </div>
-        
-        {/* Column 3: Leaderboard and Events */}
-        <div className="space-y-6">
-          {/* اضافه کردن کامپوننت ارسال اطلاع‌رسانی */}
-          <NotificationSender />
-          <LeaderboardCard />
-          <UpcomingEventsCard />
-          <SmartRecommendations />
-        </div>
-      </div>
-      
-      {/* HR/HSE Manager Dashboard Preview */}
-      {showHRDashboard && (
-        <div className="mt-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">داشبورد مدیران HR/HSE</h2>
-            <Link href="/hr-dashboard">
-              <div className="text-sm text-tiffany hover:text-tiffany-light transition-colors flex items-center cursor-pointer">
-                <span>مشاهده کامل</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </div>
-            </Link>
-          </div>
-          
-          <HRAnalyticsCards />
-          <DepartmentalComparisonChart />
-          
-          {/* Client Carousel - لوگوی مشتریان */}
-          <ClientCarousel />
-        </div>
-      )}
-    </>
-  );
-}
+export default Dashboard;

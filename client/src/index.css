@@ -624,6 +624,101 @@
   border-left: 2px solid hsl(var(--error));
 }
 
+/* Islands Layout Styles */
+.islands-container {
+  position: relative;
+  transition: all 0.4s ease-in-out;
+}
+
+/* Island style variant with hover effects */
+.glass-island {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-island:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.05) 50%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glass-island:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px 0 rgba(31, 38, 135, 0.2);
+}
+
+/* Island color variants */
+.glass-island.tiffany {
+  border-top: 3px solid hsl(var(--tiffany));
+}
+
+.glass-island.purple {
+  border-top: 3px solid hsl(var(--purple));
+}
+
+.glass-island.amber {
+  border-top: 3px solid hsl(var(--amber));
+}
+
+.glass-island.success {
+  border-top: 3px solid hsl(var(--success));
+}
+
+/* Island sizes */
+.island-sm {
+  padding: 0.75rem;
+}
+
+.island-md {
+  padding: 1.25rem;
+}
+
+.island-lg {
+  padding: 1.75rem;
+}
+
+/* Dark mode specifics for islands */
+.dark .glass-island {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(71, 85, 105, 0.2);
+}
+
+.dark .glass-island:before {
+  background: linear-gradient(
+    135deg, 
+    rgba(255, 255, 255, 0.05) 0%, 
+    rgba(255, 255, 255, 0.02) 50%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+/* Island grid system support */
+@media (min-width: 1024px) {
+  .island-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
 .glass.info {
   box-shadow: 
     0 4px 15px rgba(0, 0, 0, 0.05),
