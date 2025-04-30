@@ -888,6 +888,203 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // سرو فایل‌های استاتیک
   app.use('/assets', express.static(path.resolve(process.cwd(), 'client/public/assets')));
+  
+  // API endpoints for AI analysis
+  app.post('/api/ai/analyze', requireAuth, async (req, res) => {
+    try {
+      const { prompt, data, options } = req.body;
+      
+      if (!prompt) {
+        return res.status(400).json({ 
+          error: "پرامپت برای تحلیل با هوش مصنوعی ضروری است" 
+        });
+      }
+      
+      const result = await aiService.analyzeWithAI(prompt, data || {}, options || {});
+      res.json(result);
+    } catch (error: any) {
+      console.error("AI API error:", error);
+      res.status(500).json({ 
+        error: error.message || "خطا در تحلیل با هوش مصنوعی",
+        code: error.code || "UNKNOWN_ERROR" 
+      });
+    }
+  });
+  
+  app.post('/api/ai/analyze-image', requireAuth, async (req, res) => {
+    try {
+      const { prompt, imageBase64, options } = req.body;
+      
+      if (!prompt) {
+        return res.status(400).json({ 
+          error: "پرامپت برای تحلیل تصویر ضروری است" 
+        });
+      }
+      
+      if (!imageBase64) {
+        return res.status(400).json({ 
+          error: "تصویر برای تحلیل ضروری است (در فرمت base64)" 
+        });
+      }
+      
+      const result = await aiService.analyzeImageWithAI(prompt, imageBase64, options || {});
+      res.json(result);
+    } catch (error: any) {
+      console.error("AI Image API error:", error);
+      res.status(500).json({ 
+        error: error.message || "خطا در تحلیل تصویر با هوش مصنوعی",
+        code: error.code || "UNKNOWN_ERROR" 
+      });
+    }
+  });
+  
+  app.post('/api/ai/generate-content', requireAuth, async (req, res) => {
+    try {
+      const { prompt, options } = req.body;
+      
+      if (!prompt) {
+        return res.status(400).json({ 
+          error: "پرامپت برای تولید محتوا ضروری است" 
+        });
+      }
+      
+      const result = await aiService.generateContentWithAI(prompt, options || {});
+      res.json(result);
+    } catch (error: any) {
+      console.error("AI Content Generation API error:", error);
+      res.status(500).json({ 
+        error: error.message || "خطا در تولید محتوا با هوش مصنوعی",
+        code: error.code || "UNKNOWN_ERROR" 
+      });
+    }
+  });
+  
+  app.post('/api/ai/predict-trends', requireAuth, async (req, res) => {
+    try {
+      const { data, timeframe, options } = req.body;
+      
+      if (!data) {
+        return res.status(400).json({ 
+          error: "داده‌های تاریخی برای پیش‌بینی روند ضروری است" 
+        });
+      }
+      
+      const result = await aiService.predictTrendsWithAI(data, timeframe || 'next quarter', options || {});
+      res.json(result);
+    } catch (error: any) {
+      console.error("AI Trend Prediction API error:", error);
+      res.status(500).json({ 
+        error: error.message || "خطا در پیش‌بینی روند با هوش مصنوعی",
+        code: error.code || "UNKNOWN_ERROR" 
+      });
+    }
+  });
+  
+  app.post('/api/ai/analyze-text', requireAuth, async (req, res) => {
+    try {
+      const { text, analysisType, options } = req.body;
+      
+      if (!text) {
+        return res.status(400).json({ 
+          error: "متن برای تحلیل ضروری است" 
+        });
+      }
+      
+      const result = await aiService.analyzeTextWithAI(
+        text, 
+        analysisType || 'general', 
+        options || {}
+      );
+      res.json(result);
+    } catch (error: any) {
+      console.error("AI Text Analysis API error:", error);
+      res.status(500).json({ 
+        error: error.message || "خطا در تحلیل متن با هوش مصنوعی",
+        code: error.code || "UNKNOWN_ERROR" 
+      });
+    }
+  });
+  
+  // API endpoint for health insights with AI
+  app.post('/api/ai/health-insights', requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const { customData } = req.body;
+      
+      // Get user's health metrics
+      const healthMetrics = await storage.getHealthMetricsByUserId(userId);
+      
+      // Combine with custom data if provided
+      const analysisData = {
+        healthMetrics,
+        ...(customData || {})
+      };
+      
+      const result = await aiService.analyzeWithAI(
+        'تحلیل وضعیت سلامت کاربر و ارائه توصیه‌های بهبود بر اساس داده‌های سلامت موجود',
+        analysisData,
+        { 
+          format: 'json',
+          temperature: 0.3,
+          model: 'gpt-4o'
+        }
+      );
+      
+      res.json(result);
+    } catch (error: any) {
+      console.error("Health Insights API error:", error);
+      res.status(500).json({ 
+        error: error.message || "خطا در دریافت بینش‌های سلامت",
+        code: error.code || "UNKNOWN_ERROR" 
+      });
+    }
+  });
+  
+  // API endpoint for organizational performance analysis with AI
+  app.post('/api/ai/org-performance', requireRole(['admin', 'hr', 'hse']), async (req, res) => {
+    try {
+      const { departmentId, timeframe, customData } = req.body;
+      
+      if (!departmentId) {
+        return res.status(400).json({ 
+          error: "شناسه دپارتمان برای تحلیل عملکرد سازمانی ضروری است" 
+        });
+      }
+      
+      // Get organizational metrics
+      const orgMetrics = await storage.getOrganizationalMetrics(departmentId, timeframe);
+      
+      // Get department members
+      const members = await storage.getDepartmentMembers(departmentId);
+      
+      // Combine data for analysis
+      const analysisData = {
+        departmentId,
+        timeframe,
+        orgMetrics,
+        members,
+        ...(customData || {})
+      };
+      
+      const result = await aiService.analyzeWithAI(
+        'تحلیل عملکرد سازمانی و ارائه راهکارهای بهبود برای این دپارتمان',
+        analysisData,
+        { 
+          format: 'json',
+          temperature: 0.2,
+          model: 'gpt-4o'
+        }
+      );
+      
+      res.json(result);
+    } catch (error: any) {
+      console.error("Org Performance API error:", error);
+      res.status(500).json({ 
+        error: error.message || "خطا در تحلیل عملکرد سازمانی",
+        code: error.code || "UNKNOWN_ERROR" 
+      });
+    }
+  });
 
   const httpServer = createServer(app);
 
