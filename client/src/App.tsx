@@ -30,63 +30,97 @@ import AdvancedProfilePage from "@/pages/AdvancedProfilePage";
 import SimpleAdminPanel from "@/pages/SimpleAdminPanel";
 import MainLayout from "@/components/layouts/MainLayout";
 import LoadingScreen from '@/components/ui/loading-screen';
+import AdvancedAnalyticsDashboard from "@/pages/AdvancedAnalyticsDashboard";
+import About from "@/pages/About";
+import Pricing from "@/pages/Pricing";
+import Terms from "@/pages/Terms";
+import Register from "@/pages/Register";
+import Login from "@/pages/Login";
 
-// کامپوننت برای مدیریت مسیریابی
+/**
+ * ساختار مسیریابی (Router): سیستم مسیریابی اصلی برنامه
+ * این کامپوننت مسیرهای موجود در برنامه را تعریف می‌کند و کامپوننت مناسب را برای هر مسیر بارگذاری می‌کند.
+ */
 function AppRoutes() {
-  // استفاده از هوک location برای دسترسی به مسیر فعلی
+  // استفاده از هوک location برای دسترسی به مسیر فعلی و دیباگ کردن مسیریابی
   const [location] = useLocation();
-  
-  // چاپ مسیر فعلی برای اشکال‌زدایی
   console.log("Current path:", location);
   
   return (
     <Switch>
+      {/* صفحات اصلی */}
       <Route path="/" component={EnhancedDashboard} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/enhanced-dashboard" component={EnhancedDashboard} />
+      
+      {/* داشبوردهای تخصصی */}
       <Route path="/hr-dashboard" component={HRDashboard} />
       <Route path="/health-dashboard" component={HealthDashboard} />
       <Route path="/workout-dashboard" component={WorkoutDashboard} />
+      <Route path="/hse-smart-dashboard" component={HSESmartDashboard} />
+      <Route path="/advanced-analysis-dashboard" component={AdvancedAnalyticsDashboard} />
+      
+      {/* صفحات عملکردی */}
       <Route path="/challenges" component={Challenges} />
       <Route path="/achievements" component={Achievements} />
       <Route path="/achievements-dashboard" component={AchievementsDashboard} />
-      <Route path="/medical-center" component={MedicalCenterPage} />
-      <Route path="/organizational-health" component={OrganizationalHealthPage} />
       <Route path="/leaderboard" component={Leaderboard} />
+      <Route path="/psychological-tests" component={PsychologicalTests} />
+      
+      {/* صفحات پروفایل و تنظیمات */}
       <Route path="/profile" component={Profile} />
       <Route path="/user-profile" component={UserProfile} />
       <Route path="/advanced-profile" component={AdvancedProfilePage} />
       <Route path="/avatar-customizer" component={AvatarCustomizer} />
-      <Route path="/psychological-tests" component={PsychologicalTests} />
       <Route path="/settings" component={Settings} />
+      
+      {/* صفحات مرکز پزشکی و سلامت سازمانی */}
+      <Route path="/medical-center" component={MedicalCenterPage} />
+      <Route path="/organizational-health" component={OrganizationalHealthPage} />
+      
+      {/* صفحات احراز هویت */}
       <Route path="/auto-login" component={AutoLogin} />
       <Route path="/login" component={AdvancedLoginPage} />
-      <Route path="/hse-smart-dashboard" component={HSESmartDashboard} />
+      <Route path="/register" component={Register} />
+      <Route path="/login-legacy" component={Login} />
+      
+      {/* صفحات عمومی */}
+      <Route path="/about" component={About} />
+      <Route path="/pricing" component={Pricing} />
+      <Route path="/terms" component={Terms} />
+      
+      {/* صفحات مدیریتی */}
       <Route path="/admin-panel" component={SimpleAdminPanel} />
+      
+      {/* صفحه خطای 404 */}
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// کامپوننت اصلی برنامه با معماری بهینه‌شده
+/**
+ * کامپوننت اصلی برنامه
+ * این کامپوننت ساختار کلی برنامه و مدیریت حالت‌های بارگذاری را انجام می‌دهد.
+ */
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   
-  // بارگذاری اولیه با زمان کوتاه‌تر
+  // مدیریت بارگذاری اولیه صفحه
   useEffect(() => {
+    // زمان بارگذاری را کاهش می‌دهیم برای تجربه کاربری بهتر
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1500);
+    }, 1000);
     
     return () => clearTimeout(timer);
   }, []);
   
-  // زمانی که در حال بارگذاری هستیم، نمایش صفحه بارگذاری بدون منو و لایه‌های دیگر
+  // نمایش صفحه بارگذاری تا زمانی که آماده‌سازی اولیه تمام شود
   if (isLoading) {
     return <LoadingScreen />;
   }
   
-  // پس از بارگذاری، نمایش برنامه اصلی با MainLayout
+  // پس از بارگذاری، برنامه اصلی با طرح‌بندی کامل نمایش داده می‌شود
   return (
     <QueryClientProvider client={queryClient}>
       <WebSocketProvider>

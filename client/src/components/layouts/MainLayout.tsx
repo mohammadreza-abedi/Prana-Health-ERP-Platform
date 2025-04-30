@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import PWAInstallButton from "@/components/pwa/PWAInstallButton";
 import { AdminPanelButton } from "@/components/admin/AdminPanelButton";
+import { Separator } from "@/components/ui/separator";
 import {
   Home,
   Award,
@@ -163,57 +164,121 @@ export default function MainLayout({ children }: MainLayoutProps) {
     setDarkMode(!darkMode);
   };
 
-  // Menu items
-  const menuItems = [
+  // تشخیص کاربر مدیر سیستم
+  const isAdmin = true; // برای نمونه، همه کاربران را مدیر در نظر می‌گیریم
+  
+  // منوی اصلی - دسترسی سریع
+  const dashboardMenuItems = [
     {
-      title: "داشبورد",
-      icon: <Home className="h-5 w-5" />,
+      title: "داشبورد اصلی",
+      icon: <LayoutDashboard className="h-5 w-5" />,
       path: "/",
+      tooltip: "صفحه اصلی و داشبورد کلی سلامت",
     },
     {
       title: "داشبورد تحلیلی پیشرفته",
-      icon: <Zap className="h-5 w-5" />,
-      path: "/advanced-analytics",
+      icon: <BarChart2 className="h-5 w-5" />,
+      path: "/advanced-analysis-dashboard",
+      tooltip: "تحلیل پیشرفته داده‌های سلامت",
     },
     {
-      title: "تست‌های روانشناسی",
-      icon: <Brain className="h-5 w-5" />,
-      path: "/psychological-tests",
+      title: "داشبورد HSE",
+      icon: <Shield className="h-5 w-5" />,
+      path: "/hse-smart-dashboard",
+      tooltip: "داشبورد ایمنی، بهداشت و محیط زیست",
     },
+    {
+      title: "داشبورد سلامت",
+      icon: <Heart className="h-5 w-5" />,
+      path: "/health-dashboard",
+      tooltip: "وضعیت سلامت شخصی",
+    },
+  ];
+  
+  // منوی عملکردی
+  const functionalMenuItems = [
     {
       title: "چالش‌ها",
       icon: <Award className="h-5 w-5" />,
       path: "/challenges",
+      tooltip: "چالش‌های سلامت و تندرستی",
+    },
+    {
+      title: "دستاوردها",
+      icon: <Trophy className="h-5 w-5" />,
+      path: "/achievements",
+      tooltip: "دستاوردها و نشان‌های شما",
+    },
+    {
+      title: "آزمون‌های روانشناسی",
+      icon: <Brain className="h-5 w-5" />,
+      path: "/psychological-tests", 
+      tooltip: "آزمون‌های سنجش سلامت روان",
+    },
+    {
+      title: "مرکز پزشکی",
+      icon: <LifeBuoy className="h-5 w-5" />,
+      path: "/medical-center",
+      tooltip: "خدمات پزشکی و درمانی",
     },
     {
       title: "جدول امتیازات",
       icon: <BarChart className="h-5 w-5" />,
       path: "/leaderboard",
+      tooltip: "رتبه‌بندی و مقایسه با همکاران",
+    },
+  ];
+  
+  // منوی پروفایل
+  const profileMenuItems = [
+    {
+      title: "پروفایل پیشرفته",
+      icon: <CircleUser className="h-5 w-5" />,
+      path: "/advanced-profile",
+      tooltip: "پروفایل کامل با ویژگی‌های پیشرفته",
     },
     {
-      title: "پروفایل من",
-      icon: <User className="h-5 w-5" />,
+      title: "پروفایل کاربری",
+      icon: <UserRound className="h-5 w-5" />,
       path: "/user-profile",
+      tooltip: "مشاهده و ویرایش پروفایل",
     },
     {
       title: "سفارشی‌سازی آواتار",
-      icon: <UserRound className="h-5 w-5" />,
+      icon: <Smile className="h-5 w-5" />,
       path: "/avatar-customizer",
-    },
-    {
-      title: "داشبورد HR",
-      icon: <Users className="h-5 w-5" />,
-      path: "/hr-dashboard",
-    },
-    {
-      title: "رویدادها",
-      icon: <Calendar className="h-5 w-5" />,
-      path: "/events",
+      tooltip: "شخصی‌سازی آواتار شما",
     },
     {
       title: "تنظیمات",
       icon: <Settings className="h-5 w-5" />,
       path: "/settings",
+      tooltip: "تنظیمات برنامه و حساب کاربری",
+    },
+  ];
+  
+  // منوی مدیریت (فقط برای ادمین‌ها)
+  const adminMenuItems = [
+    {
+      title: "پنل مدیریت",
+      icon: <AppWindow className="h-5 w-5" />,
+      path: "/admin-panel",
+      tooltip: "پنل مدیریت سیستم",
+      adminOnly: true,
+    },
+    {
+      title: "داشبورد منابع انسانی",
+      icon: <Users className="h-5 w-5" />,
+      path: "/hr-dashboard",
+      tooltip: "مدیریت منابع انسانی",
+      adminOnly: true,
+    },
+    {
+      title: "سلامت سازمانی",
+      icon: <Database className="h-5 w-5" />,
+      path: "/organizational-health",
+      tooltip: "شاخص‌های سلامت سازمانی",
+      adminOnly: true,
     },
   ];
   
