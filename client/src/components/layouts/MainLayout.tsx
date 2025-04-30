@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import PWAInstallButton from "@/components/pwa/PWAInstallButton";
-import { AdminPanelButton } from "@/components/admin/AdminPanelButton";
-import { Separator } from "@/components/ui/separator";
 import {
   Home,
   Award,
@@ -164,121 +162,57 @@ export default function MainLayout({ children }: MainLayoutProps) {
     setDarkMode(!darkMode);
   };
 
-  // تشخیص کاربر مدیر سیستم
-  const isAdmin = true; // برای نمونه، همه کاربران را مدیر در نظر می‌گیریم
-  
-  // منوی اصلی - دسترسی سریع
-  const dashboardMenuItems = [
+  // Menu items
+  const menuItems = [
     {
-      title: "داشبورد اصلی",
-      icon: <LayoutDashboard className="h-5 w-5" />,
+      title: "داشبورد",
+      icon: <Home className="h-5 w-5" />,
       path: "/",
-      tooltip: "صفحه اصلی و داشبورد کلی سلامت",
     },
     {
       title: "داشبورد تحلیلی پیشرفته",
-      icon: <BarChart2 className="h-5 w-5" />,
-      path: "/advanced-analysis-dashboard",
-      tooltip: "تحلیل پیشرفته داده‌های سلامت",
+      icon: <Zap className="h-5 w-5" />,
+      path: "/advanced-analytics",
     },
     {
-      title: "داشبورد HSE",
-      icon: <Shield className="h-5 w-5" />,
-      path: "/hse-smart-dashboard",
-      tooltip: "داشبورد ایمنی، بهداشت و محیط زیست",
+      title: "تست‌های روانشناسی",
+      icon: <Brain className="h-5 w-5" />,
+      path: "/psychological-tests",
     },
-    {
-      title: "داشبورد سلامت",
-      icon: <Heart className="h-5 w-5" />,
-      path: "/health-dashboard",
-      tooltip: "وضعیت سلامت شخصی",
-    },
-  ];
-  
-  // منوی عملکردی
-  const functionalMenuItems = [
     {
       title: "چالش‌ها",
       icon: <Award className="h-5 w-5" />,
       path: "/challenges",
-      tooltip: "چالش‌های سلامت و تندرستی",
-    },
-    {
-      title: "دستاوردها",
-      icon: <Trophy className="h-5 w-5" />,
-      path: "/achievements",
-      tooltip: "دستاوردها و نشان‌های شما",
-    },
-    {
-      title: "آزمون‌های روانشناسی",
-      icon: <Brain className="h-5 w-5" />,
-      path: "/psychological-tests", 
-      tooltip: "آزمون‌های سنجش سلامت روان",
-    },
-    {
-      title: "مرکز پزشکی",
-      icon: <LifeBuoy className="h-5 w-5" />,
-      path: "/medical-center",
-      tooltip: "خدمات پزشکی و درمانی",
     },
     {
       title: "جدول امتیازات",
       icon: <BarChart className="h-5 w-5" />,
       path: "/leaderboard",
-      tooltip: "رتبه‌بندی و مقایسه با همکاران",
-    },
-  ];
-  
-  // منوی پروفایل
-  const profileMenuItems = [
-    {
-      title: "پروفایل پیشرفته",
-      icon: <CircleUser className="h-5 w-5" />,
-      path: "/advanced-profile",
-      tooltip: "پروفایل کامل با ویژگی‌های پیشرفته",
     },
     {
-      title: "پروفایل کاربری",
-      icon: <UserRound className="h-5 w-5" />,
+      title: "پروفایل من",
+      icon: <User className="h-5 w-5" />,
       path: "/user-profile",
-      tooltip: "مشاهده و ویرایش پروفایل",
     },
     {
       title: "سفارشی‌سازی آواتار",
-      icon: <Smile className="h-5 w-5" />,
+      icon: <UserRound className="h-5 w-5" />,
       path: "/avatar-customizer",
-      tooltip: "شخصی‌سازی آواتار شما",
+    },
+    {
+      title: "داشبورد HR",
+      icon: <Users className="h-5 w-5" />,
+      path: "/hr-dashboard",
+    },
+    {
+      title: "رویدادها",
+      icon: <Calendar className="h-5 w-5" />,
+      path: "/events",
     },
     {
       title: "تنظیمات",
       icon: <Settings className="h-5 w-5" />,
       path: "/settings",
-      tooltip: "تنظیمات برنامه و حساب کاربری",
-    },
-  ];
-  
-  // منوی مدیریت (فقط برای ادمین‌ها)
-  const adminMenuItems = [
-    {
-      title: "پنل مدیریت",
-      icon: <AppWindow className="h-5 w-5" />,
-      path: "/admin-panel",
-      tooltip: "پنل مدیریت سیستم",
-      adminOnly: true,
-    },
-    {
-      title: "داشبورد منابع انسانی",
-      icon: <Users className="h-5 w-5" />,
-      path: "/hr-dashboard",
-      tooltip: "مدیریت منابع انسانی",
-      adminOnly: true,
-    },
-    {
-      title: "سلامت سازمانی",
-      icon: <Database className="h-5 w-5" />,
-      path: "/organizational-health",
-      tooltip: "شاخص‌های سلامت سازمانی",
-      adminOnly: true,
     },
   ];
   
@@ -588,15 +522,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
           {/* Bottom actions - پیشرفته و مدرن */}
           <div className="p-3 space-y-2">
-            {/* دکمه‌های ویژه (نصب PWA و پنل ادمین) */}
-            <div className={`w-full ${isExpanded ? 'px-2 flex gap-2' : 'flex justify-center gap-2'}`}>
+            {/* دکمه نصب PWA */}
+            <div className={`w-full ${isExpanded ? 'px-2' : 'flex justify-center'}`}>
               <PWAInstallButton 
                 variant="outline" 
-                className={`${isExpanded ? 'flex-1' : 'p-2 h-10 w-10'}`} 
-              />
-              <AdminPanelButton 
-                variant="outline" 
-                className={`${!isExpanded && 'p-2 h-10 w-10'}`} 
+                className={`w-full ${!isExpanded && 'p-2 h-10 w-10'}`} 
               />
             </div>
             
