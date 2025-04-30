@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Shield, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import {
   Tooltip,
   TooltipContent,
@@ -36,13 +36,15 @@ export const AdminPanelButton = ({
   // در نسخه تولید، این باید با سیستم احراز هویت واقعی جایگزین شود
   const ADMIN_PASSWORD = "admin1234";
 
+  // از useLocation برای دسترسی به روتر استفاده می‌کنیم
+  const [, navigate] = useLocation();
+
   const handleAdminAuth = () => {
     if (adminPassword === ADMIN_PASSWORD) {
       setIsAuthorized(true);
       setIsAuthDialogOpen(false);
-      // استفاده از روتینگ داخلی به جای تغییر مستقیم window.location
-      window.history.pushState({}, "", "/admin-panel");
-      window.dispatchEvent(new PopStateEvent('popstate'));
+      // استفاده از navigate برای انتقال به صفحه پنل ادمین
+      navigate("/admin-panel");
     } else {
       setIsInvalid(true);
     }
@@ -60,9 +62,8 @@ export const AdminPanelButton = ({
                 size="icon"
                 onClick={() => {
                   if (isAuthorized) {
-                    // استفاده از روتینگ داخلی به جای تغییر مستقیم window.location
-                    window.history.pushState({}, "", "/admin-panel");
-                    window.dispatchEvent(new PopStateEvent('popstate'));
+                    // استفاده از navigate برای انتقال به صفحه پنل ادمین
+                    navigate("/admin-panel");
                   } else {
                     setIsAuthDialogOpen(true);
                   }

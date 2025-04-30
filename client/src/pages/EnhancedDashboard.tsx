@@ -909,9 +909,9 @@ export default function EnhancedDashboard() {
           </Button>
           <Link href="/admin-panel">
             <Button 
-              variant="secondary" 
+              variant="outline" 
               size="sm" 
-              className="mr-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 dark:bg-red-500/5 dark:hover:bg-red-500/10 flex items-center gap-1"
+              className="mr-2 bg-gradient-to-r from-red-500/5 to-red-600/5 hover:from-red-500/10 hover:to-red-600/10 border-red-500/20 text-red-500 flex items-center gap-1"
             >
               <Shield className="h-4 w-4" />
               <span>پنل مدیریت</span>
