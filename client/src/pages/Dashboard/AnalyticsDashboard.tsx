@@ -173,6 +173,16 @@ const AnalyticsDashboard: React.FC = () => {
           >
             تنظیمات
           </Button>
+          
+          <Button 
+            variant="default"
+            size="sm"
+            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+            leftIcon={<Trophy className="h-4 w-4" />}
+            onClick={() => setLocation('/gamification')}
+          >
+            سیستم گیمیفیکیشن
+          </Button>
         </div>
       </div>
       
@@ -284,27 +294,77 @@ const AnalyticsDashboard: React.FC = () => {
             
             <div>
               <AnalyticsWidget
-                title="تحلیل احساسات"
-                subtitle="ارزیابی وضعیت روحی"
-                icon={<Smile className="h-5 w-5 text-green-500" />}
+                title="چالش‌های فعال"
+                subtitle="سیستم گیمیفیکیشن"
+                icon={<Trophy className="h-5 w-5 text-amber-500" />}
                 onRefresh={() => {}}
                 onExpand={() => {}}
-                value={78}
-                previousValue={65}
-                change={13}
-                timeframe="نسبت به 30 روز قبل"
+                footerAction={{
+                  label: "مشاهده همه چالش‌ها",
+                  onClick: () => setLocation('/gamification')
+                }}
               >
-                {aiEnabled ? (
-                  <SentimentAnalysis
-                    data={healthData || []} 
-                    isLoading={isLoading}
-                    simplified={true}
-                  />
-                ) : (
-                  <div className="h-32 flex items-center justify-center flex-col text-center">
-                    <p className="text-muted-foreground text-sm">تحلیل هوشمند غیرفعال است</p>
+                <div className="p-1 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-amber-100 dark:bg-amber-900/30">
+                        <Target className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">پیاده‌روی روزانه</p>
+                        <p className="text-xs text-muted-foreground">۸۵٪ تکمیل شده</p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => setLocation('/gamification')}
+                    >
+                      مشاهده
+                    </Button>
                   </div>
-                )}
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-100 dark:bg-blue-900/30">
+                        <Heart className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">تمرین یوگا</p>
+                        <p className="text-xs text-muted-foreground">۳ روز از ۷ روز</p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => setLocation('/gamification')}
+                    >
+                      مشاهده
+                    </Button>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center bg-green-100 dark:bg-green-900/30">
+                        <Smile className="h-4 w-4 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">تغذیه سالم</p>
+                        <p className="text-xs text-muted-foreground">فقط ۳ روز باقی مانده</p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => setLocation('/gamification')}
+                    >
+                      مشاهده
+                    </Button>
+                  </div>
+                </div>
               </AnalyticsWidget>
             </div>
           </div>
