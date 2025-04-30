@@ -54,8 +54,8 @@ function Router() {
   return (
     <MainLayout>
       <Switch>
-        <Route path="/" component={EnhancedDashboard} />
-        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/" component={Dashboard} />
+        <Route path="/enhanced-dashboard-old" component={EnhancedDashboard} />
         <Route path="/enhanced-dashboard" component={EnhancedDashboard} />
         <Route path="/hr-dashboard" component={HRDashboard} />
         <Route path="/health-dashboard" component={HealthDashboard} />
