@@ -649,6 +649,42 @@
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
+/* گیج کوچک برای نمایش در پنل‌های کوچک */
+.spacecraft-gauge-mini {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.2);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.spacecraft-gauge-mini .gauge-fill {
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  background-color: rgb(16, 185, 129);
+  top: 50%;
+  left: 50%;
+  transform-origin: left center;
+  transform: translateY(-50%) rotate(0deg);
+  z-index: 2;
+  box-shadow: 0 0 4px rgba(16, 185, 129, 0.6);
+}
+
+.spacecraft-gauge-mini .text-center {
+  position: relative;
+  z-index: 3;
+  font-size: 10px;
+  font-weight: bold;
+}
+
 /* استایل برای خط اسکنر */
 .scanner-line {
   position: absolute;
@@ -764,4 +800,238 @@
     box-shadow: 0 0 8px rgba(45, 212, 191, 0.3),
                 0 0 16px rgba(45, 212, 191, 0.1);
   }
+}
+
+/* اثر رادار برای داشبورد فضاپیمایی */
+@keyframes radar-scan {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.radar-scanner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(45, 212, 191, 0.1) 10deg, transparent 20deg);
+  animation: radar-scan 8s linear infinite;
+  transform-origin: center;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+/* استایل برای پنل کنترل فضاپیمایی */
+.spacecraft-panel {
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(54, 65, 82, 0.3);
+  box-shadow: 
+    0 10px 40px -10px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(76, 86, 106, 0.2),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.spacecraft-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    rgba(45, 212, 191, 0) 0%, 
+    rgba(45, 212, 191, 0.5) 50%, 
+    rgba(45, 212, 191, 0) 100%
+  );
+  z-index: 2;
+}
+
+.spacecraft-control-content {
+  position: relative;
+  z-index: 10;
+}
+
+/* استایل برای پنل‌های کنترل کناری */
+.glass-control-panel {
+  background: linear-gradient(180deg, 
+    rgba(15, 23, 42, 0.8) 0%, 
+    rgba(15, 23, 42, 0.95) 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(54, 65, 82, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(76, 86, 106, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmic-blue-panel {
+  background: linear-gradient(180deg, 
+    rgba(15, 23, 42, 0.8) 0%, 
+    rgba(7, 89, 133, 0.9) 100%
+  );
+}
+
+.deep-space-panel {
+  background: linear-gradient(180deg, 
+    rgba(15, 23, 42, 0.8) 0%, 
+    rgba(23, 37, 84, 0.9) 100%
+  );
+}
+
+/* استایل‌های آنیمیشن آهسته برای پالس */
+.animate-pulse-slow {
+  animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* استایل‌های کنترل پنل فضاپیمایی */
+.control-button {
+  background: rgba(22, 27, 37, 0.5);
+  border: 1px solid rgba(54, 65, 82, 0.5);
+  color: #45CDB9; /* tiffany */
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease-out;
+}
+
+.control-button:hover {
+  background: rgba(45, 212, 191, 0.15);
+  border-color: rgba(45, 212, 191, 0.5);
+  color: #5AECE0;
+}
+
+.control-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(45, 212, 191, 0), 
+    rgba(45, 212, 191, 0.5), 
+    rgba(45, 212, 191, 0)
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+.control-button:hover:before {
+  opacity: 1;
+}
+
+.control-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #334155;
+}
+
+.control-indicator.active {
+  background-color: #45CDB9; /* tiffany */
+}
+
+/* نشانگرهای مینی استاتوس برای پنل سرفضاپیمایی */
+.spacecraft-mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(22, 27, 37, 0.5);
+  border: 1px solid rgba(54, 65, 82, 0.4);
+  overflow: hidden;
+  position: relative;
+}
+
+.spacecraft-mini-stat:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0), 
+    rgba(255, 255, 255, 0.1), 
+    rgba(255, 255, 255, 0)
+  );
+}
+
+.stat-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.625rem;
+  color: #94A3B8;
+  line-height: 1;
+}
+
+.stat-icon.health {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #FB7185;
+}
+
+.stat-icon.cpu {
+  background-color: rgba(45, 212, 191, 0.2);
+  color: #45CDB9;
+}
+
+.stat-icon.memory {
+  background-color: rgba(99, 102, 241, 0.2);
+  color: #818CF8;
+}
+
+.stat-icon.network {
+  background-color: rgba(56, 189, 248, 0.2);
+  color: #7DD3FC;
+}
+
+.stat-icon.power {
+  background-color: rgba(250, 204, 21, 0.2);
+  color: #FDE047;
+}
+
+.stat-icon.temp {
+  background-color: rgba(249, 115, 22, 0.2);
+  color: #FB923C;
+}
+
+.stat-icon.security {
+  background-color: rgba(139, 92, 246, 0.2);
+  color: #C4B5FD;
 }

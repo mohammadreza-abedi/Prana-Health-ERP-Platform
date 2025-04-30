@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { HealthSummaryIsland } from '@/components/islands/HealthSummaryIsland';
 import { TeamHealthIsland } from '@/components/islands/TeamHealthIsland';
 import { HSEPerformanceIsland } from '@/components/islands/HSEPerformanceIsland';
 import { 
-  Activity, AlertTriangle, Battery, Clock, Calendar, ChevronDown, 
-  Cloud, CloudSun, Database, Heart, HelpCircle, Info, LifeBuoy,
-  Lock, Power, RefreshCw, Save, Settings, Shield, Signal, 
-  Terminal, Thermometer, TrendingUp, Users, Wifi, ArrowUpRight,
-  Bell, Search, Menu, Check, CheckCheck, Zap, GitBranch, LineChart
+  Activity, AlertTriangle, AlertCircle, Battery, BatteryFull, BatteryMedium, BatteryLow,
+  Clock, Calendar, ChevronDown, Circle, CircleCheck, CircleDashed, CircleDot, 
+  Cloud, CloudSun, CloudRain, Compass, Cpu, Crosshair, Database, Diamond, 
+  FileLineChart, Flame, GitBranch, GitGraph, 
+  HardDrive, Heart, HelpCircle, HelpingHand, Info, Laptop, LineChart, 
+  Lock, LockKeyhole, Maximize, Menu, MessageSquare, Minimize, MonitorSmartphone,
+  Network, PanelTopOpen, PlayCircle, Plug, PlusSquare, Power, 
+  RefreshCw, Save, Settings, Shield, ShieldCheck, ShieldAlert, Signal, 
+  Star, SunMedium, Sunrise, Sunset, StopCircle, Target, 
+  Terminal, Thermometer, ToggleLeft, ToggleRight, TrendingUp, Users, Wifi, Zap, 
+  Bell, Search, Layers, X, XCircle, ArrowUpRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -109,80 +115,173 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen">
-      {/* نوار بالایی داشبورد با اطلاعات و اکشن‌ها */}
-      <div className="glass py-4 px-6 rounded-2xl backdrop-blur-xl border border-white/20 dark:border-slate-700/30 mb-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div>
-            <div className="flex items-center">
-              <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">داشبورد سلامت</h1>
-              <span className="glass-island tiffany ml-3 px-2 py-1 rounded-lg text-xs font-bold text-tiffany">PRO</span>
+      {/* نوار بالایی داشبورد با استایل پنل فضاپیمایی */}
+      <div className="spacecraft-panel py-4 px-6 rounded-2xl mb-6 relative overflow-hidden">
+        {/* اثرات پیشرفته */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-tiffany/40 to-transparent"></div>
+        <div className="absolute top-0 bottom-0 right-2 w-1 bg-gradient-to-b from-transparent via-tiffany/30 to-transparent"></div>
+        <div className="absolute top-0 bottom-0 left-2 w-1 bg-gradient-to-b from-transparent via-purple-500/30 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"></div>
+        
+        <div className="absolute left-12 top-0 flex space-x-2 space-x-reverse">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-1 w-4 bg-tiffany/20 dark:bg-tiffany/30 rounded-b-full" 
+              style={{ height: `${(i) * 2}px`, opacity: 0.4 + (i * 0.1) }}></div>
+          ))}
+        </div>
+        
+        <div className="absolute right-12 top-0 flex space-x-2 space-x-reverse">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-1 w-4 bg-purple-500/20 dark:bg-purple-500/30 rounded-b-full" 
+              style={{ height: `${(6-i) * 2}px`, opacity: 0.4 + ((5-i) * 0.1) }}></div>
+          ))}
+        </div>
+        
+        {/* Pulse indicators */}
+        <div className="absolute left-3 top-1/2 w-2 h-2 rounded-full bg-tiffany/40 pulse-glow"></div>
+        <div className="absolute right-3 top-1/2 w-2 h-2 rounded-full bg-purple-500/40 pulse-glow"></div>
+        
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center relative z-10">
+          <div className="flex items-center">
+            <div className="flex flex-col">
+              <div className="flex items-center">
+                <div className="bg-slate-800/60 p-2 rounded-lg border border-slate-600/30 flex items-center justify-center">
+                  <ShieldCheck className="h-6 w-6 text-tiffany mr-1" />
+                  <h1 className="text-xl font-extrabold text-white">سیستم پایش سلامت فضایی</h1>
+                </div>
+                <div className="flex items-center ml-3 bg-tiffany/10 px-2 py-1 rounded-lg border border-tiffany/20">
+                  <CircleCheck className="h-3 w-3 text-tiffany ml-1" />
+                  <span className="text-xs text-tiffany font-medium">آنلاین</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center mt-2 text-sm text-slate-400">
+                <div className="flex items-center bg-slate-800/40 px-2 py-1 rounded-lg border border-slate-700/30 ml-2">
+                  <Calendar className="w-3.5 h-3.5 ml-1 text-amber-400" /> 
+                  <span className="text-amber-300">{formattedDate}</span>
+                </div>
+                <div className="flex items-center bg-slate-800/40 px-2 py-1 rounded-lg border border-slate-700/30 ml-2">
+                  <Clock className="w-3.5 h-3.5 ml-1 text-sky-400" />
+                  <span className="text-sky-300">{new Date().toLocaleTimeString('fa-IR')}</span>
+                </div>
+                <div className="flex items-center bg-slate-800/40 px-2 py-1 rounded-lg border border-slate-700/30">
+                  <Signal className="w-3.5 h-3.5 ml-1 text-emerald-400" />
+                  <span className="text-emerald-300">وضعیت: عالی</span>
+                </div>
+              </div>
             </div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center">
-              <Calendar className="w-4 h-4 ml-1" /> 
-              {formattedDate} | 
-              <Clock className="w-4 h-4 mx-1" />
-              سال کاری 1403
-            </p>
           </div>
           
           <div className="flex mt-4 md:mt-0 w-full md:w-auto gap-2">
             <div className="relative w-full md:w-64">
               <input 
                 type="text" 
-                placeholder="جستجو..." 
-                className="glass w-full py-2 px-4 pl-10 rounded-xl backdrop-blur-sm text-sm focus:outline-none focus:ring-2 focus:ring-tiffany/50 focus:border-transparent border border-white/20 dark:border-slate-700/30"
+                placeholder="جستجو در سیستم..." 
+                className="bg-slate-800/50 py-2 px-4 pl-10 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-tiffany focus:border-tiffany/30 border border-slate-700/60 text-tiffany-light"
               />
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-tiffany/70" />
             </div>
             
-            <div className="relative">
-              <button className="glass p-2 rounded-xl backdrop-blur-sm hover:bg-white/10 dark:hover:bg-slate-700/40 transition-colors border border-white/20 dark:border-slate-700/30 relative">
-                <Bell className="w-5 h-5 text-slate-600 dark:text-slate-300" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
-                  2
-                </span>
-              </button>
-              
-              {/* منوی اعلان‌ها */}
-              <div className="absolute top-12 right-0 w-80 p-3 glass-island rounded-xl shadow-lg z-30 hidden group-hover:block">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-bold text-sm">اعلان‌ها</h3>
-                  <button className="text-xs text-tiffany">علامت‌گذاری همه</button>
-                </div>
-                <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {notifications.map(notification => (
-                    <div 
-                      key={notification.id} 
-                      className={`p-2 rounded-lg ${notification.isNew ? 'glass bg-white/40 dark:bg-slate-700/40' : 'hover:bg-white/5 dark:hover:bg-slate-700/20'}`}
-                    >
-                      <div className="flex">
-                        {notification.isNew && (
-                          <span className="w-2 h-2 mt-1.5 mr-1 rounded-full bg-tiffany"></span>
-                        )}
-                        <div className="flex-1">
-                          <p className="text-xs">{notification.text}</p>
-                          <p className="text-[10px] text-slate-500 mt-1">{notification.time}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                  <a href="#" className="text-xs text-tiffany flex items-center justify-center">
-                    مشاهده همه
-                    <ArrowUpRight className="w-3 h-3 mr-1" />
-                  </a>
-                </div>
-              </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="control-button p-2 rounded-lg relative inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-tiffany/50 relative">
+                    <Bell className="w-5 h-5" />
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
+                      2
+                    </span>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>اعلان‌های جدید</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="control-button p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-tiffany/50 inline-flex items-center justify-center">
+                    <HelpingHand className="w-5 h-5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>راهنمای سیستم</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="control-button p-2 rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-tiffany/50 inline-flex items-center justify-center">
+                    <Menu className="w-5 h-5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>منوی اصلی</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+        
+        {/* نوار زیرین با وضعیت‌های سیستم */}
+        <div className="mt-4 grid grid-cols-4 md:grid-cols-7 gap-2 pt-3 border-t border-slate-700/30">
+          <div className="spacecraft-mini-stat">
+            <div className="stat-icon health">
+              <Heart className="w-3 h-3" />
             </div>
-            
-            <button className="glass p-2 rounded-xl backdrop-blur-sm hover:bg-white/10 dark:hover:bg-slate-700/40 transition-colors border border-white/20 dark:border-slate-700/30">
-              <LifeBuoy className="w-5 h-5 text-slate-600 dark:text-slate-300" />
-            </button>
-            
-            <button className="glass p-2 rounded-xl backdrop-blur-sm hover:bg-white/10 dark:hover:bg-slate-700/40 transition-colors border border-white/20 dark:border-slate-700/30 md:hidden">
-              <Menu className="w-5 h-5 text-slate-600 dark:text-slate-300" />
-            </button>
+            <span className="stat-value">۹۴٪</span>
+            <span className="stat-label">سلامت</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat">
+            <div className="stat-icon cpu">
+              <Cpu className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{cpuUsage}٪</span>
+            <span className="stat-label">CPU</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat">
+            <div className="stat-icon memory">
+              <Database className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{memoryUsage}٪</span>
+            <span className="stat-label">حافظه</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat">
+            <div className="stat-icon network">
+              <Wifi className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{networkStatus}٪</span>
+            <span className="stat-label">شبکه</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat hidden md:flex">
+            <div className="stat-icon power">
+              <Zap className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{powerLevel}٪</span>
+            <span className="stat-label">انرژی</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat hidden md:flex">
+            <div className="stat-icon temp">
+              <Thermometer className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{envTemperature}°C</span>
+            <span className="stat-label">دما</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat hidden md:flex">
+            <div className="stat-icon security">
+              <Lock className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{securityLevel}٪</span>
+            <span className="stat-label">امنیت</span>
           </div>
         </div>
       </div>
