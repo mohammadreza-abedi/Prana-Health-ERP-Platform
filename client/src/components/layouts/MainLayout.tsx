@@ -175,12 +175,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
     {
       title: "داشبورد تحلیلی پیشرفته",
       icon: <Zap className="h-5 w-5" />,
-      path: "/advanced-analytics",
+      path: "/ai-analytics",
     },
     {
       title: "تست‌های روانشناسی",
       icon: <Brain className="h-5 w-5" />,
       path: "/psychological-tests",
+    },
+    {
+      title: "سیستم گیمیفیکیشن",
+      icon: <Trophy className="h-5 w-5" />,
+      path: "/gamification",
     },
     {
       title: "چالش‌ها",

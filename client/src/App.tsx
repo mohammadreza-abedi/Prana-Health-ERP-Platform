@@ -29,6 +29,7 @@ import HSESmartDashboard from "@/pages/HSESmartDashboard";
 import AdvancedProfilePage from "@/pages/AdvancedProfilePage";
 import WeatherInfo from "@/pages/WeatherInfo";
 import AIAnalyticsDashboard from "@/pages/Dashboard/AnalyticsDashboard";
+import GamificationHub from "@/pages/Gamification/GamificationHub";
 import MainLayout from "@/components/layouts/MainLayout";
 import PulsingLogo from "@/components/ui/pulsing-logo";
 
@@ -78,6 +79,7 @@ function Router() {
         <Route path="/hse-smart-dashboard" component={HSESmartDashboard} />
         <Route path="/weather-info" component={WeatherInfo} />
         <Route path="/ai-analytics" component={AIAnalyticsDashboard} />
+        <Route path="/gamification" component={GamificationHub} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

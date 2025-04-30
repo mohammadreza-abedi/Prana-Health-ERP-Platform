@@ -10,6 +10,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/use-auth';
 import { motion } from 'framer-motion';
+import { useLocation } from 'wouter';
 import { 
   Calendar, 
   Activity, 
@@ -22,7 +23,9 @@ import {
   Smile,
   AlertTriangle,
   Settings2,
-  Filter
+  Filter,
+  Trophy,
+  Target
 } from 'lucide-react';
 import { addDays, format, subDays, subMonths } from 'date-fns';
 import { Switch } from '@/components/ui/switch';
@@ -51,6 +54,7 @@ const AnalyticsDashboard: React.FC = () => {
   const [viewMode, setViewMode] = useState<string>('comprehensive');
   const [aiEnabled, setAiEnabled] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>('overview');
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   
   // دریافت داده‌های سلامت کاربر
