@@ -239,22 +239,18 @@ export default function MainLayout({ children }: MainLayoutProps) {
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden relative bg-gradient-to-b from-gray-50 to-gray-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      {/* Background patterns and effects */}
-      <div className="absolute inset-0 bg-grid opacity-[0.02] dark:opacity-[0.03] pointer-events-none z-0"></div>
-      <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-tiffany/5 to-transparent rounded-full blur-3xl pointer-events-none opacity-60 dark:opacity-20"></div>
-      <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-gradient-to-tl from-aqua/5 to-transparent rounded-full blur-3xl pointer-events-none opacity-60 dark:opacity-20"></div>
-        {/* Sidebar with advanced glass effect */}
-        <AnimatePresence>
-          <motion.aside
-            initial={{ width: isMobile ? 0 : 280 }}
-            animate={{ width: isExpanded ? 280 : 80 }}
-            transition={{ 
-              duration: 0.4, 
-              ease: [0.19, 1, 0.22, 1] // Expo ease for smooth animation
-            }}
-            className="h-full glass-effect border-l border-white/20 dark:border-slate-700/30 relative z-30 flex flex-col shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.1)] dark:shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.3)]"
-          >
+    <div className="flex h-screen overflow-hidden">
+      {/* Sidebar */}
+      <AnimatePresence>
+        <motion.aside
+          initial={{ width: isMobile ? 0 : 280 }}
+          animate={{ width: isExpanded ? 280 : 80 }}
+          transition={{ 
+            duration: 0.4, 
+            ease: [0.19, 1, 0.22, 1] // Expo ease for smooth animation
+          }}
+          className="h-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950 border-l border-slate-200/60 dark:border-slate-800/40 relative z-30 flex flex-col shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.05)] dark:shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.2)] backdrop-blur-sm"
+        >
           {/* Sidebar Header */}
           <div className="p-4 flex items-center justify-between">
             {isExpanded && (
@@ -743,16 +739,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
       </AnimatePresence>
 
       {/* Enhanced Main content area with modernized glass effect */}
-      <div className="flex-1 overflow-y-auto relative flex flex-col transition-all duration-300 ease-in-out z-10">
-        {/* Advanced animated background with dynamic effects */}
-        <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-          <div className="absolute top-1/3 left-1/4 w-1/2 h-1/2 bg-gradient-to-br from-tiffany/10 to-transparent rounded-full blur-3xl animate-float opacity-20 dark:opacity-10"></div>
-          <div className="absolute bottom-1/4 right-1/3 w-1/3 h-1/3 bg-gradient-to-tl from-aqua/10 to-transparent rounded-full blur-3xl animate-float-reverse opacity-20 dark:opacity-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-50/70 to-white/90 dark:from-slate-900/70 dark:to-slate-950/90 z-10 backdrop-blur-[2px]"></div>
-        </div>
-        
+      <div className="flex-1 overflow-y-auto relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 flex flex-col transition-all duration-300 ease-in-out">
         {/* Enhanced Fixed Header with advanced glassmorphism */}
-        <div className="sticky top-0 z-20 p-4 glass dark:glass-dark border-b border-white/20 dark:border-slate-700/30 backdrop-blur-xl shadow-[0_4px_30px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_30px_-10px_rgba(0,0,0,0.3)] flex flex-col motion-safe:animate-fade-in transition-all duration-300">
+        <div className="sticky top-0 z-20 p-4 bg-white/80 dark:bg-slate-900/75 border-b border-slate-200/30 dark:border-slate-800/30 backdrop-blur-xl shadow-[0_4px_30px_-10px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_30px_-10px_rgba(0,0,0,0.2)] flex flex-col motion-safe:animate-fade-in transition-all duration-300">
           {/* Top row with logo, menu and actions */}
           <div className="flex items-center justify-between mb-2">
             {/* Left side - Logo and menu button (on mobile) */}
@@ -1383,204 +1372,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
         </div>
         
-        {/* Page content with advanced container */}
-        <div className="flex-1 pt-8 px-6 pb-6 relative bg-gradient-to-b from-slate-50/30 to-slate-100/30 dark:from-slate-900/30 dark:to-slate-800/30 min-h-screen">
-          {/* Decorative elements for control panel style */}
-          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-transparent via-tiffany/20 to-transparent z-10"></div>
-          <div className="absolute top-2 left-6 w-3 h-3 rounded-full bg-rose-500/50 shadow-lg shadow-rose-500/30 animate-pulse-slow z-10"></div>
-          <div className="absolute top-2 left-12 w-3 h-3 rounded-full bg-amber-500/50 shadow-lg shadow-amber-500/30 animate-pulse-slow animation-delay-500 z-10"></div>
-          <div className="absolute top-2 left-18 w-3 h-3 rounded-full bg-emerald-500/50 shadow-lg shadow-emerald-500/30 animate-pulse-slow animation-delay-1000 z-10"></div>
-          
-          {/* Radar scanner overlay effect */}
-          <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden z-0">
-            <div className="radar-scanner"></div>
+        {/* Page content with enhanced container and subtle decoration */}
+        <div className="flex-1 p-6 relative">
+          <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/20 dark:from-slate-800/30 to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/3 right-0 w-96 h-96 bg-tiffany/3 dark:bg-tiffany/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift"></div>
+            <div className="absolute top-2/3 left-0 w-64 h-64 bg-aqua/3 dark:bg-aqua/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift-slow"></div>
           </div>
-          
-          {/* Advanced Island Content Layout with Grid System */}
-          <div className="relative z-10 mt-5">
-            <div className="islands-container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Main Content Island - Spacecraft Control Panel */}
-              <div className="spacecraft-panel col-span-1 lg:col-span-9 p-6 rounded-2xl backdrop-blur-xl border border-slate-300/20 dark:border-slate-700/30 shadow-2xl shadow-tiffany/5 dark:shadow-tiffany/10 hover:shadow-tiffany/10 transition-all duration-300 relative overflow-hidden bg-white/5 dark:bg-slate-900/60">
-                {/* Top control indicators */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"></div>
-                <div className="absolute right-4 top-0 flex space-x-3 space-x-reverse">
-                  {[1, 2, 3, 4, 5].map((_, i) => (
-                    <div key={i} className="h-4 w-1 bg-tiffany/20 dark:bg-tiffany/30 rounded-b-full" 
-                      style={{ height: `${(i+1) * 4}px`, opacity: 0.5 + (i * 0.1) }}></div>
-                  ))}
-                </div>
-                <div className="absolute left-4 top-0 flex space-x-3 space-x-reverse">
-                  {[1, 2, 3, 4, 5].map((_, i) => (
-                    <div key={i} className="h-4 w-1 bg-purple-500/20 dark:bg-purple-500/30 rounded-b-full" 
-                      style={{ height: `${(5-i) * 4}px`, opacity: 0.5 + ((4-i) * 0.1) }}></div>
-                  ))}
-                </div>
-                
-                {/* Side connections for spacecraft control panel */}
-                <div className="absolute left-0 top-1/3 w-1 h-20 bg-gradient-to-b from-tiffany/20 via-tiffany/40 to-tiffany/20"></div>
-                <div className="absolute right-0 top-1/3 w-1 h-20 bg-gradient-to-b from-purple-500/20 via-purple-500/40 to-purple-500/20"></div>
-                
-                {/* Advanced space for content */}
-                <div className="spacecraft-control-content">
-                  {children}
-                </div>
-                
-                {/* Bottom connection lines */}
-                <div className="absolute bottom-0 left-1/4 right-1/4 h-1 bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"></div>
-                <div className="absolute bottom-3 left-1/3 right-1/3 flex justify-between">
-                  <div className="w-1 h-3 bg-tiffany/30 rounded-t-full"></div>
-                  <div className="w-1 h-3 bg-tiffany/30 rounded-t-full"></div>
-                  <div className="w-1 h-3 bg-tiffany/30 rounded-t-full"></div>
-                </div>
-                
-                {/* Pulse circles */}
-                <div className="absolute left-6 bottom-6 w-2 h-2 rounded-full bg-tiffany/40 pulse-glow opacity-75"></div>
-                <div className="absolute right-6 bottom-6 w-2 h-2 rounded-full bg-purple-500/40 pulse-glow opacity-75"></div>
-              </div>
-              
-              {/* Right Sidebar with Advanced Control Features */}
-              <div className="lg:col-span-3 space-y-6">
-                {/* User Stats Control Panel */}
-                <div className="glass-control-panel cosmic-blue-panel rounded-2xl border border-white/10 dark:border-slate-700/30 shadow-xl shadow-amber-500/10 p-4 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"></div>
-                  <div className="flex items-center mb-3">
-                    <div className="p-1.5 rounded-full bg-amber-500/20">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <h3 className="text-sm font-bold text-white mr-2">آمار بیومتریک</h3>
-                    <div className="mr-auto">
-                      <div className="control-indicator active pulse-glow" />
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="bg-slate-800/30 p-3 rounded-xl flex flex-col items-center space-y-1">
-                      <span className="text-slate-400">قدم‌ها</span>
-                      <span className="text-lg font-bold text-tiffany">۶,۵۴۲</span>
-                      <div className="w-full h-1 bg-slate-700/50 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-tiffany-light to-tiffany rounded-full" style={{ width: "65%" }}></div>
-                      </div>
-                    </div>
-                    <div className="bg-slate-800/30 p-3 rounded-xl flex flex-col items-center space-y-1">
-                      <span className="text-slate-400">کالری</span>
-                      <span className="text-lg font-bold text-purple-400">۸۵۴</span>
-                      <div className="w-full h-1 bg-slate-700/50 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-purple-400 to-purple-600 rounded-full" style={{ width: "45%" }}></div>
-                      </div>
-                    </div>
-                    <div className="bg-slate-800/30 p-3 rounded-xl flex flex-col items-center space-y-1">
-                      <span className="text-slate-400">آب</span>
-                      <span className="text-lg font-bold text-sky-400">۴/۸</span>
-                      <div className="w-full h-1 bg-slate-700/50 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-sky-400 to-sky-600 rounded-full" style={{ width: "75%" }}></div>
-                      </div>
-                    </div>
-                    <div className="bg-slate-800/30 p-3 rounded-xl flex flex-col items-center space-y-1">
-                      <span className="text-slate-400">خواب</span>
-                      <span className="text-lg font-bold text-amber-400">۷:۲۵</span>
-                      <div className="w-full h-1 bg-slate-700/50 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-amber-400 to-amber-600 rounded-full" style={{ width: "80%" }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Tasks Control Panel */}
-                <div className="glass-control-panel deep-space-panel rounded-2xl border border-white/10 dark:border-slate-700/30 shadow-xl shadow-tiffany/10 p-4 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-aqua/30 to-transparent"></div>
-                  <div className="flex items-center mb-3">
-                    <div className="p-1.5 rounded-full bg-aqua/20">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-aqua" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                        <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <h3 className="text-sm font-bold text-white mr-2">وظایف امروز</h3>
-                    <div className="mr-auto">
-                      <div className="control-indicator active pulse-glow" />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3 text-xs">
-                    <div className="bg-slate-800/30 p-3 rounded-xl flex items-center justify-between relative overflow-hidden">
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500"></div>
-                      <span className="text-slate-300 pr-1">ارزیابی سلامت ماهانه</span>
-                      <div className="spacecraft-gauge-mini">
-                        <div className="gauge-fill" style={{ transform: 'rotate(90deg)' }}></div>
-                        <div className="text-center text-amber-400">۱</div>
-                      </div>
-                    </div>
-                    <div className="bg-slate-800/30 p-3 rounded-xl flex items-center justify-between relative overflow-hidden">
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-purple-500"></div>
-                      <span className="text-slate-300 pr-1">تست استرس هفتگی</span>
-                      <div className="spacecraft-gauge-mini">
-                        <div className="gauge-fill purple-fill" style={{ transform: 'rotate(110deg)' }}></div>
-                        <div className="text-center text-purple-400">۲</div>
-                      </div>
-                    </div>
-                    <div className="bg-slate-800/30 p-3 rounded-xl flex items-center justify-between relative overflow-hidden">
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-tiffany"></div>
-                      <span className="text-slate-300 pr-1">چالش پیاده‌روی تیمی</span>
-                      <div className="spacecraft-gauge-mini">
-                        <div className="gauge-fill tiffany-fill" style={{ transform: 'rotate(130deg)' }}></div>
-                        <div className="text-center text-tiffany-light">۳</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* HSE Status Control Panel */}
-                <div className="glass-control-panel deep-space-panel rounded-2xl border border-white/10 dark:border-slate-700/30 shadow-xl shadow-emerald-500/10 p-4 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent"></div>
-                  <div className="flex items-center mb-3">
-                    <div className="p-1.5 rounded-full bg-emerald-500/20">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <h3 className="text-sm font-bold text-white mr-2">وضعیت HSE</h3>
-                    <div className="mr-auto">
-                      <div className="control-indicator active pulse-glow" />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3 text-xs">
-                    <div className="spacecraft-gauge">
-                      <div className="gauge-label flex items-center justify-between mb-1">
-                        <span className="text-xs text-slate-300 font-medium">امتیاز ایمنی</span>
-                        <span className="text-xs text-emerald-400">۹۲٪</span>
-                      </div>
-                      <div className="gauge-wrapper">
-                        <div className="gauge-base"></div>
-                        <div className="gauge-fill" style={{ transform: `rotate(${92 * 1.8}deg)` }}></div>
-                        <div className="gauge-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-3 bg-slate-800/30 p-3 rounded-xl flex items-center justify-between">
-                      <span className="text-slate-300">گزارش حوادث</span>
-                      <span className="text-emerald-400 font-medium flex items-center">
-                        ۰ مورد
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      </span>
-                    </div>
-                    
-                    <div className="mt-3 bg-slate-800/30 p-3 rounded-xl flex items-center justify-between">
-                      <span className="text-slate-300">وضعیت کلی</span>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-medium">عالی</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="relative z-10">
+            {children}
           </div>
         </div>
         

@@ -8,7 +8,6 @@ import { WebSocketProvider } from "@/hooks/use-websocket";
 import PWAManager from "@/components/pwa/PWAManager";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/Dashboard";
-import SpacecraftDashboard from "@/pages/SpacecraftDashboard";
 import EnhancedDashboard from "@/pages/EnhancedDashboard";
 import HRDashboard from "@/pages/HRDashboard";
 import HealthDashboard from "@/pages/HealthDashboard";
@@ -55,8 +54,8 @@ function Router() {
   return (
     <MainLayout>
       <Switch>
-        <Route path="/" component={Dashboard} />
-        <Route path="/spacecraft-dashboard" component={SpacecraftDashboard} />
+        <Route path="/" component={EnhancedDashboard} />
+        <Route path="/dashboard" component={Dashboard} />
         <Route path="/enhanced-dashboard" component={EnhancedDashboard} />
         <Route path="/hr-dashboard" component={HRDashboard} />
         <Route path="/health-dashboard" component={HealthDashboard} />
