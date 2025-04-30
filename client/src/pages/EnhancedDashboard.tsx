@@ -37,7 +37,8 @@ import {
   Search,
   Settings,
   Target,
-  Trophy
+  Trophy,
+  Shield
 } from "lucide-react";
 
 import {
@@ -906,6 +907,16 @@ export default function EnhancedDashboard() {
           <Button variant="outline" size="icon" className="rounded-full">
             <Settings className="h-5 w-5" />
           </Button>
+          <Link href="/admin-panel">
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              className="mr-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 dark:bg-red-500/5 dark:hover:bg-red-500/10 flex items-center gap-1"
+            >
+              <Shield className="h-4 w-4" />
+              <span>پنل مدیریت</span>
+            </Button>
+          </Link>
         </div>
       </div>
       

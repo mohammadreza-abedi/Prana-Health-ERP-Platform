@@ -40,7 +40,9 @@ export const AdminPanelButton = ({
     if (adminPassword === ADMIN_PASSWORD) {
       setIsAuthorized(true);
       setIsAuthDialogOpen(false);
-      window.location.href = "/admin-panel";
+      // استفاده از روتینگ داخلی به جای تغییر مستقیم window.location
+      window.history.pushState({}, "", "/admin-panel");
+      window.dispatchEvent(new PopStateEvent('popstate'));
     } else {
       setIsInvalid(true);
     }
@@ -58,7 +60,9 @@ export const AdminPanelButton = ({
                 size="icon"
                 onClick={() => {
                   if (isAuthorized) {
-                    window.location.href = "/admin-panel";
+                    // استفاده از روتینگ داخلی به جای تغییر مستقیم window.location
+                    window.history.pushState({}, "", "/admin-panel");
+                    window.dispatchEvent(new PopStateEvent('popstate'));
                   } else {
                     setIsAuthDialogOpen(true);
                   }
