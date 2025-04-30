@@ -1137,7 +1137,7 @@ const PagesSection = () => {
                           {page.icon === 'UserCircle' && <UserCircle className="h-4 w-4 text-slate-500" />}
                           {page.icon === 'Settings' && <Settings className="h-4 w-4 text-slate-500" />}
                           {page.icon === 'Activity' && <Activity className="h-4 w-4 text-slate-500" />}
-                          {page.icon === 'File' && <File className="h-4 w-4 text-slate-500" />}
+                          {page.icon === 'File' && <FileIcon className="h-4 w-4 text-slate-500" />}
                           <span className={!page.isVisible ? 'text-slate-400 dark:text-slate-500' : ''}>
                             {page.title}
                           </span>
