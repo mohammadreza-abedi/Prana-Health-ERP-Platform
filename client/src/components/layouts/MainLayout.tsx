@@ -239,8 +239,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
+    <div className="flex h-screen overflow-hidden relative bg-gradient-to-b from-gray-50 to-gray-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      {/* Background patterns and effects */}
+      <div className="absolute inset-0 bg-grid opacity-[0.02] dark:opacity-[0.03] pointer-events-none z-0"></div>
+      <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-tiffany/5 to-transparent rounded-full blur-3xl pointer-events-none opacity-60 dark:opacity-20"></div>
+      <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-gradient-to-tl from-aqua/5 to-transparent rounded-full blur-3xl pointer-events-none opacity-60 dark:opacity-20"></div>
+      
+      {/* Sidebar with advanced glass effect */}
       <AnimatePresence>
         <motion.aside
           initial={{ width: isMobile ? 0 : 280 }}
@@ -249,7 +254,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             duration: 0.4, 
             ease: [0.19, 1, 0.22, 1] // Expo ease for smooth animation
           }}
-          className="h-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950 border-l border-slate-200/60 dark:border-slate-800/40 relative z-30 flex flex-col shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.05)] dark:shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.2)] backdrop-blur-sm"
+          className="h-full glass-effect border-l border-white/20 dark:border-slate-700/30 relative z-30 flex flex-col shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.1)] dark:shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.3)]"
         >
           {/* Sidebar Header */}
           <div className="p-4 flex items-center justify-between">
@@ -739,9 +744,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
       </AnimatePresence>
 
       {/* Enhanced Main content area with modernized glass effect */}
-      <div className="flex-1 overflow-y-auto relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 flex flex-col transition-all duration-300 ease-in-out">
+      <div className="flex-1 overflow-y-auto relative flex flex-col transition-all duration-300 ease-in-out z-10">
+        {/* Advanced animated background with dynamic effects */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+          <div className="absolute top-1/3 left-1/4 w-1/2 h-1/2 bg-gradient-to-br from-tiffany/10 to-transparent rounded-full blur-3xl animate-float opacity-20 dark:opacity-10"></div>
+          <div className="absolute bottom-1/4 right-1/3 w-1/3 h-1/3 bg-gradient-to-tl from-aqua/10 to-transparent rounded-full blur-3xl animate-float-reverse opacity-20 dark:opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-50/70 to-white/90 dark:from-slate-900/70 dark:to-slate-950/90 z-10 backdrop-blur-[2px]"></div>
+        </div>
+        
         {/* Enhanced Fixed Header with advanced glassmorphism */}
-        <div className="sticky top-0 z-20 p-4 bg-white/80 dark:bg-slate-900/75 border-b border-slate-200/30 dark:border-slate-800/30 backdrop-blur-xl shadow-[0_4px_30px_-10px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_30px_-10px_rgba(0,0,0,0.2)] flex flex-col motion-safe:animate-fade-in transition-all duration-300">
+        <div className="sticky top-0 z-20 p-4 glass dark:glass-dark border-b border-white/20 dark:border-slate-700/30 backdrop-blur-xl shadow-[0_4px_30px_-10px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_30px_-10px_rgba(0,0,0,0.3)] flex flex-col motion-safe:animate-fade-in transition-all duration-300">
           {/* Top row with logo, menu and actions */}
           <div className="flex items-center justify-between mb-2">
             {/* Left side - Logo and menu button (on mobile) */}
