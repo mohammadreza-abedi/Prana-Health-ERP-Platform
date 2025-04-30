@@ -27,6 +27,7 @@ import OrganizationalHealthPage from "@/pages/OrganizationalHealthPage";
 import AdvancedLoginPage from "@/pages/AdvancedLoginPage";
 import HSESmartDashboard from "@/pages/HSESmartDashboard";
 import AdvancedProfilePage from "@/pages/AdvancedProfilePage";
+import AdminPanel from "@/pages/AdminPanel";
 import MainLayout from "@/components/layouts/MainLayout";
 import PulsingLogo from "@/components/ui/pulsing-logo";
 
@@ -74,6 +75,7 @@ function Router() {
         <Route path="/auto-login" component={AutoLogin} />
         <Route path="/login" component={AdvancedLoginPage} />
         <Route path="/hse-smart-dashboard" component={HSESmartDashboard} />
+        <Route path="/admin-panel" component={AdminPanel} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

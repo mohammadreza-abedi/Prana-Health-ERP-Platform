@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import PWAInstallButton from "@/components/pwa/PWAInstallButton";
+import { AdminPanelButton } from "@/components/admin/AdminPanelButton";
 import {
   Home,
   Award,
@@ -522,11 +523,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
           {/* Bottom actions - پیشرفته و مدرن */}
           <div className="p-3 space-y-2">
-            {/* دکمه نصب PWA */}
-            <div className={`w-full ${isExpanded ? 'px-2' : 'flex justify-center'}`}>
+            {/* دکمه‌های ویژه (نصب PWA و پنل ادمین) */}
+            <div className={`w-full ${isExpanded ? 'px-2 flex gap-2' : 'flex justify-center gap-2'}`}>
               <PWAInstallButton 
                 variant="outline" 
-                className={`w-full ${!isExpanded && 'p-2 h-10 w-10'}`} 
+                className={`${isExpanded ? 'flex-1' : 'p-2 h-10 w-10'}`} 
+              />
+              <AdminPanelButton 
+                variant="outline" 
+                className={`${!isExpanded && 'p-2 h-10 w-10'}`} 
               />
             </div>
             
