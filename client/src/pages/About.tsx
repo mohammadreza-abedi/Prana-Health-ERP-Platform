@@ -28,7 +28,9 @@ import {
   Smartphone,
   Brain,
   Lock,
-  Mail
+  Mail,
+  Building,
+  Trophy
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -145,7 +147,7 @@ const keyFeatures = [
   {
     title: "پشتیبانی تخصصی",
     description: "مشاوره و پشتیبانی توسط متخصصان روانشناسی و فناوری",
-    icon: <HelpingHand className="h-10 w-10 text-emerald-500" />
+    icon: <HeartHandshake className="h-10 w-10 text-emerald-500" />
   },
 ];
 
