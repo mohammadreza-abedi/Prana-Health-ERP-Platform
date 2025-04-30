@@ -1,200 +1,175 @@
-import React from 'react';
-import { Shield, AlertTriangle, CheckCircle, Clock, Calendar, PieChart, ArrowUpRight } from 'lucide-react';
+import { HardHat, TrendingUp, ShieldCheck, AlertTriangle, ShieldAlert, AlertCircle } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
-/**
- * جزیره نمایش عملکرد HSE با شاخص‌های ایمنی و سلامت محیط کار
- */
 export function HSEPerformanceIsland() {
-  // داده‌های مثال برای نمایش - در نسخه نهایی از API دریافت خواهد شد
-  const hseData = {
-    safetyScore: 96,
-    incidentFree: 142, // روزهای بدون حادثه
-    incidents: {
-      total: 3,
-      thisYear: 1,
-      byType: [
-        { type: 'جزئی', count: 2, color: 'amber' },
-        { type: 'متوسط', count: 1, color: 'orange' },
-        { type: 'شدید', count: 0, color: 'rose' }
-      ]
-    },
-    inspections: {
-      completed: 28,
-      scheduled: 30,
-      nextDate: '1404/02/15'
-    },
-    compliance: {
-      score: 98,
-      certificates: [
-        { id: 1, name: 'ISO 45001', expiry: '1404/09/22', status: 'active' },
-        { id: 2, name: 'HSE-MS', expiry: '1404/06/15', status: 'active' }
-      ]
-    },
-    recentUpdates: [
-      { id: 1, text: 'بروزرسانی دستورالعمل‌های ایمنی انجام شد', date: '۱۴۰۴/۰۲/۰۳', type: 'success' },
-      { id: 2, text: 'بازرسی دوره‌ای تجهیزات انجام شد', date: '۱۴۰۴/۰۱/۲۸', type: 'info' }
-    ]
-  };
-
-  // محاسبه درصد اتمام بازرسی‌ها
-  const inspectionPercentage = Math.round((hseData.inspections.completed / hseData.inspections.scheduled) * 100);
-
   return (
-    <div className="glass-island success p-5 rounded-2xl">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center">
-          <Shield className="w-5 h-5 text-emerald-500 mr-2" />
-          گزارش عملکرد HSE
-        </h3>
-        <div className="glass px-3 py-1 rounded-full text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center">
-          <Clock className="w-3.5 h-3.5 ml-1" />
-          {hseData.incidentFree} روز بدون حادثه
+    <div className="glass-island p-4 rounded-2xl relative overflow-hidden">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center">
+          <div className="p-2 rounded-lg bg-amber-500/10 mr-2">
+            <HardHat className="h-5 w-5 text-amber-400" />
+          </div>
+          <h3 className="text-base font-bold text-white">عملکرد بهداشت، ایمنی و محیط زیست</h3>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-        {/* امتیاز ایمنی */}
-        <div className="glass p-4 rounded-xl">
-          <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">امتیاز ایمنی</h4>
-            <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-              hseData.safetyScore >= 90 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' :
-              hseData.safetyScore >= 70 ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300' :
-              'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300'
-            }`}>
-              {hseData.safetyScore >= 90 ? 'عالی' :
-               hseData.safetyScore >= 70 ? 'متوسط' :
-               'ضعیف'}
-            </span>
-          </div>
-          <div className="relative pt-1">
-            <div className="flex mb-2 items-center justify-between">
-              <div>
-                <span className="text-xs font-medium inline-block py-1 px-2 uppercase rounded-full text-emerald-600 bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-300">
-                  {hseData.safetyScore}%
-                </span>
-              </div>
-            </div>
-            <div className="overflow-hidden h-2 text-xs flex rounded bg-slate-200 dark:bg-slate-700">
-              <div 
-                style={{ width: `${hseData.safetyScore}%` }}
-                className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-emerald-400 to-tiffany"
-              ></div>
-            </div>
-          </div>
-        </div>
-
-        {/* پیشرفت بازرسی‌ها */}
-        <div className="glass p-4 rounded-xl">
-          <div className="flex items-center justify-between mb-3">
-            <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300">بازرسی‌های دوره‌ای</h4>
-            <div className="flex items-center text-xs font-medium text-slate-600 dark:text-slate-400">
-              <Calendar className="w-3.5 h-3.5 ml-1" />
-              {hseData.inspections.nextDate}
-            </div>
-          </div>
-          <div className="relative pt-1">
-            <div className="flex mb-2 items-center justify-between">
-              <div>
-                <span className="text-xs font-medium inline-block py-1 px-2 uppercase rounded-full text-tiffany bg-tiffany-100 dark:bg-tiffany-900/20 dark:text-tiffany-light">
-                  {inspectionPercentage}%
-                </span>
-              </div>
-              <div className="text-right">
-                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                  {hseData.inspections.completed} از {hseData.inspections.scheduled}
-                </span>
-              </div>
-            </div>
-            <div className="overflow-hidden h-2 text-xs flex rounded bg-slate-200 dark:bg-slate-700">
-              <div 
-                style={{ width: `${inspectionPercentage}%` }}
-                className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-tiffany to-blue-400"
-              ></div>
-            </div>
+        
+        <div className="flex items-center">
+          <span className="text-xs text-amber-400 mr-2">+15% نسبت به ماه قبل</span>
+          <div className="p-1 rounded-md bg-amber-500/10">
+            <TrendingUp className="h-3.5 w-3.5 text-amber-400" />
           </div>
         </div>
       </div>
-
-      {/* حوادث و رخدادها */}
-      <div className="glass p-4 rounded-xl mb-5">
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/30">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-slate-300 font-medium">ضریب ایمنی</div>
+            <div className="p-1.5 rounded-lg bg-emerald-500/10">
+              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+            </div>
+          </div>
+          
+          <div className="mt-2">
+            <div className="text-3xl font-bold text-white">96.2٪</div>
+            <div className="flex items-center mt-1">
+              <div className="flex items-center text-emerald-400 text-xs">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 mr-1"></div>
+                عالی
+              </div>
+              <div className="flex items-center text-slate-400 text-xs mr-3">
+                <div className="w-2 h-2 rounded-full bg-slate-500 mr-1"></div>
+                هدف: 95٪
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-slate-400">پیشرفت ۶ ماهه</span>
+            </div>
+            <Progress value={96} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-emerald-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/30">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-slate-300 font-medium">حوادث ثبت شده</div>
+            <div className="p-1.5 rounded-lg bg-amber-500/10">
+              <AlertTriangle className="h-4 w-4 text-amber-400" />
+            </div>
+          </div>
+          
+          <div className="mt-2">
+            <div className="text-3xl font-bold text-white">17 <span className="text-sm text-slate-400">مورد</span></div>
+            <div className="flex items-center mt-1">
+              <div className="flex items-center text-amber-400 text-xs">
+                <div className="w-2 h-2 rounded-full bg-amber-400 mr-1"></div>
+                متوسط
+              </div>
+              <div className="flex items-center text-slate-400 text-xs mr-3">
+                <div className="w-2 h-2 rounded-full bg-slate-500 mr-1"></div>
+                هدف: &lt;15
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-slate-400">بهبود نسبت به دوره قبل</span>
+            </div>
+            <Progress value={65} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-amber-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/30">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-slate-300 font-medium">شاخص خطر</div>
+            <div className="p-1.5 rounded-lg bg-rose-500/10">
+              <ShieldAlert className="h-4 w-4 text-rose-400" />
+            </div>
+          </div>
+          
+          <div className="mt-2">
+            <div className="text-3xl font-bold text-white">21.3٪</div>
+            <div className="flex items-center mt-1">
+              <div className="flex items-center text-rose-400 text-xs">
+                <div className="w-2 h-2 rounded-full bg-rose-400 mr-1"></div>
+                نیاز به توجه
+              </div>
+              <div className="flex items-center text-slate-400 text-xs mr-3">
+                <div className="w-2 h-2 rounded-full bg-slate-500 mr-1"></div>
+                هدف: &lt;20٪
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-slate-400">وضعیت فعلی</span>
+            </div>
+            <Progress value={45} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-rose-400" />
+          </div>
+        </div>
+      </div>
+      
+      <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
         <div className="flex items-center justify-between mb-3">
-          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center">
-            <AlertTriangle className="w-4 h-4 ml-1 text-amber-500" />
-            وضعیت حوادث
-          </h4>
-          <span className="text-xs text-slate-500 dark:text-slate-400">{hseData.incidents.thisYear} مورد در سال جاری</span>
-        </div>
-        
-        <div className="grid grid-cols-3 gap-2 mb-3">
-          {hseData.incidents.byType.map((incident, index) => (
-            <div key={index} className="glass p-2 rounded-lg flex flex-col items-center justify-center">
-              <span className={`text-lg font-bold ${
-                incident.color === 'amber' ? 'text-amber-500' :
-                incident.color === 'orange' ? 'text-orange-500' :
-                'text-rose-500'
-              }`}>
-                {incident.count}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 text-center">
-                {incident.type}
-              </span>
+          <div className="flex items-center">
+            <div className="p-1.5 rounded-lg bg-rose-500/10 mr-2">
+              <AlertCircle className="h-4 w-4 text-rose-400" />
             </div>
-          ))}
+            <h4 className="text-sm font-bold text-white">مناطق با ریسک بالا</h4>
+          </div>
         </div>
         
-        <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
-          <span className="flex items-center">
-            <CheckCircle className="w-3.5 h-3.5 ml-1 text-emerald-500" />
-            نرخ حوادث نسبت به سال قبل: ۳۵٪ کاهش
-          </span>
-        </div>
-      </div>
-
-      {/* گواهینامه‌ها و به‌روزرسانی‌ها */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* گواهینامه‌های HSE */}
-        <div className="glass p-4 rounded-xl">
-          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">
-            گواهینامه‌های HSE
-          </h4>
-          <ul className="space-y-2">
-            {hseData.compliance.certificates.map(cert => (
-              <li key={cert.id} className="glass p-2 rounded-md flex items-center justify-between">
-                <span className="font-medium text-xs text-slate-700 dark:text-slate-300">{cert.name}</span>
-                <div className="flex items-center">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 ml-2">اعتبار: {cert.expiry}</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-        
-        {/* به‌روزرسانی‌های اخیر */}
-        <div className="glass p-4 rounded-xl">
-          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 flex items-center justify-between">
-            <span>به‌روزرسانی‌های اخیر</span>
-            <a href="#" className="text-xs font-medium text-tiffany flex items-center hover:underline">
-              مشاهده همه
-              <ArrowUpRight className="w-3 h-3 mr-1" />
-            </a>
-          </h4>
-          <ul className="space-y-2">
-            {hseData.recentUpdates.map(update => (
-              <li key={update.id} className="glass p-2 rounded-md flex items-start">
-                <span className={`w-2 h-2 mt-1.5 ml-2 rounded-full ${
-                  update.type === 'success' ? 'bg-emerald-500' :
-                  update.type === 'warning' ? 'bg-amber-500' :
-                  'bg-blue-500'
-                }`}></span>
-                <div className="flex-1">
-                  <p className="text-xs text-slate-700 dark:text-slate-300">{update.text}</p>
-                  <p className="text-[10px] text-slate-500">{update.date}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div>
+            <div className="flex items-center mb-2">
+              <div className="w-2 h-2 rounded-full bg-rose-400 mr-2"></div>
+              <span className="text-slate-300 font-medium">سالن تولید شماره ۳</span>
+              <div className="ml-2 px-1.5 py-0.5 bg-rose-500/10 rounded text-rose-400">ریسک بالا</div>
+            </div>
+            <div className="bg-slate-800/50 p-2 rounded-lg text-slate-400 border border-slate-700/40">
+              <p>مشکل: نشت احتمالی مواد شیمیایی در واحد تصفیه</p>
+              <p className="mt-1">اقدام: بازرسی فوری لوله‌ها و شیرهای اتصال</p>
+            </div>
+          </div>
+          
+          <div>
+            <div className="flex items-center mb-2">
+              <div className="w-2 h-2 rounded-full bg-amber-400 mr-2"></div>
+              <span className="text-slate-300 font-medium">آزمایشگاه کنترل کیفیت</span>
+              <div className="ml-2 px-1.5 py-0.5 bg-amber-500/10 rounded text-amber-400">ریسک متوسط</div>
+            </div>
+            <div className="bg-slate-800/50 p-2 rounded-lg text-slate-400 border border-slate-700/40">
+              <p>مشکل: سیستم تهویه نیازمند بازبینی و بهینه‌سازی</p>
+              <p className="mt-1">اقدام: بررسی کیفیت هوا و سرویس فن‌ها</p>
+            </div>
+          </div>
+          
+          <div>
+            <div className="flex items-center mb-2">
+              <div className="w-2 h-2 rounded-full bg-rose-400 mr-2"></div>
+              <span className="text-slate-300 font-medium">انبار مواد اولیه</span>
+              <div className="ml-2 px-1.5 py-0.5 bg-rose-500/10 rounded text-rose-400">ریسک بالا</div>
+            </div>
+            <div className="bg-slate-800/50 p-2 rounded-lg text-slate-400 border border-slate-700/40">
+              <p>مشکل: سیستم اطفاء حریق خودکار نیازمند به‌روزرسانی</p>
+              <p className="mt-1">اقدام: بررسی و تعویض تجهیزات فرسوده</p>
+            </div>
+          </div>
+          
+          <div>
+            <div className="flex items-center mb-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 mr-2"></div>
+              <span className="text-slate-300 font-medium">دفاتر اداری</span>
+              <div className="ml-2 px-1.5 py-0.5 bg-emerald-500/10 rounded text-emerald-400">ریسک پایین</div>
+            </div>
+            <div className="bg-slate-800/50 p-2 rounded-lg text-slate-400 border border-slate-700/40">
+              <p>مشکل: مسیرهای خروج اضطراری نیاز به علامت‌گذاری بهتر</p>
+              <p className="mt-1">اقدام: نصب علائم هشدار و آموزش پرسنل</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

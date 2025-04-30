@@ -1,167 +1,122 @@
-import React from 'react';
-import { Heart, Activity, Sun, Moon, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Activity, Heart, TrendingUp, ArrowUp, ArrowDown, BarChart } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
-/**
- * جزیره خلاصه وضعیت سلامت با نمودارهای پیشرفته و شاخص‌های مهم
- */
 export function HealthSummaryIsland() {
-  // داده‌های مثال برای نمایش - در نسخه نهایی از API دریافت خواهد شد
-  const healthMetrics = {
-    score: 87,
-    change: 3,
-    restingHeartRate: {
-      current: 64,
-      previous: 68,
-      isGood: true
-    },
-    sleepQuality: {
-      score: 82,
-      hours: 7.4,
-      isGood: true
-    },
-    stressLevel: {
-      score: 42,
-      isGood: true
-    },
-    activityScore: {
-      score: 79,
-      steps: 9340,
-      isGood: true
-    },
-    warnings: [
-      { id: 1, message: "میزان فعالیت هفته گذشته ۱۵٪ کاهش داشته است" }
-    ]
-  };
-
   return (
-    <div className="glass-island min-h-[300px] p-5 rounded-2xl transition-all duration-300">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center">
-          <Heart className="w-5 h-5 text-rose-500 mr-2" />
-          خلاصه وضعیت سلامت
-        </h3>
-        <div className="glass px-2 py-1 rounded-lg text-xs font-medium">
-          {healthMetrics.change > 0 ? (
-            <span className="text-emerald-500 flex items-center">
-              <TrendingUp className="w-3 h-3 ml-1" />
-              {healthMetrics.change}٪ بهبود
-            </span>
-          ) : (
-            <span className="text-rose-500">
-              {Math.abs(healthMetrics.change)}٪ کاهش
-            </span>
-          )}
+    <div className="glass-island p-4 rounded-2xl relative overflow-hidden">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center">
+          <div className="p-2 rounded-lg bg-tiffany/10 mr-2">
+            <Heart className="h-5 w-5 text-tiffany" />
+          </div>
+          <h3 className="text-base font-bold text-white">وضعیت کلی سلامت</h3>
+        </div>
+        
+        <div className="flex items-center">
+          <span className="text-xs text-tiffany mr-2">+12% نسبت به ماه قبل</span>
+          <div className="p-1 rounded-md bg-tiffany/10">
+            <TrendingUp className="h-3.5 w-3.5 text-tiffany" />
+          </div>
         </div>
       </div>
-
-      {/* نمودار اصلی وضعیت سلامت */}
-      <div className="relative mb-6 mt-2">
-        <div className="flex justify-center">
-          <div className="relative w-32 h-32">
-            <svg className="w-full h-full" viewBox="0 0 100 100">
-              <circle 
-                className="text-slate-200 dark:text-slate-700" 
-                strokeWidth="10"
-                stroke="currentColor" 
-                fill="transparent" 
-                r="40" 
-                cx="50" 
-                cy="50" 
-              />
-              <circle 
-                className="text-tiffany" 
-                strokeWidth="10" 
-                strokeDasharray={`${healthMetrics.score * 2.51} 251`}
-                strokeLinecap="round" 
-                stroke="currentColor" 
-                fill="transparent" 
-                r="40" 
-                cx="50" 
-                cy="50" 
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-3xl font-bold text-slate-800 dark:text-white">{healthMetrics.score}</span>
-              <span className="text-xs text-slate-500">امتیاز کل</span>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/30">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-slate-300 font-medium">شاخص BMI</div>
+            <div className="p-1.5 rounded-lg bg-amber-500/10">
+              <Activity className="h-4 w-4 text-amber-400" />
+            </div>
+          </div>
+          
+          <div className="mt-2">
+            <div className="text-3xl font-bold text-white">23.4</div>
+            <div className="flex items-center mt-1">
+              <ArrowUp className="h-3 w-3 text-emerald-400 mr-1" />
+              <span className="text-xs text-emerald-400">نرمال</span>
+            </div>
+          </div>
+          
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-slate-400">میانگین تیم</span>
+              <span className="text-slate-300">24.2</span>
+            </div>
+            <Progress value={78} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-amber-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/30">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-slate-300 font-medium">فشار خون</div>
+            <div className="p-1.5 rounded-lg bg-emerald-500/10">
+              <Activity className="h-4 w-4 text-emerald-400" />
+            </div>
+          </div>
+          
+          <div className="mt-2">
+            <div className="text-3xl font-bold text-white">120/80</div>
+            <div className="flex items-center mt-1">
+              <ArrowUp className="h-3 w-3 text-emerald-400 mr-1" />
+              <span className="text-xs text-emerald-400">عالی</span>
+            </div>
+          </div>
+          
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-slate-400">میانگین تیم</span>
+              <span className="text-slate-300">130/85</span>
+            </div>
+            <Progress value={95} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-emerald-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800/40 p-3 rounded-xl border border-slate-700/30">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-slate-300 font-medium">فعالیت فیزیکی</div>
+            <div className="p-1.5 rounded-lg bg-rose-500/10">
+              <Activity className="h-4 w-4 text-rose-400" />
+            </div>
+          </div>
+          
+          <div className="mt-2">
+            <div className="text-3xl font-bold text-white">5.4k</div>
+            <div className="flex items-center mt-1">
+              <ArrowDown className="h-3 w-3 text-rose-400 mr-1" />
+              <span className="text-xs text-rose-400">پایین‌تر از حد نرمال</span>
+            </div>
+          </div>
+          
+          <div className="mt-3">
+            <div className="flex items-center justify-between text-xs mb-1">
+              <span className="text-slate-400">میانگین تیم</span>
+              <span className="text-slate-300">7.5k</span>
+            </div>
+            <Progress value={45} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-rose-400" />
+          </div>
+        </div>
+      </div>
+      
+      <div className="bg-slate-800/30 rounded-xl p-4 border border-slate-700/30">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center">
+            <div className="p-1.5 rounded-lg bg-tiffany/10 mr-2">
+              <BarChart className="h-4 w-4 text-tiffany" />
+            </div>
+            <h4 className="text-sm font-bold text-white">روند شاخص‌های سلامت طی ۶ ماه اخیر</h4>
+          </div>
+        </div>
+        
+        <div className="h-60">
+          {/* اینجا نمودار قرار می‌گیرد - در نسخه بعدی */}
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <div className="text-slate-400 text-sm mb-2">در حال بارگذاری نمودارها...</div>
+              <div className="spacecraft-loader"></div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* شاخص‌های سلامت */}
-      <div className="grid grid-cols-2 gap-4 text-sm">
-        <div className="glass p-3 rounded-xl flex flex-col">
-          <div className="flex items-center text-rose-500 mb-1">
-            <Activity className="w-4 h-4 ml-1" />
-            <span className="font-medium">ضربان قلب استراحت</span>
-          </div>
-          <div className="flex items-end justify-between mt-auto">
-            <span className="text-xl font-bold text-slate-800 dark:text-white">{healthMetrics.restingHeartRate.current}</span>
-            <span className={`text-xs ${healthMetrics.restingHeartRate.isGood ? 'text-emerald-500' : 'text-rose-500'}`}>
-              {healthMetrics.restingHeartRate.previous > healthMetrics.restingHeartRate.current ? 
-                `${healthMetrics.restingHeartRate.previous - healthMetrics.restingHeartRate.current} کاهش` : 
-                `${healthMetrics.restingHeartRate.current - healthMetrics.restingHeartRate.previous} افزایش`}
-            </span>
-          </div>
-        </div>
-
-        <div className="glass p-3 rounded-xl flex flex-col">
-          <div className="flex items-center text-blue-500 mb-1">
-            <Moon className="w-4 h-4 ml-1" />
-            <span className="font-medium">کیفیت خواب</span>
-          </div>
-          <div className="flex items-end justify-between mt-auto">
-            <span className="text-xl font-bold text-slate-800 dark:text-white">{healthMetrics.sleepQuality.hours} ساعت</span>
-            <span className={`text-xs ${healthMetrics.sleepQuality.isGood ? 'text-emerald-500' : 'text-rose-500'}`}>
-              {healthMetrics.sleepQuality.score}% کیفیت
-            </span>
-          </div>
-        </div>
-
-        <div className="glass p-3 rounded-xl flex flex-col">
-          <div className="flex items-center text-amber-500 mb-1">
-            <Sun className="w-4 h-4 ml-1" />
-            <span className="font-medium">سطح استرس</span>
-          </div>
-          <div className="flex items-end justify-between mt-auto">
-            <span className="text-xl font-bold text-slate-800 dark:text-white">{healthMetrics.stressLevel.score}/100</span>
-            <span className={`text-xs ${healthMetrics.stressLevel.isGood ? 'text-emerald-500' : 'text-rose-500'}`}>
-              {healthMetrics.stressLevel.isGood ? 'طبیعی' : 'بالا'}
-            </span>
-          </div>
-        </div>
-
-        <div className="glass p-3 rounded-xl flex flex-col">
-          <div className="flex items-center text-purple-500 mb-1">
-            <Activity className="w-4 h-4 ml-1" />
-            <span className="font-medium">فعالیت روزانه</span>
-          </div>
-          <div className="flex items-end justify-between mt-auto">
-            <span className="text-xl font-bold text-slate-800 dark:text-white">{healthMetrics.activityScore.steps.toLocaleString()}</span>
-            <span className={`text-xs ${healthMetrics.activityScore.isGood ? 'text-emerald-500' : 'text-rose-500'}`}>
-              {healthMetrics.activityScore.score}% هدف
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* هشدارها و توصیه‌ها */}
-      {healthMetrics.warnings.length > 0 && (
-        <div className="mt-4 glass p-3 rounded-xl text-sm text-slate-600 dark:text-slate-300">
-          <div className="flex items-center text-amber-500 mb-2">
-            <AlertTriangle className="w-4 h-4 ml-1" />
-            <span className="font-medium">توصیه‌های سلامتی</span>
-          </div>
-          <ul className="space-y-1">
-            {healthMetrics.warnings.map(warning => (
-              <li key={warning.id} className="flex items-start">
-                <span className="block w-1.5 h-1.5 mt-1.5 ml-2 rounded-full bg-amber-400"></span>
-                {warning.message}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
