@@ -1,0 +1,87 @@
+🎯 UI/UX STRATEGIC CANVAS – ADVANCED PLATFORM LAYOUT v2.0
+
+🧭 1. DESIGN INTENTION – هدف کلان طراحی
+Design is a cognitive architecture. The UI must serve as a visual operating system for decision-making, not just an interface. Prioritize systems thinking over surface-level design.
+
+• Shift from data-display to data-activation
+• Interface should guide behavior, not just show options
+• Design for trust, control, and cognitive clarity
+
+
+📐 2. LAYOUT ARCHITECTURE – معماری چیدمان
+Architect every region of the screen based on semantic role and user intention. Avoid symmetrical grid rigidity in favor of functional zones.
+
+• Employ 12-column adaptive grid with contextual reflow
+• Vertical rhythm must be governed by baseline grid alignment
+• Introduce layout tokens: zone-density, priority-weight, flow-order
+
+
+🌀 3. BEHAVIORAL LAYERING – لایه‌گذاری تعاملی
+UI should breathe with the user. Define behavioral strata where interaction depth correlates with task complexity.
+
+• Layer 1 – Passive UI (background, info-only)
+• Layer 2 – Actionable UI (clickable modules, filters, inputs)
+• Layer 3 – Modal UI (critical path overlays, confirmation flows)
+• No visual element without a defined interaction pattern
+
+
+📱 4. RESPONSIVE SEMANTICS – واکنش‌گرایی معنایی
+Move from device-based responsiveness to role-context awareness. Screens should morph based on tasks, time, and user journey stage.
+
+• Design breakpoints for use-case shifts, not just width
+• Introduce adaptive components: self-scaling, collapsible, summarizing
+• Prioritize critical path per device-role matrix
+
+
+⚙️ 5. VISUAL HARMONY FRAMEWORK – هماهنگی بصری سیستماتیک
+Unify all UI through visual semantics: meaning before styling. Use color, scale, spacing, and movement with intentional consistency.
+
+• Color must encode: status, state, priority
+• Scale with purpose: typography based on hierarchy and scan pattern
+• Motion: subtle, directive, informative (not decorative)
+
+
+🔁 6. PREDICTIVE UX BEHAVIOR – رفتار پیش‌بینی‌پذیر
+Craft an anticipatory experience where users are never lost. Every element should signal consequence and affordance.
+
+• Highlight expected interactions before they happen
+• Support exploration through inline micro-guidance
+• Implement visual memory cues (location-based state retention)
+
+
+📊 7. DATA-FIRST NARRATIVE DESIGN – طراحی روایی داده‌محور
+Dashboard must read like a story: what happened, what it means, what to do. Visual hierarchy should support analytical reasoning.
+
+• Metrics grouped by intent: insight → comparison → action
+• Cards act as micro-narratives: data, context, reaction
+• Connect narrative arcs via layout (e.g., anomaly → drilldown → action button)
+
+
+🔐 8. ROLE-BASED UI LOGIC – منطق رابط مبتنی بر نقش
+Redesign UI structure dynamically per user role, maturity level, and access control.
+
+• Declarative rendering per permission matrix
+• Modular access zones for viewer, editor, admin, and super-admin
+• User-mode toggling (e.g., Beginner ↔ Expert)
+
+
+♻️ 9. MODULAR & EVOLVABLE DESIGN SYSTEM – سیستم طراحی پیش‌رونده
+Every UI unit must be reusable, versioned, testable, and decoupled from global dependencies.
+
+• Full implementation of atomic structure (Atomic → Molecular → Composite)
+• Centralized style tokens and behavior logic
+• Layouts rendered via schema-driven architecture (JSON + UI engine)
+
+
+🧠 10. PERCEPTION-DRIVEN INFORMATION DESIGN – طراحی اطلاعاتی ادراکی
+Structure information flow based on visual attention, memory retention, and task urgency.
+
+• Zone-based layout: F-pattern, Z-pattern optimized for screen reading
+• Dynamic reordering of UI based on task priority (AI-driven personalization)
+• Use visual weight mapping: proximity, alignment, repetition, contrast
+
+
+✅ ULTIMATE OUTCOME:
+A perceptive, adaptive, and narratively intelligent layout system that delivers clarity at scale and evolves alongside the platform.
+
+Design the UI as a **thinking environment**—not a container. Architecture is behavior.
