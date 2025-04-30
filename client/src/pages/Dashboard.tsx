@@ -25,10 +25,10 @@ import {
   Bar
 } from 'recharts';
 import { 
-  Activity, ActivitySquare, AlertTriangle, AlertCircle, Battery, BatteryFull, BatteryMedium, BatteryLow,
+  Activity, AlertTriangle, AlertCircle, Battery, BatteryFull, BatteryMedium, BatteryLow,
   Clock, Calendar, ChevronDown, Circle, CircleCheck, CircleDashed, CircleDot, 
-  Cloud, CloudSun, CloudRain, Compass, Cpu, Crosshair, Database, Diamond, Droplets,
-  FileLineChart, Flame, GitBranch, GitGraph, Moon,
+  Cloud, CloudSun, CloudRain, Compass, Cpu, Crosshair, Database, Diamond, 
+  FileLineChart, Flame, GitBranch, GitGraph, 
   HardDrive, Heart, HelpCircle, HelpingHand, Info, Laptop, 
   Lock, LockKeyhole, Maximize, Menu, MessageSquare, Minimize, MonitorSmartphone,
   Network, PanelTopOpen, PlayCircle, Plug, PlusSquare, Power, 
@@ -432,7 +432,7 @@ const Dashboard = () => {
             <div className="cyber-card p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="text-sm font-bold text-white flex items-center">
-                  <ActivitySquare className="w-4 h-4 ml-1.5 text-tiffany" />
+                  <Activity className="w-4 h-4 ml-1.5 text-tiffany" />
                   وضعیت سلامت تیمی
                 </div>
                 
@@ -442,23 +442,25 @@ const Dashboard = () => {
                     ۸۷٪
                   </div>
                   
-                  <Select>
-                    <SelectTrigger className="text-xs h-7 bg-slate-800/40 border-slate-700/50 hover:bg-slate-800">
-                      <span>هفته جاری</span>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="week">هفته جاری</SelectItem>
-                      <SelectItem value="month">ماه جاری</SelectItem>
-                      <SelectItem value="quarter">فصل جاری</SelectItem>
-                      <SelectItem value="year">سال جاری</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="relative">
+                    <Select>
+                      <SelectTrigger className="text-xs h-7 bg-slate-800/40 border-slate-700/50 hover:bg-slate-800 w-24">
+                        <SelectValue placeholder="هفته جاری" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="week">هفته جاری</SelectItem>
+                        <SelectItem value="month">ماه جاری</SelectItem>
+                        <SelectItem value="quarter">فصل جاری</SelectItem>
+                        <SelectItem value="year">سال جاری</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
               
               <div className="h-60 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={[
+                  <ReLineChart data={[
                     { name: 'شنبه', value: 65 },
                     { name: 'یکشنبه', value: 72 },
                     { name: 'دوشنبه', value: 87 },
@@ -467,25 +469,12 @@ const Dashboard = () => {
                     { name: 'پنج‌شنبه', value: 85 },
                     { name: 'جمعه', value: 91 },
                   ]}>
-                    <defs>
-                      <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#45CDB9" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#45CDB9" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
                     <XAxis dataKey="name" tick={{ fill: '#94A3B8', fontSize: 10 }} axisLine={{ stroke: '#334155' }} tickLine={false} />
                     <YAxis tick={{ fill: '#94A3B8', fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'rgba(15, 23, 42, 0.9)', 
-                        borderRadius: '8px',
-                        border: '1px solid rgba(51, 65, 85, 0.6)',
-                        color: '#E2E8F0'
-                      }}
-                    />
-                    <Area type="monotone" dataKey="value" stroke="#45CDB9" fillOpacity={1} fill="url(#colorUv)" />
+                    <CartesianGrid stroke="#334155" strokeDasharray="3 3" vertical={false} />
+                    <ReTooltip />
                     <Line type="monotone" dataKey="value" stroke="#45CDB9" strokeWidth={2} dot={{ r: 4, fill: '#0F172A', stroke: '#45CDB9', strokeWidth: 2 }} />
-                  </LineChart>
+                  </ReLineChart>
                 </ResponsiveContainer>
               </div>
             </div>
@@ -563,7 +552,7 @@ const Dashboard = () => {
                 <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40 flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="w-6 h-6 rounded-lg bg-purple-500/20 flex items-center justify-center ml-2">
-                      <Moon className="w-3 h-3 text-purple-400" />
+                      <SunMedium className="w-3 h-3 text-purple-400" />
                     </div>
                     <div className="text-xs text-slate-300">خواب منظم</div>
                   </div>
@@ -573,7 +562,7 @@ const Dashboard = () => {
                 <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40 flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="w-6 h-6 rounded-lg bg-blue-500/20 flex items-center justify-center ml-2">
-                      <Droplets className="w-3 h-3 text-blue-400" />
+                      <Cloud className="w-3 h-3 text-blue-400" />
                     </div>
                     <div className="text-xs text-slate-300">نوشیدن آب</div>
                   </div>
