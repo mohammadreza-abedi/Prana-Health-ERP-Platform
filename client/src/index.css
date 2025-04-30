@@ -28,6 +28,17 @@
     animation-delay: 4000ms;
   }
   
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
   /* Glass effect utilities */
   .glass-effect {
     @apply backdrop-blur-md bg-white/70 dark:bg-slate-800/70 border border-slate-200/50 dark:border-slate-700/50;
@@ -35,6 +46,12 @@
   
   .glass-card {
     @apply rounded-xl glass-effect shadow-sm hover:shadow-lg transition-all duration-300;
+  }
+  
+  .glass-island {
+    @apply bg-slate-900/40 backdrop-blur-lg border border-slate-800/50 shadow-xl;
+    background-image: radial-gradient(circle at 50% 0, rgba(47, 108, 185, 0.1), transparent 70%),
+                      radial-gradient(circle at 100% 0, rgba(75, 192, 192, 0.05), transparent 50%);
   }
 }
 
