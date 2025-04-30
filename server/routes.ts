@@ -38,6 +38,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     res.json({ results });
   });
+  
+  // API endpoint برای دریافت اطلاعات آب و هوا
+  app.get('/api/weather', async (req, res) => {
+    try {
+      const { lat, lon, city } = req.query;
+      
+      // API Key برای سرویس Weather
+      const WEATHER_API_KEY = "7c7e2a35ab3f4efbb3a115226230811";
+      
+      let url: string;
+      
+      // اگر مختصات جغرافیایی داده شده باشد، از آنها استفاده می‌کنیم
+      if (lat && lon) {
+        url = `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${lat},${lon}&days=1&aqi=yes&alerts=no&lang=fa`;
+      } 
+      // اگر نام شهر داده شده باشد، از آن استفاده می‌کنیم
+      else if (city) {
+        url = `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${encodeURIComponent(String(city))}&days=1&aqi=yes&alerts=no&lang=fa`;
+      } else {
+        return res.status(400).json({ 
+          error: "حداقل یکی از پارامترهای لازم باید ارسال شود: مختصات جغرافیایی (lat, lon) یا نام شهر (city)"
+        });
+      }
+      
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        return res.status(response.status).json({
+          error: errorData.error?.message || "خطا در دریافت اطلاعات آب و هوا"
+        });
+      }
+      
+      const weatherData = await response.json();
+      
+      // بهینه‌سازی داده‌ها برای ارسال به کلاینت (کاهش حجم داده)
+      const optimizedData = {
+        location: {
+          name: weatherData.location.name,
+          country: weatherData.location.country,
+          lat: weatherData.location.lat,
+          lon: weatherData.location.lon,
+          localtime: weatherData.location.localtime,
+          tz_id: weatherData.location.tz_id,
+        },
+        current: {
+          temp_c: weatherData.current.temp_c,
+          condition: weatherData.current.condition,
+          humidity: weatherData.current.humidity,
+          feelslike_c: weatherData.current.feelslike_c,
+          wind_kph: weatherData.current.wind_kph,
+          wind_dir: weatherData.current.wind_dir,
+          uv: weatherData.current.uv,
+          air_quality: weatherData.current.air_quality,
+          is_day: weatherData.current.is_day,
+          last_updated: weatherData.current.last_updated,
+        },
+        forecast: weatherData.forecast ? {
+          forecastday: weatherData.forecast.forecastday.map((day: any) => ({
+            date: day.date,
+            day: {
+              maxtemp_c: day.day.maxtemp_c,
+              mintemp_c: day.day.mintemp_c,
+              condition: day.day.condition,
+            },
+            astro: {
+              sunrise: day.astro.sunrise,
+              sunset: day.astro.sunset,
+            }
+          }))
+        } : undefined
+      };
+      
+      res.json(optimizedData);
+    } catch (error: any) {
+      console.error("Weather API error:", error);
+      res.status(500).json({ 
+        error: "خطا در سرور هنگام دریافت اطلاعات آب و هوا" 
+      });
+    }
+  });
   // Set up session middleware
   app.use(session({
     cookie: { maxAge: 86400000 },
