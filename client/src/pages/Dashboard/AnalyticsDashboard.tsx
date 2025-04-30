@@ -1,27 +1,38 @@
 /**
  * @file AnalyticsDashboard.tsx
- * @description داشبورد تحلیلی پیشرفته مبتنی بر هوش مصنوعی
+ * @description داشبورد تحلیلی هوشمند
  * 
- * این کامپوننت داشبورد اصلی تحلیلی با اتصال به هوش مصنوعی را نمایش می‌دهد
- * و شامل ویژگی‌های مختلف تحلیلی، نمودارها و بینش‌های هوشمند است.
+ * این کامپوننت صفحه اصلی داشبورد تحلیلی هوشمند را نمایش می‌دهد
+ * که با استفاده از هوش مصنوعی، تحلیل‌های پیشرفته‌ای از داده‌های سلامت ارائه می‌کند.
  */
 
 import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/use-auth';
-import { apiRequest, queryClient } from '@/lib/queryClient';
-import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import { 
-  Activity, BrainCircuit, Calendar, Clock, BarChart3, 
-  Users, TrendingUp, LineChart, AlertTriangle, Heart,
-  BarChart, PieChart, Radar, Target, Zap, Award, 
-  BookOpen, ChevronDown, ChevronRight, Settings, Filter,
-  RefreshCcw, Download, Share2, Save, Menu,
-  Maximize2, Minimize2, Info
+  Calendar, 
+  Activity, 
+  LineChart, 
+  TrendingUp, 
+  Users, 
+  Brain,
+  Heart, 
+  Zap, 
+  Smile,
+  AlertTriangle,
+  Settings2,
+  Filter
 } from 'lucide-react';
+import { addDays, format, subDays, subMonths } from 'date-fns';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { Button } from '@/design-system/atoms/Button';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/design-system/atoms/Card';
+import { useToast } from '@/hooks/use-toast';
 
-// کامپوننت‌های داشبورد
+// کامپوننت‌ها
 import MetricsOverview from '@/components/dashboard/MetricsOverview';
 import HealthInsights from '@/components/dashboard/HealthInsights';
 import PerformanceChart from '@/components/dashboard/PerformanceChart';
@@ -33,441 +44,472 @@ import AIRecommendation from '@/components/dashboard/AIRecommendation';
 import SentimentAnalysis from '@/components/dashboard/SentimentAnalysis';
 import RiskAssessment from '@/components/dashboard/RiskAssessment';
 
-// کامپوننت‌های UI
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/design-system/atoms/Card';
-import { Button } from '@/design-system/atoms/Button';
-import { DataCard } from '@/design-system/molecules/DataCard';
-
-// تایپ‌های داده
-type TimeRange = '1d' | '7d' | '30d' | '90d' | '1y' | 'all';
-
-// پلتفرم تحلیلی پیشرفته
+// کامپوننت داشبورد تحلیلی هوشمند
 const AnalyticsDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, isLoading: isLoadingUser } = useAuth();
+  const [timeRange, setTimeRange] = useState<string>('week');
+  const [viewMode, setViewMode] = useState<string>('comprehensive');
+  const [aiEnabled, setAiEnabled] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<string>('overview');
   const { toast } = useToast();
-  const [timeRange, setTimeRange] = useState<TimeRange>('30d');
-  const [isAIGenerating, setIsAIGenerating] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    metrics: true,
-    health: true,
-    performance: true,
-    trends: true,
-    activities: true,
-    teams: true,
-    predictions: false,
-    risks: false,
+  
+  // دریافت داده‌های سلامت کاربر
+  const { data: healthData, isLoading: isLoadingHealthData } = useQuery({
+    queryKey: ['/api/health-metrics', user?.id, timeRange],
+    enabled: !!user?.id,
   });
   
-  // دریافت داده‌های مترکیس
-  const { data: healthMetrics, isLoading: isLoadingMetrics } = useQuery({
-    queryKey: ['/api/health-metrics'],
-    enabled: !!user,
+  // دریافت داده‌های فعالیت کاربر
+  const { data: activityData, isLoading: isLoadingActivityData } = useQuery({
+    queryKey: ['/api/activities', user?.id, timeRange],
+    enabled: !!user?.id,
   });
   
-  // دریافت چالش‌های کاربر
-  const { data: challenges, isLoading: isLoadingChallenges } = useQuery({
-    queryKey: ['/api/user-challenges'],
-    enabled: !!user,
+  // دریافت داده‌های چالش‌ها
+  const { data: challengesData, isLoading: isLoadingChallengesData } = useQuery({
+    queryKey: ['/api/challenges', user?.id],
+    enabled: !!user?.id,
   });
   
-  // دریافت بینش‌های سلامت با هوش مصنوعی
-  const { data: aiHealthInsights, isLoading: isLoadingHealthInsights, refetch: refetchHealthInsights } = useQuery({
-    queryKey: ['/api/ai/health-insights'],
-    enabled: false, // به صورت دستی اجرا می‌شود
-  });
-  
-  // درخواست تحلیل توسط هوش مصنوعی
-  const analyzeWithAIMutation = useMutation({
-    mutationFn: async (data: any) => {
-      const res = await apiRequest("POST", "/api/ai/analyze", data);
-      return await res.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: "تحلیل انجام شد",
-        description: "نتایج تحلیل با هوش مصنوعی با موفقیت دریافت شد",
-      });
-      setIsAIGenerating(false);
-    },
-    onError: (error: any) => {
-      toast({
-        title: "خطا در تحلیل",
-        description: error.message || "خطایی در تحلیل با هوش مصنوعی رخ داد",
-        variant: "destructive",
-      });
-      setIsAIGenerating(false);
-    }
-  });
-  
-  // درخواست پیش‌بینی روند توسط هوش مصنوعی
-  const predictTrendsMutation = useMutation({
-    mutationFn: async (data: any) => {
-      const res = await apiRequest("POST", "/api/ai/predict-trends", data);
-      return await res.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: "پیش‌بینی روند انجام شد",
-        description: "نتایج پیش‌بینی روند با هوش مصنوعی با موفقیت دریافت شد",
-      });
-    },
-    onError: (error: any) => {
-      toast({
-        title: "خطا در پیش‌بینی روند",
-        description: error.message || "خطایی در پیش‌بینی روند با هوش مصنوعی رخ داد",
-        variant: "destructive",
-      });
-    }
-  });
-  
-  // دریافت بینش‌های سلامت
-  const generateHealthInsights = async () => {
-    setIsAIGenerating(true);
-    try {
-      await refetchHealthInsights();
-    } catch (error) {
-      toast({
-        title: "خطا",
-        description: "خطایی در دریافت بینش‌های سلامت رخ داد",
-        variant: "destructive",
-      });
-      setIsAIGenerating(false);
+  // محاسبه تاریخ‌ها برای فیلتر زمانی
+  const getDateRangeLabel = () => {
+    const today = new Date();
+    switch(timeRange) {
+      case 'day':
+        return `امروز (${format(today, 'yyyy/MM/dd')})`;
+      case 'week':
+        return `هفته اخیر (${format(subDays(today, 6), 'yyyy/MM/dd')} تا ${format(today, 'yyyy/MM/dd')})`;
+      case 'month':
+        return `ماه اخیر (${format(subDays(today, 29), 'yyyy/MM/dd')} تا ${format(today, 'yyyy/MM/dd')})`;
+      case 'quarter':
+        return `سه ماه اخیر (${format(subMonths(today, 3), 'yyyy/MM/dd')} تا ${format(today, 'yyyy/MM/dd')})`;
+      default:
+        return '';
     }
   };
   
-  // پیش‌بینی روند داده‌ها
-  const generateTrendPrediction = async (data: any) => {
-    setIsAIGenerating(true);
-    try {
-      await predictTrendsMutation.mutateAsync({
-        data: data,
-        timeframe: 'next quarter',
-        options: {
-          temperature: 0.4,
-          format: 'json'
-        }
+  // تغییر حالت نمایش در صورت عدم وجود کلید OpenAI
+  useEffect(() => {
+    if (!aiEnabled) {
+      toast({
+        title: 'هوش مصنوعی غیرفعال شد',
+        description: 'تحلیل‌های مبتنی بر هوش مصنوعی در دسترس نیستند',
       });
-    } catch (error) {
-      setIsAIGenerating(false);
     }
-  };
+  }, [aiEnabled, toast]);
   
-  // تغییر وضعیت بخش‌های گسترش‌یافته
-  const toggleSection = (section: string) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-  
-  // داده‌های نمایشی خلاصه
-  const summaryData = [
-    { 
-      title: "امتیاز سلامت", 
-      value: 87, 
-      trend: { value: 3.2, direction: 'up', timeframe: 'هفتگی' },
-      icon: <Heart className="h-5 w-5 text-tiffany" />,
-      state: "positive",
-    },
-    { 
-      title: "تکمیل چالش‌ها", 
-      value: "68%", 
-      trend: { value: 5.7, direction: 'up', timeframe: 'ماهانه' },
-      icon: <Award className="h-5 w-5 text-amber-500" />,
-      state: "positive",
-    },
-    { 
-      title: "فعالیت روزانه", 
-      value: "7.3", 
-      trend: { value: 1.5, direction: 'down', timeframe: 'هفتگی' },
-      icon: <Activity className="h-5 w-5 text-error-500" />,
-      state: "negative",
-    },
-    { 
-      title: "سطح استرس", 
-      value: "42%", 
-      trend: { value: 8.1, direction: 'down', timeframe: 'ماهانه' },
-      icon: <Zap className="h-5 w-5 text-green-500" />,
-      state: "positive",
-    },
-  ];
+  // وضعیت بارگذاری
+  const isLoading = isLoadingUser || isLoadingHealthData || isLoadingActivityData || isLoadingChallengesData;
   
   return (
-    <div className="flex flex-col w-full bg-dmr-background p-4 md:p-6 lg:p-8 max-w-[1600px] mx-auto">
-      {/* هدر داشبورد */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
+    <div className="p-4 md:p-6 space-y-6">
+      {/* هدر صفحه */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold flex items-center">
-            <BrainCircuit className="mr-2 h-8 w-8 text-primary-600" />
+          <motion.h1 
+            className="text-2xl md:text-3xl font-bold"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             داشبورد تحلیلی هوشمند
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            تحلیل‌های پیشرفته و بینش‌های هوشمند مبتنی بر هوش مصنوعی
-          </p>
+          </motion.h1>
+          <motion.p 
+            className="text-muted-foreground mt-1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            {getDateRangeLabel()}
+          </motion.p>
         </div>
         
-        <div className="flex items-center gap-2">
-          {/* فیلتر زمانی */}
-          <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm flex items-center p-1">
-            {['1d', '7d', '30d', '90d', '1y', 'all'].map((range) => (
-              <button
-                key={range}
-                onClick={() => setTimeRange(range as TimeRange)}
-                className={`px-3 py-1.5 text-xs rounded-md ${
-                  timeRange === range 
-                    ? 'bg-primary-500 text-white' 
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
+        <div className="flex flex-wrap items-center gap-3">
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger className="w-[160px]">
+              <Calendar className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="بازه زمانی" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="day">امروز</SelectItem>
+              <SelectItem value="week">هفته اخیر</SelectItem>
+              <SelectItem value="month">ماه اخیر</SelectItem>
+              <SelectItem value="quarter">سه ماه اخیر</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Select value={viewMode} onValueChange={setViewMode}>
+            <SelectTrigger className="w-[180px]">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="حالت نمایش" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="comprehensive">نمای جامع</SelectItem>
+              <SelectItem value="performance">تمرکز بر عملکرد</SelectItem>
+              <SelectItem value="health">تمرکز بر سلامت</SelectItem>
+              <SelectItem value="prediction">تمرکز بر پیش‌بینی</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <div className="flex items-center space-x-2 rtl:space-x-reverse">
+            <Switch
+              checked={aiEnabled}
+              onCheckedChange={setAiEnabled}
+              id="ai-mode"
+            />
+            <label htmlFor="ai-mode" className="text-sm cursor-pointer">
+              تحلیل هوشمند
+            </label>
+          </div>
+          
+          <Button 
+            variant="outline"
+            size="sm"
+            leftIcon={<Settings2 className="h-4 w-4" />}
+          >
+            تنظیمات
+          </Button>
+        </div>
+      </div>
+      
+      {/* تب‌های داشبورد */}
+      <Tabs
+        defaultValue="overview"
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-4"
+      >
+        <TabsList className="grid grid-cols-5 md:w-fit">
+          <TabsTrigger value="overview" className="flex items-center gap-1">
+            <Activity className="h-4 w-4" />
+            <span className="hidden sm:inline">نمای کلی</span>
+          </TabsTrigger>
+          <TabsTrigger value="insights" className="flex items-center gap-1">
+            <Brain className="h-4 w-4" />
+            <span className="hidden sm:inline">بینش‌ها</span>
+          </TabsTrigger>
+          <TabsTrigger value="performance" className="flex items-center gap-1">
+            <TrendingUp className="h-4 w-4" />
+            <span className="hidden sm:inline">عملکرد</span>
+          </TabsTrigger>
+          <TabsTrigger value="team" className="flex items-center gap-1">
+            <Users className="h-4 w-4" />
+            <span className="hidden sm:inline">مقایسه تیمی</span>
+          </TabsTrigger>
+          <TabsTrigger value="risk" className="flex items-center gap-1">
+            <AlertTriangle className="h-4 w-4" />
+            <span className="hidden sm:inline">ارزیابی ریسک</span>
+          </TabsTrigger>
+        </TabsList>
+        
+        {/* نمای کلی */}
+        <TabsContent value="overview" className="space-y-6">
+          <MetricsOverview 
+            data={healthData || []} 
+            timeRange={timeRange}
+            isLoading={isLoading}
+          />
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+              <AnalyticsWidget
+                title="روند فعالیت‌های اخیر"
+                icon={<LineChart className="h-5 w-5 text-primary-500" />}
+                onRefresh={() => {}}
+                onExpand={() => setActiveTab('performance')}
               >
-                {range === '1d' ? 'امروز' : 
-                 range === '7d' ? '۱ هفته' : 
-                 range === '30d' ? '۱ ماه' : 
-                 range === '90d' ? '۳ ماه' : 
-                 range === '1y' ? '۱ سال' : 'همه'}
-              </button>
-            ))}
-          </div>
-          
-          <Button 
-            variant="outline" 
-            size="sm"
-            leftIcon={<RefreshCcw className="h-4 w-4" />}
-          >
-            بروزرسانی
-          </Button>
-          
-          <Button 
-            variant="primary" 
-            size="sm"
-            leftIcon={<Filter className="h-4 w-4" />}
-          >
-            فیلترها
-          </Button>
-        </div>
-      </div>
-      
-      {/* کارت‌های خلاصه */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {summaryData.map((item, index) => (
-          <DataCard
-            key={index}
-            title={item.title}
-            value={item.value}
-            icon={item.icon}
-            trend={item.trend}
-            state={item.state as any}
-            layout="simple"
-          />
-        ))}
-      </div>
-      
-      {/* بخش بینش‌های هوش مصنوعی */}
-      <Card className="mb-6 border-2 border-tiffany/20 bg-gradient-to-br from-white to-tiffany/5 dark:from-gray-900 dark:to-tiffany/10">
-        <CardHeader className="pb-2">
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-xl flex items-center">
-              <BrainCircuit className="mr-2 h-6 w-6 text-tiffany" />
-              بینش‌های هوشمند با هوش مصنوعی
-            </CardTitle>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<RefreshCcw className="h-4 w-4" />}
-              onClick={generateHealthInsights}
-              disabled={isAIGenerating}
-            >
-              {isAIGenerating ? 'در حال تحلیل...' : 'تحلیل جدید'}
-            </Button>
-          </div>
-          <CardDescription>
-            بینش‌های تولید شده توسط هوش مصنوعی بر اساس داده‌های سلامت شما
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent>
-          <AIRecommendation 
-            insights={aiHealthInsights?.content || null}
-            isLoading={isLoadingHealthInsights || isAIGenerating}
-          />
-        </CardContent>
-      </Card>
-      
-      {/* بخش اصلی داشبورد با ویژگی‌های متنوع */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* ستون اول */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* چارت عملکرد */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-lg flex items-center cursor-pointer" onClick={() => toggleSection('performance')}>
-                  {expandedSections.performance ? <ChevronDown className="h-5 w-5 mr-1" /> : <ChevronRight className="h-5 w-5 mr-1" />}
-                  <BarChart3 className="h-5 w-5 mr-2 text-primary-600" />
-                  تحلیل عملکرد سلامت
-                </CardTitle>
-                
-                <div className="flex gap-1">
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Download className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Info className="h-4 w-4" />
-                  </Button>
+                <div className="h-64">
+                  <PerformanceChart 
+                    data={activityData || []} 
+                    isLoading={isLoading}
+                    simplified={true}
+                  />
                 </div>
-              </div>
-            </CardHeader>
+              </AnalyticsWidget>
+            </div>
             
-            {expandedSections.performance && (
-              <CardContent>
-                <PerformanceChart 
-                  data={healthMetrics || []} 
-                  timeRange={timeRange}
-                  isLoading={isLoadingMetrics}
-                />
-              </CardContent>
-            )}
-          </Card>
+            <div>
+              <AnalyticsWidget
+                title="پیش‌بینی روندها"
+                icon={<TrendingUp className="h-5 w-5 text-indigo-500" />}
+                onRefresh={() => {}}
+                onExpand={() => {}}
+                footerAction={{
+                  label: "مشاهده جزئیات",
+                  onClick: () => setActiveTab('insights')
+                }}
+              >
+                {aiEnabled ? (
+                  <TrendPrediction 
+                    data={healthData || []} 
+                    isLoading={isLoading}
+                    simplified={true}
+                  />
+                ) : (
+                  <div className="h-52 flex items-center justify-center flex-col text-center p-4">
+                    <Brain className="h-12 w-12 text-muted-foreground mb-2 opacity-30" />
+                    <p className="text-muted-foreground mb-2">تحلیل هوشمند غیرفعال است</p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setAiEnabled(true)}
+                    >
+                      فعال‌سازی
+                    </Button>
+                  </div>
+                )}
+              </AnalyticsWidget>
+            </div>
+          </div>
           
-          {/* پیش‌بینی روند */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-lg flex items-center cursor-pointer" onClick={() => toggleSection('trends')}>
-                  {expandedSections.trends ? <ChevronDown className="h-5 w-5 mr-1" /> : <ChevronRight className="h-5 w-5 mr-1" />}
-                  <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
-                  پیش‌بینی روندها
-                </CardTitle>
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => generateTrendPrediction(healthMetrics || [])}
-                  disabled={predictTrendsMutation.isPending}
-                >
-                  {predictTrendsMutation.isPending ? 'در حال پیش‌بینی...' : 'پیش‌بینی جدید'}
-                </Button>
-              </div>
-            </CardHeader>
-            
-            {expandedSections.trends && (
-              <CardContent>
-                <TrendPrediction
-                  data={predictTrendsMutation.data?.content || null}
-                  isLoading={predictTrendsMutation.isPending}
-                />
-              </CardContent>
-            )}
-          </Card>
-          
-          {/* تحلیل ریسک */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-lg flex items-center cursor-pointer" onClick={() => toggleSection('risks')}>
-                  {expandedSections.risks ? <ChevronDown className="h-5 w-5 mr-1" /> : <ChevronRight className="h-5 w-5 mr-1" />}
-                  <AlertTriangle className="h-5 w-5 mr-2 text-warning-500" />
-                  ارزیابی ریسک
-                </CardTitle>
-              </div>
-            </CardHeader>
-            
-            {expandedSections.risks && (
-              <CardContent>
-                <RiskAssessment
-                  data={healthMetrics || []}
-                  isLoading={isLoadingMetrics}
-                />
-              </CardContent>
-            )}
-          </Card>
-        </div>
-        
-        {/* ستون دوم */}
-        <div className="space-y-6">
-          {/* بینش‌های سلامت */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-lg flex items-center cursor-pointer" onClick={() => toggleSection('health')}>
-                  {expandedSections.health ? <ChevronDown className="h-5 w-5 mr-1" /> : <ChevronRight className="h-5 w-5 mr-1" />}
-                  <Heart className="h-5 w-5 mr-2 text-red-500" />
-                  بینش‌های سلامت
-                </CardTitle>
-              </div>
-            </CardHeader>
-            
-            {expandedSections.health && (
-              <CardContent>
-                <HealthInsights 
-                  data={healthMetrics || []} 
-                  isLoading={isLoadingMetrics}
-                />
-              </CardContent>
-            )}
-          </Card>
-          
-          {/* فید فعالیت‌ها */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-lg flex items-center cursor-pointer" onClick={() => toggleSection('activities')}>
-                  {expandedSections.activities ? <ChevronDown className="h-5 w-5 mr-1" /> : <ChevronRight className="h-5 w-5 mr-1" />}
-                  <Clock className="h-5 w-5 mr-2 text-blue-500" />
-                  فعالیت‌های اخیر
-                </CardTitle>
-              </div>
-            </CardHeader>
-            
-            {expandedSections.activities && (
-              <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+              <AnalyticsWidget
+                title="فعالیت‌های اخیر"
+                icon={<Zap className="h-5 w-5 text-amber-500" />}
+                onRefresh={() => {}}
+                onExpand={() => {}}
+              >
                 <ActivityFeed 
-                  data={challenges || []} 
-                  isLoading={isLoadingChallenges}
+                  data={activityData || []} 
+                  isLoading={isLoading}
+                  limit={5}
                 />
-              </CardContent>
-            )}
-          </Card>
-          
-          {/* مقایسه تیمی */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-lg flex items-center cursor-pointer" onClick={() => toggleSection('teams')}>
-                  {expandedSections.teams ? <ChevronDown className="h-5 w-5 mr-1" /> : <ChevronRight className="h-5 w-5 mr-1" />}
-                  <Users className="h-5 w-5 mr-2 text-purple-500" />
-                  مقایسه با تیم
-                </CardTitle>
-              </div>
-            </CardHeader>
+              </AnalyticsWidget>
+            </div>
             
-            {expandedSections.teams && (
-              <CardContent>
-                <TeamComparison 
-                  userId={user?.id}
-                  isLoading={false}
-                />
-              </CardContent>
-            )}
-          </Card>
-          
-          {/* تحلیل احساسات */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-lg flex items-center">
-                  <Radar className="h-5 w-5 mr-2 text-amber-500" />
-                  تحلیل احساسات
-                </CardTitle>
-              </div>
-            </CardHeader>
+            <div>
+              <AnalyticsWidget
+                title="تحلیل احساسات"
+                subtitle="ارزیابی وضعیت روحی"
+                icon={<Smile className="h-5 w-5 text-green-500" />}
+                onRefresh={() => {}}
+                onExpand={() => {}}
+                value={78}
+                previousValue={65}
+                change={13}
+                timeframe="نسبت به 30 روز قبل"
+              >
+                {aiEnabled ? (
+                  <SentimentAnalysis
+                    data={healthData || []} 
+                    isLoading={isLoading}
+                    simplified={true}
+                  />
+                ) : (
+                  <div className="h-32 flex items-center justify-center flex-col text-center">
+                    <p className="text-muted-foreground text-sm">تحلیل هوشمند غیرفعال است</p>
+                  </div>
+                )}
+              </AnalyticsWidget>
+            </div>
+          </div>
+        </TabsContent>
+        
+        {/* بینش‌ها */}
+        <TabsContent value="insights" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Brain className="h-5 w-5 text-purple-500 mr-2" />
+                    بینش‌های هوشمند
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {aiEnabled ? (
+                    <AIRecommendation
+                      data={healthData || []} 
+                      isLoading={isLoading}
+                    />
+                  ) : (
+                    <div className="h-64 flex items-center justify-center flex-col text-center">
+                      <Brain className="h-16 w-16 text-muted-foreground mb-3 opacity-30" />
+                      <p className="text-lg text-muted-foreground mb-2">تحلیل هوشمند غیرفعال است</p>
+                      <p className="text-muted-foreground mb-4 max-w-md">
+                        با فعال‌سازی تحلیل هوشمند، هوش مصنوعی داده‌های سلامت شما را بررسی کرده و 
+                        توصیه‌های شخصی‌سازی شده ارائه می‌دهد.
+                      </p>
+                      <Button 
+                        variant="primary"
+                        onClick={() => setAiEnabled(true)}
+                      >
+                        فعال‌سازی تحلیل هوشمند
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <TrendingUp className="h-5 w-5 text-indigo-500 mr-2" />
+                    پیش‌بینی روندها
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {aiEnabled ? (
+                    <TrendPrediction
+                      data={healthData || []} 
+                      isLoading={isLoading}
+                      simplified={false}
+                    />
+                  ) : (
+                    <div className="h-64 flex items-center justify-center">
+                      <p className="text-muted-foreground">تحلیل هوشمند غیرفعال است</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
             
-            <CardContent>
-              <SentimentAnalysis />
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Smile className="h-5 w-5 text-green-500 mr-2" />
+                    تحلیل احساسات
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {aiEnabled ? (
+                    <SentimentAnalysis
+                      data={healthData || []} 
+                      isLoading={isLoading}
+                      simplified={false}
+                    />
+                  ) : (
+                    <div className="h-64 flex items-center justify-center">
+                      <p className="text-muted-foreground">تحلیل هوشمند غیرفعال است</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Heart className="h-5 w-5 text-red-500 mr-2" />
+                    سلامت قلبی-عروقی
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <HealthInsights
+                    data={healthData || []} 
+                    isLoading={isLoading}
+                    type="heart"
+                  />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+        
+        {/* عملکرد */}
+        <TabsContent value="performance" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Activity className="h-5 w-5 text-blue-500 mr-2" />
+                تحلیل عملکرد
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <PerformanceChart
+                data={activityData || []} 
+                isLoading={isLoading}
+                simplified={false}
+              />
             </CardContent>
           </Card>
-        </div>
-      </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Calendar className="h-5 w-5 text-green-500 mr-2" />
+                  فعالیت‌های اخیر
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ActivityFeed
+                  data={activityData || []} 
+                  isLoading={isLoading}
+                  limit={10}
+                />
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <TrendingUp className="h-5 w-5 text-purple-500 mr-2" />
+                  روند پیشرفت
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* دیتا نداریم، فعلا خالی باشد */}
+                <div className="min-h-[300px]"></div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        {/* مقایسه تیمی */}
+        <TabsContent value="team">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Users className="h-5 w-5 text-blue-500 mr-2" />
+                مقایسه با تیم
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TeamComparison
+                userId={user?.id} 
+                isLoading={isLoading}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* ارزیابی ریسک */}
+        <TabsContent value="risk">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <AlertTriangle className="h-5 w-5 text-warning-500 mr-2" />
+                ارزیابی ریسک سلامت
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {aiEnabled ? (
+                <RiskAssessment
+                  data={healthData || []} 
+                  isLoading={isLoading}
+                />
+              ) : (
+                <div className="min-h-[400px] flex items-center justify-center flex-col text-center p-6">
+                  <AlertTriangle className="h-16 w-16 text-muted-foreground mb-3 opacity-30" />
+                  <p className="text-lg text-muted-foreground mb-2">ارزیابی ریسک غیرفعال است</p>
+                  <p className="text-muted-foreground mb-4 max-w-md">
+                    با فعال‌سازی تحلیل هوشمند، هوش مصنوعی داده‌های سلامت شما را بررسی کرده و 
+                    ریسک‌های احتمالی را شناسایی می‌کند.
+                  </p>
+                  <Button 
+                    variant="primary"
+                    onClick={() => setAiEnabled(true)}
+                  >
+                    فعال‌سازی ارزیابی ریسک
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
