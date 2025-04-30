@@ -109,7 +109,7 @@ const buttonVariants = cva(
 
 // اکسپورت کردن تایپ تنظیمات دکمه برای استفاده در جاهای دیگر
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'>,
     VariantProps<typeof buttonVariants> {
   // پراپس اضافی برای دکمه
   leftIcon?: React.ReactNode;
@@ -165,8 +165,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           shadowClasses[elevation]
         )}
         ref={ref}
-        disabled={disabled || isLoading}
-        aria-disabled={disabled || isLoading}
+        disabled={disabled || isLoading ? true : undefined}
+        aria-disabled={disabled || isLoading ? true : undefined}
         data-state={
           isLoading ? "loading" : disabled ? "disabled" : selected ? "selected" : "idle"
         }
