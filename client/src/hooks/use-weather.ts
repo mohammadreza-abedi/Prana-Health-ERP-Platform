@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
-import { toast } from "@/components/ui/use-toast";
+import { useState } from "react";
 
-// تعریف مدل داده برای اطلاعات آب و هوا
 export interface WeatherData {
   location: {
     name: string;
@@ -50,13 +48,6 @@ export function useWeather(): UseWeatherReturn {
   const [data, setData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<WeatherError | null>(null);
-  
-  // API رایگان هواشناسی - موارد اصلی:
-  // - دریافت اطلاعات هواشناسی شهرهای مختلف
-  // - قابلیت دریافت پیش‌بینی
-  // - آلودگی هوا
-  const API_KEY = "e99e9a9b8b3e4153aad181352240804"; // رایگان و محدود به 1 میلیون درخواست ماهانه
-  const BASE_URL = "https://api.weatherapi.com/v1";
 
   /**
    * دریافت اطلاعات آب و هوا برای یک شهر مشخص
@@ -64,36 +55,27 @@ export function useWeather(): UseWeatherReturn {
   const getWeatherByCity = async (city: string): Promise<void> => {
     setLoading(true);
     setError(null);
-    
+
     try {
-      const response = await fetch(
-        `${BASE_URL}/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}&aqi=yes`,
-        { method: "GET" }
-      );
-      
+      // استفاده از API رایگان
+      const apiKey = "7c7e2a35ab3f4efbb3a115226230811"; // کلید رایگان برای استفاده عمومی - در نسخه تولید از محیط متغیر استفاده کنید
+      const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(city)}&aqi=yes&lang=fa`;
+
+      const response = await fetch(url);
+
       if (!response.ok) {
-        throw new Error(`خطا در دریافت اطلاعات: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || "خطا در دریافت اطلاعات آب و هوا");
       }
-      
+
       const weatherData: WeatherData = await response.json();
       setData(weatherData);
-      
-      // نمایش نوتیفیکیشن موفقیت
-      toast({
-        title: "اطلاعات آب و هوا",
-        description: `دمای ${weatherData.location.name}: ${weatherData.current.temp_c}°C`,
-        variant: "success"
-      });
+      setError(null);
     } catch (err: any) {
-      const errorMessage = err.message || "خطا در دریافت اطلاعات آب و هوا";
-      setError({ message: errorMessage });
-      
-      // نمایش نوتیفیکیشن خطا
-      toast({
-        title: "خطای دریافت اطلاعات",
-        description: errorMessage,
-        variant: "destructive"
+      setError({
+        message: err.message || "خطا در دریافت اطلاعات آب و هوا. لطفاً مجدداً تلاش کنید."
       });
+      setData(null);
     } finally {
       setLoading(false);
     }

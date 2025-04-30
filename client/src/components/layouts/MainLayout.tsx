@@ -48,6 +48,9 @@ import {
   Sparkles,
   Languages,
   ChevronDown,
+  Cloud,
+  CloudSun,
+  Thermometer,
   Bookmark,
   ArrowLeftRight,
   CircleUser,
@@ -402,6 +405,58 @@ export default function MainLayout({ children }: MainLayoutProps) {
                           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-400/5 to-white/30 dark:from-green-500/10 dark:to-slate-800/50"></div>
                         </div>
                       )}
+                    </div>
+                  </Link>
+                </li>
+                
+                {/* دکمه اطلاعات آب و هوا */}
+                <li>
+                  <Link href="/weather-info">
+                    <div className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 relative group
+                      ${location === '/weather-info' 
+                        ? "bg-gradient-to-l from-blue-500/90 to-sky-400 text-white shadow-lg shadow-blue-500/20 dark:shadow-blue-500/10 ring-1 ring-white/10"
+                        : "hover:bg-white dark:hover:bg-slate-800/80 hover:shadow-md hover:scale-[1.02] dark:hover:shadow-black/5"
+                      }`}
+                    >
+                      <div className={`relative z-10 transition-transform duration-300 group-hover:scale-110 ${
+                        location === '/weather-info' ? "text-white" : "text-slate-500 dark:text-slate-400"
+                      }`}>
+                        <CloudSun className="h-5 w-5" />
+                      </div>
+                      {isExpanded && (
+                        <motion.span
+                          initial={{ opacity: 0, x: -5 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -5 }}
+                          transition={{ duration: 0.3 }}
+                          className={`mr-3 font-medium tracking-wide ${location === '/weather-info' ? "text-white" : "group-hover:text-blue-500 dark:group-hover:text-blue-300"}`}
+                        >
+                          اطلاعات آب و هوا
+                        </motion.span>
+                      )}
+                      {location === '/weather-info' && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-600 to-sky-400 overflow-hidden"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px]"></div>
+                        </motion.div>
+                      )}
+                      {location !== '/weather-info' && (
+                        <div 
+                          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-400/5 to-white/30 dark:from-blue-500/10 dark:to-slate-800/50"></div>
+                        </div>
+                      )}
+                      
+                      {/* نشانگر ویژگی جدید */}
+                      <div className="absolute -left-1 top-1 bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-md shadow-md">
+                        جدید
+                      </div>
                     </div>
                   </Link>
                 </li>
