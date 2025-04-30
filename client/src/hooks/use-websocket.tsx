@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, createContext, useContext, ReactNode } from 'react';
-import { useAuth } from '@/lib/useAuth';
+import { useAuth } from '../lib/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 // Types for websocket messages
@@ -146,7 +146,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         toast({
           title: message.sender || 'سیستم',
           description: message.message,
-          variant: "info"
+          variant: "default"
         });
         break;
         
@@ -168,7 +168,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           toast({
             title: 'کاربر آنلاین',
             description: `${message.username} اکنون آنلاین است`,
-            variant: "success"
+            variant: "default"
           });
         }
         break;

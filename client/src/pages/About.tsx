@@ -17,7 +17,6 @@ import {
   LightbulbIcon,
   Medal,
   MessageSquare,
-  MilitaryMedal,
   Shield,
   SparklesIcon, 
   Target, 
@@ -28,7 +27,8 @@ import {
   LineChart,
   Smartphone,
   Brain,
-  HelpingHand
+  Lock,
+  Mail
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
