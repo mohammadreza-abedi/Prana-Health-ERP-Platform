@@ -25,17 +25,17 @@ import {
   Bar
 } from 'recharts';
 import { 
-  Activity, AlertTriangle, AlertCircle, Battery, BatteryFull, BatteryMedium, BatteryLow,
+  Activity, ActivitySquare, AlertTriangle, AlertCircle, Battery, BatteryFull, BatteryMedium, BatteryLow,
   Clock, Calendar, ChevronDown, Circle, CircleCheck, CircleDashed, CircleDot, 
-  Cloud, CloudSun, CloudRain, Compass, Cpu, Crosshair, Database, Diamond, 
-  FileLineChart, Flame, GitBranch, GitGraph, 
+  Cloud, CloudSun, CloudRain, Compass, Cpu, Crosshair, Database, Diamond, Droplets,
+  FileLineChart, Flame, GitBranch, GitGraph, Moon,
   HardDrive, Heart, HelpCircle, HelpingHand, Info, Laptop, 
   Lock, LockKeyhole, Maximize, Menu, MessageSquare, Minimize, MonitorSmartphone,
   Network, PanelTopOpen, PlayCircle, Plug, PlusSquare, Power, 
   RefreshCw, Save, Settings, Shield, ShieldCheck, ShieldAlert, Signal, 
   Star, SunMedium, Sunrise, Sunset, StopCircle, Target, 
   Terminal, Thermometer, ToggleLeft, ToggleRight, TrendingUp, Users, Wifi, Zap, 
-  Bell, Search, Layers, X, XCircle, ArrowUpRight,
+  Bell, Search, Layers, X, XCircle, ArrowUpRight, UserCircle, User2 as User,
   LineChart as LucideLineChart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -50,6 +50,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 /**
  * داشبورد فضایی پیشرفته با گلسمورفیسم و نورپردازی تعاملی
@@ -150,9 +157,432 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* نوار بالایی داشبورد با استایل پنل فضاپیمایی */}
-      <div className="spacecraft-panel py-4 px-6 rounded-2xl mb-6 relative overflow-hidden">
+    <div className="dashboard-container">
+      {/* سایدبار راست */}
+      <div className="dashboard-sidebar">
+        <div className="flex items-center justify-center gap-2 p-3 mb-4">
+          <div className="w-9 h-9 rounded-xl bg-tiffany/20 flex items-center justify-center">
+            <ShieldCheck className="h-5 w-5 text-tiffany" />
+          </div>
+          <div className="font-bold text-lg text-white">پرانا</div>
+        </div>
+        
+        {/* منوی اصلی */}
+        <nav className="space-y-2 flex-1 px-2">
+          {mainTabs.map((item) => (
+            <button 
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`w-full flex items-center p-2.5 rounded-lg transition-all text-right ${
+                activeTab === item.id 
+                  ? 'bg-tiffany/10 text-tiffany font-medium'
+                  : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-200'
+              }`}
+            >
+              <div className={`w-8 h-8 rounded-lg ${activeTab === item.id ? 'bg-tiffany/20' : 'bg-slate-800/50'} flex items-center justify-center ml-3`}>
+                {item.icon}
+              </div>
+              <span>{item.label}</span>
+              {activeTab === item.id && <div className="w-1 h-5 bg-tiffany rounded-full mr-auto"></div>}
+            </button>
+          ))}
+        </nav>
+        
+        {/* دکمه راهنمایی */}
+        <div className="p-3 mt-4">
+          <Button variant="outline" className="w-full text-sm py-5 bg-slate-800/50 border-slate-700/50 text-slate-400 hover:text-white">
+            <HelpingHand className="w-4 h-4 ml-2" />
+            راهنمای سیستم
+          </Button>
+        </div>
+      </div>
+      
+      {/* محتوای اصلی */}
+      <div className="dashboard-content">
+        {/* هدر */}
+        <header className="dashboard-navbar mb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <h1 className="text-lg font-bold text-white ml-3">سیستم پایش سلامت سازمانی</h1>
+              <div className="flex items-center bg-tiffany/10 px-2 py-1 rounded-lg border border-tiffany/20">
+                <CircleCheck className="h-3 w-3 text-tiffany ml-1" />
+                <span className="text-xs text-tiffany font-medium">آنلاین</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="flex items-center bg-slate-800/40 px-2 py-1 rounded-lg border border-slate-700/30 ml-2">
+                <Calendar className="w-3.5 h-3.5 ml-1 text-amber-400" /> 
+                <span className="text-sm text-amber-300">{formattedDate}</span>
+              </div>
+              
+              <div className="flex items-center bg-slate-800/40 px-2 py-1 rounded-lg border border-slate-700/30">
+                <Clock className="w-3.5 h-3.5 ml-1 text-sky-400" />
+                <span className="text-sm text-sky-300">{new Date().toLocaleTimeString('fa-IR')}</span>
+              </div>
+              
+              <div className="relative">
+                <button className="p-2 bg-slate-800/50 rounded-lg relative">
+                  <Bell className="w-5 h-5 text-slate-400" />
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
+                    2
+                  </span>
+                </button>
+              </div>
+              
+              <div className="bg-gradient-to-r from-slate-700/50 to-slate-800/50 px-3 py-1.5 rounded-lg flex items-center">
+                <div className="w-7 h-7 rounded-lg bg-tiffany/20 flex items-center justify-center ml-2">
+                  <User className="h-4 w-4 text-tiffany" />
+                </div>
+                <div>
+                  <div className="text-xs text-slate-300">مهندس حامد رضاییان</div>
+                  <div className="text-[10px] text-slate-500">مدیر بهداشت، ایمنی و محیط زیست</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+        
+        {/* نوار وضعیت */}
+        <div className="spacecraft-panel py-2 px-4 rounded-xl mb-4 flex overflow-x-auto hide-scrollbar">
+          <div className="spacecraft-mini-stat ml-3">
+            <div className="stat-icon health">
+              <Heart className="w-3 h-3" />
+            </div>
+            <span className="stat-value">۹۴٪</span>
+            <span className="stat-label">سلامت</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat ml-3">
+            <div className="stat-icon cpu">
+              <Cpu className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{cpuUsage}٪</span>
+            <span className="stat-label">CPU</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat ml-3">
+            <div className="stat-icon memory">
+              <Database className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{memoryUsage}٪</span>
+            <span className="stat-label">حافظه</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat ml-3">
+            <div className="stat-icon network">
+              <Wifi className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{networkStatus}٪</span>
+            <span className="stat-label">شبکه</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat ml-3">
+            <div className="stat-icon power">
+              <Zap className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{powerLevel}٪</span>
+            <span className="stat-label">انرژی</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat ml-3">
+            <div className="stat-icon temp">
+              <Thermometer className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{envTemperature}°C</span>
+            <span className="stat-label">دما</span>
+          </div>
+          
+          <div className="spacecraft-mini-stat ml-3">
+            <div className="stat-icon security">
+              <Lock className="w-3 h-3" />
+            </div>
+            <span className="stat-value">{securityLevel}٪</span>
+            <span className="stat-label">امنیت</span>
+          </div>
+        </div>
+        
+        {/* نوار فیلترهای اصلی */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            {['سلامت عمومی', 'بهداشت کار', 'ایمنی', 'HSE', 'محیط کار'].map((filter, index) => (
+              <button 
+                key={index}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium ${
+                  index === 0 
+                    ? 'bg-tiffany/10 text-tiffany border border-tiffany/20' 
+                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+                }`}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <div className="relative w-64">
+              <input 
+                type="text" 
+                placeholder="جستجو در سیستم..." 
+                className="w-full bg-slate-800/50 py-2 px-4 pl-10 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-tiffany focus:border-tiffany/30 border border-slate-700/60 text-tiffany-light"
+              />
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-tiffany/70" />
+            </div>
+            
+            <Button variant="outline" size="sm" className="text-xs py-1.5 bg-slate-800/60 border-slate-700/50 text-slate-300">
+              <Settings className="w-3.5 h-3.5 ml-1.5" />
+              تنظیمات
+            </Button>
+          </div>
+        </div>
+        
+        {/* گرید اصلی داشبورد */}
+        <div className="grid grid-cols-12 gap-4">
+          {/* ستون سمت راست */}
+          <div className="col-span-3 space-y-4">
+            <div className="cyber-card p-4">
+              <div className="text-sm font-bold text-tiffany mb-2 flex items-center">
+                <Heart className="w-4 h-4 ml-1.5" />
+                وضعیت سلامت
+              </div>
+              
+              <div className="flex flex-col items-center justify-center pt-2 pb-4">
+                <div className="relative mb-4">
+                  <div className="w-28 h-28 rounded-full flex items-center justify-center bg-slate-800/50 border border-tiffany/20 neon-circle">
+                    <div className="text-3xl font-bold text-tiffany">۷۹٪</div>
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-tiffany/10 rounded-full flex items-center justify-center border border-tiffany/30">
+                    <Activity className="w-3 h-3 text-tiffany" />
+                  </div>
+                </div>
+                
+                <div className="text-xs text-slate-400 mt-1">
+                  <span className="text-tiffany ml-1">۲۱٪</span>
+                  بهبود نسبت به ماه گذشته
+                </div>
+              </div>
+              
+              {/* شاخص‌های سلامت */}
+              <div className="space-y-2 mt-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-400">وضعیت قلبی</span>
+                  <span className="text-tiffany">خوب</span>
+                </div>
+                <Progress value={78} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-tiffany" />
+                
+                <div className="flex items-center justify-between text-xs mt-3">
+                  <span className="text-slate-400">شاخص BMI</span>
+                  <span className="text-amber-400">متوسط</span>
+                </div>
+                <Progress value={58} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-amber-400" />
+                
+                <div className="flex items-center justify-between text-xs mt-3">
+                  <span className="text-slate-400">فعالیت روزانه</span>
+                  <span className="text-rose-400">پایین</span>
+                </div>
+                <Progress value={34} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-rose-400" />
+              </div>
+            </div>
+            
+            {/* کارت وضعیت محیطی */}
+            <div className="cyber-card p-4">
+              <div className="text-sm font-bold text-amber-400 mb-2 flex items-center">
+                <Thermometer className="w-4 h-4 ml-1.5" />
+                وضعیت محیطی
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3 mt-3">
+                <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40">
+                  <div className="text-xs text-slate-400 mb-1">دما</div>
+                  <div className="flex items-baseline">
+                    <span className="text-lg font-bold text-amber-400">۲۳</span>
+                    <span className="text-xs text-amber-400 mr-1">°C</span>
+                  </div>
+                </div>
+                
+                <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40">
+                  <div className="text-xs text-slate-400 mb-1">رطوبت</div>
+                  <div className="flex items-baseline">
+                    <span className="text-lg font-bold text-blue-400">۳۷</span>
+                    <span className="text-xs text-blue-400 mr-1">٪</span>
+                  </div>
+                </div>
+                
+                <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40">
+                  <div className="text-xs text-slate-400 mb-1">کیفیت هوا</div>
+                  <div className="flex items-baseline">
+                    <span className="text-lg font-bold text-emerald-400">۹۱</span>
+                    <span className="text-xs text-emerald-400 mr-1">AQI</span>
+                  </div>
+                </div>
+                
+                <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40">
+                  <div className="text-xs text-slate-400 mb-1">سر و صدا</div>
+                  <div className="flex items-baseline">
+                    <span className="text-lg font-bold text-purple-400">۴۲</span>
+                    <span className="text-xs text-purple-400 mr-1">dB</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* ستون میانی */}
+          <div className="col-span-6 space-y-4">
+            <div className="cyber-card p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-sm font-bold text-white flex items-center">
+                  <ActivitySquare className="w-4 h-4 ml-1.5 text-tiffany" />
+                  وضعیت سلامت تیمی
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <div className="text-xs bg-tiffany/10 text-tiffany px-2 py-1 rounded-md flex items-center">
+                    <TrendingUp className="w-3 h-3 ml-1" />
+                    ۸۷٪
+                  </div>
+                  
+                  <Select>
+                    <SelectTrigger className="text-xs h-7 bg-slate-800/40 border-slate-700/50 hover:bg-slate-800">
+                      <span>هفته جاری</span>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="week">هفته جاری</SelectItem>
+                      <SelectItem value="month">ماه جاری</SelectItem>
+                      <SelectItem value="quarter">فصل جاری</SelectItem>
+                      <SelectItem value="year">سال جاری</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <div className="h-60 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={[
+                    { name: 'شنبه', value: 65 },
+                    { name: 'یکشنبه', value: 72 },
+                    { name: 'دوشنبه', value: 87 },
+                    { name: 'سه‌شنبه', value: 78 },
+                    { name: 'چهارشنبه', value: 90 },
+                    { name: 'پنج‌شنبه', value: 85 },
+                    { name: 'جمعه', value: 91 },
+                  ]}>
+                    <defs>
+                      <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#45CDB9" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#45CDB9" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="name" tick={{ fill: '#94A3B8', fontSize: 10 }} axisLine={{ stroke: '#334155' }} tickLine={false} />
+                    <YAxis tick={{ fill: '#94A3B8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)', 
+                        borderRadius: '8px',
+                        border: '1px solid rgba(51, 65, 85, 0.6)',
+                        color: '#E2E8F0'
+                      }}
+                    />
+                    <Area type="monotone" dataKey="value" stroke="#45CDB9" fillOpacity={1} fill="url(#colorUv)" />
+                    <Line type="monotone" dataKey="value" stroke="#45CDB9" strokeWidth={2} dot={{ r: 4, fill: '#0F172A', stroke: '#45CDB9', strokeWidth: 2 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+          
+          {/* ستون سمت چپ */}
+          <div className="col-span-3 space-y-4">
+            <div className="cyber-card p-4">
+              <div className="text-sm font-bold text-purple-400 mb-2 flex items-center">
+                <Shield className="w-4 h-4 ml-1.5" />
+                وضعیت HSE
+              </div>
+              
+              <div className="flex flex-col items-center justify-center py-3">
+                <div className="h-44 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart cx="50%" cy="50%" outerRadius="70%" data={[
+                      { subject: 'ایمنی', A: 85 },
+                      { subject: 'بهداشت', A: 70 },
+                      { subject: 'محیط', A: 88 },
+                      { subject: 'آموزش', A: 90 },
+                      { subject: 'اقدامات', A: 75 },
+                      { subject: 'حوادث', A: 95 },
+                    ]}>
+                      <PolarGrid stroke="#334155" />
+                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#94A3B8', fontSize: 10 }} />
+                      <Radar name="وضعیت" dataKey="A" stroke="#9D5CEF" fill="#9D5CEF" fillOpacity={0.2} />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </div>
+                
+                <div className="text-xs text-slate-400 mt-2">
+                  <span className="text-purple-400 ml-1">۱۲٪</span>
+                  بهبود نسبت به ماه گذشته
+                </div>
+              </div>
+              
+              <div className="space-y-2 mt-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-400">شاخص کلی HSE</span>
+                  <span className="text-purple-400">۸۴٪</span>
+                </div>
+                <Progress value={84} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-purple-400" />
+              </div>
+            </div>
+            
+            {/* کارت چالش‌ها */}
+            <div className="cyber-card p-4">
+              <div className="text-sm font-bold text-amber-400 mb-2 flex items-center">
+                <Target className="w-4 h-4 ml-1.5" />
+                چالش‌ها
+              </div>
+              
+              <div className="space-y-2 mt-3">
+                <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40 flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-500/20 flex items-center justify-center ml-2">
+                      <Activity className="w-3 h-3 text-emerald-400" />
+                    </div>
+                    <div className="text-xs text-slate-300">قدم زدن روزانه</div>
+                  </div>
+                  <div className="text-xs text-emerald-400 font-medium">۹۱٪</div>
+                </div>
+                
+                <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40 flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 rounded-lg bg-orange-500/20 flex items-center justify-center ml-2">
+                      <Flame className="w-3 h-3 text-orange-400" />
+                    </div>
+                    <div className="text-xs text-slate-300">کاهش استرس</div>
+                  </div>
+                  <div className="text-xs text-orange-400 font-medium">۷۹٪</div>
+                </div>
+                
+                <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40 flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 rounded-lg bg-purple-500/20 flex items-center justify-center ml-2">
+                      <Moon className="w-3 h-3 text-purple-400" />
+                    </div>
+                    <div className="text-xs text-slate-300">خواب منظم</div>
+                  </div>
+                  <div className="text-xs text-purple-400 font-medium">۶۵٪</div>
+                </div>
+                
+                <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/40 flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 rounded-lg bg-blue-500/20 flex items-center justify-center ml-2">
+                      <Droplets className="w-3 h-3 text-blue-400" />
+                    </div>
+                    <div className="text-xs text-slate-300">نوشیدن آب</div>
+                  </div>
+                  <div className="text-xs text-blue-400 font-medium">۸۵٪</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         {/* اثرات پیشرفته */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-tiffany/40 to-transparent"></div>
         <div className="absolute top-0 bottom-0 right-2 w-1 bg-gradient-to-b from-transparent via-tiffany/30 to-transparent"></div>
