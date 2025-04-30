@@ -1,16 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { HealthSummaryIsland } from '@/components/islands/HealthSummaryIsland';
 import { TeamHealthIsland } from '@/components/islands/TeamHealthIsland';
 import { HSEPerformanceIsland } from '@/components/islands/HSEPerformanceIsland';
-import { Clock, Calendar, Bell, Search, LifeBuoy, ArrowUpRight, Menu } from 'lucide-react';
+import { 
+  Activity, AlertTriangle, Battery, Clock, Calendar, ChevronDown, 
+  Cloud, CloudSun, Database, Heart, HelpCircle, Info, LifeBuoy,
+  Lock, Power, RefreshCw, Save, Settings, Shield, Signal, 
+  Terminal, Thermometer, TrendingUp, Users, Wifi, ArrowUpRight,
+  Bell, Search, Menu, Check, CheckCheck, Zap, GitBranch, LineChart
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Slider } from '@/components/ui/slider';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 /**
- * داشبورد اصلی با لیوت جزیره‌ای و گرید بندی پیشرفته
- * طراحی 2025 با استفاده از 100 فیچر پیشرفته
+ * داشبورد فضایی پیشرفته با گلسمورفیسم و نورپردازی تعاملی
+ * طراحی 2025 با استفاده از 100 فیچر پیشرفته با لیوت جزیره‌ای
  */
 const Dashboard = () => {
   const currentDate = new Date();
+  
+  // وضعیت‌های سیستم
+  const [systemHealth, setSystemHealth] = useState(94);
+  const [cpuUsage, setCpuUsage] = useState(42);
+  const [memoryUsage, setMemoryUsage] = useState(56);
+  const [networkStatus, setNetworkStatus] = useState(78);
+  const [powerLevel, setPowerLevel] = useState(87);
+  const [securityLevel, setSecurityLevel] = useState(95);
+  const [envTemperature, setEnvTemperature] = useState(22);
+  const [envHumidity, setEnvHumidity] = useState(45);
+  
+  // وضعیت‌های رابط کاربری
+  const [processingData, setProcessingData] = useState(false);
+  const [scanActive, setScanActive] = useState(false);
+  const [showTerminal, setShowTerminal] = useState(false);
   
   // فرمت تاریخ به فارسی
   const persianMonths = [
@@ -33,6 +65,47 @@ const Dashboard = () => {
     { id: 2, title: 'تست سلامت فصلی', date: '1403/02/20', priority: 'medium' },
     { id: 3, title: 'کارگاه مدیریت استرس', date: '1403/02/25', priority: 'low' },
   ];
+  
+  // داده‌های لاگ سیستم
+  const [systemLogs, setSystemLogs] = useState([
+    { time: '14:42:19', message: 'سیستم ردیابی سلامت فعال شد', status: 'success' },
+    { time: '14:38:55', message: 'به‌روزرسانی ماژول HSE تکمیل شد', status: 'info' },
+    { time: '14:32:14', message: 'اتصال به سرورهای مرکزی برقرار شد', status: 'success' },
+    { time: '14:28:00', message: 'هشدار: نوسان در سطح اکسیژن محیطی', status: 'warning' },
+    { time: '14:24:37', message: 'راه‌اندازی سیستم فضاپیما موفقیت‌آمیز بود', status: 'success' }
+  ]);
+  
+  // شبیه‌سازی تغییرات در وضعیت سیستم برای افکت دینامیک
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCpuUsage(prev => Math.max(30, Math.min(85, prev + (Math.random() * 6 - 3))));
+      setMemoryUsage(prev => Math.max(40, Math.min(90, prev + (Math.random() * 4 - 2))));
+      setNetworkStatus(prev => Math.max(60, Math.min(95, prev + (Math.random() * 5 - 2.5))));
+      setPowerLevel(prev => Math.max(80, Math.min(98, prev + (Math.random() * 3 - 1.5))));
+    }, 3000);
+    
+    return () => clearInterval(timer);
+  }, []);
+  
+  // شبیه‌سازی اسکن سیستم
+  const handleSystemScan = () => {
+    setProcessingData(true);
+    setScanActive(true);
+    
+    // شبیه‌سازی زمان اسکن
+    setTimeout(() => {
+      // افزودن نتیجه اسکن به لاگ‌ها
+      setSystemLogs(prev => [
+        { time: new Date().toLocaleTimeString('fa-IR'), message: 'اسکن سیستم تکمیل شد - هیچ تهدیدی یافت نشد', status: 'success' },
+        ...prev
+      ]);
+      
+      setProcessingData(false);
+      
+      // اسکنر برای مدتی فعال بماند
+      setTimeout(() => setScanActive(false), 2000);
+    }, 3500);
+  };
 
   return (
     <div className="min-h-screen">

@@ -624,98 +624,486 @@
   border-left: 2px solid hsl(var(--error));
 }
 
-/* Islands Layout Styles */
+/* Advanced Futuristic Islands Layout System */
 .islands-container {
   position: relative;
-  transition: all 0.4s ease-in-out;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  perspective: 1000px;
 }
 
-/* Island style variant with hover effects */
+/* Spacecraft Console Glass Effect with Advanced Hover Effects */
 .glass-island {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-  border-radius: 1rem;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.07) inset;
+  border-radius: 1.25rem;
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
   position: relative;
   overflow: hidden;
+  transform-style: preserve-3d;
 }
 
-.glass-island:before {
+.glass-island::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    135deg, 
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 0%, 
     rgba(255, 255, 255, 0.1) 0%, 
-    rgba(255, 255, 255, 0.05) 50%, 
-    rgba(255, 255, 255, 0) 100%
+    rgba(255, 255, 255, 0) 75%
   );
   pointer-events: none;
   z-index: 1;
 }
 
-.glass-island:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px 0 rgba(31, 38, 135, 0.2);
+.glass-island::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  width: 120%;
+  height: 120%;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+  transform: rotate(35deg);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-/* Island color variants */
+.glass-island:hover {
+  transform: translateY(-5px) rotateX(2deg);
+  box-shadow: 
+    0 15px 35px 0 rgba(31, 38, 135, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 0 15px rgba(var(--tiffany-rgb), 0.15);
+}
+
+.glass-island:hover::after {
+  opacity: 1;
+}
+
+/* Interactive Light Effects on Hover */
+.glass-island.interactive {
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-island.interactive:hover {
+  box-shadow: 
+    0 20px 40px 0 rgba(31, 38, 135, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    0 0 20px rgba(var(--tiffany-rgb), 0.2),
+    0 0 30px rgba(var(--tiffany-rgb), 0.1);
+}
+
+/* Advanced Spacecraft Island Color Variants with Glow Effects */
 .glass-island.tiffany {
-  border-top: 3px solid hsl(var(--tiffany));
+  border-top: 3px solid rgba(var(--tiffany-rgb), 0.7);
+  box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.07) inset,
+    0 0 10px rgba(var(--tiffany-rgb), 0.1);
+}
+
+.glass-island.tiffany:hover {
+  box-shadow: 
+    0 15px 35px 0 rgba(31, 38, 135, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 0 15px rgba(var(--tiffany-rgb), 0.2),
+    0 0 25px rgba(var(--tiffany-rgb), 0.1);
 }
 
 .glass-island.purple {
-  border-top: 3px solid hsl(var(--purple));
+  border-top: 3px solid rgba(var(--purple-rgb), 0.7);
+  box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.07) inset,
+    0 0 10px rgba(var(--purple-rgb), 0.1);
+}
+
+.glass-island.purple:hover {
+  box-shadow: 
+    0 15px 35px 0 rgba(31, 38, 135, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 0 15px rgba(var(--purple-rgb), 0.2),
+    0 0 25px rgba(var(--purple-rgb), 0.1);
 }
 
 .glass-island.amber {
-  border-top: 3px solid hsl(var(--amber));
+  border-top: 3px solid rgba(var(--amber-rgb), 0.7);
+  box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.07) inset,
+    0 0 10px rgba(var(--amber-rgb), 0.1);
+}
+
+.glass-island.amber:hover {
+  box-shadow: 
+    0 15px 35px 0 rgba(31, 38, 135, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 0 15px rgba(var(--amber-rgb), 0.2),
+    0 0 25px rgba(var(--amber-rgb), 0.1);
 }
 
 .glass-island.success {
-  border-top: 3px solid hsl(var(--success));
+  border-top: 3px solid rgba(var(--success-rgb), 0.7);
+  box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.07) inset,
+    0 0 10px rgba(var(--success-rgb), 0.1);
 }
 
-/* Island sizes */
+.glass-island.success:hover {
+  box-shadow: 
+    0 15px 35px 0 rgba(31, 38, 135, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 0 15px rgba(var(--success-rgb), 0.2),
+    0 0 25px rgba(var(--success-rgb), 0.1);
+}
+
+.glass-island.deep-space {
+  background: linear-gradient(135deg, rgba(13, 17, 23, 0.8) 0%, rgba(23, 34, 45, 0.7) 100%);
+  border-top: 3px solid rgba(138, 43, 226, 0.7);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(138, 43, 226, 0.1) inset,
+    0 0 10px rgba(138, 43, 226, 0.1);
+}
+
+.glass-island.deep-space:hover {
+  box-shadow: 
+    0 15px 35px 0 rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(138, 43, 226, 0.2) inset,
+    0 0 15px rgba(138, 43, 226, 0.2),
+    0 0 25px rgba(138, 43, 226, 0.1);
+}
+
+.glass-island.cosmic-blue {
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(24, 61, 93, 0.7) 100%);
+  border-top: 3px solid rgba(56, 189, 248, 0.7);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(56, 189, 248, 0.1) inset,
+    0 0 10px rgba(56, 189, 248, 0.1);
+}
+
+.glass-island.cosmic-blue:hover {
+  box-shadow: 
+    0 15px 35px 0 rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(56, 189, 248, 0.2) inset,
+    0 0 15px rgba(56, 189, 248, 0.2),
+    0 0 25px rgba(56, 189, 248, 0.1);
+}
+
+/* Enhanced Control Island sizes with perspective */
 .island-sm {
-  padding: 0.75rem;
+  padding: 0.875rem;
+  border-radius: 1rem;
 }
 
 .island-md {
-  padding: 1.25rem;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
 }
 
 .island-lg {
-  padding: 1.75rem;
+  padding: 2rem;
+  border-radius: 1.5rem;
 }
 
-/* Dark mode specifics for islands */
+/* Dark mode enhancements for spacecraft panel effect */
 .dark .glass-island {
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(71, 85, 105, 0.2);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.7) 0%,
+    rgba(30, 41, 59, 0.6) 100%
+  );
+  border: 1px solid rgba(71, 85, 105, 0.15);
 }
 
-.dark .glass-island:before {
-  background: linear-gradient(
-    135deg, 
+.dark .glass-island::before {
+  background: radial-gradient(
+    circle at 50% 0%, 
     rgba(255, 255, 255, 0.05) 0%, 
-    rgba(255, 255, 255, 0.02) 50%, 
-    rgba(255, 255, 255, 0) 100%
+    rgba(255, 255, 255, 0) 75%
   );
 }
 
-/* Island grid system support */
+/* Advanced Spacecraft Grid System with Dynamic Sizing */
+.island-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  transition: all 0.4s ease;
+}
+
+/* Responsive Dynamic Grid Systems for Different Layouts */
 @media (min-width: 1024px) {
-  .island-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  .island-grid-1 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  
+  .island-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .island-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .island-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .island-grid-dashboard {
+    grid-template-columns: 2fr 1fr;
+  }
+  
+  .island-grid-flexible {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+  
+  .island-stack {
+    display: flex;
+    flex-direction: column;
     gap: 1.5rem;
+  }
+}
+
+/* Futuristic Control Elements */
+.control-panel {
+  position: relative;
+  background: rgba(17, 24, 39, 0.8);
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(71, 85, 105, 0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.control-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(var(--tiffany-rgb), 0.8);
+  box-shadow: 0 0 10px rgba(var(--tiffany-rgb), 0.6);
+  animation: pulse-indicator 2s infinite;
+}
+
+.control-indicator.active {
+  background: rgba(var(--success-rgb), 0.8);
+  box-shadow: 0 0 10px rgba(var(--success-rgb), 0.6);
+}
+
+.control-indicator.warning {
+  background: rgba(var(--amber-rgb), 0.8);
+  box-shadow: 0 0 10px rgba(var(--amber-rgb), 0.6);
+}
+
+.control-indicator.danger {
+  background: rgba(var(--error-rgb), 0.8);
+  box-shadow: 0 0 10px rgba(var(--error-rgb), 0.6);
+}
+
+@keyframes pulse-indicator {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
+/* Digital Display Elements */
+.digital-display {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(17, 24, 39, 0.9);
+  color: rgba(var(--tiffany-rgb), 1);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(var(--tiffany-rgb), 0.3);
+  box-shadow: 
+    0 0 10px rgba(var(--tiffany-rgb), 0.1),
+    0 0 20px rgba(var(--tiffany-rgb), 0.05) inset;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.digital-display.large {
+  font-size: 2rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgba(var(--tiffany-rgb), 0.7), transparent);
+  animation: scan 2s linear infinite;
+  z-index: 10;
+  opacity: 0.5;
+}
+
+@keyframes scan {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* Interactive Button Styles for Control Panel */
+.control-button {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(var(--tiffany-rgb), 0.3);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: rgba(var(--tiffany-rgb), 1);
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 2px 5px rgba(0, 0, 0, 0.2),
+    0 0 5px rgba(var(--tiffany-rgb), 0.2);
+}
+
+.control-button:hover {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(var(--tiffany-rgb), 0.7);
+  box-shadow: 
+    0 5px 15px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(var(--tiffany-rgb), 0.4);
+  transform: translateY(-2px);
+}
+
+.control-button:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 2px 5px rgba(0, 0, 0, 0.2),
+    0 0 5px rgba(var(--tiffany-rgb), 0.2);
+}
+
+.control-button.inactive {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Data Visualization Enhancement */
+.data-visualization {
+  background: rgba(17, 24, 39, 0.7);
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(71, 85, 105, 0.2);
+  transition: all 0.3s ease;
+}
+
+.data-visualization:hover {
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(var(--tiffany-rgb), 0.1);
+}
+
+/* Control Panel Gauge */
+.gauge-container {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  margin: 1rem 0;
+}
+
+.gauge-base {
+  position: absolute;
+  width: 100%;
+  height: 75px;
+  bottom: 0;
+  border-top-left-radius: 150px;
+  border-top-right-radius: 150px;
+  background: rgba(17, 24, 39, 0.4);
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  overflow: hidden;
+}
+
+.gauge-fill {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background: linear-gradient(to top, 
+    rgba(var(--tiffany-rgb), 0.8) 0%, 
+    rgba(var(--tiffany-rgb), 0.4) 100%);
+  border-top-left-radius: 150px;
+  border-top-right-radius: 150px;
+  transition: height 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gauge-needle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  transform-origin: bottom center;
+  transform: rotate(0deg);
+  transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+.gauge-center {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(to right, #2a2a2a, #4a4a4a);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  z-index: 3;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Scanner effect for visualizing data processing */
+.scanner-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+
+.scanner-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, 
+    transparent, 
+    rgba(var(--tiffany-rgb), 0.8), 
+    transparent);
+  box-shadow: 0 0 8px rgba(var(--tiffany-rgb), 0.6);
+  animation: scanner 1.5s linear infinite;
+  z-index: 5;
+}
+
+@keyframes scanner {
+  0% {
+    top: 0%;
+  }
+  100% {
+    top: 100%;
   }
 }
 
