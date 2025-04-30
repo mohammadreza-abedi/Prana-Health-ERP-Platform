@@ -1387,12 +1387,19 @@ export default function MainLayout({ children }: MainLayoutProps) {
         {/* Page content with enhanced container and subtle decoration */}
         <div className="flex-1 p-6 relative">
           <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/20 dark:from-slate-800/30 to-transparent pointer-events-none"></div>
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/3 right-0 w-96 h-96 bg-tiffany/3 dark:bg-tiffany/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift"></div>
-            <div className="absolute top-2/3 left-0 w-64 h-64 bg-aqua/3 dark:bg-aqua/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift-slow"></div>
+          {/* Advanced background effects with multiple layers */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/3 right-0 w-96 h-96 bg-tiffany/5 dark:bg-tiffany/5 rounded-full filter blur-3xl opacity-60 -z-10 animate-float-slow"></div>
+            <div className="absolute top-2/3 left-0 w-64 h-64 bg-aqua/5 dark:bg-aqua/5 rounded-full filter blur-3xl opacity-60 -z-10 animate-float-reverse"></div>
+            <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-yellow/3 dark:bg-yellow/3 rounded-full filter blur-3xl opacity-40 -z-10 animate-breathe"></div>
+            <div className="absolute inset-0 bg-noise opacity-[0.015] dark:opacity-[0.03] mix-blend-overlay"></div>
           </div>
+          
+          {/* Content with glassmorphism container */}
           <div className="relative z-10">
-            {children}
+            <div className="glass-card mx-auto my-4 rounded-xl overflow-hidden max-w-[95%] md:max-w-[90%] backdrop-blur-md border border-white/20 dark:border-slate-700/30">
+              {children}
+            </div>
           </div>
         </div>
         
