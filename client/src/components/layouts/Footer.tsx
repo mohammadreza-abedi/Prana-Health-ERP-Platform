@@ -319,7 +319,7 @@ export default function Footer() {
               </div>
               
               <div className="pt-3">
-                <Button className="w-full glass-button">دریافت مشاوره رایگان</Button>
+                <Button className="w-full bg-gradient-to-r from-tiffany to-aqua hover:from-tiffany-light hover:to-aqua-light">دریافت مشاوره رایگان</Button>
               </div>
             </div>
           </div>
