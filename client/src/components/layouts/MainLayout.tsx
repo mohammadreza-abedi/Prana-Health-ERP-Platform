@@ -244,18 +244,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <div className="absolute inset-0 bg-grid opacity-[0.02] dark:opacity-[0.03] pointer-events-none z-0"></div>
       <div className="absolute top-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-tiffany/5 to-transparent rounded-full blur-3xl pointer-events-none opacity-60 dark:opacity-20"></div>
       <div className="absolute bottom-0 right-0 w-1/3 h-1/3 bg-gradient-to-tl from-aqua/5 to-transparent rounded-full blur-3xl pointer-events-none opacity-60 dark:opacity-20"></div>
-      
-      {/* Sidebar with advanced glass effect */}
-      <AnimatePresence>
-        <motion.aside
-          initial={{ width: isMobile ? 0 : 280 }}
-          animate={{ width: isExpanded ? 280 : 80 }}
-          transition={{ 
-            duration: 0.4, 
-            ease: [0.19, 1, 0.22, 1] // Expo ease for smooth animation
-          }}
-          className="h-full glass-effect border-l border-white/20 dark:border-slate-700/30 relative z-30 flex flex-col shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.1)] dark:shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.3)]"
-        >
+        {/* Sidebar with advanced glass effect */}
+        <AnimatePresence>
+          <motion.aside
+            initial={{ width: isMobile ? 0 : 280 }}
+            animate={{ width: isExpanded ? 280 : 80 }}
+            transition={{ 
+              duration: 0.4, 
+              ease: [0.19, 1, 0.22, 1] // Expo ease for smooth animation
+            }}
+            className="h-full glass-effect border-l border-white/20 dark:border-slate-700/30 relative z-30 flex flex-col shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.1)] dark:shadow-[8px_0px_30px_-12px_rgba(0,0,0,0.3)]"
+          >
           {/* Sidebar Header */}
           <div className="p-4 flex items-center justify-between">
             {isExpanded && (
