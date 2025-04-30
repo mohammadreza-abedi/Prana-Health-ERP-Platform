@@ -1,15 +1,10 @@
 {
-  "name": "پرانا - دستیار هوشمند سلامت",
   "short_name": "پرانا",
-  "description": "دستیار هوشمند سلامت برای ارتقای سلامت کارکنان از طریق امکانات گیمیفیکیشن",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#2EC4B6",
-  "theme_color": "#2EC4B6",
-  "orientation": "portrait-primary",
-  "dir": "rtl",
+  "name": "پرانا - دستیار هوشمند سلامت",
   "lang": "fa-IR",
-  "scope": "/",
+  "dir": "rtl",
+  "description": "پلتفرم جامع مدیریت سلامت سازمانی با قابلیت‌های گیمیفیکیشن",
+  "categories": ["health", "wellness", "productivity", "business"],
   "icons": [
     {
       "src": "/icons/icon-72x72.png",
@@ -60,36 +55,55 @@
       "purpose": "any maskable"
     }
   ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
   "shortcuts": [
     {
       "name": "داشبورد",
       "short_name": "داشبورد",
-      "description": "نمایش داشبورد اصلی",
-      "url": "/",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "url": "/enhanced-dashboard",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
-      "name": "پروفایل",
+      "name": "پروفایل سلامت",
       "short_name": "پروفایل",
-      "description": "پروفایل کاربری پیشرفته",
       "url": "/advanced-profile",
-      "icons": [{ "src": "/icons/icon-96x96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "چالش‌ها",
+      "short_name": "چالش‌ها",
+      "url": "/challenges",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ],
   "screenshots": [
     {
-      "src": "/screenshots/screenshot1.jpg",
+      "src": "/screenshots/screenshot1.png",
       "sizes": "1280x720",
-      "type": "image/jpeg",
-      "platform": "wide",
-      "label": "داشبورد اصلی پرانا - دستیار هوشمند سلامت"
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "داشبورد پرانا"
     },
     {
-      "src": "/screenshots/screenshot2.jpg",
+      "src": "/screenshots/screenshot2.png",
       "sizes": "1280x720",
-      "type": "image/jpeg",
-      "platform": "wide",
-      "label": "پروفایل کاربری پیشرفته"
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "پروفایل سلامت"
+    },
+    {
+      "src": "/screenshots/screenshot3.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "نسخه موبایل پرانا"
     }
-  ]
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

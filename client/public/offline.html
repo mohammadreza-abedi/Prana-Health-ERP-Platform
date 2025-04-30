@@ -3,125 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#2EC4B6">
-  <title>حالت آفلاین - پرانا</title>
+  <title>اتصال به اینترنت قطع است - پرانا</title>
   <style>
-    :root {
-      --primary: #2EC4B6;
-      --primary-dark: #219E92;
-      --background: #F5F7FA;
-      --text: #333333;
-      --text-light: #6B7280;
-    }
-
-    @font-face {
-      font-family: 'Peyda';
-      src: url('/fonts/Peyda-Medium.woff2') format('woff2');
-      font-weight: 500;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
     body {
-      font-family: 'Peyda', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--background);
-      color: var(--text);
-      min-height: 100vh;
+      font-family: 'Peyda', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #0f172a;
+      color: #e2e8f0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
+      height: 100vh;
+      margin: 0;
       padding: 20px;
+      text-align: center;
+      line-height: 1.6;
     }
-    
-    .offline-container {
+    .container {
       max-width: 500px;
-      background-color: white;
-      border-radius: 12px;
-      padding: 32px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 40px 20px;
+      border-radius: 16px;
+      background-color: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
-    
-    .offline-icon {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 24px;
-      background-color: rgba(46, 196, 182, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
     }
-    
     h1 {
       font-size: 24px;
       margin-bottom: 16px;
-      color: var(--text);
+      font-weight: 700;
+      color: #f8fafc;
     }
-    
     p {
       font-size: 16px;
-      line-height: 1.6;
-      color: var(--text-light);
       margin-bottom: 24px;
+      color: #cbd5e1;
     }
-    
     .retry-button {
-      background-color: var(--primary);
+      background-color: #8b5cf6;
       color: white;
       border: none;
-      border-radius: 8px;
       padding: 12px 24px;
+      border-radius: 8px;
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: all 0.3s ease;
     }
-    
     .retry-button:hover {
-      background-color: var(--primary-dark);
+      background-color: #7c3aed;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
     }
-    
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --background: #121826;
-        --text: #FFFFFF;
-        --text-light: #A0AEC0;
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
       }
-      
-      .offline-container {
-        background-color: #1A2234;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
       }
     }
   </style>
 </head>
 <body>
-  <div class="offline-container">
-    <div class="offline-icon">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#2EC4B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M8 15L16 9" stroke="#2EC4B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M16 15L8 9" stroke="#2EC4B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <h1>شما آفلاین هستید</h1>
-    <p>به نظر می‌رسد اتصال شما به اینترنت قطع شده است. لطفاً اتصال خود را بررسی کنید و مجدداً تلاش کنید.</p>
+  <div class="container">
+    <img class="logo" src="/icons/icon-512x512.png" alt="پرانا - دستیار هوشمند سلامت">
+    <h1>اتصال به اینترنت قطع است</h1>
+    <p>برای استفاده از پرانا، لطفاً اتصال اینترنت خود را بررسی کنید و دوباره تلاش نمایید.</p>
     <button class="retry-button" onclick="window.location.reload()">تلاش مجدد</button>
   </div>
-  
-  <script>
-    // بررسی کنید آیا کاربر به اینترنت متصل شده است
-    window.addEventListener('online', () => {
-      window.location.reload();
-    });
-  </script>
 </body>
 </html>

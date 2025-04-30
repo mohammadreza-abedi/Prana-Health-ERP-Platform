@@ -1,17 +1,17 @@
-// نسخه کش را تعریف می‌کنیم تا با هر آپدیت اپلیکیشن، کش‌های قبلی پاک شوند
-const CACHE_NAME = 'prana-health-v1';
+// Service Worker for PWA capabilities
 
-// لیست فایل‌هایی که باید کش شوند
+const CACHE_NAME = 'prana-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/offline.html',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
-  // افزودن دیگر فایل‌های استاتیک که باید کش شوند
+  '/icons/apple-touch-icon.png'
 ];
 
-// نصب سرویس ورکر و ذخیره فایل‌های اصلی در کش
+// Install event - cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -20,11 +20,9 @@ self.addEventListener('install', (event) => {
         return cache.addAll(urlsToCache);
       })
   );
-  // زمانی که سرویس ورکر جدید نصب می‌شود، نسخه قبلی را فوراً جایگزین کنید
-  self.skipWaiting();
 });
 
-// فعال‌سازی سرویس ورکر و پاک کردن کش‌های قبلی
+// Activate event - clean old caches
 self.addEventListener('activate', (event) => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -34,63 +32,45 @@ self.addEventListener('activate', (event) => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
             return caches.delete(cacheName);
           }
-          return null;
         })
       );
     })
   );
-  // به سرویس ورکر اجازه می‌دهیم روی همه کلاینت‌ها (تب‌های باز) تأثیر بگذارد
-  self.clients.claim();
 });
 
-// استراتژی کش: ابتدا از شبکه، سپس از کش
+// Fetch event - respond with cache first, then network
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    // ابتدا درخواست از شبکه را امتحان می‌کنیم
-    fetch(event.request)
+    caches.match(event.request)
       .then((response) => {
-        // درخواست موفقیت‌آمیز بود، پاسخ را به کاربر برمی‌گردانیم و یک کپی از آن را در کش ذخیره می‌کنیم
-        if (!response || response.status !== 200 || response.type !== 'basic') {
+        // Cache hit - return response
+        if (response) {
           return response;
         }
 
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME)
-          .then((cache) => {
-            // فقط درخواست‌های GET را کش می‌کنیم
-            if (event.request.method === 'GET') {
-              cache.put(event.request, responseToCache);
+        return fetch(event.request)
+          .then((response) => {
+            // Check if we received a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
             }
-          });
 
-        return response;
-      })
-      .catch(() => {
-        // اگر درخواست از شبکه شکست خورد، از کش استفاده می‌کنیم
-        return caches.match(event.request)
-          .then((cachedResponse) => {
-            if (cachedResponse) {
-              return cachedResponse;
-            }
-            
-            // اگر در کش هم موجود نبود، صفحه آفلاین را نمایش می‌دهیم
+            // Clone the response
+            const responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          })
+          .catch(() => {
+            // If both cache and network fail, show offline page
             if (event.request.mode === 'navigate') {
               return caches.match('/offline.html');
             }
-            
-            // برای درخواست‌های دیگر پاسخی نداریم
-            return new Response('Network error occurred', {
-              status: 408,
-              headers: { 'Content-Type': 'text/plain' }
-            });
           });
       })
   );
-});
-
-// مدیریت پیام‌ها (برای به‌روزرسانی کش به صورت دستی)
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
 });
