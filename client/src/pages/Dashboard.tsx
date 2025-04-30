@@ -197,8 +197,196 @@ const Dashboard = () => {
           {/* جزیره عملکرد HSE */}
           <HSEPerformanceIsland />
           
+          {/* پنل کنترل سیستم */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* نشانگرهای دیجیتال سیستم - ردیف اول */}
+            <div className="glass-island deep-space p-4 rounded-2xl">
+              <div className="flex items-center mb-3">
+                <div className="p-2 rounded-full bg-white/10">
+                  <Shield className="h-5 w-5 text-purple-400" />
+                </div>
+                <h3 className="text-base font-bold mr-2 text-white">وضعیت سیستم</h3>
+                <div className="mr-auto">
+                  <div className="control-indicator active pulse-glow" />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="spacecraft-gauge">
+                  <div className="gauge-label flex items-center justify-between mb-1">
+                    <span className="text-xs text-slate-300 font-medium">سلامت سیستم</span>
+                    <span className="text-xs text-emerald-400">{systemHealth}%</span>
+                  </div>
+                  <div className="gauge-wrapper">
+                    <div className="gauge-base"></div>
+                    <div className="gauge-fill" style={{ transform: `rotate(${systemHealth * 1.8}deg)` }}></div>
+                    <div className="gauge-center">
+                      <Heart className="w-3.5 h-3.5 text-emerald-400" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="spacecraft-gauge">
+                  <div className="gauge-label flex items-center justify-between mb-1">
+                    <span className="text-xs text-slate-300 font-medium">شبکه</span>
+                    <span className="text-xs text-tiffany">{networkStatus}%</span>
+                  </div>
+                  <div className="gauge-wrapper">
+                    <div className="gauge-base"></div>
+                    <div className="gauge-fill tiffany-fill" style={{ transform: `rotate(${networkStatus * 1.8}deg)` }}></div>
+                    <div className="gauge-center">
+                      <Signal className="w-3.5 h-3.5 text-tiffany" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="spacecraft-gauge">
+                  <div className="gauge-label flex items-center justify-between mb-1">
+                    <span className="text-xs text-slate-300 font-medium">امنیت</span>
+                    <span className="text-xs text-purple-400">{securityLevel}%</span>
+                  </div>
+                  <div className="gauge-wrapper">
+                    <div className="gauge-base"></div>
+                    <div className="gauge-fill purple-fill" style={{ transform: `rotate(${securityLevel * 1.8}deg)` }}></div>
+                    <div className="gauge-center">
+                      <Lock className="w-3.5 h-3.5 text-purple-400" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="spacecraft-gauge">
+                  <div className="gauge-label flex items-center justify-between mb-1">
+                    <span className="text-xs text-slate-300 font-medium">قدرت</span>
+                    <span className="text-xs text-amber-400">{powerLevel}%</span>
+                  </div>
+                  <div className="gauge-wrapper">
+                    <div className="gauge-base"></div>
+                    <div className="gauge-fill amber-fill" style={{ transform: `rotate(${powerLevel * 1.8}deg)` }}></div>
+                    <div className="gauge-center">
+                      <Zap className="w-3.5 h-3.5 text-amber-400" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 pt-3 border-t border-slate-700/50">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="system-control">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] text-slate-400 uppercase tracking-wider">CPU</span>
+                      <span className="text-xs text-tiffany flex items-center">
+                        {cpuUsage}%
+                        <GitBranch className="h-3 w-3 ml-1 text-tiffany-light" />
+                      </span>
+                    </div>
+                    <Progress value={cpuUsage} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-gradient-to-r from-tiffany-light to-tiffany" />
+                  </div>
+                  
+                  <div className="system-control">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] text-slate-400 uppercase tracking-wider">MEM</span>
+                      <span className="text-xs text-purple-400 flex items-center">
+                        {memoryUsage}%
+                        <Database className="h-3 w-3 ml-1 text-purple-300" />
+                      </span>
+                    </div>
+                    <Progress value={memoryUsage} className="h-1.5 bg-slate-700/50" indicatorClassName="bg-gradient-to-r from-purple-300 to-purple-500" />
+                  </div>
+                </div>
+              </div>
+              
+              <Button 
+                onClick={handleSystemScan}
+                disabled={processingData}
+                className="w-full mt-4 bg-gradient-to-r from-purple-500/80 to-tiffany/80 hover:from-purple-500 hover:to-tiffany border-none text-white flex items-center justify-center space-x-2 space-x-reverse"
+              >
+                <RefreshCw className={`w-4 h-4 ml-2 ${processingData ? 'animate-spin' : ''}`} />
+                اسکن سیستم
+              </Button>
+            </div>
+
+            {/* نمایش لاگ سیستم */}
+            <div className="glass-island cosmic-blue p-4 rounded-2xl">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center">
+                  <div className="p-2 rounded-full bg-white/10">
+                    <Terminal className="h-5 w-5 text-sky-400" />
+                  </div>
+                  <h3 className="text-base font-bold mr-2 text-white">لاگ سیستم</h3>
+                </div>
+                
+                <div className="flex space-x-2 space-x-reverse">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button 
+                          onClick={() => setShowTerminal(!showTerminal)}
+                          className="control-button p-1.5 h-7 w-7 flex items-center justify-center"
+                        >
+                          {showTerminal ? <ChevronDown className="h-4 w-4 transform rotate-180" /> : <ChevronDown className="h-4 w-4" />}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{showTerminal ? 'بستن ترمینال' : 'گسترش ترمینال'}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button className="control-button p-1.5 h-7 w-7 flex items-center justify-center">
+                          <Save className="h-4 w-4" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>ذخیره لاگ‌ها</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </div>
+              
+              <div className={`space-y-2 overflow-hidden transition-all duration-500 ${showTerminal ? 'h-64' : 'h-36'}`}>
+                {systemLogs.map((log, index) => (
+                  <div 
+                    key={index} 
+                    className="text-xs border-r-2 border-slate-600 pr-2 py-1 flex items-start"
+                    style={{ borderColor: log.status === 'success' ? 'rgba(16, 185, 129, 0.5)' : 
+                                         log.status === 'warning' ? 'rgba(245, 158, 11, 0.5)' : 
+                                         log.status === 'error' ? 'rgba(239, 68, 68, 0.5)' : 
+                                         'rgba(14, 165, 233, 0.5)' }}
+                  >
+                    <div className="flex-none w-16 text-slate-400">{log.time}</div>
+                    <div className={`
+                      flex-1 
+                      ${log.status === 'success' ? 'text-emerald-300' : 
+                        log.status === 'warning' ? 'text-amber-300' : 
+                        log.status === 'error' ? 'text-rose-300' : 
+                        'text-sky-300'}
+                    `}>
+                      {log.message}
+                    </div>
+                  </div>
+                ))}
+                
+                {processingData && (
+                  <div className="text-xs border-r-2 border-tiffany pr-2 py-1 flex items-start">
+                    <div className="flex-none w-16 text-slate-400">{new Date().toLocaleTimeString('fa-IR')}</div>
+                    <div className="flex-1 text-tiffany flex items-center">
+                      <span className="ml-2">در حال اسکن سیستم...</span>
+                      <div className="animate-pulse">⚡</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          
           {/* جزیره نقشه حرارتی سلامت سازمانی */}
-          <div className="glass-island tiffany p-5 rounded-2xl">
+          <div className="glass-island tiffany p-5 rounded-2xl mt-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-lg font-bold text-slate-800 dark:text-white">نقشه حرارتی سلامت سازمانی</h3>
               <Button variant="outline" size="sm" className="text-xs">
@@ -206,7 +394,7 @@ const Dashboard = () => {
               </Button>
             </div>
             
-            <div className="bg-white/10 dark:bg-slate-800/20 rounded-xl h-96 p-4 flex items-center justify-center">
+            <div className="bg-white/10 dark:bg-slate-800/20 rounded-xl h-64 p-4 flex items-center justify-center">
               <div className="text-center">
                 <p className="text-slate-500 dark:text-slate-400 text-sm">نقشه سلامت سازمانی اینجا نمایش داده می‌شود.</p>
                 <p className="text-slate-500 dark:text-slate-400 text-xs mt-2">این بخش در بروزرسانی بعدی اضافه خواهد شد.</p>
@@ -219,6 +407,81 @@ const Dashboard = () => {
         <div className="lg:col-span-4 space-y-6">
           {/* جزیره سلامت تیمی */}
           <TeamHealthIsland />
+          
+          {/* پنل محیطی */}
+          <div className="glass-island deep-space p-4 rounded-2xl">
+            <div className="flex items-center mb-3">
+              <div className="p-2 rounded-full bg-white/10">
+                <Thermometer className="h-5 w-5 text-rose-400" />
+              </div>
+              <h3 className="text-base font-bold mr-2 text-white">شرایط محیطی</h3>
+              <div className="mr-auto">
+                <div className="control-indicator active pulse-glow" />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-800/30 rounded-xl p-3">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center">
+                    <Thermometer className="h-4 w-4 text-rose-400 ml-1.5" />
+                    <span className="text-xs text-slate-300">دما</span>
+                  </div>
+                  <span className="text-sm font-medium text-white">{envTemperature}°C</span>
+                </div>
+                <Slider 
+                  value={[envTemperature]} 
+                  min={16} 
+                  max={30} 
+                  step={0.5}
+                  className="mt-3"
+                  onValueChange={(value) => setEnvTemperature(value[0])}
+                />
+                <div className="flex justify-between mt-1">
+                  <span className="text-[10px] text-slate-500">16°C</span>
+                  <span className="text-[10px] text-slate-500">30°C</span>
+                </div>
+              </div>
+              
+              <div className="bg-slate-800/30 rounded-xl p-3">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center">
+                    <Cloud className="h-4 w-4 text-sky-400 ml-1.5" />
+                    <span className="text-xs text-slate-300">رطوبت</span>
+                  </div>
+                  <span className="text-sm font-medium text-white">{envHumidity}%</span>
+                </div>
+                <Slider 
+                  value={[envHumidity]} 
+                  min={20} 
+                  max={70} 
+                  step={1}
+                  className="mt-3"
+                  onValueChange={(value) => setEnvHumidity(value[0])}
+                />
+                <div className="flex justify-between mt-1">
+                  <span className="text-[10px] text-slate-500">20%</span>
+                  <span className="text-[10px] text-slate-500">70%</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-3 pt-3 border-t border-slate-700/50 grid grid-cols-2 gap-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <span className="text-xs text-slate-400 ml-2">فیلتر هوا</span>
+                </div>
+                <Switch checked={true} />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <span className="text-xs text-slate-400 ml-2">تهویه هوشمند</span>
+                </div>
+                <Switch checked={true} />
+              </div>
+            </div>
+          </div>
           
           {/* جزیره وظایف آینده */}
           <div className="glass-island amber p-5 rounded-2xl">

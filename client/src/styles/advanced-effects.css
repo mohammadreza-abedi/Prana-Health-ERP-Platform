@@ -498,3 +498,270 @@
 .rtl .text-gradient-animated {
   background-image: linear-gradient(to left, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
 }
+
+/* ===== استایل‌های داشبورد فضاپیمایی ===== */
+/* نشانگر کنترل */
+.control-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  position: relative;
+  display: inline-block;
+}
+
+.control-indicator::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  top: 3px;
+  left: 3px;
+}
+
+.control-indicator.active {
+  background-color: rgba(45, 212, 191, 0.3);
+}
+
+.control-indicator.active::after {
+  background-color: rgb(45, 212, 191);
+  box-shadow: 0 0 8px rgba(45, 212, 191, 0.6);
+}
+
+.control-indicator.warning {
+  background-color: rgba(245, 158, 11, 0.3);
+}
+
+.control-indicator.warning::after {
+  background-color: rgb(245, 158, 11);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.control-indicator.danger {
+  background-color: rgba(239, 68, 68, 0.3);
+}
+
+.control-indicator.danger::after {
+  background-color: rgb(239, 68, 68);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* استایل دکمه‌های کنترل */
+.control-button {
+  background-color: rgba(45, 212, 191, 0.1);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  color: rgba(45, 212, 191, 0.8);
+  border: 1px solid rgba(45, 212, 191, 0.2);
+}
+
+.control-button:hover {
+  background-color: rgba(45, 212, 191, 0.2);
+  color: rgba(45, 212, 191, 1);
+  border-color: rgba(45, 212, 191, 0.3);
+}
+
+.control-button.inactive {
+  background-color: rgba(148, 163, 184, 0.1);
+  color: rgba(148, 163, 184, 0.5);
+  border-color: rgba(148, 163, 184, 0.1);
+  cursor: not-allowed;
+}
+
+/* گیج فضاپیمایی */
+.spacecraft-gauge {
+  position: relative;
+}
+
+.gauge-wrapper {
+  width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-base {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(30, 41, 59, 0.5);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.gauge-base::before {
+  content: "";
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(51, 65, 85, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
+}
+
+.gauge-fill {
+  position: absolute;
+  width: 50%;
+  height: 6px;
+  background-color: rgb(16, 185, 129);
+  top: 50%;
+  left: 50%;
+  transform-origin: left center;
+  transform: translateY(-50%) rotate(0deg);
+  border-radius: 6px;
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+}
+
+.gauge-fill.tiffany-fill {
+  background-color: rgb(45, 212, 191);
+  box-shadow: 0 0 10px rgba(45, 212, 191, 0.6);
+}
+
+.gauge-fill.purple-fill {
+  background-color: rgb(168, 85, 247);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+}
+
+.gauge-fill.amber-fill {
+  background-color: rgb(245, 158, 11);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+}
+
+.gauge-center {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(15, 23, 42, 0.8);
+  border: 2px solid rgba(226, 232, 240, 0.2);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+/* استایل برای خط اسکنر */
+.scanner-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, 
+    rgba(45, 212, 191, 0) 0%,
+    rgba(45, 212, 191, 0.8) 50%,
+    rgba(45, 212, 191, 0) 100%
+  );
+  animation: scanning 2s linear infinite;
+  z-index: 10;
+  opacity: 0.8;
+}
+
+@keyframes scanning {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* استایل‌های گلسمورفیسم پیشرفته */
+.glass-island {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  box-shadow: 
+    0 4px 24px -8px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.glass-island::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.glass-island.deep-space {
+  background: linear-gradient(180deg, 
+    rgba(15, 23, 42, 0.8) 0%, 
+    rgba(23, 37, 84, 0.9) 100%
+  );
+  border-color: rgba(99, 102, 241, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(99, 102, 241, 0.2);
+}
+
+.glass-island.cosmic-blue {
+  background: linear-gradient(180deg, 
+    rgba(15, 23, 42, 0.8) 0%, 
+    rgba(7, 89, 133, 0.9) 100%
+  );
+  border-color: rgba(56, 189, 248, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(56, 189, 248, 0.2);
+}
+
+.glass-island.tiffany {
+  background: linear-gradient(180deg, 
+    rgba(240, 253, 250, 0.1) 0%, 
+    rgba(204, 251, 241, 0.2) 100%
+  );
+  border-color: rgba(45, 212, 191, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 0 0 1px rgba(45, 212, 191, 0.2);
+}
+
+.glass-island.amber {
+  background: linear-gradient(180deg, 
+    rgba(254, 252, 232, 0.1) 0%, 
+    rgba(254, 240, 138, 0.2) 100%
+  );
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 0 0 1px rgba(245, 158, 11, 0.2);
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 8px rgba(45, 212, 191, 0.3),
+                0 0 16px rgba(45, 212, 191, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(45, 212, 191, 0.4),
+                0 0 32px rgba(45, 212, 191, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(45, 212, 191, 0.3),
+                0 0 16px rgba(45, 212, 191, 0.1);
+  }
+}
