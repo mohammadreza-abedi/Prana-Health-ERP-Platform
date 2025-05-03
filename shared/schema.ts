@@ -27,6 +27,26 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// روابط کاربر
+export const usersRelations = relations(users, ({ many, one }) => ({
+  userProfile: one(userProfiles),
+  bodyCompositions: many(bodyCompositions),
+  healthMetrics: many(healthMetrics),
+  mentalHealthMetrics: many(mentalHealthMetrics),
+  userEducations: many(userEducations),
+  healthReminders: many(healthReminders),
+  userChallenges: many(userChallenges),
+  userBadges: many(userBadges),
+  userAchievements: many(userAchievements),
+  streaks: many(streaks),
+  userQuests: many(userQuests),
+  userSeasonalChallenges: many(userSeasonalChallenges),
+  creditTransactions: many(creditTransactions),
+  eventParticipations: many(eventParticipants),
+  departmentMemberships: many(departmentMembers),
+  // روابط سیستم آواتار از طریق کامپوننت‌های واسط در AvatarSystem ارائه می‌شوند
+}));
+
 // مدل پروفایل کاربر برای اطلاعات گسترده‌تر
 export const userProfiles = pgTable("user_profiles", {
   id: serial("id").primaryKey(),
