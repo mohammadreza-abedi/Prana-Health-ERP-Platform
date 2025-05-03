@@ -116,11 +116,50 @@ export default function Footer() {
             
             <div className="pt-3">
               <h4 className="text-sm font-medium mb-2">گواهینامه‌ها و استانداردها</h4>
-              <div className="flex flex-wrap gap-2">
-                <img src="https://via.placeholder.com/50" alt="گواهی APA" className="h-12 rounded-md bg-white p-1 border" />
-                <img src="https://via.placeholder.com/50" alt="استاندارد ISO" className="h-12 rounded-md bg-white p-1 border" />
-                <img src="https://via.placeholder.com/50" alt="انجمن روانشناسی" className="h-12 rounded-md bg-white p-1 border" />
-                <img src="https://via.placeholder.com/50" alt="جایزه نوآوری" className="h-12 rounded-md bg-white p-1 border" />
+              <div className="flex flex-wrap gap-4">
+                {/* گواهی ISO */}
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse-slow"></div>
+                  <div className="relative px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center space-x-3 space-x-reverse shadow-lg hover:shadow-blue-500/20 transition-all duration-300 group-hover:scale-105">
+                    <div className="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400">
+                      <div className="text-2xl font-bold">ISO</div>
+                      <div className="text-xs">9001:2015</div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* گواهی APA */}
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse-slow"></div>
+                  <div className="relative px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center space-x-3 space-x-reverse shadow-lg hover:shadow-purple-500/20 transition-all duration-300 group-hover:scale-105">
+                    <div className="flex flex-col items-center justify-center text-purple-600 dark:text-purple-400">
+                      <div className="text-2xl font-bold">APA</div>
+                      <div className="text-xs">Certified</div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* انجمن روانشناسی */}
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-tiffany rounded-lg blur opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse-slow"></div>
+                  <div className="relative px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center space-x-3 space-x-reverse shadow-lg hover:shadow-green-500/20 transition-all duration-300 group-hover:scale-105">
+                    <div className="flex flex-col items-center justify-center text-green-600 dark:text-green-400">
+                      <div className="text-2xl font-bold">PSY</div>
+                      <div className="text-xs">عضو رسمی</div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* جایزه نوآوری */}
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-lg blur opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse-slow"></div>
+                  <div className="relative px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center space-x-3 space-x-reverse shadow-lg hover:shadow-amber-500/20 transition-all duration-300 group-hover:scale-105">
+                    <div className="flex flex-col items-center justify-center text-amber-600 dark:text-amber-400">
+                      <Award className="h-5 w-5 mb-1" />
+                      <div className="text-xs">جایزه نوآوری</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -188,9 +227,9 @@ export default function Footer() {
             </ul>
           </div>
           
-          {/* ستون سوم - همکاری سازمانی */}
+          {/* ستون سوم - همکاری */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">همکاری سازمانی</h3>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">همکاری با پرانا</h3>
             <ul className="space-y-2 text-sm">
               <li className="transition hover:text-tiffany">
                 <Link href="/enterprise">
@@ -235,18 +274,18 @@ export default function Footer() {
             </ul>
             
             <div className="pt-2">
-              <h4 className="text-sm font-medium mb-2">شرکای سازمانی ما</h4>
+              <h4 className="text-sm font-medium mb-2">مشتریان ما</h4>
               <div className="flex flex-wrap gap-3">
-                <div className="bg-white dark:bg-slate-800 p-2 rounded-md border border-slate-200 dark:border-slate-700">
+                <div className="bg-white dark:bg-slate-800 p-2 rounded-md border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-tiffany/30 dark:hover:border-tiffany/30 transition-all duration-300 hover:scale-105">
                   <img src="https://via.placeholder.com/40" alt="شرکت الف" className="h-6 w-auto opacity-70 hover:opacity-100 transition" />
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-2 rounded-md border border-slate-200 dark:border-slate-700">
+                <div className="bg-white dark:bg-slate-800 p-2 rounded-md border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-tiffany/30 dark:hover:border-tiffany/30 transition-all duration-300 hover:scale-105">
                   <img src="https://via.placeholder.com/40" alt="شرکت ب" className="h-6 w-auto opacity-70 hover:opacity-100 transition" />
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-2 rounded-md border border-slate-200 dark:border-slate-700">
+                <div className="bg-white dark:bg-slate-800 p-2 rounded-md border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-tiffany/30 dark:hover:border-tiffany/30 transition-all duration-300 hover:scale-105">
                   <img src="https://via.placeholder.com/40" alt="شرکت ج" className="h-6 w-auto opacity-70 hover:opacity-100 transition" />
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-2 rounded-md border border-slate-200 dark:border-slate-700">
+                <div className="bg-white dark:bg-slate-800 p-2 rounded-md border border-slate-200 dark:border-slate-700 hover:shadow-lg hover:border-tiffany/30 dark:hover:border-tiffany/30 transition-all duration-300 hover:scale-105">
                   <img src="https://via.placeholder.com/40" alt="شرکت د" className="h-6 w-auto opacity-70 hover:opacity-100 transition" />
                 </div>
               </div>
