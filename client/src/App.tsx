@@ -17,6 +17,7 @@ import Leaderboard from "@/pages/Leaderboard";
 import Profile from "@/pages/Profile";
 import UserProfile from "@/pages/UserProfile";
 import AvatarCustomizer from "@/pages/AvatarCustomizer";
+import AvatarEditor from "@/pages/AvatarEditor";
 import AutoLogin from "@/pages/auto-login";
 import PsychologicalTests from "@/pages/PsychologicalTests";
 import Settings from "@/pages/Settings";
@@ -72,6 +73,7 @@ function Router() {
         <Route path="/user-profile" component={UserProfile} />
         <Route path="/advanced-profile" component={AdvancedProfilePage} />
         <Route path="/avatar-customizer" component={AvatarCustomizer} />
+        <Route path="/avatar-editor" component={AvatarEditor} />
         <Route path="/psychological-tests" component={PsychologicalTests} />
         <Route path="/settings" component={Settings} />
         <Route path="/auto-login" component={AutoLogin} />

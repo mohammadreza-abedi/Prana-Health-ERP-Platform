@@ -19,7 +19,7 @@ import {
   PopoverTrigger 
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -57,7 +57,6 @@ import {
   Wand2,
   BrainCircuit,
   Layers,
-  Mask,
   Settings,
   Scale,
   CalendarRange
@@ -450,6 +449,7 @@ export default function AdvancedAvatarBuilder({
   userXp = 0,
   className
 }: AdvancedAvatarBuilderProps) {
+  const { toast } = useToast();
   const [options, setOptions] = useState<AdvancedAvatarOptions>({
     ...defaultAvatarOptions,
     ...initialOptions,
