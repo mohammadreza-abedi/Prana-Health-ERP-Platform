@@ -474,7 +474,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
                             </td>
                             <td className="py-3 pl-4 font-medium">
                               <span className="flex items-center">
-                                <Zap className="h-3 w-3 ml-1 text-amber-500" />
+                                <Star className="h-3 w-3 ml-1 text-amber-500" />
                                 {user.xp.toLocaleString('fa-IR')}
                               </span>
                             </td>
@@ -522,7 +522,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
                               <span>رتبه {currentUser.rank} از {leaderboardData.length}</span>
                               <span className="mx-2">•</span>
                               <span className="flex items-center">
-                                <Zap className="h-3 w-3 ml-1 text-amber-500" />
+                                <Star className="h-3 w-3 ml-1 text-amber-500" />
                                 {currentUser.xp.toLocaleString('fa-IR')} XP
                               </span>
                             </div>
@@ -615,7 +615,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
                             </td>
                             <td className="py-3 pl-4 font-medium">
                               <span className="flex items-center">
-                                <Zap className="h-3 w-3 ml-1 text-amber-500" />
+                                <Star className="h-3 w-3 ml-1 text-amber-500" />
                                 {dept.totalXp.toLocaleString('fa-IR')}
                               </span>
                             </td>
