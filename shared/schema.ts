@@ -4,6 +4,8 @@ import { z } from "zod";
 import { relations } from "drizzle-orm";
 
 // User model - بهبود یافته و کامل
+// ----------------- نقطه ورودی مدل‌های دیتابیس -----------------
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -24,20 +26,6 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
-
-// روابط کاربر 
-export const usersRelations = relations(users, ({ many }) => ({
-  healthMetrics: many(healthMetrics),
-  userChallenges: many(userChallenges),
-  userBadges: many(userBadges),
-  userAchievements: many(userAchievements),
-  streaks: many(streaks),
-  userQuests: many(userQuests),
-  userSeasonalChallenges: many(userSeasonalChallenges),
-  creditTransactions: many(creditTransactions),
-  eventParticipations: many(eventParticipants),
-  departmentMemberships: many(departmentMembers),
-}));
 
 // مدل پروفایل کاربر برای اطلاعات گسترده‌تر
 export const userProfiles = pgTable("user_profiles", {
@@ -897,3 +885,4 @@ export type InsertSeasonalChallenge = z.infer<typeof insertSeasonalChallengeSche
 
 export type UserSeasonalChallenge = typeof userSeasonalChallenges.$inferSelect;
 export type InsertUserSeasonalChallenge = z.infer<typeof insertUserSeasonalChallengeSchema>;
+
