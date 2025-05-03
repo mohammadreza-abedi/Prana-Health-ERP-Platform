@@ -1741,32 +1741,20 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </div>
         
         {/* Page content with ultra-modern glassmorphism and advanced light effects */}
-        <div className="flex-1 p-6 relative overflow-hidden">
+        <div className="flex-1 p-6 relative overflow-auto">
           {/* Top gradient haze - creates soft light atmosphere */}
-          <div className="absolute top-0 left-0 w-full h-16 bg-gradient-to-b from-white/30 dark:from-slate-800/40 to-transparent pointer-events-none backdrop-blur-[2px]"></div>
+          <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/20 dark:from-slate-800/30 to-transparent pointer-events-none"></div>
           
           {/* Left edge light beam - subtle side illumination */}
-          <div className="absolute left-0 top-1/4 w-8 h-1/2 bg-gradient-to-r from-tiffany/10 dark:from-tiffany/5 to-transparent pointer-events-none blur-xl"></div>
+          <div className="fixed left-0 top-1/4 w-4 h-1/2 bg-gradient-to-r from-tiffany/5 dark:from-tiffany/3 to-transparent pointer-events-none blur-md"></div>
           
           {/* Right edge light beam - subtle side illumination */}
-          <div className="absolute right-0 top-1/3 w-8 h-1/3 bg-gradient-to-l from-purple-500/10 dark:from-purple-500/5 to-transparent pointer-events-none blur-xl"></div>
+          <div className="fixed right-0 top-1/3 w-4 h-1/3 bg-gradient-to-l from-purple-500/5 dark:from-purple-500/3 to-transparent pointer-events-none blur-md"></div>
           
-          {/* Bottom gradient soft shadow */}
-          <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white/10 dark:from-slate-900/20 to-transparent pointer-events-none"></div>
-          
-          {/* Dynamic particle effect container - adds subtle movement */}
-          <div className="absolute inset-0 overflow-hidden opacity-20 dark:opacity-10 pointer-events-none">
-            <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-tiffany/5 animate-pulse-slow blur-3xl"></div>
-            <div className="absolute top-2/3 right-1/4 w-96 h-96 rounded-full bg-purple-500/5 animate-pulse-slower blur-3xl"></div>
-          </div>
-          
-          {/* Decorative subtle grid background */}
-          <div className="absolute inset-0 bg-grid-slate-200/[0.02] dark:bg-grid-slate-50/[0.01] bg-[size:20px_20px] pointer-events-none"></div>
-          
-          {/* Content container with advanced glassmorphism */}
-          <div className="relative z-10 rounded-2xl backdrop-blur-[1px]">
-            {/* Advanced light reflection effect */}
-            <div className="absolute inset-x-0 -top-3 h-8 bg-gradient-to-b from-white/10 dark:from-white/5 to-transparent rotate-180 rounded-t-full scale-[1.15] blur-md opacity-70 dark:opacity-50 pointer-events-none"></div>
+          {/* Content container with light glassmorphism that maintains scrolling */}
+          <div className="relative z-10">
+            {/* Subtle highlight edge */}
+            <div className="absolute inset-x-0 -top-1 h-px bg-white/10 dark:bg-white/5 pointer-events-none"></div>
             
             {children}
           </div>
