@@ -84,7 +84,13 @@ const DynamicBackground = () => {
 };
 
 // کارت شیشه‌ای با افکت‌های بصری
-const GlassCard = ({ children, className = "", variant = "default" }) => {
+interface GlassCardProps {
+  children: React.ReactNode;
+  className?: string;
+  variant?: 'default' | 'primary' | 'danger' | 'warning' | 'success' | 'info';
+}
+
+const GlassCard: React.FC<GlassCardProps> = ({ children, className = "", variant = "default" }) => {
   const variantStyles = {
     default: "bg-white/60 dark:bg-slate-800/60 border-slate-200/50 dark:border-slate-700/50",
     primary: "bg-white/70 dark:bg-slate-800/70 border-tiffany/30 dark:border-tiffany/20 hover:shadow-tiffany/5",
@@ -101,8 +107,25 @@ const GlassCard = ({ children, className = "", variant = "default" }) => {
   );
 };
 
+// تعریف ساختار داده برای KPI
+interface KPI {
+  title: string;
+  value: number;
+  change: number;
+  trend: 'up' | 'down';
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+  isPrimary?: boolean;
+  details?: string;
+}
+
 // کامپوننت کارت شاخص عملکرد با افکت‌های بصری پیشرفته
-const KPICard = ({ kpi }) => {
+interface KPICardProps {
+  kpi: KPI;
+}
+
+const KPICard: React.FC<KPICardProps> = ({ kpi }) => {
   const [loadProgress, setLoadProgress] = useState(0);
 
   useEffect(() => {
@@ -110,7 +133,7 @@ const KPICard = ({ kpi }) => {
     return () => clearTimeout(timer);
   }, [kpi.value]);
 
-  const getIconColor = (color) => {
+  const getIconColor = (color: string): string => {
     switch(color) {
       case 'emerald': return 'text-emerald-500 bg-emerald-50 dark:bg-emerald-950/30';
       case 'amber': return 'text-amber-500 bg-amber-50 dark:bg-amber-950/30';
@@ -124,11 +147,11 @@ const KPICard = ({ kpi }) => {
     }
   };
 
-  const getTrendColor = (trend) => {
+  const getTrendColor = (trend: 'up' | 'down'): string => {
     return trend === 'up' ? 'text-emerald-500' : 'text-rose-500';
   };
 
-  const getProgressColor = (color) => {
+  const getProgressColor = (color: string): string => {
     switch(color) {
       case 'emerald': return 'from-emerald-300 to-emerald-500';
       case 'amber': return 'from-amber-300 to-amber-500';
