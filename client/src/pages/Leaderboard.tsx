@@ -407,6 +407,15 @@ export default function Leaderboard() {
         </div>
       </div>
       
+      {/* Quick overview card */}
+      <div className="mb-8">
+        <h2 className="text-lg font-bold mb-4 flex items-center">
+          <BarChart3 className="h-5 w-5 ml-2 text-tiffany" />
+          خلاصه لیدربورد
+        </h2>
+        <LeaderboardCard />
+      </div>
+      
       {/* Leaderboard table */}
       <GlassCard className="p-6 rounded-xl">
         <div className="flex justify-between items-center mb-6">
