@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { LeaderboardEntry, Department } from "@/types";
 import { GlassCard } from "@/components/ui/glass-card";
 import { motion, useScroll, useTransform } from "framer-motion";
+import LeaderboardCard from "@/components/dashboard/LeaderboardCard";
 import { useState, useRef } from "react";
 import { useAuth } from "@/lib/useAuth";
 import { 

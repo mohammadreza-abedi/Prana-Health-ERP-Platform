@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Challenge, UserChallenge } from "@/types";
 import { GlassCard } from "@/components/ui/glass-card";
 import { motion, AnimatePresence } from "framer-motion";
+import DailyChallengeCard from "@/components/dashboard/DailyChallengeCard";
 import { 
   Clock, 
   Mail, 
@@ -309,7 +310,15 @@ export default function Challenges() {
       </div>
       
       {/* Active/Filtered Challenges */}
+      {/* Daily Challenge Card */}
       <div className="mb-8">
+        <h2 className="text-xl font-bold mb-4">چالش امروز</h2>
+        <DailyChallengeCard />
+      </div>
+      
+      {/* User Challenges */}
+      <div className="mb-8">
+        <h2 className="text-xl font-bold mb-4">چالش‌های شما</h2>
         {filteredChallenges.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredChallenges.map((userChallenge) => {
