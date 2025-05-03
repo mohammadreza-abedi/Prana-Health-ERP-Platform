@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import MainLayout from '@/components/layouts/MainLayout';
 import { OrganizationalHealthDashboard } from '@/components/reports/OrganizationalHealthDashboard';
 import { ProCard } from '@/components/ui/pro-card';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -148,8 +147,7 @@ export default function OrganizationalHealthPage() {
   const selectedOrganization = organizations.find(org => org.id === selectedOrg) || organizations[0];
   
   return (
-    <MainLayout>
-      <div className="pb-8">
+    <div className="pb-8">
         <div className="flex flex-col lg:flex-row justify-between lg:items-center mb-6 gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">سلامت سازمانی</h1>
@@ -529,6 +527,5 @@ export default function OrganizationalHealthPage() {
           </TabsContent>
         </Tabs>
       </div>
-    </MainLayout>
   );
 }

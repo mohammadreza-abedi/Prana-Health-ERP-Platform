@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import MainLayout from '@/components/layouts/MainLayout';
 import { GlassMedicalCenterViewer } from '@/components/medical-center/GlassMedicalCenterViewer';
 import { ProCard } from '@/components/ui/pro-card';
 import { Button } from '@/components/ui/button';
@@ -281,251 +280,249 @@ export default function MedicalCenterPage() {
   const [activeTab, setActiveTab] = useState('center');
   
   return (
-    <MainLayout>
-      <div className="pb-8">
-        <ProCard 
-          className="mb-6 bg-gradient-to-r from-tiffany-alpha to-aqua-alpha dark:from-tiffany/30 dark:to-aqua/20 border-0 p-8"
-          variant="acrylic"
-          glassmorphism
-        >
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="mb-6 md:mb-0 md:ml-6">
-              <h1 className="text-3xl font-bold mb-2 text-tiffany">مرکز طب کار پرانا</h1>
-              <p className="text-slate-700 dark:text-slate-300 mb-4 max-w-2xl">
-                مرکز تخصصی طب کار پرانا، ارائه‌دهنده خدمات جامع معاینات دوره‌ای، ارزیابی ریسک محیط کار و آموزش‌های HSE برای سازمان‌ها و شرکت‌های صنعتی با بیش از ۱۵ سال تجربه درخشان
-              </p>
-              
-              <div className="flex flex-wrap gap-2">
-                <Badge className="bg-tiffany hover:bg-tiffany-hover">معاینات دوره‌ای</Badge>
-                <Badge className="bg-navy hover:bg-navy-hover">بهداشت حرفه‌ای</Badge>
-                <Badge className="bg-aqua hover:bg-aqua-hover">ارزیابی ریسک</Badge>
-                <Badge className="bg-success hover:bg-success-hover">آموزش HSE</Badge>
+    <div className="pb-8">
+      <ProCard 
+        className="mb-6 bg-gradient-to-r from-tiffany-alpha to-aqua-alpha dark:from-tiffany/30 dark:to-aqua/20 border-0 p-8"
+        variant="acrylic"
+        glassmorphism
+      >
+        <div className="flex flex-col md:flex-row items-center justify-between">
+          <div className="mb-6 md:mb-0 md:ml-6">
+            <h1 className="text-3xl font-bold mb-2 text-tiffany">مرکز طب کار پرانا</h1>
+            <p className="text-slate-700 dark:text-slate-300 mb-4 max-w-2xl">
+              مرکز تخصصی طب کار پرانا، ارائه‌دهنده خدمات جامع معاینات دوره‌ای، ارزیابی ریسک محیط کار و آموزش‌های HSE برای سازمان‌ها و شرکت‌های صنعتی با بیش از ۱۵ سال تجربه درخشان
+            </p>
+            
+            <div className="flex flex-wrap gap-2">
+              <Badge className="bg-tiffany hover:bg-tiffany-hover">معاینات دوره‌ای</Badge>
+              <Badge className="bg-navy hover:bg-navy-hover">بهداشت حرفه‌ای</Badge>
+              <Badge className="bg-aqua hover:bg-aqua-hover">ارزیابی ریسک</Badge>
+              <Badge className="bg-success hover:bg-success-hover">آموزش HSE</Badge>
+            </div>
+          </div>
+          
+          <div className="flex flex-col md:flex-row gap-4">
+            <Button size="lg" className="bg-tiffany hover:bg-tiffany-hover">
+              <Phone className="ml-2 h-5 w-5" />
+              تماس با ما
+            </Button>
+            <Button size="lg" variant="outline">
+              <Calendar className="ml-2 h-5 w-5" />
+              رزرو نوبت
+            </Button>
+          </div>
+        </div>
+      </ProCard>
+      
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        {medicalCenterStats.map((stat, idx) => (
+          <Card key={idx}>
+            <CardContent className="p-6 flex items-center">
+              <div className={`w-12 h-12 rounded-full bg-${stat.color}/10 dark:bg-${stat.color}/20 flex items-center justify-center text-${stat.color} ml-4`}>
+                {stat.icon}
               </div>
+              <div>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <div className="text-sm text-slate-500 dark:text-slate-400">{stat.title}</div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      
+      <Tabs 
+        value={activeTab} 
+        onValueChange={setActiveTab}
+        className="pro-tabs mb-6"
+      >
+        <TabsList>
+          <TabsTrigger value="center" className="pro-tab">
+            <Building className="h-4 w-4 ml-1.5" />
+            مرکز طب کار
+          </TabsTrigger>
+          <TabsTrigger value="services" className="pro-tab">
+            <Briefcase className="h-4 w-4 ml-1.5" />
+            خدمات
+          </TabsTrigger>
+          <TabsTrigger value="doctors" className="pro-tab">
+            <Stethoscope className="h-4 w-4 ml-1.5" />
+            پزشکان
+          </TabsTrigger>
+          <TabsTrigger value="clients" className="pro-tab">
+            <BarChart2 className="h-4 w-4 ml-1.5" />
+            مشتریان
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="center" className="pro-tab-content">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <GlassMedicalCenterViewer />
             </div>
             
-            <div className="flex flex-col md:flex-row gap-4">
-              <Button size="lg" className="bg-tiffany hover:bg-tiffany-hover">
-                <Phone className="ml-2 h-5 w-5" />
-                تماس با ما
-              </Button>
-              <Button size="lg" variant="outline">
-                <Calendar className="ml-2 h-5 w-5" />
-                رزرو نوبت
+            <div className="lg:col-span-1 space-y-6">
+              <ContactInfo />
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>درباره مرکز طب کار پرانا</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-justify">
+                    مرکز طب کار پرانا با بیش از ۱۵ سال سابقه درخشان در ارائه خدمات تخصصی طب کار، بهداشت حرفه‌ای و ایمنی محیط کار، یکی از پیشروترین مراکز تخصصی این حوزه در کشور است.
+                  </p>
+                  <p className="text-justify">
+                    این مرکز با بهره‌گیری از کادر مجرب پزشکی، تجهیزات پیشرفته و استانداردهای بین‌المللی، خدمات جامعی را به سازمان‌ها و صنایع مختلف ارائه می‌دهد. تمرکز اصلی ما بر پیشگیری از بیماری‌های شغلی، ارتقای سلامت کارکنان و ایمن‌سازی محیط‌های کاری است.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="services" className="pro-tab-content">
+          <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-2xl font-bold">خدمات مرکز طب کار</h2>
+            
+            <div className="flex gap-2">
+              <Select defaultValue="all">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="نوع خدمات" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">همه خدمات</SelectItem>
+                  <SelectItem value="periodic">معاینات دوره‌ای</SelectItem>
+                  <SelectItem value="risk">ارزیابی ریسک</SelectItem>
+                  <SelectItem value="training">آموزش</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Button variant="outline">
+                <FileText className="h-4 w-4 ml-1.5" />
+                دانلود تعرفه
               </Button>
             </div>
           </div>
-        </ProCard>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {medicalServices.map((service) => (
+              <ServiceCard key={service.id} service={service} />
+            ))}
+          </div>
+        </TabsContent>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          {medicalCenterStats.map((stat, idx) => (
-            <Card key={idx}>
-              <CardContent className="p-6 flex items-center">
-                <div className={`w-12 h-12 rounded-full bg-${stat.color}/10 dark:bg-${stat.color}/20 flex items-center justify-center text-${stat.color} ml-4`}>
-                  {stat.icon}
-                </div>
-                <div>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <div className="text-sm text-slate-500 dark:text-slate-400">{stat.title}</div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        
-        <Tabs 
-          value={activeTab} 
-          onValueChange={setActiveTab}
-          className="pro-tabs mb-6"
-        >
-          <TabsList>
-            <TabsTrigger value="center" className="pro-tab">
-              <Building className="h-4 w-4 ml-1.5" />
-              مرکز طب کار
-            </TabsTrigger>
-            <TabsTrigger value="services" className="pro-tab">
-              <Briefcase className="h-4 w-4 ml-1.5" />
-              خدمات
-            </TabsTrigger>
-            <TabsTrigger value="doctors" className="pro-tab">
-              <Stethoscope className="h-4 w-4 ml-1.5" />
-              پزشکان
-            </TabsTrigger>
-            <TabsTrigger value="clients" className="pro-tab">
-              <BarChart2 className="h-4 w-4 ml-1.5" />
-              مشتریان
-            </TabsTrigger>
-          </TabsList>
+        <TabsContent value="doctors" className="pro-tab-content">
+          <h2 className="text-2xl font-bold mb-6">پزشکان متخصص مرکز</h2>
           
-          <TabsContent value="center" className="pro-tab-content">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
-                <GlassMedicalCenterViewer />
-              </div>
-              
-              <div className="lg:col-span-1 space-y-6">
-                <ContactInfo />
-                
-                <Card>
-                  <CardHeader>
-                    <CardTitle>درباره مرکز طب کار پرانا</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-justify">
-                      مرکز طب کار پرانا با بیش از ۱۵ سال سابقه درخشان در ارائه خدمات تخصصی طب کار، بهداشت حرفه‌ای و ایمنی محیط کار، یکی از پیشروترین مراکز تخصصی این حوزه در کشور است.
-                    </p>
-                    <p className="text-justify">
-                      این مرکز با بهره‌گیری از کادر مجرب پزشکی، تجهیزات پیشرفته و استانداردهای بین‌المللی، خدمات جامعی را به سازمان‌ها و صنایع مختلف ارائه می‌دهد. تمرکز اصلی ما بر پیشگیری از بیماری‌های شغلی، ارتقای سلامت کارکنان و ایمن‌سازی محیط‌های کاری است.
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="services" className="pro-tab-content">
-            <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <h2 className="text-2xl font-bold">خدمات مرکز طب کار</h2>
-              
-              <div className="flex gap-2">
-                <Select defaultValue="all">
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="نوع خدمات" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">همه خدمات</SelectItem>
-                    <SelectItem value="periodic">معاینات دوره‌ای</SelectItem>
-                    <SelectItem value="risk">ارزیابی ریسک</SelectItem>
-                    <SelectItem value="training">آموزش</SelectItem>
-                  </SelectContent>
-                </Select>
-                
-                <Button variant="outline">
-                  <FileText className="h-4 w-4 ml-1.5" />
-                  دانلود تعرفه
-                </Button>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {medicalServices.map((service) => (
-                <ServiceCard key={service.id} service={service} />
-              ))}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="doctors" className="pro-tab-content">
-            <h2 className="text-2xl font-bold mb-6">پزشکان متخصص مرکز</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {doctors.map((doctor) => (
-                <ProCard key={doctor.id} className="h-full">
-                  <CardHeader>
-                    <CardTitle>{doctor.name}</CardTitle>
-                    <CardDescription>{doctor.specialty}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <div className="text-slate-500 dark:text-slate-400">سابقه</div>
-                        <div className="font-medium">{doctor.experience}</div>
-                      </div>
-                      <div>
-                        <div className="text-slate-500 dark:text-slate-400">تحصیلات</div>
-                        <div className="font-medium">{doctor.education}</div>
-                      </div>
-                    </div>
-                    
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {doctors.map((doctor) => (
+              <ProCard key={doctor.id} className="h-full">
+                <CardHeader>
+                  <CardTitle>{doctor.name}</CardTitle>
+                  <CardDescription>{doctor.specialty}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <h4 className="text-sm font-semibold mb-2">روزهای حضور:</h4>
-                      {doctor.schedule.map((item, idx) => (
-                        <div key={idx} className="flex items-start mb-1 text-sm">
-                          <Calendar className="h-3.5 w-3.5 ml-1.5 mt-0.5 text-tiffany" />
-                          <span>{item.day}: {item.hours}</span>
-                        </div>
+                      <div className="text-slate-500 dark:text-slate-400">سابقه</div>
+                      <div className="font-medium">{doctor.experience}</div>
+                    </div>
+                    <div>
+                      <div className="text-slate-500 dark:text-slate-400">تحصیلات</div>
+                      <div className="font-medium">{doctor.education}</div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-semibold mb-2">روزهای حضور:</h4>
+                    {doctor.schedule.map((item, idx) => (
+                      <div key={idx} className="flex items-start mb-1 text-sm">
+                        <Calendar className="h-3.5 w-3.5 ml-1.5 mt-0.5 text-tiffany" />
+                        <span>{item.day}: {item.hours}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div>
+                    <h4 className="text-sm font-semibold mb-2">گواهینامه‌ها:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {doctor.certifications.map((cert, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-xs">
+                          {cert}
+                        </Badge>
                       ))}
-                    </div>
-                    
-                    <div>
-                      <h4 className="text-sm font-semibold mb-2">گواهینامه‌ها:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {doctor.certifications.map((cert, idx) => (
-                          <Badge key={idx} variant="secondary" className="text-xs">
-                            {cert}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                </ProCard>
-              ))}
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="clients" className="pro-tab-content">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-2">شرکت‌های تحت پوشش</h2>
-              <p className="text-slate-600 dark:text-slate-400">
-                بیش از ۱۵۰ شرکت و سازمان معتبر در صنایع مختلف از خدمات مرکز طب کار پرانا بهره می‌برند
-              </p>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 dark:bg-slate-800">
-                    <th className="p-3 text-right border-b">نام شرکت</th>
-                    <th className="p-3 text-right border-b">تعداد کارکنان</th>
-                    <th className="p-3 text-right border-b">صنعت</th>
-                    <th className="p-3 text-right border-b">خدمات دریافتی</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {corporateClients.map((client) => (
-                    <tr key={client.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                      <td className="p-3 border-b">
-                        <div className="font-medium">{client.name}</div>
-                      </td>
-                      <td className="p-3 border-b">{client.employees.toLocaleString('fa-IR')}</td>
-                      <td className="p-3 border-b">{client.industry}</td>
-                      <td className="p-3 border-b">
-                        <div className="flex flex-wrap gap-1">
-                          {client.services.map((service, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
-                              {service}
-                            </Badge>
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            
-            <div className="mt-8">
-              <ProCard className="bg-gradient-to-r from-tiffany/5 to-aqua/5 dark:from-tiffany/10 dark:to-aqua/10">
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row items-center">
-                    <div className="mb-4 md:mb-0 md:ml-6">
-                      <h3 className="text-xl font-bold mb-2">همکاری با شرکت شما</h3>
-                      <p className="text-slate-600 dark:text-slate-400">
-                        برای دریافت اطلاعات بیشتر درباره خدمات و تعرفه‌ها با ما تماس بگیرید
-                      </p>
-                    </div>
-                    
-                    <div className="flex-shrink-0">
-                      <Button className="bg-tiffany hover:bg-tiffany-hover">
-                        <FileText className="ml-2 h-4 w-4" />
-                        درخواست همکاری
-                      </Button>
                     </div>
                   </div>
                 </CardContent>
               </ProCard>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </MainLayout>
+            ))}
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="clients" className="pro-tab-content">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold mb-2">شرکت‌های تحت پوشش</h2>
+            <p className="text-slate-600 dark:text-slate-400">
+              بیش از ۱۵۰ شرکت و سازمان معتبر در صنایع مختلف از خدمات مرکز طب کار پرانا بهره می‌برند
+            </p>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-slate-100 dark:bg-slate-800">
+                  <th className="p-3 text-right border-b">نام شرکت</th>
+                  <th className="p-3 text-right border-b">تعداد کارکنان</th>
+                  <th className="p-3 text-right border-b">صنعت</th>
+                  <th className="p-3 text-right border-b">خدمات دریافتی</th>
+                </tr>
+              </thead>
+              <tbody>
+                {corporateClients.map((client) => (
+                  <tr key={client.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <td className="p-3 border-b">
+                      <div className="font-medium">{client.name}</div>
+                    </td>
+                    <td className="p-3 border-b">{client.employees.toLocaleString('fa-IR')}</td>
+                    <td className="p-3 border-b">{client.industry}</td>
+                    <td className="p-3 border-b">
+                      <div className="flex flex-wrap gap-1">
+                        {client.services.map((service, idx) => (
+                          <Badge key={idx} variant="outline" className="text-xs">
+                            {service}
+                          </Badge>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          <div className="mt-8">
+            <ProCard className="bg-gradient-to-r from-tiffany/5 to-aqua/5 dark:from-tiffany/10 dark:to-aqua/10">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row items-center">
+                  <div className="mb-4 md:mb-0 md:ml-6">
+                    <h3 className="text-xl font-bold mb-2">همکاری با شرکت شما</h3>
+                    <p className="text-slate-600 dark:text-slate-400">
+                      برای دریافت اطلاعات بیشتر درباره خدمات و تعرفه‌ها با ما تماس بگیرید
+                    </p>
+                  </div>
+                  
+                  <div className="flex-shrink-0">
+                    <Button className="bg-tiffany hover:bg-tiffany-hover">
+                      <FileText className="ml-2 h-4 w-4" />
+                      درخواست همکاری
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </ProCard>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

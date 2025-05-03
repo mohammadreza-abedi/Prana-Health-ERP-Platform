@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import MainLayout from '@/components/layouts/MainLayout';
 import { HealthMetricsGrid, type HealthMetricData } from '@/components/dashboards/HealthMetricsCard';
 import { Activity, Calendar, User, Users } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -228,8 +227,7 @@ export default function HealthDashboard() {
   const [activeTab, setActiveTab] = useState('personal');
   
   return (
-    <MainLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <DashboardHeader />
         
         <Tabs 
@@ -324,6 +322,5 @@ export default function HealthDashboard() {
           </TabsContent>
         </Tabs>
       </div>
-    </MainLayout>
   );
 }
