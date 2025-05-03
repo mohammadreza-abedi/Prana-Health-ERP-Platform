@@ -5,10 +5,18 @@ interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-export function Container({ className, children, ...props }: ContainerProps) {
-  return (
-    <div className={cn("container mx-auto px-4", className)} {...props}>
-      {children}
-    </div>
-  );
-}
+export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
+  ({ className, children, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn("mx-auto w-full px-4 sm:px-6 lg:px-8", className)}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+
+Container.displayName = "Container";

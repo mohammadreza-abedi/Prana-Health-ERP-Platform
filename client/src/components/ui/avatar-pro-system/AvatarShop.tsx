@@ -20,6 +20,12 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 
+// واردات تصاویر آواتارها
+import priaMohawk from '@assets/Pria Mohawk.png';
+import wanitaUraiTopi from '@assets/Wanita Urai Topi.png';
+import wanitaBerhijabBerkacamata from '@assets/Wanita Berhijab Berkacamata.png';
+import priaGimbalSebelahKacamata from '@assets/Pria Gimbal sebelah Kacamata.png';
+
 export interface ShopItemData {
   id: number;
   name: string;
@@ -71,7 +77,7 @@ const AvatarShop: React.FC<AvatarShopProps> = ({
     {
       id: 101,
       name: "آواتار آبی",
-      imagePath: "/attached_assets/Pria Mohawk.png",
+      imagePath: priaMohawk,
       description: "آواتار پسر با موهای آبی و طرح خاص",
       type: 'avatar',
       price: 500,
@@ -83,7 +89,7 @@ const AvatarShop: React.FC<AvatarShopProps> = ({
     {
       id: 102,
       name: "آواتار صورتی",
-      imagePath: "/attached_assets/Wanita Urai Topi.png",
+      imagePath: wanitaUraiTopi,
       description: "آواتار دختر با کلاه و طرح ویژه",
       type: 'avatar',
       price: 500,
@@ -95,7 +101,7 @@ const AvatarShop: React.FC<AvatarShopProps> = ({
     {
       id: 103,
       name: "آواتار با حجاب و عینک",
-      imagePath: "/attached_assets/Wanita Berhijab Berkacamata.png",
+      imagePath: wanitaBerhijabBerkacamata,
       description: "آواتار ویژه و کمیاب دختر با حجاب و عینک",
       type: 'avatar',
       price: 1200,
@@ -107,7 +113,7 @@ const AvatarShop: React.FC<AvatarShopProps> = ({
     {
       id: 104,
       name: "آواتار افسانه‌ای",
-      imagePath: "/attached_assets/Pria Gimbal sebelah Kacamata.png",
+      imagePath: priaGimbalSebelahKacamata,
       description: "آواتار پسر با طراحی فوق‌العاده خاص",
       type: 'avatar',
       price: 3000,
