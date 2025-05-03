@@ -20,8 +20,16 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 
-// مسیرهای تصاویر آواتارها
+// مسیرهای تصاویر آواتارها - مجموعه کامل آواتارها
 const priaGimbalKacamata = '/avatar-images/Pria Gimbal Kacamata.png'; // آواتار سبز اصلی
+const priaMohawk = '/avatar-images/Pria Mohawk.png'; // آواتار پسر با موهای آبی
+const wanitaUraiTopi = '/avatar-images/Wanita Urai Topi.png'; // آواتار دختر با کلاه
+const wanitaBerhijabBerkacamata = '/avatar-images/Wanita Berhijab Berkacamata.png'; // آواتار دختر با حجاب
+const priaGimbalSebelahKacamata = '/avatar-images/Pria Gimbal sebelah Kacamata.png'; // آواتار پسر با طراحی ویژه
+const priaPoniBrewokan = '/avatar-images/Pria Poni Brewokan.png'; // آواتار پسر با ریش
+const priaRambutLepekTopi = '/avatar-images/Pria Rambut Lepek Topi.png'; // آواتار پسر با کلاه 
+const wanitaHijabSweater = '/avatar-images/Wanita Hijab Sweater.png'; // آواتار دختر با حجاب و لباس گرم
+const wanitaKuncirTopi = '/avatar-images/Wanita Kuncir Topi.png'; // آواتار دختر با مو بسته و کلاه
 
 export interface ShopItemData {
   id: number;
@@ -70,24 +78,23 @@ const AvatarShop: React.FC<AvatarShopProps> = ({
 
   // داده‌های فروشگاه (در یک اپلیکیشن واقعی باید از API گرفته شود)
   const shopItems: ShopItemData[] = [
-    // آواتارها
+    // آواتارها - مجموعه کامل و متنوع
     {
       id: 101,
-      name: "کاراکتر سبز کمیاب",
+      name: "کاراکتر سبز",
       imagePath: priaGimbalKacamata,
-      description: "آواتار سبز با طراحی خاص",
+      description: "آواتار اصلی سبز با طراحی خاص و عینک",
       type: 'avatar',
-      price: 500,
+      price: 0, // رایگان - پیش‌فرض
       category: "male",
-      rarity: "rare",
-      requiredLevel: 3,
+      rarity: "common",
       isAvailable: true
     },
     {
       id: 102,
-      name: "کاراکتر سبز ویژه",
-      imagePath: priaGimbalKacamata,
-      description: "آواتار سبز با ویژگی‌های خاص",
+      name: "کاراکتر آبی",
+      imagePath: priaMohawk,
+      description: "آواتار پسر با موهای آبی و طرح خاص",
       type: 'avatar',
       price: 500,
       category: "male",
@@ -97,21 +104,81 @@ const AvatarShop: React.FC<AvatarShopProps> = ({
     },
     {
       id: 103,
-      name: "کاراکتر سبز حماسی",
-      imagePath: priaGimbalKacamata,
-      description: "آواتار سبز با طراحی حماسی",
+      name: "دختر با کلاه",
+      imagePath: wanitaUraiTopi,
+      description: "آواتار دختر با کلاه و طرح ویژه",
+      type: 'avatar',
+      price: 500,
+      category: "female",
+      rarity: "rare",
+      requiredLevel: 3,
+      isAvailable: true
+    },
+    {
+      id: 104,
+      name: "پسر با ریش",
+      imagePath: priaPoniBrewokan,
+      description: "آواتار پسر با طراحی ریش و موی خاص",
+      type: 'avatar',
+      price: 700,
+      category: "male",
+      rarity: "rare",
+      requiredLevel: 4,
+      isAvailable: true
+    },
+    {
+      id: 105,
+      name: "پسر با کلاه",
+      imagePath: priaRambutLepekTopi,
+      description: "آواتار کاراکتر پسر با کلاه مخصوص",
+      type: 'avatar',
+      price: 700,
+      category: "male",
+      rarity: "rare",
+      requiredLevel: 4,
+      isAvailable: true
+    },
+    {
+      id: 106,
+      name: "دختر با حجاب",
+      imagePath: wanitaHijabSweater,
+      description: "آواتار دختر با حجاب و لباس گرم",
+      type: 'avatar',
+      price: 1000,
+      category: "female",
+      rarity: "epic",
+      requiredLevel: 6,
+      isAvailable: true
+    },
+    {
+      id: 107,
+      name: "دختر کلاه‌دار",
+      imagePath: wanitaKuncirTopi,
+      description: "آواتار دختر با مو بسته و کلاه ویژه",
+      type: 'avatar',
+      price: 1000,
+      category: "female",
+      rarity: "epic",
+      requiredLevel: 6,
+      isAvailable: true
+    },
+    {
+      id: 108,
+      name: "دختر با حجاب و عینک",
+      imagePath: wanitaBerhijabBerkacamata,
+      description: "آواتار ویژه و کمیاب دختر با حجاب و عینک طبی",
       type: 'avatar',
       price: 1200,
-      category: "male",
+      category: "female",
       rarity: "epic",
       requiredLevel: 7,
       isAvailable: true
     },
     {
-      id: 104,
-      name: "کاراکتر سبز افسانه‌ای",
-      imagePath: priaGimbalKacamata,
-      description: "آواتار سبز با طراحی فوق‌العاده خاص",
+      id: 109,
+      name: "کاراکتر افسانه‌ای",
+      imagePath: priaGimbalSebelahKacamata,
+      description: "آواتار پسر با طراحی فوق‌العاده خاص و نادر",
       type: 'avatar',
       price: 3000,
       category: "male",
