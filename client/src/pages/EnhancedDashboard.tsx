@@ -875,7 +875,7 @@ const NewFeatureMenu = () => {
 };
 
 // کامپوننت اصلی داشبورد پیشرفته
-// کامپوننت کارت شخصی
+// کامپوننت کارت شخصی (مینیمال و حرفه‌ای)
 const PersonalCard = () => {
   // داده‌های نمونه برای کارت شخصی
   const userInfo = {
@@ -893,110 +893,217 @@ const PersonalCard = () => {
     contact: {
       email: 'admin@prana-health.com',
       phone: '021-88776655'
-    }
+    },
+    achievements: [
+      { icon: "🏆", label: "رهبر تیم برتر" },
+      { icon: "🌟", label: "مدیر نمونه سال" },
+      { icon: "📊", label: "بهره‌وری بالا" }
+    ]
   };
 
   return (
     <motion.div 
-      className="mb-6 rounded-xl bg-white dark:bg-slate-800/95 shadow-lg relative overflow-hidden border border-slate-200/50 dark:border-slate-700/50"
+      className="mb-6 rounded-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl shadow-xl relative overflow-hidden border-0"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
+      whileHover={{ boxShadow: "0 20px 40px rgba(0,0,0,0.1), 0 0 20px rgba(121, 218, 232, 0.1)" }}
     >
-      {/* افکت‌های پس‌زمینه */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-r from-aqua/30 to-tiffany/30 dark:from-aqua/20 dark:to-tiffany/20 z-0"></div>
-      <div className="absolute -top-12 -left-12 h-32 w-32 rounded-full bg-tiffany/20 blur-2xl z-0"></div>
-      <div className="absolute -bottom-8 -right-8 h-24 w-24 rounded-full bg-aqua/20 blur-2xl z-0"></div>
+      {/* افکت‌های پس‌زمینه خاص */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-tiffany/3 via-white/0 to-aqua/3 dark:from-tiffany/5 dark:via-slate-800/0 dark:to-aqua/5"></div>
+      <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-r from-tiffany/60 to-aqua/60"></div>
+      <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full bg-aqua/5 dark:bg-aqua/10 blur-3xl"></div>
+      <div className="absolute -bottom-32 -right-32 w-64 h-64 rounded-full bg-tiffany/5 dark:bg-tiffany/10 blur-3xl"></div>
       
-      <div className="relative z-10 flex flex-col md:flex-row p-6 gap-6">
-        {/* بخش اطلاعات اصلی */}
-        <div className="flex gap-6">
-          {/* آواتار */}
-          <div className="relative">
-            <div className="w-20 h-20 rounded-xl overflow-hidden border-4 border-white dark:border-slate-700 shadow-lg flex-shrink-0">
-              <img src={userInfo.avatar} alt={userInfo.name} className="w-full h-full object-cover" />
+      {/* اطلاعات کاربر */}
+      <div className="relative z-10 px-6 pt-6 pb-3">
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* بخش اصلی پروفایل */}
+          <div className="flex">
+            {/* آواتار با افکت خاص */}
+            <div className="flex-shrink-0 relative">
+              <div className="w-[76px] h-[76px] rounded-lg overflow-hidden shadow-lg mr-4">
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-br from-aqua/20 to-tiffany/20 mix-blend-overlay z-10"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 0.8 }}
+                ></motion.div>
+                <img src={userInfo.avatar} alt={userInfo.name} className="w-full h-full object-cover" />
+              </div>
+              <motion.div 
+                className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.6, type: "spring", stiffness: 300 }}
+              >
+                <span className="sr-only">آنلاین</span>
+              </motion.div>
             </div>
-            <div className="absolute -bottom-1 -right-1 bg-emerald-500 p-1 rounded-full border-2 border-white dark:border-slate-700">
-              <div className="w-2 h-2 rounded-full bg-white"></div>
+            
+            {/* اطلاعات شخصی */}
+            <div className="pr-2">
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">{userInfo.name}</h2>
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <Badge className="bg-tiffany/90 hover:bg-tiffany text-[10px] py-0 px-2 h-5 font-normal">
+                    {userInfo.accessLevel}
+                  </Badge>
+                </motion.div>
+              </div>
+              
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{userInfo.position}</p>
+              
+              {/* اطلاعات تکمیلی */}
+              <div className="flex mt-2 gap-3 text-[10px] text-slate-500 dark:text-slate-400">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center mr-1">
+                    <span className="text-[6px] text-slate-500 dark:text-slate-400">#</span>
+                  </div>
+                  <span>{userInfo.id}</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center mr-1">
+                    <span className="text-[6px] text-slate-500 dark:text-slate-400">📅</span>
+                  </div>
+                  <span>{userInfo.joiningDate}</span>
+                </div>
+              </div>
             </div>
           </div>
           
-          {/* اطلاعات پایه */}
-          <div className="flex flex-col justify-between py-1">
-            <div>
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                {userInfo.name}
-                <Badge className="bg-tiffany hover:bg-tiffany/90 ml-2">{userInfo.accessLevel}</Badge>
-              </h2>
-              <p className="text-slate-500 dark:text-slate-400 text-sm">{userInfo.position}</p>
-            </div>
-            <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
-              <div className="flex items-center">
-                <span className="ml-1">شناسه:</span>
-                <span className="font-semibold text-slate-700 dark:text-slate-300">{userInfo.id}</span>
+          {/* شاخص‌های کلیدی عملکرد */}
+          <div className="flex-1 grid grid-cols-4 gap-2 border-t md:border-t-0 md:border-r pt-4 md:pt-0 md:pr-6 mt-4 md:mt-0 border-slate-100 dark:border-slate-700/20">
+            {/* شاخص امتیاز سلامت - مینیمال و مدرن */}
+            <motion.div 
+              className="flex flex-col items-center"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <div className="relative w-12 h-12 mb-1">
+                <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeWidth="1" className="text-slate-200 dark:text-slate-700" />
+                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="100" strokeDashoffset={100 - userInfo.healthScore} className="text-emerald-500" strokeLinecap="round" />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-xs font-bold">{userInfo.healthScore}</span>
+                </div>
               </div>
-              <div className="flex items-center">
-                <span className="ml-1">تاریخ شروع:</span>
-                <span className="font-semibold text-slate-700 dark:text-slate-300">{userInfo.joiningDate}</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">امتیاز سلامت</span>
+            </motion.div>
+            
+            {/* شاخص سطح - مینیمال و مدرن */}
+            <motion.div 
+              className="flex flex-col items-center"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <div className="relative w-12 h-12 mb-1 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-tiffany/10 text-tiffany">
+                  <span className="text-sm font-bold">{userInfo.level}</span>
+                </div>
               </div>
-            </div>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">سطح</span>
+            </motion.div>
+            
+            {/* وضعیت - مینیمال و مدرن */}
+            <motion.div 
+              className="flex flex-col items-center"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <div className="relative w-12 h-12 mb-1 flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping absolute"></div>
+                <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+              </div>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">حاضر</span>
+            </motion.div>
+            
+            {/* بخش - مینیمال و مدرن */}
+            <motion.div 
+              className="flex flex-col items-center"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+            >
+              <div className="relative w-12 h-12 mb-1 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center text-indigo-500">
+                  <Users className="w-5 h-5" />
+                </div>
+              </div>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">منابع انسانی</span>
+            </motion.div>
           </div>
         </div>
         
-        {/* بخش آمار و اطلاعات تکمیلی */}
-        <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 border-t md:border-t-0 md:border-r pt-4 md:pt-0 md:pr-6 mt-4 md:mt-0 border-slate-200 dark:border-slate-700/50">
-          <div className="flex flex-col">
-            <span className="text-xs text-slate-500 dark:text-slate-400">امتیاز سلامت</span>
-            <div className="flex items-center mt-1">
-              <div className="w-12 h-2 bg-slate-200 dark:bg-slate-700 rounded-full mr-2 overflow-hidden">
-                <div className={`h-full ${userInfo.healthScore >= 80 ? 'bg-emerald-500' : userInfo.healthScore >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`} style={{ width: `${userInfo.healthScore}%` }}></div>
-              </div>
-              <span className="font-bold text-sm">{userInfo.healthScore}%</span>
-            </div>
-          </div>
-          
-          <div className="flex flex-col">
-            <span className="text-xs text-slate-500 dark:text-slate-400">سطح</span>
-            <div className="flex items-center mt-1">
-              <div className="w-6 h-6 rounded-md bg-tiffany/10 text-tiffany flex items-center justify-center mr-2 text-xs font-bold">
-                {userInfo.level}
-              </div>
-              <Heart className="h-4 w-4 text-rose-500" />
-            </div>
-          </div>
-          
-          <div className="flex flex-col">
-            <span className="text-xs text-slate-500 dark:text-slate-400">بخش</span>
-            <span className="font-semibold text-sm mt-1">{userInfo.department}</span>
-          </div>
-          
-          <div className="flex flex-col">
-            <span className="text-xs text-slate-500 dark:text-slate-400">وضعیت</span>
-            <span className="font-semibold text-sm text-emerald-500 mt-1 flex items-center">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
-              {userInfo.workStatus}
-            </span>
-          </div>
+        {/* نوار دستاوردها - افکت مینیمال سه بعدی */}
+        <div className="mt-4 flex items-center overflow-x-auto scrollbar-hide pb-2">
+          {userInfo.achievements.map((achievement, index) => (
+            <motion.div
+              key={index}
+              className="flex-shrink-0 mr-3 py-1 px-3 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center shadow-sm"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8 + (index * 0.1) }}
+              whileHover={{ y: -2, boxShadow: "0 4px 12px rgba(0,0,0,0.05)" }}
+            >
+              <span className="text-xs mr-1">{achievement.icon}</span>
+              <span className="text-xs">{achievement.label}</span>
+            </motion.div>
+          ))}
         </div>
       </div>
       
-      {/* نوار پایین - مهارت‌ها */}
-      <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-700/50 bg-slate-50/80 dark:bg-slate-800/50 backdrop-blur-sm flex flex-wrap items-center">
-        <div className="text-xs text-slate-500 dark:text-slate-400 ml-2">مهارت‌ها:</div>
-        {userInfo.skills.map((skill, index) => (
-          <Badge key={index} variant="outline" className="mr-1 bg-white/70 dark:bg-slate-700/70">
-            {skill}
-          </Badge>
-        ))}
-        <div className="mr-auto flex items-center text-xs text-tiffany gap-3">
-          <a href="#" className="hover:underline flex items-center">
-            <Mail className="w-3 h-3 ml-1" />
-            ایمیل
-          </a>
-          <a href="#" className="hover:underline flex items-center">
-            <PanelLeftOpen className="w-3 h-3 ml-1" />
-            مشاهده پروفایل کامل
-          </a>
+      {/* نوار پایین - مهارت‌ها و عملکردها (مینیمال) */}
+      <div className="px-6 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/30 backdrop-blur-sm flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="text-[10px] text-slate-400 dark:text-slate-500 ml-2 uppercase tracking-wider font-medium">مهارت‌ها</div>
+          <div className="flex gap-1">
+            {userInfo.skills.map((skill, index) => (
+              <motion.div
+                key={index}
+                className="text-[10px] py-0.5 px-2 rounded-sm bg-white/80 dark:bg-slate-700/30 text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50"
+                initial={{ opacity: 0, x: -5 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.9 + (index * 0.1) }}
+                whileHover={{ backgroundColor: "rgba(121, 218, 232, 0.1)", borderColor: "rgba(121, 218, 232, 0.3)" }}
+              >
+                {skill}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        
+        {/* آیکون‌های عملکردی مینیمال */}
+        <div className="flex text-slate-400 dark:text-slate-500">
+          <motion.button 
+            className="p-1.5 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Mail className="w-3.5 h-3.5" />
+          </motion.button>
+          <motion.button 
+            className="p-1.5 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <PanelLeftOpen className="w-3.5 h-3.5" />
+          </motion.button>
+          <motion.button 
+            className="p-1.5 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Settings className="w-3.5 h-3.5" />
+          </motion.button>
         </div>
       </div>
     </motion.div>
