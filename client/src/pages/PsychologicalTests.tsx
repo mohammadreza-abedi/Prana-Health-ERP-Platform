@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/useAuth";
 import { useCredits } from "@/hooks/use-credits";
+import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 import { GlassCard } from "@/components/ui/glass-card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -935,7 +937,11 @@ export default function PsychologicalTests() {
   const startTest = (test: PsychTest) => {
     if (!test.isFree && (credits !== undefined && credits < test.creditCost)) {
       // Show not enough credits message
-      alert("اعتبار کافی ندارید. لطفاً اعتبار خود را افزایش دهید.");
+      toast({
+        title: "اعتبار ناکافی",
+        description: "اعتبار شما برای انجام این تست کافی نیست. لطفاً اعتبار خود را افزایش دهید.",
+        variant: "destructive"
+      });
       return;
     }
     
@@ -945,11 +951,12 @@ export default function PsychologicalTests() {
   
   // Function to confirm starting a test
   const confirmStartTest = () => {
-    // Here we would deduct credits and navigate to the test
     setConfirmDialogOpen(false);
     
-    // For demo purposes, just alert
-    alert(`شروع تست ${selectedTest?.title}. این صفحه در نسخه‌های بعدی تکمیل خواهد شد.`);
+    if (selectedTest) {
+      // هدایت کاربر به صفحه انجام تست
+      setLocation(`/tests/${selectedTest.id}`);
+    }
   };
   
   // Filter tests by category
