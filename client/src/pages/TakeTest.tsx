@@ -20,13 +20,13 @@ import {
   Sparkles,
   Lightbulb,
   ThumbsUp,
-  Activity
+  Activity,
+  Loader2
 } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/lib/useAuth";
 import { useCredits } from "@/hooks/use-credits";
-import { Loader2 } from "lucide-react";
 
 // تعریف انواع تست‌ها
 interface Question {
@@ -679,7 +679,7 @@ export default function TakeTest() {
   const [match, params] = useRoute<{ id: string }>("/tests/:id");
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
-  const { credits, updateCredits } = useCredits();
+  const { credits } = useCredits();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<{ [key: number]: number[] }>({});
   const [testStarted, setTestStarted] = useState(false);
@@ -809,8 +809,9 @@ export default function TakeTest() {
       
       // تفسیر نتیجه برای تست‌هایی با نمره‌دهی ساده
       if ('ranges' in testData.resultInterpretation) {
-        const interpretation = testData.resultInterpretation.ranges.find(
-          range => totalScore >= range.min && totalScore <= range.max
+        const ranges = testData.resultInterpretation.ranges;
+        const interpretation = ranges.find(
+          (range: {min: number, max: number}) => totalScore >= range.min && totalScore <= range.max
         );
         
         if (interpretation) {
@@ -893,7 +894,7 @@ export default function TakeTest() {
         });
         
         // به‌روزرسانی اعتبار کاربر
-        queryClient.invalidateQueries(["/api/credits/balance"]);
+        queryClient.invalidateQueries({ queryKey: ["/api/credits/balance"] });
         
         toast({
           title: "کسر اعتبار",

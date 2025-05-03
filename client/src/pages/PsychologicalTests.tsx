@@ -932,6 +932,8 @@ export default function PsychologicalTests() {
   
   const { user } = useAuth();
   const { credits, isLoadingCredits } = useCredits();
+  const { toast } = useToast();
+  const [, setLocation] = useLocation();
   
   // Function to start a test
   const startTest = (test: PsychTest) => {
