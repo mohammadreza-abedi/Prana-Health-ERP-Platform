@@ -1087,6 +1087,298 @@ export default function HealthDashboard() {
                 </div>
               </motion.div>
               
+              {/* تحلیل جمعی سلامت تیمی */}
+              <motion.div
+                className="relative z-10 mb-12"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.3 }}
+              >
+                {/* عنوان بخش با انیمیشن */}
+                <motion.div 
+                  className="flex items-center mb-5 pb-2 border-b border-slate-200 dark:border-slate-700"
+                  initial={{ x: -10, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <div className="h-7 w-7 mr-2 rounded-full bg-gradient-to-br from-tiffany to-cyan-500 flex items-center justify-center">
+                    <BarChart3 className="h-4 w-4 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-tiffany to-cyan-500">
+                    تحلیل جمعی سلامت سازمانی
+                  </h3>
+                  <div className="mr-auto">
+                    <motion.div 
+                      className="relative h-1.5 w-8 bg-tiffany/20 rounded-full overflow-hidden"
+                      whileHover={{ width: '32px' }}
+                    >
+                      <motion.div 
+                        className="absolute inset-0 bg-gradient-to-r from-tiffany to-cyan-500 rounded-full"
+                        animate={{ x: ['-100%', '100%'] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                      />
+                    </motion.div>
+                  </div>
+                </motion.div>
+                
+                {/* کارت تحلیل جمعی */}
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <Card className="relative overflow-hidden backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 bg-white/70 dark:bg-slate-900/70 shadow-lg hover:shadow-xl transition-all duration-500">
+                    {/* افکت پیش زمینه گرادیان */}
+                    <div className="absolute -top-12 -right-12 w-60 h-60 bg-gradient-to-br from-tiffany/5 to-transparent rounded-full blur-3xl opacity-30 transition-opacity"></div>
+                    <div className="absolute -bottom-12 -left-12 w-50 h-50 bg-gradient-to-tr from-aqua/5 to-transparent rounded-full blur-3xl opacity-20 transition-opacity"></div>
+                    
+                    {/* افکت پترن پس زمینه */}
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTS0xMyAxM2gyNnYyNmgtMjZ6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wMykiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-30"></div>
+                    
+                    {/* خط تزئینی بالا */}
+                    <div className="absolute top-0 left-0 right-0 h-0.5 overflow-hidden z-10">
+                      <div className="h-full w-full bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"></div>
+                      <motion.div 
+                        className="absolute top-0 h-full w-20 bg-gradient-to-r from-transparent via-tiffany/70 to-transparent"
+                        animate={{ x: ['-100%', '500%'] }}
+                        transition={{ 
+                          duration: 3, 
+                          ease: "easeInOut", 
+                          repeat: Infinity,
+                          repeatDelay: 1
+                        }}
+                      />
+                    </div>
+                    
+                    {/* نقاط متحرک تزئینی */}
+                    <div className="absolute right-20 bottom-20 w-2 h-2 rounded-full bg-tiffany/30">
+                      <motion.div 
+                        className="absolute inset-0 rounded-full"
+                        animate={{ 
+                          y: [0, -10, 0],
+                          opacity: [0, 0.5, 0],
+                        }}
+                        transition={{ 
+                          duration: 3, 
+                          repeat: Infinity,
+                          repeatDelay: 1
+                        }}
+                      />
+                    </div>
+                    
+                    <CardHeader className="relative z-10">
+                      <div className="flex items-center">
+                        <div className="h-10 w-10 rounded-xl p-0.5 bg-gradient-to-br from-tiffany to-cyan-500 relative overflow-hidden shadow-md shadow-tiffany/10 mr-3">
+                          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
+                          <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-tiffany to-cyan-500 rounded-[7px]">
+                            <motion.div
+                              animate={{ scale: [1, 1.1, 1] }}
+                              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                              <BarChart3 className="h-5 w-5 text-white" />
+                            </motion.div>
+                          </div>
+                        </div>
+                        <div>
+                          <CardTitle className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-tiffany to-cyan-500">
+                            تحلیل سلامت جمعی واحدهای سازمانی
+                          </CardTitle>
+                          <CardDescription className="text-sm mt-1">
+                            <div className="flex items-center gap-3">
+                              <span className="text-slate-500 dark:text-slate-400">
+                                گزارش وضعیت سلامت به تفکیک واحدهای سازمانی در سه ماه اخیر
+                              </span>
+                              <Badge variant="secondary" className="bg-tiffany/10 text-tiffany px-2 text-xs">
+                                <motion.div
+                                  animate={{ scale: [1, 1.2, 1] }}
+                                  transition={{ duration: 2, repeat: Infinity }}
+                                  className="h-1.5 w-1.5 rounded-full bg-tiffany mr-1"
+                                />
+                                <span>به‌روز شده</span>
+                              </Badge>
+                            </div>
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="relative z-10">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                      >
+                        <div className="p-4 bg-gradient-to-r from-white/60 to-white/30 dark:from-slate-800/60 dark:to-slate-800/30 rounded-xl backdrop-blur-sm">
+                          {/* نمودار مقایسه‌ای */}
+                          <div className="h-64 p-4 bg-white/50 dark:bg-slate-900/50 rounded-lg shadow-sm mb-4">
+                            <div className="flex justify-between items-center mb-4">
+                              <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300">مقایسه سلامت واحدهای سازمانی</h4>
+                              <div className="flex gap-3">
+                                <div className="flex items-center">
+                                  <div className="h-2 w-2 bg-tiffany rounded-full mr-1"></div>
+                                  <span className="text-xs text-slate-500 dark:text-slate-400">واحد فنی</span>
+                                </div>
+                                <div className="flex items-center">
+                                  <div className="h-2 w-2 bg-fuchsia-500 rounded-full mr-1"></div>
+                                  <span className="text-xs text-slate-500 dark:text-slate-400">واحد پشتیبانی</span>
+                                </div>
+                                <div className="flex items-center">
+                                  <div className="h-2 w-2 bg-amber-500 rounded-full mr-1"></div>
+                                  <span className="text-xs text-slate-500 dark:text-slate-400">واحد مالی</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* نمودار نمایشی */}
+                            <div className="relative h-40">
+                              {/* ماه 1 */}
+                              <div className="absolute bottom-0 right-[10%] flex items-end space-x-1 space-x-reverse h-full">
+                                <motion.div
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 120 }}
+                                  transition={{ duration: 1, delay: 0.1 }}
+                                  className="w-4 bg-gradient-to-t from-tiffany to-tiffany/70 rounded-t-sm"
+                                />
+                                <motion.div
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 90 }}
+                                  transition={{ duration: 1, delay: 0.2 }}
+                                  className="w-4 bg-gradient-to-t from-fuchsia-500 to-fuchsia-500/70 rounded-t-sm"
+                                />
+                                <motion.div
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 100 }}
+                                  transition={{ duration: 1, delay: 0.3 }}
+                                  className="w-4 bg-gradient-to-t from-amber-500 to-amber-500/70 rounded-t-sm"
+                                />
+                              </div>
+                              
+                              {/* ماه 2 */}
+                              <div className="absolute bottom-0 right-[40%] flex items-end space-x-1 space-x-reverse h-full">
+                                <motion.div
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 130 }}
+                                  transition={{ duration: 1, delay: 0.4 }}
+                                  className="w-4 bg-gradient-to-t from-tiffany to-tiffany/70 rounded-t-sm"
+                                />
+                                <motion.div
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 110 }}
+                                  transition={{ duration: 1, delay: 0.5 }}
+                                  className="w-4 bg-gradient-to-t from-fuchsia-500 to-fuchsia-500/70 rounded-t-sm"
+                                />
+                                <motion.div
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 105 }}
+                                  transition={{ duration: 1, delay: 0.6 }}
+                                  className="w-4 bg-gradient-to-t from-amber-500 to-amber-500/70 rounded-t-sm"
+                                />
+                              </div>
+                              
+                              {/* ماه 3 */}
+                              <div className="absolute bottom-0 right-[70%] flex items-end space-x-1 space-x-reverse h-full">
+                                <motion.div
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 150 }}
+                                  transition={{ duration: 1, delay: 0.7 }}
+                                  className="w-4 bg-gradient-to-t from-tiffany to-tiffany/70 rounded-t-sm"
+                                />
+                                <motion.div
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 120 }}
+                                  transition={{ duration: 1, delay: 0.8 }}
+                                  className="w-4 bg-gradient-to-t from-fuchsia-500 to-fuchsia-500/70 rounded-t-sm"
+                                />
+                                <motion.div
+                                  initial={{ height: 0 }}
+                                  animate={{ height: 130 }}
+                                  transition={{ duration: 1, delay: 0.9 }}
+                                  className="w-4 bg-gradient-to-t from-amber-500 to-amber-500/70 rounded-t-sm"
+                                />
+                              </div>
+                              
+                              {/* خط افقی پایه */}
+                              <div className="absolute bottom-0 left-0 right-0 h-px bg-slate-200 dark:bg-slate-700"></div>
+                              
+                              {/* برچسب‌های زمانی */}
+                              <div className="absolute -bottom-5 right-[10%] text-xs text-slate-500 dark:text-slate-400">مهر</div>
+                              <div className="absolute -bottom-5 right-[40%] text-xs text-slate-500 dark:text-slate-400">آبان</div>
+                              <div className="absolute -bottom-5 right-[70%] text-xs text-slate-500 dark:text-slate-400">آذر</div>
+                            </div>
+                          </div>
+                          
+                          {/* آمار تحلیلی */}
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.5, delay: 1 }}
+                              className="bg-white/50 dark:bg-slate-900/50 p-3 rounded-lg shadow-sm"
+                            >
+                              <div className="flex justify-between items-center mb-2">
+                                <h5 className="text-sm font-medium text-slate-700 dark:text-slate-300">امتیاز کلی سلامت</h5>
+                                <Badge variant="secondary" className="bg-success/10 text-success px-2 text-xs">
+                                  +12%
+                                </Badge>
+                              </div>
+                              <p className="text-2xl font-bold text-tiffany">82<span className="text-sm text-slate-500 mr-1">از 100</span></p>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">افزایش 12% نسبت به سه ماه قبل</p>
+                            </motion.div>
+                            
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.5, delay: 1.1 }}
+                              className="bg-white/50 dark:bg-slate-900/50 p-3 rounded-lg shadow-sm"
+                            >
+                              <div className="flex justify-between items-center mb-2">
+                                <h5 className="text-sm font-medium text-slate-700 dark:text-slate-300">میزان مشارکت</h5>
+                                <Badge variant="secondary" className="bg-success/10 text-success px-2 text-xs">
+                                  +8%
+                                </Badge>
+                              </div>
+                              <p className="text-2xl font-bold text-fuchsia-500">76%</p>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">افزایش 8% نسبت به سه ماه قبل</p>
+                            </motion.div>
+                            
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.5, delay: 1.2 }}
+                              className="bg-white/50 dark:bg-slate-900/50 p-3 rounded-lg shadow-sm"
+                            >
+                              <div className="flex justify-between items-center mb-2">
+                                <h5 className="text-sm font-medium text-slate-700 dark:text-slate-300">بهبود شاخص‌های سلامت</h5>
+                                <Badge variant="secondary" className="bg-success/10 text-success px-2 text-xs">
+                                  +15%
+                                </Badge>
+                              </div>
+                              <p className="text-2xl font-bold text-amber-500">15%</p>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">افزایش 15% نسبت به سه ماه قبل</p>
+                            </motion.div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </CardContent>
+                    
+                    <CardFooter className="pt-0 pb-4 relative z-10">
+                      <motion.button 
+                        whileHover={{ x: 5 }}
+                        className="text-tiffany dark:text-tiffany-light text-sm flex items-center group/btn focus:outline-none transition-colors ml-auto"
+                      >
+                        <span className="group-hover/btn:underline">مشاهده گزارش کامل</span>
+                        <motion.div
+                          animate={{ x: [0, 3, 0] }}
+                          transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+                        >
+                          <ChevronRight className="h-4 w-4 mr-1" />
+                        </motion.div>
+                      </motion.button>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              </motion.div>
+              
               {/* چالش‌های تیمی - با طراحی پیشرفته‌تر */}
               <motion.div
                 initial={{ y: 30, opacity: 0 }}
