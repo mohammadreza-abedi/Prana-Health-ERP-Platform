@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { 
-  Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription 
+  Card, CardContent, CardHeader, CardTitle, CardDescription 
 } from '@/components/ui/card';
 import {
   Select,
@@ -12,78 +12,42 @@ import {
 } from "@/components/ui/select";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, Radar, RadarChart, PolarGrid,
-  PolarAngleAxis, PolarRadiusAxis, Scatter, ScatterChart, ZAxis, Treemap, 
-  ComposedChart, Sankey, RadialBarChart, RadialBar 
+  LineChart, Line, AreaChart, Area, PieChart, Pie, Cell
 } from 'recharts';
 import {
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsUpDown,
-  Download,
   Filter,
-  RefreshCcw,
-  Plus,
-  Zap,
-  Rocket,
   BarChart3,
-  LineChart as LineChartIcon,
-  PieChart as PieChartIcon,
   Activity,
-  Users,
-  Layers,
   ArrowUp,
   ArrowDown,
   TrendingUp,
   TrendingDown,
   Award,
-  Heart,
   AlertCircle,
   Clock,
-  Calendar as CalendarIcon,
-  Bell,
   CheckCircle,
   Flag,
-  ThumbsUp,
-  Speech,
   Target,
-  Gauge,
   Clipboard,
   FileText,
-  Share2,
-  Save,
-  Eye,
   Info,
-  HelpCircle,
   Settings,
-  UserPlus,
   ShieldCheck,
-  Map,
-  Globe,
-  Building,
   TreePine,
-  Droplets,
   Wind,
   Sun,
-  CloudDrizzle,
   Factory,
-  Maximize2,
-  X,
-  Moon,
-  LayoutGrid,
-  LayoutList,
   GraduationCap,
-  Share
+  ClipboardCheck,
+  User,
+  Plus
 } from 'lucide-react';
 
-// داده‌های ساختگی برای نمودارها و گراف‌ها
+// داده‌های ساختگی برای نمودارها
 const healthMetricsData = [
   { name: 'فروردین', کارخانه_A: 4000, کارخانه_B: 2400, امتیاز_ایمنی: 90 },
   { name: 'اردیبهشت', کارخانه_A: 3000, کارخانه_B: 1398, امتیاز_ایمنی: 82 },
@@ -198,6 +162,7 @@ const budgetAllocationData = [
   { name: 'متفرقه', مقدار: 10, fill: '#D72638' },
 ];
 
+// داده‌های شاخص های کلیدی عملکرد
 const keyPerformanceIndicators = [
   { 
     title: 'شاخص HSE سازمانی', 
@@ -281,6 +246,7 @@ const keyPerformanceIndicators = [
   }
 ];
 
+// هشدارهای سلامت
 const healthAlerts = [
   {
     id: 1,
@@ -304,7 +270,7 @@ const healthAlerts = [
     description: 'معاینات دوره‌ای کارکنان بخش تولید در هفته آینده انجام می‌شود.',
     level: 'info',
     time: '1 روز پیش',
-    icon: <Calendar className="h-5 w-5" />
+    icon: <Sun className="h-5 w-5" />
   },
   {
     id: 4,
@@ -316,6 +282,7 @@ const healthAlerts = [
   }
 ];
 
+// فعالیت‌های اخیر
 const recentActivities = [
   {
     id: 1,
@@ -336,7 +303,7 @@ const recentActivities = [
     title: 'آموزش ایمنی',
     description: 'جلسه آموزش ایمنی برای کارکنان جدید برگزار شد',
     time: '1 روز پیش',
-    icon: <Users className="h-5 w-5 text-blue-500" />
+    icon: <User className="h-5 w-5 text-blue-500" />
   },
   {
     id: 4,
@@ -354,6 +321,7 @@ const recentActivities = [
   }
 ];
 
+// رویدادهای آینده
 const upcomingEvents = [
   {
     id: 1,
@@ -369,7 +337,7 @@ const upcomingEvents = [
     description: 'معاینات دوره‌ای کارکنان بخش تولید',
     time: 'پنج‌شنبه، تمام روز',
     location: 'مرکز بهداشت شرکت',
-    icon: <Heart className="h-5 w-5 text-emerald-500" />
+    icon: <Activity className="h-5 w-5 text-emerald-500" />
   },
   {
     id: 3,
@@ -377,7 +345,7 @@ const upcomingEvents = [
     description: 'بررسی وضعیت ایمنی فصل گذشته و برنامه‌ریزی آتی',
     time: 'شنبه، 14:00',
     location: 'سالن جلسات مرکزی',
-    icon: <Users className="h-5 w-5 text-blue-500" />
+    icon: <User className="h-5 w-5 text-blue-500" />
   }
 ];
 
@@ -410,304 +378,301 @@ const DynamicBackground: React.FC = () => {
   );
 };
 
-// هدر داشبورد با افکت‌های شیشه‌ای و انیمیشن
+// کارت شیشه‌ای با افکت‌های بصری
+interface GlassCardProps {
+  children: React.ReactNode;
+  className?: string;
+  showControls?: boolean;
+}
+
+const GlassCard: React.FC<GlassCardProps> = ({ children, className = "", showControls = false }) => {
+  return (
+    <Card className={`relative overflow-hidden rounded-xl glass-effect bg-white/60 dark:bg-slate-800/60 backdrop-blur-lg border border-slate-200/50 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all duration-300 ${className}`}>
+      {showControls && (
+        <div className="absolute top-2 right-2 flex items-center space-x-1 space-x-reverse opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+          <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full bg-white dark:bg-slate-950 text-slate-500">
+            <Plus className="h-3 w-3" />
+          </Button>
+        </div>
+      )}
+      {children}
+    </Card>
+  );
+};
+
+// هدر داشبورد با افکت‌های انیمیشن
 const DashboardHeader: React.FC = () => {
   const [timeFilter, setTimeFilter] = useState('month');
   const [locationFilter, setLocationFilter] = useState('all');
   
   return (
-    <div className="mb-6">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+    <motion.div
+      className="mb-6"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-tiffany to-blue-500 animate-gradient">
-            داشبورد هوشمند HSE
-          </h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">
+          <h1 className="text-2xl font-bold mb-2">داشبورد هوشمند HSE</h1>
+          <p className="text-slate-500 dark:text-slate-400">
             نمای 360 درجه از وضعیت سلامت، ایمنی و محیط زیست سازمان
           </p>
         </div>
         
-        <div className="flex flex-wrap items-center gap-3">
-          <Select value={timeFilter} onValueChange={setTimeFilter}>
-            <SelectTrigger className="w-32 h-9 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-lg">
-              <SelectValue placeholder="دوره زمانی" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="day">روزانه</SelectItem>
-              <SelectItem value="week">هفتگی</SelectItem>
-              <SelectItem value="month">ماهانه</SelectItem>
-              <SelectItem value="quarter">فصلی</SelectItem>
-              <SelectItem value="year">سالانه</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Select value={locationFilter} onValueChange={setLocationFilter}>
-            <SelectTrigger className="w-32 h-9 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-lg">
-              <SelectValue placeholder="همه مکان‌ها" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">همه مکان‌ها</SelectItem>
-              <SelectItem value="loc-1">کارخانه 1</SelectItem>
-              <SelectItem value="loc-2">کارخانه 2</SelectItem>
-              <SelectItem value="loc-3">کارخانه 3</SelectItem>
-              <SelectItem value="loc-4">دفتر مرکزی</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Select>
-            <SelectTrigger className="w-32 h-9 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-lg">
-              <SelectValue placeholder="دپارتمان" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">همه دپارتمان‌ها</SelectItem>
-              <SelectItem value="prod">تولید</SelectItem>
-              <SelectItem value="eng">مهندسی</SelectItem>
-              <SelectItem value="qa">کنترل کیفیت</SelectItem>
-              <SelectItem value="maint">تعمیرات</SelectItem>
-              <SelectItem value="hr">منابع انسانی</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Button 
-            size="sm" 
-            className="h-9 rounded-lg bg-gradient-to-r from-tiffany to-tiffany-dark text-white transition-all duration-300 border-none animate-shimmer bg-[length:200%]"
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" className="gap-1">
+            <FileText className="h-4 w-4 ml-1" />
+            دانلود گزارش
+          </Button>
+          <Button variant="default" size="sm" className="gap-1">
+            <Settings className="h-4 w-4 ml-1" />
+            تنظیمات
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3 mt-4">
+        <Select value={timeFilter} onValueChange={setTimeFilter}>
+          <SelectTrigger className="w-32 h-9 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-lg">
+            <SelectValue placeholder="دوره زمانی" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="day">روزانه</SelectItem>
+            <SelectItem value="week">هفتگی</SelectItem>
+            <SelectItem value="month">ماهانه</SelectItem>
+            <SelectItem value="quarter">فصلی</SelectItem>
+            <SelectItem value="year">سالانه</SelectItem>
+          </SelectContent>
+        </Select>
+        
+        <Select value={locationFilter} onValueChange={setLocationFilter}>
+          <SelectTrigger className="w-32 h-9 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-lg">
+            <SelectValue placeholder="همه مکان‌ها" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">همه مکان‌ها</SelectItem>
+            <SelectItem value="loc-1">کارخانه 1</SelectItem>
+            <SelectItem value="loc-2">کارخانه 2</SelectItem>
+            <SelectItem value="loc-3">کارخانه 3</SelectItem>
+            <SelectItem value="loc-4">دفتر مرکزی</SelectItem>
+          </SelectContent>
+        </Select>
+        
+        <Select>
+          <SelectTrigger className="w-32 h-9 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 rounded-lg">
+            <SelectValue placeholder="دپارتمان" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">همه دپارتمان‌ها</SelectItem>
+            <SelectItem value="prod">تولید</SelectItem>
+            <SelectItem value="eng">مهندسی</SelectItem>
+            <SelectItem value="qa">کنترل کیفیت</SelectItem>
+            <SelectItem value="maint">تعمیرات</SelectItem>
+            <SelectItem value="hr">منابع انسانی</SelectItem>
+          </SelectContent>
+        </Select>
+        
+        <Button 
+          size="sm" 
+          className="h-9 rounded-lg bg-gradient-to-r from-tiffany to-tiffany-dark text-white transition-all duration-300 border-none animate-shimmer bg-[length:200%]"
           >
             <Filter className="h-4 w-4 ml-1" />
             فیلتر پیشرفته
           </Button>
         </div>
-      </div>
-      
-      {/* نشانگر اصلی */}
-      {keyPerformanceIndicators.filter(kpi => kpi.isPrimary).map((kpi, index) => (
-        <div 
-          key={index} 
-          className="relative overflow-hidden rounded-xl glass-effect border-2 border-tiffany/30 dark:border-tiffany/20 p-4 bg-white/60 dark:bg-slate-800/60 backdrop-blur-lg mb-6 group hover:shadow-lg hover:shadow-tiffany/5 transition-all duration-300"
-        >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-tiffany to-transparent opacity-50"></div>
-          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-tiffany/5 rounded-full blur-3xl animate-pulse-slow"></div>
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="mr-4 h-14 w-14 rounded-xl bg-tiffany/10 flex items-center justify-center">
-                {kpi.icon}
-              </div>
-              <div>
-                <h2 className="font-bold text-xl">{kpi.title}</h2>
-                <p className="text-slate-500 dark:text-slate-400 text-sm">{kpi.description}</p>
-              </div>
-            </div>
-            
-            <div className="text-center">
-              <div className="flex items-center">
-                <span className="text-4xl font-bold">{kpi.value}</span>
-                <span className="text-2xl font-bold text-slate-400 ml-1">/ 100</span>
-                
-                <div className={`ml-3 flex items-center ${kpi.trend === 'up' ? 'text-emerald-500' : 'text-rose-500'}`}>
-                  {kpi.trend === 'up' ? (
-                    <TrendingUp className="h-5 w-5 mr-1" />
-                  ) : (
-                    <TrendingDown className="h-5 w-5 mr-1" />
-                  )}
-                  <span className="font-medium">{Math.abs(kpi.change)}%</span>
-                </div>
-              </div>
-              
-              <div className="flex mt-1 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                <div 
-                  className="bg-gradient-to-r from-tiffany-light to-tiffany animate-shimmer bg-[length:200%]" 
-                  style={{ width: `${kpi.value}%` }}
-                ></div>
-              </div>
-            </div>
-            
-            <Button variant="ghost" size="sm" className="px-4 h-10 rounded-lg ml-2 hover:bg-tiffany/10 transition-colors">
-              <Info className="h-4 w-4 ml-1" />
-              <span className="text-xs">جزئیات بیشتر</span>
-            </Button>
-          </div>
-        </div>
-      ))}
-    </div>
+      </motion.div>
   );
 };
 
-// کامپوننت کارت‌های شاخص عملکرد
-const KeyPerformanceCards: React.FC = () => {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-      {keyPerformanceIndicators.filter(kpi => !kpi.isPrimary).map((kpi, index) => (
-        <div 
-          key={index} 
-          className="relative overflow-hidden rounded-xl bg-white/80 dark:bg-slate-800/70 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 p-4 group hover:shadow-lg transition-all duration-300"
-        >
-          {/* هاله رنگی */}
-          <div className={`absolute -bottom-8 -right-8 w-32 h-32 rounded-full bg-${kpi.color}/5 blur-2xl transition-opacity duration-500 opacity-0 group-hover:opacity-100`}></div>
-          
-          {/* خط تزئینی بالای کارت */}
-          <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-${kpi.color} to-transparent opacity-0 group-hover:opacity-80 transition-opacity duration-500`}></div>
-          
-          <div className="flex items-center mb-3">
-            <div className={`h-10 w-10 rounded-lg bg-${kpi.color}/10 flex items-center justify-center mr-3`}>
-              {kpi.icon}
-            </div>
-            <div>
-              <h3 className="font-medium text-sm">{kpi.title}</h3>
-            </div>
-          </div>
-          
-          <div className="flex items-baseline justify-between">
-            <span className="text-3xl font-bold">{kpi.value}</span>
-            
-            <div className={`flex items-center ${kpi.trend === 'up' ? 'text-emerald-500' : 'text-rose-500'}`}>
-              {kpi.trend === 'up' ? (
-                <TrendingUp className="h-4 w-4 mr-1" />
-              ) : (
-                <TrendingDown className="h-4 w-4 mr-1" />
-              )}
-              <span className="font-medium text-sm">{Math.abs(kpi.change)}%</span>
-            </div>
-          </div>
-          
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-1">{kpi.details}</p>
-          
-          <div className="flex mt-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden">
-            <div 
-              className={`bg-${kpi.color} group-hover:animate-shimmer group-hover:bg-[length:200%] bg-gradient-to-r transition-all duration-300`} 
-              style={{ width: `${kpi.value}%` }}
-            ></div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-// کارت نمودار سلامت و ایمنی
-const HealthMetricsCard: React.FC = () => {
-  const [chartType, setChartType] = useState<'bar' | 'line' | 'area'>('line');
+// نمایش شاخص اصلی با انیمیشن‌های ویژه
+const MainIndicator: React.FC = () => {
+  const mainKpi = keyPerformanceIndicators.find(kpi => kpi.isPrimary);
+  
+  if (!mainKpi) return null;
   
   return (
-    <Card className="overflow-hidden group hover:shadow-lg dark:shadow-slate-900/10 transition-all duration-300 border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
-      <CardHeader className="px-6 py-5 flex flex-row justify-between items-center">
-        <div>
-          <CardTitle className="text-xl font-bold group-hover:text-tiffany transition-colors duration-300">
-            <span className="inline-flex items-center">
-              <Activity className="mr-2 h-5 w-5 text-tiffany" />
-              روند شاخص‌های سلامت و ایمنی
-            </span>
-          </CardTitle>
-          <CardDescription>مقایسه شاخص‌های کارخانه‌های A و B در طول سال</CardDescription>
-        </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-6"
+    >
+      <div className="relative overflow-hidden rounded-xl glass-effect border-2 border-tiffany/30 dark:border-tiffany/20 p-4 bg-white/60 dark:bg-slate-800/60 backdrop-blur-lg group hover:shadow-lg hover:shadow-tiffany/5 transition-all duration-300">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-tiffany to-transparent opacity-50"></div>
+        <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-tiffany/5 rounded-full blur-3xl animate-pulse-slow"></div>
         
-        <div className="flex space-x-1 space-x-reverse">
-          <Button 
-            size="sm" 
-            variant="ghost" 
-            className={`h-8 w-8 p-0 ${chartType === 'line' ? 'bg-tiffany/10 text-tiffany' : 'text-slate-500'}`}
-            onClick={() => setChartType('line')}
-          >
-            <LineChartIcon className="h-4 w-4" />
-          </Button>
-          <Button 
-            size="sm" 
-            variant="ghost" 
-            className={`h-8 w-8 p-0 ${chartType === 'bar' ? 'bg-tiffany/10 text-tiffany' : 'text-slate-500'}`}
-            onClick={() => setChartType('bar')}
-          >
-            <BarChart3 className="h-4 w-4" />
-          </Button>
-          <Button 
-            size="sm" 
-            variant="ghost" 
-            className={`h-8 w-8 p-0 ${chartType === 'area' ? 'bg-tiffany/10 text-tiffany' : 'text-slate-500'}`}
-            onClick={() => setChartType('area')}
-          >
-            <Activity className="h-4 w-4" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="mr-4 h-14 w-14 rounded-xl bg-tiffany/10 flex items-center justify-center">
+              {mainKpi.icon}
+            </div>
+            <div>
+              <h2 className="font-bold text-xl">{mainKpi.title}</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">{mainKpi.description}</p>
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <div className="flex items-center">
+              <span className="text-4xl font-bold">{mainKpi.value}</span>
+              <span className="text-2xl font-bold text-slate-400 ml-1">/ 100</span>
+              
+              <div className={`ml-3 flex items-center ${mainKpi.trend === 'up' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                {mainKpi.trend === 'up' ? (
+                  <TrendingUp className="h-5 w-5 mr-1" />
+                ) : (
+                  <TrendingDown className="h-5 w-5 mr-1" />
+                )}
+                <span className="font-medium">{Math.abs(mainKpi.change)}%</span>
+              </div>
+            </div>
+            
+            <div className="flex mt-1 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
+              <div 
+                className="bg-gradient-to-r from-tiffany-light to-tiffany animate-shimmer bg-[length:200%]" 
+                style={{ width: `${mainKpi.value}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// کامپوننت نمایش کی پی آی‌ها
+const KPISection: React.FC = () => {
+  const otherKpis = keyPerformanceIndicators.filter(kpi => !kpi.isPrimary);
+  
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {otherKpis.map((kpi, index) => (
+        <motion.div 
+          key={index}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
+        >
+          <GlassCard className="group">
+            <CardContent className="p-4">
+              <div className="flex items-center mb-2">
+                <div className={`h-10 w-10 rounded-lg bg-${kpi.color}/10 flex items-center justify-center mr-3`}>
+                  {kpi.icon}
+                </div>
+                <div>
+                  <h3 className="font-medium text-sm">{kpi.title}</h3>
+                  <div className="flex items-center mt-1">
+                    <span className="text-xl font-bold mr-1">{kpi.value}</span>
+                    <div className={`ml-2 flex items-center text-xs ${kpi.trend === 'up' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                      {kpi.trend === 'up' ? (
+                        <ArrowUp className="h-3 w-3 mr-0.5" />
+                      ) : (
+                        <ArrowDown className="h-3 w-3 mr-0.5" />
+                      )}
+                      <span>{Math.abs(kpi.change)}%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <Progress 
+                value={kpi.value} 
+                className={`h-1.5 bg-slate-200/50 dark:bg-slate-700/50 ${kpi.color === 'tiffany' ? 'text-tiffany' : `text-${kpi.color}-500`}`} 
+              />
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                {kpi.details || kpi.description}
+              </p>
+            </CardContent>
+          </GlassCard>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+// کامپوننت نمودار روند ایمنی
+const SafetyTrendChart: React.FC = () => {
+  return (
+    <GlassCard className="col-span-2">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-lg font-medium">روند شاخص‌های ایمنی</CardTitle>
+          <Button variant="ghost" size="sm" className="h-8 text-xs">
+            <BarChart3 className="h-4 w-4 ml-1" />
+            گزارش کامل
           </Button>
         </div>
+        <CardDescription>مقایسه شاخص‌های ایمنی در ماه‌های اخیر</CardDescription>
       </CardHeader>
-      
-      <CardContent className="px-6 pb-6 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-tiffany/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
-        <div className="h-80 w-full">
+      <CardContent className="pt-0">
+        <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            {chartType === 'line' && (
-              <LineChart
-                data={healthMetricsData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
-                <Tooltip />
-                <Legend />
-                <Line yAxisId="left" type="monotone" dataKey="کارخانه_A" stroke="#2EC4B6" strokeWidth={2} activeDot={{ r: 8 }} />
-                <Line yAxisId="left" type="monotone" dataKey="کارخانه_B" stroke="#FFBB00" strokeWidth={2} activeDot={{ r: 6 }} />
-                <Line yAxisId="right" type="monotone" dataKey="امتیاز_ایمنی" stroke="#D72638" strokeWidth={2} strokeDasharray="5 5" />
-              </LineChart>
-            )}
-            
-            {chartType === 'bar' && (
-              <BarChart
-                data={healthMetricsData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
-                <Tooltip />
-                <Legend />
-                <Bar yAxisId="left" dataKey="کارخانه_A" fill="#2EC4B6" radius={[4, 4, 0, 0]} />
-                <Bar yAxisId="left" dataKey="کارخانه_B" fill="#FFBB00" radius={[4, 4, 0, 0]} />
-                <Line yAxisId="right" type="monotone" dataKey="امتیاز_ایمنی" stroke="#D72638" strokeWidth={2} />
-              </BarChart>
-            )}
-            
-            {chartType === 'area' && (
-              <AreaChart
-                data={healthMetricsData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
-                <Tooltip />
-                <Legend />
-                <Area type="monotone" dataKey="کارخانه_A" fill="#2EC4B699" stroke="#2EC4B6" strokeWidth={2} />
-                <Area type="monotone" dataKey="کارخانه_B" fill="#FFBB0099" stroke="#FFBB00" strokeWidth={2} />
-                <Line yAxisId="right" type="monotone" dataKey="امتیاز_ایمنی" stroke="#D72638" strokeWidth={2} />
-              </AreaChart>
-            )}
+            <LineChart
+              data={healthMetricsData}
+              margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+              <XAxis 
+                dataKey="name" 
+                tick={{ fontSize: 10 }}
+                tickLine={false}
+                axisLine={{ opacity: 0.2 }}
+              />
+              <YAxis 
+                tick={{ fontSize: 10 }}
+                tickLine={false}
+                axisLine={{ opacity: 0.2 }}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  borderRadius: '8px', 
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  backdropFilter: 'blur(4px)',
+                  border: '1px solid rgba(0, 0, 0, 0.05)'
+                }} 
+              />
+              <Legend />
+              <Line 
+                type="monotone" 
+                dataKey="امتیاز_ایمنی" 
+                stroke="#2EC4B6" 
+                strokeWidth={2}
+                dot={{ r: 3, strokeWidth: 1 }}
+                activeDot={{ r: 5, strokeWidth: 0 }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="کارخانه_A" 
+                stroke="#FF9F1C" 
+                strokeWidth={2} 
+                dot={{ r: 3, strokeWidth: 1 }}
+                activeDot={{ r: 5, strokeWidth: 0 }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="کارخانه_B" 
+                stroke="#9381FF" 
+                strokeWidth={2} 
+                dot={{ r: 3, strokeWidth: 1 }}
+                activeDot={{ r: 5, strokeWidth: 0 }}
+              />
+            </LineChart>
           </ResponsiveContainer>
         </div>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 };
 
-// کارت توزیع انواع حوادث
-const IncidentTypesCard: React.FC = () => {
+// کامپوننت نمودار توزیع حوادث
+const IncidentDistributionChart: React.FC = () => {
   return (
-    <Card className="overflow-hidden group hover:shadow-lg dark:shadow-slate-900/10 transition-all duration-300 border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
-      <CardHeader className="px-6 py-5">
-        <CardTitle className="text-xl font-bold group-hover:text-amber-500 transition-colors duration-300">
-          <span className="inline-flex items-center">
-            <PieChartIcon className="mr-2 h-5 w-5 text-amber-500" />
-            توزیع انواع حوادث
-          </span>
-        </CardTitle>
-        <CardDescription>فراوانی انواع حوادث در دوره‌ی گزارش</CardDescription>
+    <GlassCard className="col-span-1">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-medium">توزیع حوادث</CardTitle>
+        <CardDescription>نوع حوادث در دوره جاری</CardDescription>
       </CardHeader>
-      
-      <CardContent className="px-6 pb-6 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
-        <div className="h-72 w-full">
+      <CardContent className="pt-0">
+        <div className="h-52">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -715,188 +680,135 @@ const IncidentTypesCard: React.FC = () => {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                 outerRadius={80}
-                fill="#8884d8"
+                innerRadius={35}
+                fill="#2EC4B6"
                 dataKey="مقدار"
+                nameKey="name"
               >
                 {incidentTypeData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="hover:opacity-80 transition-opacity" />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value) => [`${value} مورد`, 'تعداد']} />
-              <Legend formatter={(value) => <span className="text-sm">{value}</span>} />
+              <Tooltip 
+                contentStyle={{ 
+                  borderRadius: '8px', 
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  backdropFilter: 'blur(4px)',
+                  border: '1px solid rgba(0, 0, 0, 0.05)'
+                }} 
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-// کارت‌های دیگر...
-// کارت شاخص‌های زیست‌محیطی
-const EnvironmentalMetricsCard: React.FC = () => {
-  return (
-    <Card className="overflow-hidden group hover:shadow-lg dark:shadow-slate-900/10 transition-all duration-300 border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
-      <CardHeader className="px-6 py-5">
-        <CardTitle className="text-xl font-bold group-hover:text-emerald-500 transition-colors duration-300">
-          <span className="inline-flex items-center">
-            <TreePine className="mr-2 h-5 w-5 text-emerald-500" />
-            شاخص‌های زیست‌محیطی
-          </span>
-        </CardTitle>
-        <CardDescription>مقایسه شاخص‌های محیط زیستی بین واحدها</CardDescription>
-      </CardHeader>
-      
-      <CardContent className="px-6 pb-6 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
-        <div className="h-72 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={environmentalData}>
-              <PolarGrid stroke="#e2e8f0" />
-              <PolarAngleAxis dataKey="subject" />
-              <PolarRadiusAxis angle={90} domain={[0, 100]} />
-              <Radar name="واحد A" dataKey="A" stroke="#2EC4B6" fill="#2EC4B6" fillOpacity={0.5} />
-              <Radar name="واحد B" dataKey="B" stroke="#FFBB00" fill="#FFBB00" fillOpacity={0.5} />
-              <Legend />
-              <Tooltip />
-            </RadarChart>
-          </ResponsiveContainer>
+        <div className="flex flex-wrap justify-center gap-2 mt-2">
+          {incidentTypeData.map((item, index) => (
+            <div key={index} className="flex items-center">
+              <span 
+                className="inline-block w-3 h-3 rounded-sm mr-1"
+                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              ></span>
+              <span className="text-xs">{item.name}</span>
+            </div>
+          ))}
         </div>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 };
 
-// کارت ارزیابی ریسک‌ها
-const RiskAssessmentCard: React.FC = () => {
+// کامپوننت نمودار برنامه آموزشی
+const TrainingCompletionChart: React.FC = () => {
   return (
-    <Card className="overflow-hidden group hover:shadow-lg dark:shadow-slate-900/10 transition-all duration-300 border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
-      <CardHeader className="px-6 py-5">
-        <CardTitle className="text-xl font-bold group-hover:text-rose-500 transition-colors duration-300">
-          <span className="inline-flex items-center">
-            <AlertCircle className="mr-2 h-5 w-5 text-rose-500" />
-            ارزیابی ریسک‌ها
-          </span>
-        </CardTitle>
-        <CardDescription>توزیع ریسک‌ها بر اساس سطح اهمیت در طول سال</CardDescription>
+    <GlassCard className="col-span-1">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-medium">تکمیل آموزش‌ها</CardTitle>
+        <CardDescription>میزان تکمیل برنامه‌های آموزشی</CardDescription>
       </CardHeader>
-      
-      <CardContent className="px-6 pb-6 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
-        <div className="h-72 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={riskAssessmentData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Area type="monotone" dataKey="ریسک‌های پایین" stackId="1" stroke="#2EC4B6" fill="#2EC4B6" fillOpacity={0.6} />
-              <Area type="monotone" dataKey="ریسک‌های متوسط" stackId="1" stroke="#FFBB00" fill="#FFBB00" fillOpacity={0.6} />
-              <Area type="monotone" dataKey="ریسک‌های بالا" stackId="1" stroke="#D72638" fill="#D72638" fillOpacity={0.6} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-// کارت رتبه‌بندی ایمنی دپارتمان‌ها
-const DepartmentSafetyCard: React.FC = () => {
-  return (
-    <Card className="overflow-hidden group hover:shadow-lg dark:shadow-slate-900/10 transition-all duration-300 border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
-      <CardHeader className="px-6 py-5">
-        <CardTitle className="text-xl font-bold group-hover:text-violet-500 transition-colors duration-300">
-          <span className="inline-flex items-center">
-            <Building className="mr-2 h-5 w-5 text-violet-500" />
-            رتبه‌بندی ایمنی دپارتمان‌ها
-          </span>
-        </CardTitle>
-        <CardDescription>مقایسه امتیازات ایمنی و درصد تکمیل اقدامات</CardDescription>
-      </CardHeader>
-      
-      <CardContent className="px-6 pb-6 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
-        <div className="h-72 w-full">
+      <CardContent className="pt-0">
+        <div className="h-52">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={departmentSafetyData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-              layout="vertical"
+              data={trainingCompletionData}
+              margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis type="number" domain={[0, 100]} />
-              <YAxis dataKey="name" type="category" width={100} />
-              <Tooltip formatter={(value) => [`${value}%`, 'مقدار']} />
-              <Legend />
-              <Bar dataKey="امتیاز" name="امتیاز ایمنی" fill="#2EC4B6" radius={[0, 4, 4, 0]} />
-              <Bar dataKey="تکمیل" name="درصد تکمیل اقدامات" fill="#BD4291" radius={[0, 4, 4, 0]} />
+              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+              <XAxis 
+                dataKey="name" 
+                tick={{ fontSize: 10 }}
+                tickLine={false}
+                axisLine={{ opacity: 0.2 }}
+              />
+              <YAxis 
+                tick={{ fontSize: 10 }}
+                tickLine={false}
+                axisLine={{ opacity: 0.2 }}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  borderRadius: '8px', 
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  backdropFilter: 'blur(4px)',
+                  border: '1px solid rgba(0, 0, 0, 0.05)'
+                }} 
+              />
+              <Bar 
+                dataKey="امتیاز" 
+                fill="#2EC4B6" 
+                radius={[4, 4, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 };
 
-// کارت هشدارها و اعلانات
-const AlertsCard: React.FC = () => {
+// کامپوننت هشدارهای سلامت
+const HealthAlertsSection: React.FC = () => {
   return (
-    <Card className="overflow-hidden group hover:shadow-lg dark:shadow-slate-900/10 transition-all duration-300 border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
-      <CardHeader className="px-6 py-5">
-        <CardTitle className="text-xl font-bold group-hover:text-amber-500 transition-colors duration-300">
-          <span className="inline-flex items-center">
-            <Bell className="mr-2 h-5 w-5 text-amber-500 animate-pulse-subtle" />
-            هشدارها و اعلانات
-          </span>
-        </CardTitle>
-        <CardDescription>آخرین هشدارها و اعلانات سیستم</CardDescription>
+    <GlassCard className="col-span-1">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-lg font-medium">هشدارها و اعلان‌ها</CardTitle>
+          <Badge variant="outline" className="text-amber-500 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/50">
+            {healthAlerts.length} مورد فعال
+          </Badge>
+        </div>
       </CardHeader>
-      
-      <CardContent className="px-6 pb-6">
-        <div className="space-y-4">
+      <CardContent className="p-0">
+        <div className="max-h-[320px] overflow-y-auto scrollbar-thin">
           {healthAlerts.map((alert) => (
             <div 
               key={alert.id} 
               className={`
-                relative overflow-hidden p-4 rounded-lg border border-slate-200 dark:border-slate-700/50 
-                ${alert.level === 'high' ? 'bg-rose-50/50 dark:bg-rose-500/10' : 
-                  alert.level === 'medium' ? 'bg-amber-50/50 dark:bg-amber-500/10' : 
-                  'bg-blue-50/50 dark:bg-blue-500/10'}
-                backdrop-blur-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md
+                border-b border-slate-200/50 dark:border-slate-700/50 py-3 px-4 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors
+                ${alert.level === 'high' ? 'border-r-4 border-r-rose-500' : 
+                  alert.level === 'medium' ? 'border-r-4 border-r-amber-500' : 
+                  'border-r-4 border-r-blue-500'}
               `}
             >
-              <div className="absolute left-0 top-0 bottom-0 w-1.5 
-                ${alert.level === 'high' ? 'bg-rose-500' : 
-                  alert.level === 'medium' ? 'bg-amber-500' : 
-                  'bg-blue-500'}">
-              </div>
-              
-              <div className="flex">
-                <div className={`
-                  h-10 w-10 rounded-full flex items-center justify-center mr-3
-                  ${alert.level === 'high' ? 'bg-rose-100 text-rose-500 dark:bg-rose-500/20' : 
-                    alert.level === 'medium' ? 'bg-amber-100 text-amber-500 dark:bg-amber-500/20' : 
-                    'bg-blue-100 text-blue-500 dark:bg-blue-500/20'}
-                `}>
+              <div className="flex items-start">
+                <div 
+                  className={`
+                    h-8 w-8 rounded-lg mr-3 flex items-center justify-center flex-shrink-0
+                    ${alert.level === 'high' ? 'bg-rose-100 dark:bg-rose-950/30 text-rose-500' : 
+                      alert.level === 'medium' ? 'bg-amber-100 dark:bg-amber-950/30 text-amber-500' : 
+                      'bg-blue-100 dark:bg-blue-950/30 text-blue-500'}
+                  `}
+                >
                   {alert.icon}
                 </div>
-                
-                <div>
-                  <h4 className="font-medium text-sm mb-1">{alert.title}</h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400">{alert.description}</p>
-                  <div className="mt-2 flex items-center text-xs text-slate-500">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {alert.time}
+                <div className="flex-1">
+                  <h4 className="font-medium text-sm">{alert.title}</h4>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
+                    {alert.description}
+                  </p>
+                  <div className="flex items-center mt-1">
+                    <span className="text-slate-400 dark:text-slate-500 text-xs">{alert.time}</span>
                   </div>
                 </div>
               </div>
@@ -904,598 +816,144 @@ const AlertsCard: React.FC = () => {
           ))}
         </div>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 };
 
-// کارت فعالیت‌های اخیر
-const ActivitiesCard: React.FC = () => {
+// کامپوننت فعالیت‌های اخیر
+const RecentActivitiesSection: React.FC = () => {
   return (
-    <Card className="overflow-hidden group hover:shadow-lg dark:shadow-slate-900/10 transition-all duration-300 border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
-      <CardHeader className="px-6 py-5">
-        <CardTitle className="text-xl font-bold group-hover:text-blue-500 transition-colors duration-300">
-          <span className="inline-flex items-center">
-            <Activity className="mr-2 h-5 w-5 text-blue-500" />
-            فعالیت‌های اخیر
-          </span>
-        </CardTitle>
-        <CardDescription>آخرین اقدامات و گزارش‌های ثبت شده</CardDescription>
+    <GlassCard className="col-span-1">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-medium">فعالیت‌های اخیر</CardTitle>
       </CardHeader>
-      
-      <CardContent className="px-6 pb-6">
-        <div className="space-y-4">
+      <CardContent className="p-0">
+        <div className="max-h-[320px] overflow-y-auto scrollbar-thin">
           {recentActivities.map((activity) => (
             <div 
               key={activity.id} 
-              className="flex items-start p-3 rounded-lg hover:bg-slate-50/80 dark:hover:bg-slate-800/60 transition-colors duration-200 group/item"
+              className="border-b border-slate-200/50 dark:border-slate-700/50 py-3 px-4 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors"
             >
-              <div className="h-8 w-8 rounded-full flex items-center justify-center mr-3 bg-slate-100 dark:bg-slate-700">
-                {activity.icon}
-              </div>
-              
-              <div className="flex-1">
-                <div className="flex justify-between">
-                  <h4 className="font-medium text-sm">{activity.title}</h4>
-                  <span className="text-xs text-slate-500 group-hover/item:text-slate-700 dark:group-hover/item:text-slate-300 transition-colors duration-200">{activity.time}</span>
+              <div className="flex items-start">
+                <div className="h-8 w-8 rounded-lg bg-slate-100 dark:bg-slate-800 mr-3 flex items-center justify-center flex-shrink-0">
+                  {activity.icon}
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{activity.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        <Button variant="ghost" size="sm" className="w-full mt-4 text-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors duration-200">
-          <span className="text-xs">مشاهده همه فعالیت‌ها</span>
-          <ChevronLeft className="h-4 w-4 mr-1" />
-        </Button>
-      </CardContent>
-    </Card>
-  );
-};
-
-// کارت رویدادهای پیش رو
-const UpcomingEventsCard: React.FC = () => {
-  return (
-    <Card className="overflow-hidden group hover:shadow-lg dark:shadow-slate-900/10 transition-all duration-300 border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
-      <CardHeader className="px-6 py-5">
-        <CardTitle className="text-xl font-bold group-hover:text-indigo-500 transition-colors duration-300">
-          <span className="inline-flex items-center">
-            <CalendarIcon className="mr-2 h-5 w-5 text-indigo-500" />
-            رویدادهای پیش رو
-          </span>
-        </CardTitle>
-        <CardDescription>برنامه‌های زمان‌بندی شده در روزهای آینده</CardDescription>
-      </CardHeader>
-      
-      <CardContent className="px-6 pb-6">
-        <div className="space-y-4">
-          {upcomingEvents.map((event) => (
-            <div 
-              key={event.id} 
-              className="relative overflow-hidden p-4 rounded-lg border border-slate-200 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50 transition-transform duration-200 hover:-translate-y-1 hover:shadow-md group/event"
-            >
-              <div className="absolute right-0 top-0 h-full w-1.5 bg-indigo-500/40 group-hover/event:bg-indigo-500 transition-colors duration-300"></div>
-              
-              <div className="flex">
-                <div className="h-12 w-12 rounded-lg flex items-center justify-center mr-3 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-500">
-                  {event.icon}
-                </div>
-                
                 <div className="flex-1">
-                  <h4 className="font-medium text-sm">{event.title}</h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{event.description}</p>
-                  
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    <div className="flex items-center text-xs text-slate-500">
-                      <Clock className="h-3 w-3 mr-1" />
-                      {event.time}
-                    </div>
-                    <div className="flex items-center text-xs text-slate-500">
-                      <Map className="h-3 w-3 mr-1" />
-                      {event.location}
-                    </div>
+                  <h4 className="font-medium text-sm">{activity.title}</h4>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
+                    {activity.description}
+                  </p>
+                  <div className="flex items-center mt-1">
+                    <span className="text-slate-400 dark:text-slate-500 text-xs">{activity.time}</span>
                   </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
-        
-        <Button variant="ghost" size="sm" className="w-full mt-4 text-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 transition-colors duration-200">
-          <span className="text-xs">مشاهده تقویم رویدادها</span>
-          <ChevronLeft className="h-4 w-4 mr-1" />
-        </Button>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 };
 
-// کارت تخصیص بودجه
-const BudgetAllocationCard: React.FC = () => {
+// کامپوننت رویدادهای آینده
+const UpcomingEventsSection: React.FC = () => {
   return (
-    <Card className="overflow-hidden group hover:shadow-lg dark:shadow-slate-900/10 transition-all duration-300 border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
-      <CardHeader className="px-6 py-5">
-        <CardTitle className="text-xl font-bold group-hover:text-cyan-500 transition-colors duration-300">
-          <span className="inline-flex items-center">
-            <ChevronRight className="mr-2 h-5 w-5 text-cyan-500" />
-            تخصیص بودجه HSE
-          </span>
-        </CardTitle>
-        <CardDescription>توزیع بودجه مصرف شده در بخش‌های مختلف</CardDescription>
+    <GlassCard className="col-span-1">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-medium">رویدادهای آینده</CardTitle>
       </CardHeader>
-      
-      <CardContent className="px-6 pb-6 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        
-        <div className="h-72 w-full">
+      <CardContent className="p-0">
+        <div className="max-h-[320px] overflow-y-auto scrollbar-thin">
+          {upcomingEvents.map((event) => (
+            <div 
+              key={event.id} 
+              className="border-b border-slate-200/50 dark:border-slate-700/50 py-3 px-4 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors"
+            >
+              <div className="flex items-start">
+                <div className="h-8 w-8 rounded-lg bg-slate-100 dark:bg-slate-800 mr-3 flex items-center justify-center flex-shrink-0">
+                  {event.icon}
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-medium text-sm">{event.title}</h4>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
+                    {event.description}
+                  </p>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-slate-400 dark:text-slate-500 text-xs flex items-center">
+                      <Clock className="h-3 w-3 ml-1 text-slate-400" />
+                      {event.time}
+                    </span>
+                    <span className="text-slate-400 dark:text-slate-500 text-xs flex items-center">
+                      <Factory className="h-3 w-3 ml-1 text-slate-400" />
+                      {event.location}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </GlassCard>
+  );
+};
+
+// کامپوننت مخارج و بودجه
+const BudgetAllocationSection: React.FC = () => {
+  return (
+    <GlassCard className="col-span-1">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-medium">توزیع بودجه HSE</CardTitle>
+        <CardDescription>تخصیص بودجه به بخش‌های مختلف</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="h-52">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={budgetAllocationData}
                 cx="50%"
                 cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
+                labelLine={false}
+                outerRadius={70}
+                fill="#2EC4B6"
                 dataKey="مقدار"
+                nameKey="name"
               >
                 {budgetAllocationData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} className="hover:opacity-80 transition-opacity" />
+                  <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value) => [`${value}%`, 'سهم از بودجه']} />
-              <Legend formatter={(value) => <span className="text-sm">{value}</span>} />
+              <Tooltip 
+                contentStyle={{ 
+                  borderRadius: '8px', 
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  backdropFilter: 'blur(4px)',
+                  border: '1px solid rgba(0, 0, 0, 0.05)'
+                }} 
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
+        <div className="flex flex-wrap justify-center gap-2 mt-2">
+          {budgetAllocationData.map((item, index) => (
+            <div key={index} className="flex items-center">
+              <span 
+                className="inline-block w-3 h-3 rounded-sm mr-1"
+                style={{ backgroundColor: item.fill }}
+              ></span>
+              <span className="text-xs">{item.name}</span>
+            </div>
+          ))}
+        </div>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 };
 
-// کامپوننت گلاس کارد برای ایجاد افکت شیشه‌ای پیشرفته
-interface GlassCardProps {
-  children: React.ReactNode;
-  className?: string;
-  showControls?: boolean;
-}
-
-const GlassCard: React.FC<GlassCardProps> = ({
-  children,
-  className = "",
-  showControls = true
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  
-  return (
-    <div 
-      className={`
-        relative overflow-hidden rounded-xl 
-        border border-slate-200/50 dark:border-slate-700/50
-        bg-white/80 dark:bg-slate-800/70 backdrop-blur-lg
-        hover:shadow-xl hover:shadow-slate-200/30 dark:hover:shadow-slate-900/40
-        transition-all duration-300 ease-in-out
-        group
-        ${isExpanded ? 'fixed inset-4 z-[100]' : ''}
-        ${className}
-      `}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {isExpanded && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[-1]" onClick={() => setIsExpanded(false)}></div>
-      )}
-      
-      {showControls && (
-        <div className="absolute top-2 right-2 z-50 opacity-0 group-hover:opacity-100 transition-all duration-300 flex space-x-1 space-x-reverse">
-          <button 
-            className="h-6 w-6 flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-tiffany/20 border border-slate-200/50 dark:border-slate-600/50 transition-all duration-200 shadow-sm hover:shadow-md"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600 dark:text-slate-300">
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <polyline points="9 21 3 21 3 15"></polyline>
-              <line x1="21" y1="3" x2="14" y2="10"></line>
-              <line x1="3" y1="21" x2="10" y2="14"></line>
-            </svg>
-          </button>
-          <button 
-            className="h-6 w-6 flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-amber-500/20 border border-slate-200/50 dark:border-slate-600/50 transition-all duration-200 shadow-sm hover:shadow-md"
-            onClick={() => setShowSettings(!showSettings)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600 dark:text-slate-300">
-              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          </button>
-          <button 
-            className="h-6 w-6 flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg hover:bg-rose-500/20 border border-slate-200/50 dark:border-slate-600/50 transition-all duration-200 shadow-sm hover:shadow-md"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600 dark:text-slate-300">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-      )}
-      
-      {/* پنل تنظیمات */}
-      {showSettings && (
-        <div 
-          className="absolute top-10 right-2 z-50 w-64 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md rounded-lg shadow-lg p-3 border border-slate-200/70 dark:border-slate-700/70 animate-slide-down"
-        >
-          <div className="flex justify-between items-center mb-2">
-            <h4 className="text-xs font-medium text-slate-900 dark:text-slate-100">تنظیمات نمودار</h4>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-6 w-6 p-0 hover:bg-rose-100 dark:hover:bg-slate-700/80"
-              onClick={() => setShowSettings(false)}
-            >
-              <X className="h-3 w-3 text-slate-500" />
-            </Button>
-          </div>
-          
-          <div className="space-y-3">
-            <div className="space-y-1.5">
-              <label className="text-xs text-slate-500 dark:text-slate-400">نوع نمایش</label>
-              <div className="grid grid-cols-3 gap-1">
-                <button className="p-1.5 text-xs border border-tiffany/40 bg-tiffany/10 rounded-md">خطی</button>
-                <button className="p-1.5 text-xs border border-slate-200 dark:border-slate-700 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40">میله‌ای</button>
-                <button className="p-1.5 text-xs border border-slate-200 dark:border-slate-700 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40">ترکیبی</button>
-              </div>
-            </div>
-            
-            <div className="space-y-1.5">
-              <label className="text-xs text-slate-500 dark:text-slate-400">بازه زمانی</label>
-              <select className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                <option>هفته اخیر</option>
-                <option>ماه اخیر</option>
-                <option selected>۳ ماه اخیر</option>
-                <option>سال جاری</option>
-              </select>
-            </div>
-            
-            <div className="space-y-1.5">
-              <label className="text-xs text-slate-500 dark:text-slate-400">اندازه فونت</label>
-              <div className="flex items-center space-x-2 space-x-reverse">
-                <button className="p-1 text-xs border border-slate-200 dark:border-slate-700 w-7 h-7 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40 flex items-center justify-center">-</button>
-                <div className="h-1 flex-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                  <div className="h-full w-1/2 bg-tiffany rounded-full"></div>
-                </div>
-                <button className="p-1 text-xs border border-slate-200 dark:border-slate-700 w-7 h-7 rounded-md hover:bg-tiffany/10 hover:border-tiffany/40 flex items-center justify-center">+</button>
-              </div>
-            </div>
-            
-            <div className="flex justify-end pt-1">
-              <Button 
-                size="sm" 
-                className="h-7 text-xs bg-tiffany hover:bg-tiffany-dark text-white rounded-lg shadow-md hover:shadow-tiffany/20"
-              >
-                اعمال تغییرات
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/* افکت هاله در گوشه‌ها */}
-      <div className={`absolute -top-20 -right-20 w-60 h-60 bg-gradient-radial from-tiffany/10 to-transparent rounded-full blur-3xl transition-opacity duration-500 animate-pulse-slow ${isHovered ? 'opacity-70' : 'opacity-20'}`}></div>
-      <div className={`absolute -bottom-20 -left-20 w-60 h-60 bg-gradient-radial from-amber-500/10 to-transparent rounded-full blur-3xl transition-opacity duration-500 animate-pulse-slow animation-delay-1000 ${isHovered ? 'opacity-70' : 'opacity-20'}`}></div>
-      
-      {/* خط تزئینی بالای کارت */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-tiffany/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      
-      {/* خط تزئینی پایین کارت */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      
-      {children}
-      
-      {/* افکت هاور - بوردر متحرک */}
-      <div className="absolute inset-0 border-2 border-dashed border-tiffany/0 group-hover:border-tiffany/20 dark:group-hover:border-tiffany/30 opacity-0 group-hover:opacity-100 pointer-events-none rounded-xl transition-all duration-500"></div>
-    </div>
-  );
-};
-
-// کامپوننت قابل درگ با قابلیت تغییر وضعیت و کاستومایز شدن
-interface DraggableSectionProps {
-  children: React.ReactNode;
-  className?: string;
-  title?: string;
-}
-
-const DraggableSection: React.FC<DraggableSectionProps> = ({ 
-  children, 
-  className = "",
-  title
-}) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [showActions, setShowActions] = useState(false);
-  
-  return (
-    <div 
-      className={`relative transition-all duration-300 ${className} ${
-        isCollapsed ? 'h-12' : ''
-      } ${
-        isDragging ? 'z-50' : 'z-auto'
-      } rounded-xl overflow-hidden group shadow-sm hover:shadow-md`}
-      draggable={true}
-      onDragStart={() => setIsDragging(true)}
-      onDragEnd={() => setIsDragging(false)}
-    >
-      {/* هدر قابل کلیک برای کارت */}
-      {title && (
-        <div 
-          className={`
-            flex justify-between items-center px-4 py-2 
-            bg-gradient-to-r from-slate-50/80 to-white/80 dark:from-slate-800/80 dark:to-slate-700/80
-            backdrop-blur-sm border-b border-slate-200/60 dark:border-slate-700/40
-            cursor-pointer
-          `}
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        >
-          <h3 className="text-sm font-medium">{title}</h3>
-          <button className="h-5 w-5 flex items-center justify-center rounded-md text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              {isCollapsed ? (
-                <polyline points="6 9 12 15 18 9"></polyline>
-              ) : (
-                <polyline points="18 15 12 9 6 15"></polyline>
-              )}
-            </svg>
-          </button>
-        </div>
-      )}
-      
-      {/* منوی کنترل سمت چپ */}
-      <div className="absolute top-2 left-2 z-30 opacity-0 group-hover:opacity-100 transition-all duration-300">
-        <div className="relative">
-          <Button 
-            size="sm" 
-            variant="ghost"
-            className="h-6 w-6 p-0 rounded-full bg-white/90 dark:bg-slate-700/90 backdrop-blur-lg border border-slate-200/50 dark:border-slate-600/50 shadow-sm"
-            onClick={() => setShowActions(!showActions)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-600 dark:text-slate-300">
-              <circle cx="12" cy="12" r="1"></circle>
-              <circle cx="12" cy="5" r="1"></circle>
-              <circle cx="12" cy="19" r="1"></circle>
-            </svg>
-          </Button>
-          
-          {showActions && (
-            <div 
-              className="absolute -left-1 top-7 z-50 p-1.5 bg-white/95 dark:bg-slate-800/95 rounded-lg shadow-lg backdrop-blur-md border border-slate-200/70 dark:border-slate-700/70 animate-slide-down"
-            >
-              <div className="flex flex-col space-y-1 min-w-[140px]">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-7 text-xs justify-start px-2 hover:bg-slate-100 dark:hover:bg-slate-700/70 rounded-md"
-                  onClick={() => setShowSettings(!showSettings)}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1 text-slate-500"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                  <span>تنظیمات</span>
-                </Button>
-                
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-7 text-xs justify-start px-2 hover:bg-slate-100 dark:hover:bg-slate-700/70 rounded-md"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1 text-slate-500"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
-                  <span>تکثیر</span>
-                </Button>
-                
-                <div className="h-px bg-slate-200 dark:bg-slate-700 my-1"></div>
-                
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-7 text-xs justify-start px-2 hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-500 rounded-md"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
-                  <span>حذف</span>
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-      
-      {/* نشانگر قابلیت درگ */}
-      <div 
-        className="absolute top-2 right-2 z-30 opacity-0 group-hover:opacity-50 hover:opacity-100 transition-all duration-300 cursor-move"
-        onMouseDown={() => setIsDragging(true)}
-      >
-        <div className="h-6 w-6 rounded-md flex items-center justify-center hover:bg-slate-100/70 dark:hover:bg-slate-700/70">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-slate-400">
-            <path d="M8 6C9.10457 6 10 5.10457 10 4C10 2.89543 9.10457 2 8 2C6.89543 2 6 2.89543 6 4C6 5.10457 6.89543 6 8 6Z" fill="currentColor"/>
-            <path d="M8 14C9.10457 14 10 13.1046 10 12C10 10.8954 9.10457 10 8 10C6.89543 10 6 10.8954 6 12C6 13.1046 6.89543 14 8 14Z" fill="currentColor"/>
-            <path d="M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z" fill="currentColor"/>
-            <path d="M16 6C17.1046 6 18 5.10457 18 4C18 2.89543 17.1046 2 16 2C14.8954 2 14 2.89543 14 4C14 5.10457 14.8954 6 16 6Z" fill="currentColor"/>
-            <path d="M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z" fill="currentColor"/>
-            <path d="M16 22C17.1046 22 18 21.1046 18 20C18 18.8954 17.1046 18 16 18C14.8954 18 14 18.8954 14 20C14 21.1046 14.8954 22 16 22Z" fill="currentColor"/>
-          </svg>
-        </div>
-      </div>
-      
-      {/* پنل تنظیمات کارت */}
-      {showSettings && (
-        <div 
-          className="absolute top-10 left-2 z-50 w-72 bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg rounded-lg shadow-xl p-3 border border-slate-200/70 dark:border-slate-700/70 animate-slide-down"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex justify-between items-center mb-3">
-            <h4 className="text-xs font-medium text-slate-900 dark:text-slate-100">تنظیمات کارت</h4>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-6 w-6 p-0 hover:bg-rose-100 dark:hover:bg-slate-700/80"
-              onClick={() => setShowSettings(false)}
-            >
-              <X className="h-3 w-3 text-slate-500" />
-            </Button>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-slate-600 dark:text-slate-300">اندازه کارت</label>
-              <div className="grid grid-cols-4 gap-1.5">
-                <Button variant="outline" size="sm" className="h-8 text-xs py-0 border-tiffany/40 bg-tiffany/5">کوچک</Button>
-                <Button variant="outline" size="sm" className="h-8 text-xs py-0 bg-transparent">متوسط</Button>
-                <Button variant="outline" size="sm" className="h-8 text-xs py-0 bg-transparent">بزرگ</Button>
-                <Button variant="outline" size="sm" className="h-8 text-xs py-0 bg-transparent">کامل</Button>
-              </div>
-            </div>
-            
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-slate-600 dark:text-slate-300">دوره زمانی</label>
-              <select className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                <option>روزانه</option>
-                <option>هفتگی</option>
-                <option selected>ماهانه</option>
-                <option>سالانه</option>
-              </select>
-            </div>
-            
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-slate-600 dark:text-slate-300">قالب نمایش</label>
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex-1 relative">
-                  <input 
-                    type="radio" 
-                    id="template1" 
-                    name="template" 
-                    className="peer sr-only" 
-                    defaultChecked
-                  />
-                  <label 
-                    htmlFor="template1" 
-                    className="flex flex-col items-center justify-center h-16 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md peer-checked:border-tiffany peer-checked:bg-tiffany/5 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200 cursor-pointer"
-                  >
-                    <BarChart3 className="h-4 w-4 mb-1" />
-                    <span className="text-[10px]">میله‌ای</span>
-                  </label>
-                </div>
-                
-                <div className="flex-1 relative">
-                  <input 
-                    type="radio" 
-                    id="template2" 
-                    name="template" 
-                    className="peer sr-only" 
-                  />
-                  <label 
-                    htmlFor="template2" 
-                    className="flex flex-col items-center justify-center h-16 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md peer-checked:border-tiffany peer-checked:bg-tiffany/5 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200 cursor-pointer"
-                  >
-                    <LineChartIcon className="h-4 w-4 mb-1" />
-                    <span className="text-[10px]">خطی</span>
-                  </label>
-                </div>
-                
-                <div className="flex-1 relative">
-                  <input 
-                    type="radio" 
-                    id="template3" 
-                    name="template" 
-                    className="peer sr-only" 
-                  />
-                  <label 
-                    htmlFor="template3" 
-                    className="flex flex-col items-center justify-center h-16 w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md peer-checked:border-tiffany peer-checked:bg-tiffany/5 hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-all duration-200 cursor-pointer"
-                  >
-                    <PieChartIcon className="h-4 w-4 mb-1" />
-                    <span className="text-[10px]">دایره‌ای</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="h-8 text-xs py-0"
-                onClick={() => setShowSettings(false)}
-              >
-                انصراف
-              </Button>
-              
-              <Button 
-                size="sm" 
-                className="h-8 px-3 text-xs bg-tiffany hover:bg-tiffany-dark text-white shadow-sm hover:shadow-md transition-all duration-300"
-                onClick={() => setShowSettings(false)}
-              >
-                اعمال تغییرات
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      <div className={`transition-all duration-300 ${isCollapsed ? 'h-0 opacity-0 invisible' : 'opacity-100 visible'}`}>
-        {children}
-      </div>
-      
-      {/* سایه و افکت‌های ویژه */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* افکت سایه داخلی */}
-        <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[inset_0_0_20px_rgba(0,0,0,0.03)]"></div>
-        
-        {/* نشان‌گر درگ و دراپ */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 border-2 border-dashed border-tiffany/0 group-hover:border-tiffany/30 dark:group-hover:border-tiffany/20 rounded-xl"></div>
-        
-        {/* افکت درخشش در هنگام درگ */}
-        {isDragging && (
-          <div className="absolute inset-0 bg-gradient-to-tr from-tiffany/10 via-transparent to-transparent rounded-xl"></div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// تنظیمات مد تاریک
-const ThemeToggle: React.FC = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  
-  useEffect(() => {
-    // تنظیم حالت تاریک به عنوان پیش‌فرض
-    if (document.documentElement.classList.contains('light')) {
-      document.documentElement.classList.remove('light');
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-  
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
-    document.documentElement.classList.toggle('light');
-  };
-  
-  return (
-    <Button 
-      variant="ghost" 
-      size="sm" 
-      onClick={toggleTheme} 
-      className="h-10 w-10 p-0 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm hover:bg-slate-100/80 dark:hover:bg-slate-700/80 border border-slate-200/50 dark:border-slate-700/50 transition-all"
-    >
-      {isDarkMode ? (
-        <Sun className="h-4 w-4 text-amber-500" />
-      ) : (
-        <Moon className="h-4 w-4 text-slate-600" />
-      )}
-      <span className="absolute -bottom-8 opacity-0 group-hover:opacity-100 text-xs bg-black/70 text-white px-2 py-1 rounded">تغییر تم</span>
-    </Button>
-  );
-};
-
-// داشبورد اصلی
+// کامپوننت اصلی داشبورد HSE
 export default function HSESmartDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [showCustomizePanel, setShowCustomizePanel] = useState(false);
@@ -1503,508 +961,205 @@ export default function HSESmartDashboard() {
     'kpi', 'health', 'incidents', 'environmental', 'risks', 'departments', 'alerts', 'activities', 'events', 'budget'
   ]);
 
-  // خودکار فعال شدن حالت تاریک
-  useEffect(() => {
-    document.documentElement.classList.add('dark');
-  }, []);
-
   return (
-    <div className="min-h-screen relative pt-6 pb-12 dark:bg-slate-900 dark:text-slate-200">
-      {/* پس‌زمینه داینامیک با افکت‌های پیشرفته */}
+    <div className="relative min-h-screen">
       <DynamicBackground />
       
-      {/* نوار ابزار بالای صفحه - با افکت گلس و انیمیشن باکیفیت */}
-      <div className="sticky top-0 z-50 py-2 px-4 backdrop-blur-lg bg-white/60 dark:bg-slate-900/60 border-b border-slate-200/50 dark:border-slate-700/30 mb-4 shadow-sm dark:shadow-slate-950/30 animate-appear">
-        <div className="container mx-auto max-w-7xl flex justify-between items-center relative">
-          {/* افکت نور محو در پس‌زمینه نوار ابزار */}
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-1/2 h-8 bg-tiffany/10 blur-2xl rounded-full"></div>
-          <div className="absolute top-1/2 right-1/3 -translate-y-1/2 w-1/3 h-8 bg-amber-500/10 blur-2xl rounded-full"></div>
-          <div className="flex items-center space-x-3 space-x-reverse">
-            <div className="relative group">
-              <Button 
-                className={`
-                  py-1.5 px-3 rounded-lg text-xs font-medium
-                  ${showCustomizePanel 
-                    ? 'bg-tiffany hover:bg-tiffany-dark text-white' 
-                    : 'bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 hover:bg-tiffany/10 dark:hover:bg-tiffany/10 border border-slate-200/50 dark:border-slate-700/50'}
-                  transition-all duration-300 ease-in-out shadow-sm
-                `}
-                onClick={() => setShowCustomizePanel(!showCustomizePanel)}
-              >
-                <div className="flex items-center">
-                  <Settings className="h-3.5 w-3.5 mr-1.5" />
-                  {showCustomizePanel ? 'در حال شخصی‌سازی' : 'شخصی‌سازی داشبورد'}
-                </div>
-              </Button>
-              
-              {/* پنل شخصی‌سازی داشبورد */}
-              {showCustomizePanel && (
-                <div className="absolute top-full right-0 mt-2 p-4 w-72 bg-white/95 dark:bg-slate-800/95 rounded-lg shadow-xl backdrop-blur-md border border-slate-200/70 dark:border-slate-700/70 z-50">
-                  <div className="flex justify-between items-center mb-3">
-                    <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100">شخصی‌سازی داشبورد</h4>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-7 w-7 p-0 hover:bg-rose-100 dark:hover:bg-slate-700/80"
-                      onClick={() => setShowCustomizePanel(false)}
-                    >
-                      <X className="h-4 w-4 text-slate-500" />
-                    </Button>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div>
-                      <h5 className="text-xs font-medium mb-2 text-slate-700 dark:text-slate-300">چیدمان صفحه</h5>
-                      <div className="grid grid-cols-2 gap-2">
-                        <button className="p-2 text-xs bg-tiffany/10 border border-tiffany/40 rounded-md flex items-center justify-center">
-                          <LayoutGrid className="h-3.5 w-3.5 ml-1.5" />
-                          <span>گرید</span>
-                        </button>
-                        <button className="p-2 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md flex items-center justify-center">
-                          <LayoutList className="h-3.5 w-3.5 ml-1.5" />
-                          <span>لیست</span>
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h5 className="text-xs font-medium mb-2 text-slate-700 dark:text-slate-300">ترتیب اجزا</h5>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">موارد را با درگ و دراپ جابجا کنید</p>
-                      <div className="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
-                        {layout.map((item, index) => (
-                          <div 
-                            key={item} 
-                            className="text-xs py-2 px-3 bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 cursor-move flex justify-between items-center"
-                          >
-                            <span>{
-                              item === 'kpi' ? 'شاخص‌های کلیدی عملکرد' :
-                              item === 'health' ? 'نمودار سلامت و ایمنی' :
-                              item === 'incidents' ? 'توزیع حوادث' :
-                              item === 'environmental' ? 'شاخص‌های زیست‌محیطی' :
-                              item === 'risks' ? 'ارزیابی ریسک‌ها' :
-                              item === 'departments' ? 'رتبه‌بندی واحدها' :
-                              item === 'alerts' ? 'هشدارها و اعلانات' :
-                              item === 'activities' ? 'فعالیت‌های اخیر' :
-                              item === 'events' ? 'رویدادهای پیش رو' :
-                              item === 'budget' ? 'تخصیص بودجه' : item
-                            }</span>
-                            <div className="flex items-center space-x-1 space-x-reverse">
-                              <Button variant="ghost" size="sm" className="h-5 w-5 p-0 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-sm">
-                                <Eye className="h-3 w-3 text-slate-500" />
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-5 w-5 p-0 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-sm">
-                                <ArrowUp className="h-3 w-3 text-slate-500" />
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-5 w-5 p-0 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-sm">
-                                <ArrowDown className="h-3 w-3 text-slate-500" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
-                      <Button className="w-full bg-tiffany hover:bg-tiffany-dark text-white text-xs py-2">
-                        ذخیره تنظیمات
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-3 space-x-reverse">
-              <Button 
-                variant="ghost"
-                className="py-1.5 px-3 text-xs font-medium bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 border border-slate-200/50 dark:border-slate-700/50 rounded-lg shadow-sm"
-              >
-                <FileText className="h-3.5 w-3.5 ml-1.5 text-slate-500" />
-                گزارش‌ها
-              </Button>
-              <Button 
-                variant="ghost"
-                className="py-1.5 px-3 text-xs font-medium bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 border border-slate-200/50 dark:border-slate-700/50 rounded-lg shadow-sm"
-              >
-                <Bell className="h-3.5 w-3.5 ml-1.5 text-slate-500" />
-                اعلانات
-              </Button>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2 space-x-reverse">
-            <ThemeToggle />
-            
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-10 px-3 rounded-lg bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200/50 dark:border-slate-700/50 shadow-sm hidden sm:flex"
-            >
-              <Download className="h-4 w-4 ml-1.5 text-slate-500" />
-              <span className="text-xs">خروجی</span>
-            </Button>
-            
-            <Button 
-              size="sm" 
-              className="h-10 px-3 rounded-lg bg-tiffany hover:bg-tiffany-dark text-white border-none shadow-md hover:shadow-lg transition-all duration-300"
-            >
-              <RefreshCcw className="h-4 w-4 ml-1.5" />
-              <span className="text-xs">به‌روزرسانی</span>
-            </Button>
-          </div>
-        </div>
-      </div>
-      
-      <div className="px-4 py-2 lg:px-6 space-y-6 container mx-auto max-w-7xl">
+      <div className="px-4 py-6 mx-auto container">
         <DashboardHeader />
         
-        {/* تب‌های داشبورد با طراحی گلس و انیمیشن */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
-          <TabsList className="mb-6 p-1 bg-white/60 dark:bg-slate-800/50 backdrop-blur-md rounded-xl border border-slate-200/50 dark:border-slate-700/30 shadow-sm overflow-hidden">
-            <TabsTrigger 
-              value="overview" 
-              className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-tiffany/90 data-[state=active]:to-tiffany-dark/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
-            >
-              <span className="absolute inset-0 bg-tiffany/0 group-hover:bg-tiffany/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
-              <span className="relative flex items-center">
-                <Layers className="h-4 w-4 ml-2" />
-                نمای کلی
-                <span className="absolute -right-1 -top-1 w-2 h-2 rounded-full bg-tiffany-light animate-ping group-data-[state=active]:hidden"></span>
-              </span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="safety" 
-              className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-amber-500/90 data-[state=active]:to-amber-600/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
-            >
-              <span className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
-              <span className="relative flex items-center">
-                <ShieldCheck className="h-4 w-4 ml-2" />
-                ایمنی
-              </span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="health" 
-              className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-rose-500/90 data-[state=active]:to-rose-600/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
-            >
-              <span className="absolute inset-0 bg-rose-500/0 group-hover:bg-rose-500/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
-              <span className="relative flex items-center">
-                <Heart className="h-4 w-4 ml-2" />
-                سلامت
-              </span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="environmental" 
-              className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-emerald-500/90 data-[state=active]:to-emerald-600/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
-            >
-              <span className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
-              <span className="relative flex items-center">
-                <TreePine className="h-4 w-4 ml-2" />
-                محیط زیست
-              </span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="training" 
-              className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500/90 data-[state=active]:to-blue-600/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
-            >
-              <span className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
-              <span className="relative flex items-center">
-                <GraduationCap className="h-4 w-4 ml-2" />
-                آموزش
-              </span>
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="overview" className="space-y-6">
-            {/* شاخص‌های کلیدی عملکرد */}
-            <div className="animate-appear">
-              <KeyPerformanceCards />
-            </div>
-            
-            {/* لایه اصلی با گرید بندی پویا و پیشرفته */}
-            <div className="grid grid-cols-12 auto-rows-min gap-6">
-              {/* بخش نمودارهای اصلی - کامپوننت ۲/۳ */}
-              <div className="col-span-12 lg:col-span-8">
-                <DraggableSection className="h-full">
-                  <HealthMetricsCard />
-                </DraggableSection>
+        <div className="mb-6 relative">
+          <div className="sticky top-0 z-30 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md rounded-xl mb-4 p-1 shadow-sm border border-slate-200/70 dark:border-slate-700/30">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-2">
+              <div className="flex items-center">
+                <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
+                  <TabsList className="bg-transparent p-1">
+                    <TabsTrigger 
+                      value="overview" 
+                      className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-tiffany/90 data-[state=active]:to-tiffany-dark/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
+                    >
+                      <span className="absolute inset-0 bg-tiffany/0 group-hover:bg-tiffany/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
+                      <span className="relative flex items-center">
+                        <Activity className="h-4 w-4 ml-2" />
+                        نمای کلی
+                        <span className="absolute -right-1 -top-1 w-2 h-2 rounded-full bg-tiffany-light animate-ping group-data-[state=active]:hidden"></span>
+                      </span>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="safety" 
+                      className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-amber-500/90 data-[state=active]:to-amber-600/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
+                    >
+                      <span className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
+                      <span className="relative flex items-center">
+                        <ShieldCheck className="h-4 w-4 ml-2" />
+                        ایمنی
+                      </span>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="health" 
+                      className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-emerald-500/90 data-[state=active]:to-emerald-600/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
+                    >
+                      <span className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
+                      <span className="relative flex items-center">
+                        <Activity className="h-4 w-4 ml-2" />
+                        سلامت
+                      </span>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="environment" 
+                      className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500/90 data-[state=active]:to-blue-600/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
+                    >
+                      <span className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
+                      <span className="relative flex items-center">
+                        <TreePine className="h-4 w-4 ml-2" />
+                        محیط زیست
+                      </span>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="training" 
+                      className="relative py-2.5 px-4 text-sm rounded-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-violet-500/90 data-[state=active]:to-violet-600/90 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 group"
+                    >
+                      <span className="absolute inset-0 bg-violet-500/0 group-hover:bg-violet-500/10 group-data-[state=active]:bg-transparent rounded-lg transition-colors duration-300"></span>
+                      <span className="relative flex items-center">
+                        <GraduationCap className="h-4 w-4 ml-2" />
+                        آموزش
+                      </span>
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <div className="flex items-center"></div>
+                </Tabs>
               </div>
               
-              {/* بخش نمودار دایره‌ای - کامپوننت ۱/۳ */}
-              <div className="col-span-12 lg:col-span-4">
-                <DraggableSection className="h-full">
-                  <IncidentTypesCard />
-                </DraggableSection>
-              </div>
-              
-              {/* بخش شاخص‌های زیست محیطی - کامپوننت ۱/۳ */}
-              <div className="col-span-12 md:col-span-6 lg:col-span-4">
-                <DraggableSection className="h-full">
-                  <EnvironmentalMetricsCard />
-                </DraggableSection>
-              </div>
-              
-              {/* بخش ارزیابی ریسک - کامپوننت ۲/۳ */}
-              <div className="col-span-12 md:col-span-6 lg:col-span-8">
-                <DraggableSection className="h-full">
-                  <RiskAssessmentCard />
-                </DraggableSection>
-              </div>
-              
-              {/* بخش رتبه‌بندی دپارتمان‌ها - کامپوننت ۲/۳ */}
-              <div className="col-span-12 lg:col-span-8">
-                <DraggableSection className="h-full">
-                  <DepartmentSafetyCard />
-                </DraggableSection>
-              </div>
-              
-              {/* بخش هشدارها - کامپوننت ۱/۳ */}
-              <div className="col-span-12 lg:col-span-4">
-                <DraggableSection className="h-full">
-                  <AlertsCard />
-                </DraggableSection>
-              </div>
-              
-              {/* بخش فعالیت‌های اخیر - ۱/۳ */}
-              <div className="col-span-12 md:col-span-6 lg:col-span-4">
-                <DraggableSection className="h-full">
-                  <ActivitiesCard />
-                </DraggableSection>
-              </div>
-              
-              {/* بخش رویدادهای پیش رو - ۱/۳ */}
-              <div className="col-span-12 md:col-span-6 lg:col-span-4">
-                <DraggableSection className="h-full">
-                  <UpcomingEventsCard />
-                </DraggableSection>
-              </div>
-              
-              {/* بخش تخصیص بودجه - ۱/۳ */}
-              <div className="col-span-12 md:col-span-6 lg:col-span-4">
-                <DraggableSection className="h-full">
-                  <BudgetAllocationCard />
-                </DraggableSection>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="safety" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <DraggableSection className="col-span-1 lg:col-span-1">
-                <GlassCard className="h-full">
-                  <CardHeader className="px-6 py-5">
-                    <CardTitle className="text-xl font-bold">روند بازرسی‌های ایمنی</CardTitle>
-                    <CardDescription>مقایسه امتیازات بازرسی با استانداردهای سازمانی</CardDescription>
-                  </CardHeader>
-                  <CardContent className="px-6 pb-6">
-                    <div className="h-80 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart
-                          data={safetyAuditData}
-                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis domain={[0, 100]} />
-                          <Tooltip />
-                          <Legend />
-                          <Line type="monotone" dataKey="امتیاز" stroke="#2EC4B6" strokeWidth={2} dot={{ r: 5 }} activeDot={{ r: 8 }} />
-                          <Line type="monotone" dataKey="استاندارد" stroke="#FFBB00" strokeWidth={2} strokeDasharray="5 5" />
-                        </LineChart>
-                      </ResponsiveContainer>
+              <div className="relative mt-3 md:mt-0">
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="ghost"
+                    className={`
+                      py-1.5 px-3 rounded-lg text-xs font-medium
+                      ${showCustomizePanel 
+                        ? 'bg-tiffany hover:bg-tiffany-dark text-white' 
+                        : 'bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 hover:bg-tiffany/10 dark:hover:bg-tiffany/10 border border-slate-200/50 dark:border-slate-700/50'}
+                      transition-all duration-300 ease-in-out shadow-sm
+                    `}
+                    onClick={() => setShowCustomizePanel(!showCustomizePanel)}
+                  >
+                    <div className="flex items-center">
+                      <Settings className="h-3.5 w-3.5 ml-1.5" />
+                      {showCustomizePanel ? 'در حال شخصی‌سازی' : 'شخصی‌سازی داشبورد'}
                     </div>
-                  </CardContent>
-                </GlassCard>
-              </DraggableSection>
-              
-              <DraggableSection className="col-span-1 lg:col-span-1">
-                <GlassCard className="h-full">
-                  <CardHeader className="px-6 py-5">
-                    <CardTitle className="text-xl font-bold">تخصیص بودجه ایمنی</CardTitle>
-                    <CardDescription>توزیع بودجه بر اساس حوزه‌های کاری</CardDescription>
-                  </CardHeader>
-                  <CardContent className="px-6 pb-6">
-                    <div className="h-80 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={budgetAllocationData}
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={120}
-                            innerRadius={70}
-                            dataKey="مقدار"
-                            nameKey="name"
-                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                          >
-                            {budgetAllocationData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.fill} />
+                  </Button>
+                  
+                  {/* پنل شخصی‌سازی داشبورد */}
+                  {showCustomizePanel && (
+                    <div className="absolute top-full right-0 mt-2 p-4 w-72 bg-white/95 dark:bg-slate-800/95 rounded-lg shadow-xl backdrop-blur-md border border-slate-200/70 dark:border-slate-700/70 z-50">
+                      <div className="flex justify-between items-center mb-3">
+                        <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100">شخصی‌سازی داشبورد</h4>
+                        <Button 
+                          variant="ghost"
+                          className="h-6 w-6 p-0 rounded-full text-slate-500"
+                          onClick={() => setShowCustomizePanel(false)}
+                        >
+                          <span className="sr-only">بستن</span>
+                          <Plus className="h-4 w-4 rotate-45" />
+                        </Button>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <h5 className="text-xs font-medium mb-2">ترتیب نمایش ویجت‌ها</h5>
+                          <div className="space-y-2">
+                            {layout.map((item, index) => (
+                              <div key={index} className="flex items-center justify-between bg-slate-100/80 dark:bg-slate-900/80 rounded-md p-2">
+                                <span className="text-xs">{
+                                  item === 'kpi' ? 'شاخص‌های کلیدی' :
+                                  item === 'health' ? 'سلامت کارکنان' :
+                                  item === 'incidents' ? 'گزارش حوادث' :
+                                  item === 'environmental' ? 'شاخص‌های محیطی' :
+                                  item === 'risks' ? 'ارزیابی ریسک' :
+                                  item === 'departments' ? 'وضعیت دپارتمان‌ها' :
+                                  item === 'alerts' ? 'هشدارها' :
+                                  item === 'activities' ? 'فعالیت‌های اخیر' :
+                                  item === 'events' ? 'رویدادها' :
+                                  item === 'budget' ? 'بودجه' : item
+                                }</span>
+                                <div className="flex items-center">
+                                  <Button variant="ghost" className="h-6 w-6 p-0 rounded-full text-slate-500">
+                                    <span className="sr-only">بالا</span>
+                                    <ArrowUp className="h-3 w-3" />
+                                  </Button>
+                                  <Button variant="ghost" className="h-6 w-6 p-0 rounded-full text-slate-500">
+                                    <span className="sr-only">پایین</span>
+                                    <ArrowDown className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
                             ))}
-                          </Pie>
-                          <Tooltip formatter={(value) => [`${value}%`, 'سهم از بودجه']} />
-                        </PieChart>
-                      </ResponsiveContainer>
+                          </div>
+                        </div>
+                        
+                        <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
+                          <Button className="w-full bg-tiffany hover:bg-tiffany-dark text-white text-xs py-2">
+                            ذخیره تنظیمات
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                  </CardContent>
-                </GlassCard>
-              </DraggableSection>
+                  )}
+                </div>
+              </div>
             </div>
-            
-            <AlertsCard />
-          </TabsContent>
+          </div>
           
-          <TabsContent value="health" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <DraggableSection className="col-span-1 lg:col-span-2">
-                <GlassCard>
-                  <CardHeader className="px-6 py-5">
-                    <CardTitle className="text-xl font-bold">شاخص‌های سلامت کارکنان</CardTitle>
-                    <CardDescription>مقایسه امتیازات شاخص‌های سلامت با میانگین صنعت</CardDescription>
-                  </CardHeader>
-                  <CardContent className="px-6 pb-6">
-                    <div className="h-80 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart
-                          data={healthIndexScoreData}
-                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis domain={[0, 100]} />
-                          <Tooltip />
-                          <Legend />
-                          <Bar dataKey="امتیاز" fill="#2EC4B6" barSize={30} radius={[4, 4, 0, 0]} />
-                          <Line type="monotone" dataKey="میانگین" stroke="#FFBB00" strokeWidth={2} dot={{ strokeWidth: 2 }} />
-                        </ComposedChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </GlassCard>
-              </DraggableSection>
+          <TabsContent value="overview" className="mt-0 p-0">
+            <div className="space-y-6">
+              <MainIndicator />
               
-              <DraggableSection className="col-span-1">
-                <GlassCard>
-                  <CardHeader className="px-6 py-5">
-                    <CardTitle className="text-xl font-bold">تکمیل آموزش‌های سلامت</CardTitle>
-                    <CardDescription>درصد تکمیل آموزش‌ها به تفکیک گروه</CardDescription>
-                  </CardHeader>
-                  <CardContent className="px-6 pb-6">
-                    <div className="h-80 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={trainingCompletionData}
-                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis domain={[0, 100]} />
-                          <Tooltip formatter={(value) => [`${value}%`, 'درصد تکمیل']} />
-                          <Bar dataKey="امتیاز" fill="#2EC4B6" radius={[4, 4, 0, 0]}>
-                            {trainingCompletionData.map((entry, index) => (
-                              <Cell 
-                                key={`cell-${index}`} 
-                                fill={
-                                  entry.امتیاز > 90 ? '#10B981' : 
-                                  entry.امتیاز > 75 ? '#2EC4B6' : 
-                                  entry.امتیاز > 60 ? '#FFBB00' : 
-                                  '#D72638'
-                                } 
-                              />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </GlassCard>
-              </DraggableSection>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <KPISection />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <SafetyTrendChart />
+                <IncidentDistributionChart />
+                <TrainingCompletionChart />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <HealthAlertsSection />
+                <RecentActivitiesSection />
+                <UpcomingEventsSection />
+              </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="environmental" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <DraggableSection>
-                <GlassCard>
-                  <CardHeader className="px-6 py-5">
-                    <CardTitle className="text-xl font-bold">کیفیت هوا، دما و رطوبت</CardTitle>
-                    <CardDescription>روند شاخص‌های محیطی در طول سال</CardDescription>
-                  </CardHeader>
-                  <CardContent className="px-6 pb-6">
-                    <div className="h-80 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart
-                          data={airQualityData}
-                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line type="monotone" dataKey="AQI" stroke="#D72638" strokeWidth={2} />
-                          <Line type="monotone" dataKey="دما" stroke="#FFBB00" strokeWidth={2} />
-                          <Line type="monotone" dataKey="رطوبت" stroke="#2EC4B6" strokeWidth={2} />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </GlassCard>
-              </DraggableSection>
-              
-              <DraggableSection>
-                <EnvironmentalMetricsCard />
-              </DraggableSection>
+          <TabsContent value="safety" className="mt-0 p-0">
+            <div className="p-6 text-center">
+              <h3 className="text-lg font-medium">داشبورد ایمنی</h3>
+              <p className="text-slate-500 dark:text-slate-400">این بخش در حال توسعه است</p>
             </div>
           </TabsContent>
           
-          <TabsContent value="training" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <DraggableSection className="col-span-1 lg:col-span-2">
-                <GlassCard>
-                  <CardHeader className="px-6 py-5">
-                    <CardTitle className="text-xl font-bold">پیشرفت برنامه‌های آموزشی</CardTitle>
-                    <CardDescription>درصد تکمیل به تفکیک گروه‌های کاری</CardDescription>
-                  </CardHeader>
-                  <CardContent className="px-6 pb-6">
-                    <div className="h-80 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          data={trainingCompletionData}
-                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis domain={[0, 100]} />
-                          <Tooltip formatter={(value) => [`${value}%`, 'درصد تکمیل']} />
-                          <Bar dataKey="امتیاز" radius={[4, 4, 0, 0]}>
-                            {trainingCompletionData.map((entry, index) => (
-                              <Cell 
-                                key={`cell-${index}`} 
-                                fill={
-                                  entry.امتیاز > 90 ? '#10B981' : 
-                                  entry.امتیاز > 75 ? '#2EC4B6' : 
-                                  entry.امتیاز > 60 ? '#FFBB00' : 
-                                  '#D72638'
-                                } 
-                              />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </GlassCard>
-              </DraggableSection>
-              
-              <DraggableSection>
-                <UpcomingEventsCard />
-              </DraggableSection>
+          <TabsContent value="health" className="mt-0 p-0">
+            <div className="p-6 text-center">
+              <h3 className="text-lg font-medium">داشبورد سلامت</h3>
+              <p className="text-slate-500 dark:text-slate-400">این بخش در حال توسعه است</p>
             </div>
           </TabsContent>
-        </Tabs>
-        
-        <div className="text-center text-sm text-slate-500 dark:text-slate-400 space-y-1">
-          <p>* تمام داده‌ها و آمارها بر اساس ورودی‌های واقعی سازمان تولید شده‌اند</p>
-          <p>** گزارش‌های تفصیلی در بخش "گزارش‌ها" در دسترس است</p>
+          
+          <TabsContent value="environment" className="mt-0 p-0">
+            <div className="p-6 text-center">
+              <h3 className="text-lg font-medium">داشبورد محیط زیست</h3>
+              <p className="text-slate-500 dark:text-slate-400">این بخش در حال توسعه است</p>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="training" className="mt-0 p-0">
+            <div className="p-6 text-center">
+              <h3 className="text-lg font-medium">داشبورد آموزش</h3>
+              <p className="text-slate-500 dark:text-slate-400">این بخش در حال توسعه است</p>
+            </div>
+          </TabsContent>
         </div>
       </div>
     </div>
