@@ -875,6 +875,134 @@ const NewFeatureMenu = () => {
 };
 
 // کامپوننت اصلی داشبورد پیشرفته
+// کامپوننت کارت شخصی
+const PersonalCard = () => {
+  // داده‌های نمونه برای کارت شخصی
+  const userInfo = {
+    id: 'EMP-1024',
+    name: 'مدیر سیستم',
+    position: 'مدیر ارشد منابع انسانی',
+    department: 'بخش منابع انسانی',
+    avatar: 'https://i.pravatar.cc/150?img=8',
+    joiningDate: '1399/02/15',
+    accessLevel: 'ادمین سیستم',
+    workStatus: 'حاضر',
+    healthScore: 92,
+    level: 7,
+    skills: ['مدیریت تیم', 'هوش عاطفی', 'مدیریت پروژه'],
+    contact: {
+      email: 'admin@prana-health.com',
+      phone: '021-88776655'
+    }
+  };
+
+  return (
+    <motion.div 
+      className="mb-6 rounded-xl bg-white dark:bg-slate-800/95 shadow-lg relative overflow-hidden border border-slate-200/50 dark:border-slate-700/50"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+    >
+      {/* افکت‌های پس‌زمینه */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-r from-aqua/30 to-tiffany/30 dark:from-aqua/20 dark:to-tiffany/20 z-0"></div>
+      <div className="absolute -top-12 -left-12 h-32 w-32 rounded-full bg-tiffany/20 blur-2xl z-0"></div>
+      <div className="absolute -bottom-8 -right-8 h-24 w-24 rounded-full bg-aqua/20 blur-2xl z-0"></div>
+      
+      <div className="relative z-10 flex flex-col md:flex-row p-6 gap-6">
+        {/* بخش اطلاعات اصلی */}
+        <div className="flex gap-6">
+          {/* آواتار */}
+          <div className="relative">
+            <div className="w-20 h-20 rounded-xl overflow-hidden border-4 border-white dark:border-slate-700 shadow-lg flex-shrink-0">
+              <img src={userInfo.avatar} alt={userInfo.name} className="w-full h-full object-cover" />
+            </div>
+            <div className="absolute -bottom-1 -right-1 bg-emerald-500 p-1 rounded-full border-2 border-white dark:border-slate-700">
+              <div className="w-2 h-2 rounded-full bg-white"></div>
+            </div>
+          </div>
+          
+          {/* اطلاعات پایه */}
+          <div className="flex flex-col justify-between py-1">
+            <div>
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                {userInfo.name}
+                <Badge className="bg-tiffany hover:bg-tiffany/90 ml-2">{userInfo.accessLevel}</Badge>
+              </h2>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">{userInfo.position}</p>
+            </div>
+            <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center">
+                <span className="ml-1">شناسه:</span>
+                <span className="font-semibold text-slate-700 dark:text-slate-300">{userInfo.id}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="ml-1">تاریخ شروع:</span>
+                <span className="font-semibold text-slate-700 dark:text-slate-300">{userInfo.joiningDate}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* بخش آمار و اطلاعات تکمیلی */}
+        <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 border-t md:border-t-0 md:border-r pt-4 md:pt-0 md:pr-6 mt-4 md:mt-0 border-slate-200 dark:border-slate-700/50">
+          <div className="flex flex-col">
+            <span className="text-xs text-slate-500 dark:text-slate-400">امتیاز سلامت</span>
+            <div className="flex items-center mt-1">
+              <div className="w-12 h-2 bg-slate-200 dark:bg-slate-700 rounded-full mr-2 overflow-hidden">
+                <div className={`h-full ${userInfo.healthScore >= 80 ? 'bg-emerald-500' : userInfo.healthScore >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`} style={{ width: `${userInfo.healthScore}%` }}></div>
+              </div>
+              <span className="font-bold text-sm">{userInfo.healthScore}%</span>
+            </div>
+          </div>
+          
+          <div className="flex flex-col">
+            <span className="text-xs text-slate-500 dark:text-slate-400">سطح</span>
+            <div className="flex items-center mt-1">
+              <div className="w-6 h-6 rounded-md bg-tiffany/10 text-tiffany flex items-center justify-center mr-2 text-xs font-bold">
+                {userInfo.level}
+              </div>
+              <Heart className="h-4 w-4 text-rose-500" />
+            </div>
+          </div>
+          
+          <div className="flex flex-col">
+            <span className="text-xs text-slate-500 dark:text-slate-400">بخش</span>
+            <span className="font-semibold text-sm mt-1">{userInfo.department}</span>
+          </div>
+          
+          <div className="flex flex-col">
+            <span className="text-xs text-slate-500 dark:text-slate-400">وضعیت</span>
+            <span className="font-semibold text-sm text-emerald-500 mt-1 flex items-center">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
+              {userInfo.workStatus}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      {/* نوار پایین - مهارت‌ها */}
+      <div className="px-6 py-3 border-t border-slate-200 dark:border-slate-700/50 bg-slate-50/80 dark:bg-slate-800/50 backdrop-blur-sm flex flex-wrap items-center">
+        <div className="text-xs text-slate-500 dark:text-slate-400 ml-2">مهارت‌ها:</div>
+        {userInfo.skills.map((skill, index) => (
+          <Badge key={index} variant="outline" className="mr-1 bg-white/70 dark:bg-slate-700/70">
+            {skill}
+          </Badge>
+        ))}
+        <div className="mr-auto flex items-center text-xs text-tiffany gap-3">
+          <a href="#" className="hover:underline flex items-center">
+            <Mail className="w-3 h-3 ml-1" />
+            ایمیل
+          </a>
+          <a href="#" className="hover:underline flex items-center">
+            <PanelLeftOpen className="w-3 h-3 ml-1" />
+            مشاهده پروفایل کامل
+          </a>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 export default function EnhancedDashboard() {
   const [selectedTab, setSelectedTab] = useState("dashboard");
   const [selectedTool, setSelectedTool] = useState<(typeof analyticTools)[0] | null>(null);
@@ -884,6 +1012,9 @@ export default function EnhancedDashboard() {
   
   return (
     <>
+      {/* کارت شخصی کاربر */}
+      <PersonalCard />
+      
       <div className="mb-6 flex justify-between items-center">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -891,7 +1022,7 @@ export default function EnhancedDashboard() {
           transition={{ duration: 0.3 }}
         >
           <h1 className="text-2xl font-bold mb-1">
-            سلام، مدیر سیستم 👋
+            سلام مدیر 👋
           </h1>
           <p className="text-slate-500 dark:text-slate-400">
             امروز <span className="text-tiffany font-medium">{formatDate(new Date())}</span> است. خلاصه سلامت و فعالیت‌های شما
