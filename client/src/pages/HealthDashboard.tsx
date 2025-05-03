@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { HealthMetricsGrid, type HealthMetricData } from '@/components/dashboards/HealthMetricsCard';
-import { Activity, Calendar, User, Users, Heart, Award, Clock, ChevronRight, Trophy, Sparkles } from 'lucide-react';
+import { Activity, Calendar, User, Users, Heart, Award, Clock, ChevronRight, Trophy, Sparkles, BarChart3 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 // منتخب داده‌های سلامتی برای نمایش
 const healthMetrics: HealthMetricData[] = [
@@ -316,7 +317,7 @@ const InsightCard = ({ insight }: { insight: any }) => {
     }
   };
 
-  const colorStyle = colorMap[color];
+  const colorStyle = colorMap[color as keyof typeof colorMap];
   const isPositive = insight.impactType === 'positive';
   const trendColor = isPositive ? 'text-success dark:text-success-light' : 'text-error dark:text-error-light';
   
