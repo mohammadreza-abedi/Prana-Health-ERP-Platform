@@ -621,6 +621,7 @@ export default function AdvancedAvatarBuilder({
       
       setAiGenerating(false);
       
+      // نمایش اعلان موفقیت
       toast({
         title: "آواتار هوشمند ساخته شد",
         description: "آواتار با استفاده از هوش مصنوعی با موفقیت ایجاد شد.",
@@ -644,6 +645,7 @@ export default function AdvancedAvatarBuilder({
           onSave(options, dataUrl);
         }
         
+        // نمایش اعلان موفقیت
         toast({
           title: "آواتار ذخیره شد",
           description: "آواتار شما با موفقیت ذخیره شد.",
@@ -651,6 +653,7 @@ export default function AdvancedAvatarBuilder({
         });
       } catch (error) {
         console.error('Error generating avatar image:', error);
+        // نمایش اعلان خطا
         toast({
           title: "خطا در ذخیره‌سازی",
           description: "مشکلی در ذخیره‌سازی آواتار به وجود آمد.",
@@ -675,6 +678,7 @@ export default function AdvancedAvatarBuilder({
         link.href = dataUrl;
         link.click();
         
+        // نمایش اعلان موفقیت
         toast({
           title: "آواتار دانلود شد",
           description: "تصویر آواتار با موفقیت دانلود شد.",
@@ -682,6 +686,7 @@ export default function AdvancedAvatarBuilder({
         });
       } catch (error) {
         console.error('Error downloading avatar image:', error);
+        // نمایش اعلان خطا
         toast({
           title: "خطا در دانلود",
           description: "مشکلی در دانلود آواتار به وجود آمد.",
