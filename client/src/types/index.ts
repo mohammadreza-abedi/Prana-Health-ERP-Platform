@@ -90,6 +90,13 @@ export interface LeaderboardEntry {
   avatar?: string;
   xp: number;
   level: number;
+  department?: string;
+  rank?: number;
+  previousRank?: number;
+  streak?: number;
+  badges?: number;
+  challengesCompleted?: number;
+  title?: string;
 }
 
 export interface DepartmentComparison {
