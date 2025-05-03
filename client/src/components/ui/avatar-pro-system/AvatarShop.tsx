@@ -20,11 +20,11 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 
-// واردات تصاویر آواتارها
-import priaMohawk from '@assets/Pria Mohawk.png';
-import wanitaUraiTopi from '@assets/Wanita Urai Topi.png';
-import wanitaBerhijabBerkacamata from '@assets/Wanita Berhijab Berkacamata.png';
-import priaGimbalSebelahKacamata from '@assets/Pria Gimbal sebelah Kacamata.png';
+// مسیرهای تصاویر آواتارها
+const priaMohawk = '/avatar-images/Pria Mohawk.png';
+const wanitaUraiTopi = '/avatar-images/Wanita Urai Topi.png';
+const wanitaBerhijabBerkacamata = '/avatar-images/Wanita Berhijab Berkacamata.png';
+const priaGimbalSebelahKacamata = '/avatar-images/Pria Gimbal sebelah Kacamata.png';
 
 export interface ShopItemData {
   id: number;
