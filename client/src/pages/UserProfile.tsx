@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
+import { useAvatar } from "@/contexts/AvatarContext";
 import {
   Tabs,
   TabsList,
@@ -408,6 +409,7 @@ const UserProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showAvatarEditor, setShowAvatarEditor] = useState(false);
   const { toast } = useToast();
+  const { activeAvatarUrl, avatarName } = useAvatar();
   
   const levelProgress = calculateLevelProgress(userData.xp, userData.level);
   const nextLevelXP = calculateRequiredXP(userData.level);
@@ -1034,7 +1036,13 @@ const UserProfile: React.FC = () => {
                   {/* آواتار اصلی */}
                   <div className="absolute inset-1 rounded-full overflow-hidden border-4 border-white dark:border-slate-900 z-10 bg-white dark:bg-slate-800 shadow-lg">
                     <Link href="/avatar-studio">
-                      {userData.avatar ? (
+                      {activeAvatarUrl ? (
+                        <img 
+                          src={activeAvatarUrl} 
+                          alt={avatarName || userData.displayName}
+                          className="h-full w-full object-cover relative z-10"
+                        />
+                      ) : userData.avatar ? (
                         <img 
                           src={userData.avatar} 
                           alt={userData.displayName}
@@ -1394,7 +1402,7 @@ const UserProfile: React.FC = () => {
           
           <div className="flex flex-col items-center justify-center py-4">
             <Avatar className="w-32 h-32 border-4 border-slate-200 dark:border-slate-700">
-              <AvatarImage src={userData.avatar} alt={userData.displayName} />
+              <AvatarImage src={activeAvatarUrl || userData.avatar} alt={avatarName || userData.displayName} />
               <AvatarFallback className="text-3xl">
                 {userData.displayName.charAt(0)}
               </AvatarFallback>
