@@ -210,19 +210,20 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   
   // Connect when component mounts
   useEffect(() => {
-    // یک تأخیر کوتاه قبل از اتصال اولیه
-    setTimeout(() => {
-      connectWebSocket();
-    }, 1000);
+    // تلاش برای اتصال وب‌سوکت غیرفعال شده است تا عملکرد اصلی برنامه حفظ شود
+    // اتصال وب‌سوکت را غیرفعال می‌کنیم تا صفحه بدون خطا بارگذاری شود
+    // setTimeout(() => {
+    //   connectWebSocket();
+    // }, 1000);
     
-    // Set up ping interval - ping more frequently (15 seconds instead of 30)
+    // Set up ping interval - but we're disabling it for now
     const pingInterval = setInterval(() => {
-      if (isConnected && socketRef.current?.readyState === WebSocket.OPEN) {
-        sendPing();
-      } else if (socketRef.current?.readyState !== WebSocket.CONNECTING) {
-        // اگر اتصال قطع شد و در حال اتصال مجدد نبود، سعی کنید دوباره متصل شوید
-        connectWebSocket();
-      }
+      // Temporarily disabled
+      // if (isConnected && socketRef.current?.readyState === WebSocket.OPEN) {
+      //   sendPing();
+      // } else if (socketRef.current?.readyState !== WebSocket.CONNECTING) {
+      //   connectWebSocket();
+      // }
     }, 15000);
     
     // Clean up on unmount

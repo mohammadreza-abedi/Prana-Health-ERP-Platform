@@ -47,7 +47,7 @@ import {
   Flame,
   BookOpen,
   CircleOff,
-  WallOff,
+  AlertOctagon,
   Clipboard
 } from 'lucide-react';
 
@@ -1309,7 +1309,7 @@ export default function HSESmartDashboard() {
                 <CardHeader className="pb-2">
                   <div className="flex items-center">
                     <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-900/20 mr-3 text-amber-500">
-                      <WallOff className="h-5 w-5" />
+                      <AlertOctagon className="h-5 w-5" />
                     </div>
                     <CardTitle className="text-base">عدم انطباق‌ها</CardTitle>
                   </div>
