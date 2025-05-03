@@ -21,10 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 
 // مسیرهای تصاویر آواتارها
-const priaMohawk = '/avatar-images/Pria Mohawk.png';
-const wanitaUraiTopi = '/avatar-images/Wanita Urai Topi.png';
-const wanitaBerhijabBerkacamata = '/avatar-images/Wanita Berhijab Berkacamata.png';
-const priaGimbalSebelahKacamata = '/avatar-images/Pria Gimbal sebelah Kacamata.png';
+const priaGimbalKacamata = '/avatar-images/Pria Gimbal Kacamata.png'; // آواتار سبز اصلی
 
 export interface ShopItemData {
   id: number;
@@ -76,9 +73,9 @@ const AvatarShop: React.FC<AvatarShopProps> = ({
     // آواتارها
     {
       id: 101,
-      name: "آواتار آبی",
-      imagePath: priaMohawk,
-      description: "آواتار پسر با موهای آبی و طرح خاص",
+      name: "کاراکتر سبز کمیاب",
+      imagePath: priaGimbalKacamata,
+      description: "آواتار سبز با طراحی خاص",
       type: 'avatar',
       price: 500,
       category: "male",
@@ -88,33 +85,33 @@ const AvatarShop: React.FC<AvatarShopProps> = ({
     },
     {
       id: 102,
-      name: "آواتار صورتی",
-      imagePath: wanitaUraiTopi,
-      description: "آواتار دختر با کلاه و طرح ویژه",
+      name: "کاراکتر سبز ویژه",
+      imagePath: priaGimbalKacamata,
+      description: "آواتار سبز با ویژگی‌های خاص",
       type: 'avatar',
       price: 500,
-      category: "female",
+      category: "male",
       rarity: "rare",
       requiredLevel: 3,
       isAvailable: true
     },
     {
       id: 103,
-      name: "آواتار با حجاب و عینک",
-      imagePath: wanitaBerhijabBerkacamata,
-      description: "آواتار ویژه و کمیاب دختر با حجاب و عینک",
+      name: "کاراکتر سبز حماسی",
+      imagePath: priaGimbalKacamata,
+      description: "آواتار سبز با طراحی حماسی",
       type: 'avatar',
       price: 1200,
-      category: "female",
+      category: "male",
       rarity: "epic",
       requiredLevel: 7,
       isAvailable: true
     },
     {
       id: 104,
-      name: "آواتار افسانه‌ای",
-      imagePath: priaGimbalSebelahKacamata,
-      description: "آواتار پسر با طراحی فوق‌العاده خاص",
+      name: "کاراکتر سبز افسانه‌ای",
+      imagePath: priaGimbalKacamata,
+      description: "آواتار سبز با طراحی فوق‌العاده خاص",
       type: 'avatar',
       price: 3000,
       category: "male",

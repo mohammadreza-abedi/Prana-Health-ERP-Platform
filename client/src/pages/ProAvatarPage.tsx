@@ -31,29 +31,29 @@ export default function ProAvatarPage() {
     },
     {
       id: 2,
-      name: "کاراکتر بنفش",
-      imagePath: "/avatar-images/Wanita Hijab Sweater.png",
-      category: "female",
+      name: "کاراکتر سبز",
+      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
+      category: "male",
       rarity: "common",
-      description: "یک آواتار دختر با حجاب",
+      description: "یک آواتار ساده با موهای سبز",
       isDefault: true
     },
     {
       id: 3,
-      name: "کاراکتر قهوه‌ای",
-      imagePath: "/avatar-images/Pria Poni Brewokan.png",
+      name: "کاراکتر سبز",
+      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
       category: "male",
       rarity: "common", 
-      description: "یک آواتار پسر با ریش",
+      description: "یک آواتار ساده با موهای سبز",
       isDefault: true
     },
     {
       id: 4,
-      name: "کاراکتر صورتی",
-      imagePath: "/avatar-images/Wanita Kuncir Topi.png",
-      category: "female",
+      name: "کاراکتر سبز",
+      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
+      category: "male",
       rarity: "common",
-      description: "یک آواتار دختر با کلاه",
+      description: "یک آواتار ساده با موهای سبز",
       isDefault: true
     }
   ];
