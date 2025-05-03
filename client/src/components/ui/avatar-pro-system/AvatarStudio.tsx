@@ -71,85 +71,180 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
 
   // داده‌های آواتارهای پیش‌فرض و متنوع (در نسخه واقعی باید از API گرفته شود)
   const defaultAvatars: AvatarData[] = [
+    // آواتارهای اصلی
     {
       id: 1,
-      name: "کاراکتر سبز",
+      name: "آقای عینکی",
       imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
       category: "male",
       rarity: "common",
-      description: "آواتار اصلی سبز با طراحی خاص و عینک",
+      description: "آواتار مرد با موهای فر و عینک",
       isDefault: true
     },
     {
       id: 2,
-      name: "کاراکتر آبی",
-      imagePath: "/avatar-images/Pria Mohawk.png",
+      name: "آقای مو فرفری",
+      imagePath: "/avatar-images/Pria Keriting Kacamata.png",
       category: "male",
       rarity: "common",
-      description: "آواتار پسر با موهای آبی و طرح خاص",
+      description: "آواتار مرد با موهای فرفری و عینک",
       isDefault: true
     },
     {
       id: 3,
-      name: "دختر با کلاه",
-      imagePath: "/avatar-images/Wanita Urai Topi.png",
-      category: "female",
-      rarity: "common", 
-      description: "آواتار دختر با کلاه و طرح ویژه",
+      name: "آقای خاص",
+      imagePath: "/avatar-images/Pria Mohawk.png",
+      category: "male",
+      rarity: "rare", 
+      description: "آواتار مرد با استایل موهاک",
       isDefault: true
     },
     {
       id: 4,
-      name: "پسر با ریش",
-      imagePath: "/avatar-images/Pria Poni Brewokan.png",
+      name: "آقای کلاه به سر",
+      imagePath: "/avatar-images/Pria Rambut Lepek Topi.png",
       category: "male",
-      rarity: "rare",
-      description: "آواتار پسر با طراحی ریش و موی خاص",
-      isDefault: false
+      rarity: "common",
+      description: "آواتار مرد با کلاه اسپرت",
+      isDefault: true
     },
     {
       id: 5,
-      name: "پسر با کلاه",
-      imagePath: "/avatar-images/Pria Rambut Lepek Topi.png",
-      category: "male",
+      name: "خانم محجبه",
+      imagePath: "/avatar-images/Wanita Berhijab Berkacamata.png",
+      category: "female",
       rarity: "rare",
-      description: "آواتار کاراکتر پسر با کلاه مخصوص",
-      isDefault: false
+      description: "آواتار خانم محجبه با عینک",
+      isDefault: true
     },
     {
       id: 6,
-      name: "دختر با حجاب",
-      imagePath: "/avatar-images/Wanita Hijab Sweater.png",
+      name: "خانم اسپرت",
+      imagePath: "/avatar-images/Wanita Kuncir Topi.png",
       category: "female",
-      rarity: "epic",
-      description: "آواتار دختر با حجاب و لباس گرم",
-      isDefault: false
+      rarity: "common",
+      description: "آواتار خانم با موی بسته و کلاه",
+      isDefault: true
     },
     {
       id: 7,
-      name: "دختر کلاه‌دار",
-      imagePath: "/avatar-images/Wanita Kuncir Topi.png",
+      name: "خانم کلاه دار",
+      imagePath: "/avatar-images/Wanita Urai Topi.png",
       category: "female",
-      rarity: "epic",
-      description: "آواتار دختر با مو بسته و کلاه ویژه",
-      isDefault: false
+      rarity: "common",
+      description: "آواتار خانم با موهای باز و کلاه",
+      isDefault: true
     },
     {
       id: 8,
-      name: "دختر با حجاب و عینک",
-      imagePath: "/avatar-images/Wanita Berhijab Berkacamata.png",
+      name: "خانم با حجاب",
+      imagePath: "/avatar-images/Wanita Hijab Sweater.png",
       category: "female",
-      rarity: "legendary",
-      description: "آواتار ویژه و کمیاب دختر با حجاب و عینک طبی",
+      rarity: "rare",
+      description: "آواتار خانم با حجاب و لباس اسپرت",
+      isDefault: true
+    },
+    
+    // آواتارهای کره‌ای جدید
+    {
+      id: 9,
+      name: "پسر کلاه‌دار",
+      imagePath: "/avatar-images/korean-style/Korean Boy Pony Hat.png",
+      category: "male",
+      rarity: "epic",
+      description: "آواتار پسر با کلاه سبک کره‌ای",
       isDefault: false
     },
     {
-      id: 9,
-      name: "کاراکتر افسانه‌ای",
-      imagePath: "/avatar-images/Pria Gimbal sebelah Kacamata.png",
+      id: 10,
+      name: "پسر هودی",
+      imagePath: "/avatar-images/korean-style/Korean Boy Short Hair Jacket.png",
       category: "male",
+      rarity: "epic",
+      description: "آواتار پسر با هودی خاکستری سبک کره‌ای",
+      isDefault: false
+    },
+    {
+      id: 11,
+      name: "دختر محجبه",
+      imagePath: "/avatar-images/korean-style/Korean Girl Hijab Jacket.png",
+      category: "female",
+      rarity: "epic",
+      description: "آواتار دختر با حجاب زرد و هودی صورتی سبک کره‌ای",
+      isDefault: false
+    },
+    {
+      id: 12,
+      name: "دختر محجبه عینکی",
+      imagePath: "/avatar-images/korean-style/Korean Girl Hijab Long Shirt.png",
+      category: "female",
       rarity: "legendary",
-      description: "آواتار پسر با طراحی فوق‌العاده خاص و نادر",
+      description: "آواتار دختر محجبه با عینک بنفش سبک کره‌ای",
+      isDefault: false
+    },
+    
+    // آواتارهای جدید
+    {
+      id: 13,
+      name: "آقای ریش‌دار",
+      imagePath: "/avatar-images/Pria Keriting Brewokan.png",
+      category: "male",
+      rarity: "rare",
+      description: "آواتار مرد با موهای فرفری و ریش قرمز",
+      isDefault: false
+    },
+    {
+      id: 14,
+      name: "آقای ورزشکار",
+      imagePath: "/avatar-images/Pria Keriting Jaket.png",
+      category: "male",
+      rarity: "rare",
+      description: "آواتار مرد با ژاکت ورزشی سبز",
+      isDefault: false
+    },
+    {
+      id: 15,
+      name: "آقای کلاه قرمز",
+      imagePath: "/avatar-images/Pria Keriting Topi.png",
+      category: "male",
+      rarity: "rare",
+      description: "آواتار مرد با کلاه قرمز اسپرت",
+      isDefault: false
+    },
+    {
+      id: 16,
+      name: "مرد با ریش",
+      imagePath: "/avatar-images/Pria Rambut Pendek Brewokan.png",
+      category: "male",
+      rarity: "epic",
+      description: "آواتار مرد با موی کوتاه و ریش",
+      isDefault: false
+    },
+    {
+      id: 17,
+      name: "پسر کلاه سبز",
+      imagePath: "/avatar-images/Pria Rambut Pendek Topi.png",
+      category: "male",
+      rarity: "epic",
+      description: "آواتار پسر با کلاه سبز و بنفش",
+      isDefault: false
+    },
+    {
+      id: 18,
+      name: "پسر موآبی",
+      imagePath: "/avatar-images/Pria Rambut Pendek.png",
+      category: "male",
+      rarity: "epic",
+      description: "آواتار پسر با موهای آبی و لباس سبز",
+      isDefault: false
+    },
+    {
+      id: 19,
+      name: "خانم محجبه آبی",
+      imagePath: "/avatar-images/Wanita Hijab Kacamata.png",
+      category: "female",
+      rarity: "legendary",
+      description: "آواتار خانم با حجاب زرد و چهره آبی",
       isDefault: false
     }
   ];

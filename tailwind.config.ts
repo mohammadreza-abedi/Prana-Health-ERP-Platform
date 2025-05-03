@@ -315,6 +315,10 @@ export default {
           "75%": { opacity: "0.7" },
           "100%": { backgroundPosition: "0% 0%", opacity: "0.5" },
         },
+        "button-shine": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -375,6 +379,7 @@ export default {
         "scale-rotate": "subtle-bounce 2s ease-in-out infinite, rotate-slow 20s linear infinite",
         "pulse-hue": "pulse-subtle 3s ease-in-out infinite, hue-rotate 10s linear infinite",
         "shimmer-bounce": "shimmer 2s linear infinite, subtle-bounce 2s ease-in-out infinite",
+        "button-shine": "button-shine 1.5s ease-in-out",
       },
     },
   },
