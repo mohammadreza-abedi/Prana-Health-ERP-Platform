@@ -243,7 +243,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
+      {/* Sidebar - fixed height */}
       <AnimatePresence>
         <motion.aside
           initial={{ width: isMobile ? 0 : 280 }}
@@ -969,7 +969,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       </AnimatePresence>
 
       {/* Enhanced Main content area with modernized glass effect */}
-      <div className="flex-1 overflow-y-auto relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 flex flex-col transition-all duration-300 ease-in-out">
+      <div className="flex-1 overflow-hidden relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 flex flex-col transition-all duration-300 ease-in-out">
         {/* Enhanced Fixed Header with advanced glassmorphism */}
         <div className="sticky top-0 z-20 p-4 bg-white/80 dark:bg-slate-900/75 border-b border-slate-200/30 dark:border-slate-800/30 backdrop-blur-xl shadow-[0_4px_30px_-10px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_30px_-10px_rgba(0,0,0,0.2)] flex flex-col motion-safe:animate-fade-in transition-all duration-300">
           {/* Top row with logo, menu and actions */}
