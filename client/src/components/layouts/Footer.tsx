@@ -69,19 +69,46 @@ export default function Footer() {
   ];
   
   return (
-    <footer className="bg-slate-50/50 dark:bg-slate-900/50 py-12 border-t backdrop-blur-md">
+    <footer className="relative bg-slate-50/30 dark:bg-slate-900/30 py-12 border-t backdrop-blur-lg overflow-hidden">
+      {/* پس‌زمینه شیشه‌ای متحرک */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-slate-50/20 dark:from-slate-800/10 dark:to-slate-900/20 pointer-events-none"></div>
+      
+      {/* افکت‌های نور محیطی */}
+      <div className="absolute -top-40 -right-20 w-96 h-96 bg-tiffany/10 rounded-full blur-3xl opacity-30 dark:opacity-20 animate-pulse-slower"></div>
+      <div className="absolute -bottom-40 -left-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl opacity-30 dark:opacity-20 animate-pulse-slow"></div>
+      
+      {/* خطوط تزئینی */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-300/50 dark:via-slate-700/50 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-300/30 dark:via-slate-700/30 to-transparent"></div>
+      
+      {/* الگوی توری ظریف */}
+      <div className="absolute inset-0 bg-grid-slate-200/[0.03] dark:bg-grid-slate-50/[0.02] bg-[size:20px_20px] pointer-events-none"></div>
       {/* نوار ویژگی‌های حرفه‌ای */}
-      <div className="container mx-auto mb-8">
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
+      <div className="container mx-auto mb-8 relative z-10">
+        <div className="relative bg-white/60 dark:bg-slate-800/60 rounded-2xl p-5 shadow-lg border border-slate-200/70 dark:border-slate-700/70 backdrop-blur-md">
+          {/* افکت نور بالایی */}
+          <div className="absolute -top-1 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"></div>
+          
+          {/* نور محیطی گوشه‌ها */}
+          <div className="absolute -top-4 -right-4 w-24 h-24 bg-tiffany/10 rounded-full blur-2xl opacity-70"></div>
+          <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl opacity-70"></div>
+          
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {featuredItems.map((item, index) => (
-              <div key={index} className="flex items-center space-x-2 space-x-reverse text-sm text-slate-600 dark:text-slate-300 hover:text-tiffany transition-colors group cursor-pointer">
-                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-hover:bg-tiffany/10">
-                  <div className="text-slate-500 dark:text-slate-400 group-hover:text-tiffany">
+              <div 
+                key={index} 
+                className="flex items-center space-x-2 space-x-reverse text-sm text-slate-600 dark:text-slate-300 hover:text-tiffany transition-all duration-300 group cursor-pointer"
+              >
+                <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-slate-100/80 to-white/90 dark:from-slate-800/80 dark:to-slate-700/60 flex items-center justify-center group-hover:from-tiffany/20 group-hover:to-tiffany/5 shadow-sm backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 group-hover:border-tiffany/30 transition-all duration-300">
+                  {/* داخلی گرد و نور آن */}
+                  <div className="absolute inset-0.5 rounded-lg bg-gradient-to-br from-white/80 to-slate-100/50 dark:from-slate-800/80 dark:to-slate-700/50 opacity-80 group-hover:opacity-0"></div>
+                  
+                  {/* آیکون با افکت هاور */}
+                  <div className="relative z-10 text-slate-500 dark:text-slate-400 group-hover:text-tiffany group-hover:scale-110 transform transition-all duration-300">
                     {item.icon}
                   </div>
                 </div>
-                <span className="font-medium text-xs">{item.label}</span>
+                <span className="font-medium text-xs group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transform transition-transform duration-300">{item.label}</span>
               </div>
             ))}
           </div>
