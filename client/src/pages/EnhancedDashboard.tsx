@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAvatar } from "@/contexts/AvatarContext";
 import { 
   Activity, 
   Sparkles,
@@ -877,6 +878,7 @@ const NewFeatureMenu = () => {
 // کامپوننت اصلی داشبورد پیشرفته
 // کامپوننت کارت شخصی (مینیمال و حرفه‌ای)
 const PersonalCard = () => {
+  const { activeAvatarUrl, avatarName } = useAvatar();
   // داده‌های نمونه برای کارت شخصی
   const userInfo = {
     id: 'EMP-1024',
