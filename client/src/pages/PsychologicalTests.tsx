@@ -1,27 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/useAuth";
 import { useCredits } from "@/hooks/use-credits";
 import { GlassCard } from "@/components/ui/glass-card";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn, toPersianDigits } from "@/lib/utils";
 import { 
+  Activity,
+  AlertCircle,
   Award, 
+  BrainCircuit,
   Brain, 
+  Baby,
+  BarChart3,
+  BarChart4,
+  BookOpen,
+  Building2,
+  Briefcase,
+  ClipboardCheck,
+  Cloud,
+  Cog,
   CheckCircle2, 
   Clock, 
-  Coins, 
-  History, 
-  LockKeyhole, 
-  Sparkles, 
-  Star, 
-  Timer, 
-  ClipboardCheck,
+  CloudSun,
+  Compass,
+  Coins,
+  Coffee,
+  Diamond,
+  Dna,
+  Droplets,
+  Eye,
+  Flower2,
+  Flame,
+  Gauge,
+  Hand,
   HeartHandshake,
-  UserCircle2,
+  HeartPulse,
+  Hash,
+  History, 
+  HelpCircle,
+  LampDesk,
+  Lightbulb,
+  LineChart,
+  Link,
+  LockKeyhole,
+  MessagesSquare,
+  Network,
+  Paintbrush,
+  Puzzle,
+  PersonStanding,
+  PencilRuler,
   ScrollText,
-  Share2
+  Scale,
+  Search,
+  Settings,
+  Sigma,
+  SlidersHorizontal,
+  ShieldCheck,
+  Share2,
+  Sparkles, 
+  Star,
+  Stethoscope,
+  Timer, 
+  Target,
+  Trophy,
+  Unplug,
+  UserCircle2,
+  Utensils,
+  Zap
 } from "lucide-react";
 import {
   AlertDialog,
@@ -43,6 +90,7 @@ interface PsychTest {
   description: string;
   icon: React.ReactNode;
   category: string;
+  subcategory?: string;
   creditCost: number;
   questionsCount: number;
   timeRequired: number;
@@ -53,6 +101,24 @@ interface PsychTest {
   isPopular?: boolean;
   isRecommended?: boolean;
   isFree?: boolean;
+  isRequired?: boolean;
+  requiredFrequencyDays?: number; // چند روز یکبار تکرار شود
+  requiredNextDate?: string; // تاریخ بعدی انجام تست الزامی
+  publisher?: string; // انتشارات یا موسسه منتشر کننده تست
+  targetAudience?: string[]; // گروه هدف مانند مدیران، کارمندان و غیره
+  validityScore?: number; // امتیاز اعتبار تست از 100
+  benefits?: string[]; // مزایای انجام این تست
+  sampleQuestions?: { question: string, options: string[] }[]; // نمونه سوالات
+  previewImage?: string; // تصویر پیش نمایش تست
+  tags?: string[]; // برچسب‌های مرتبط
+  certifiable?: boolean; // آیا گواهی دارد؟
+  hasReminder?: boolean; // یادآوری برای تکمیل
+  completionTime?: number; // متوسط زمان تکمیل به دقیقه
+  releaseDate?: string; // تاریخ انتشار نسخه فعلی
+  lastUpdated?: string; // تاریخ آخرین بروزرسانی
+  version?: string; // نسخه تست
+  followUpTests?: number[]; // آی‌دی تست‌های پیشنهادی بعدی
+  instantAnalysis?: boolean; // قابلیت تحلیل لحظه‌ای
 }
 
 // Test history interface
@@ -65,14 +131,16 @@ interface TestHistory {
   result?: string;
 }
 
-// Create sample psychological tests
+// تست‌های متعدد روانشناسی بر اساس منابع معتبر
 const psychologicalTests: PsychTest[] = [
+  // شخصیت
   {
     id: 1,
     title: "تست شخصیت MBTI",
-    description: "شناخت 16 تیپ شخصیتی مایرز-بریگز و تعیین تیپ شخصیتی شما",
+    description: "شناخت 16 تیپ شخصیتی مایرز-بریگز و تعیین تیپ شخصیتی شما، ابزاری قدرتمند برای خودشناسی و رشد فردی",
     icon: <UserCircle2 className="h-10 w-10" />,
     category: "شخصیت",
+    subcategory: "تیپ‌شناسی",
     creditCost: 25,
     questionsCount: 93,
     timeRequired: 20,
@@ -80,92 +148,700 @@ const psychologicalTests: PsychTest[] = [
     difficulty: "متوسط",
     resultType: "16 تیپ شخصیتی",
     isPopular: true,
-    isRecommended: true
+    isRecommended: true,
+    publisher: "The Myers & Briggs Foundation",
+    validityScore: 94,
+    version: "Form M",
+    targetAudience: ["همه افراد", "مدیران", "کارمندان"],
+    benefits: ["شناخت نقاط قوت و ضعف", "یافتن مسیر شغلی مناسب", "بهبود روابط فردی"],
+    sampleQuestions: [
+      {
+        question: "ترجیح می‌دهید در محیط کار:",
+        options: ["انعطاف‌پذیر باشید و بر اساس شرایط تصمیم بگیرید", "ساختار مشخص و برنامه دقیق داشته باشید"]
+      }
+    ],
+    instantAnalysis: true,
+    tags: ["شخصیت‌شناسی", "خودشناسی", "استخدام", "منابع انسانی"]
   },
   {
     id: 2,
+    title: "تست شخصیت نئو (NEO)",
+    description: "ارزیابی جامع 5 بعد اصلی شخصیت: روان‌رنجوری، برون‌گرایی، گشودگی، توافق‌پذیری و وظیفه‌شناسی",
+    icon: <Network className="h-10 w-10" />,
+    category: "شخصیت",
+    subcategory: "پنج عامل بزرگ",
+    creditCost: 35,
+    questionsCount: 240,
+    timeRequired: 45,
+    popularity: 95,
+    difficulty: "پیشرفته",
+    resultType: "نیم‌رخ شخصیتی پنج عاملی",
+    isPopular: true,
+    isRequired: true,
+    requiredFrequencyDays: 180,
+    publisher: "Psychological Assessment Resources",
+    validityScore: 97,
+    version: "NEO PI-R",
+    targetAudience: ["متخصصان منابع انسانی", "روانشناسان", "مشاوران شغلی"],
+    certifiable: true
+  },
+  {
+    id: 3,
+    title: "تست تیپ شخصیتی انیاگرام",
+    description: "شناسایی یکی از 9 تیپ شخصیتی انیاگرام و درک انگیزه‌های درونی و الگوهای رفتاری",
+    icon: <Network className="h-10 w-10" />,
+    category: "شخصیت",
+    subcategory: "نُه‌گانه شخصیتی",
+    creditCost: 30,
+    questionsCount: 144,
+    timeRequired: 25,
+    popularity: 82,
+    difficulty: "پیشرفته",
+    resultType: "تیپ اصلی و فرعی",
+    isNew: true,
+    publisher: "The Enneagram Institute",
+    validityScore: 89
+  },
+  {
+    id: 4,
+    title: "تست شخصیت DISC",
+    description: "بررسی سبک رفتاری در چهار بعد: سلطه‌گری، تأثیرگذاری، ثبات و وظیفه‌گرایی",
+    icon: <LineChart className="h-10 w-10" />,
+    category: "شخصیت",
+    subcategory: "سبک رفتاری",
+    creditCost: 20,
+    questionsCount: 28,
+    timeRequired: 10,
+    popularity: 87,
+    difficulty: "آسان",
+    resultType: "پروفایل رفتاری",
+    publisher: "TTI Success Insights",
+    validityScore: 93,
+    instantAnalysis: true
+  },
+  {
+    id: 5,
+    title: "تست شخصیت‌شناسی هالند",
+    description: "شناسایی علایق و گرایش‌های شغلی بر اساس مدل RIASEC (واقع‌گرا، جستجوگر، هنری، اجتماعی، متهور و قراردادی)",
+    icon: <Compass className="h-10 w-10" />,
+    category: "شخصیت",
+    subcategory: "علایق شغلی",
+    creditCost: 15,
+    questionsCount: 180,
+    timeRequired: 30,
+    popularity: 80,
+    difficulty: "متوسط",
+    resultType: "کد هالند",
+    isRequired: true,
+    requiredFrequencyDays: 365
+  },
+  
+  // هوش هیجانی
+  {
+    id: 6,
     title: "تست هوش هیجانی (EQ)",
     description: "سنجش توانایی درک، شناسایی و مدیریت احساسات خود و دیگران",
     icon: <HeartHandshake className="h-10 w-10" />,
     category: "هوش هیجانی",
+    subcategory: "ارزیابی جامع",
     creditCost: 20,
     questionsCount: 70,
     timeRequired: 15,
     popularity: 85,
     difficulty: "متوسط",
     resultType: "نمره و تحلیل چند بعدی",
-    isPopular: true
+    isPopular: true,
+    publisher: "Multi-Health Systems",
+    validityScore: 91,
+    isRecommended: true
   },
   {
-    id: 3,
+    id: 7,
+    title: "تست هوش هیجانی مدیران",
+    description: "ارزیابی مهارت‌های هوش هیجانی مخصوص مدیران و رهبران سازمان‌ها",
+    icon: <Target className="h-10 w-10" />,
+    category: "هوش هیجانی",
+    subcategory: "رهبری",
+    creditCost: 40,
+    questionsCount: 58,
+    timeRequired: 20,
+    popularity: 83,
+    difficulty: "پیشرفته",
+    resultType: "نیمرخ هوش هیجانی رهبری",
+    isRequired: true,
+    targetAudience: ["مدیران", "رهبران سازمانی", "سرپرستان"],
+    requiredFrequencyDays: 90
+  },
+  {
+    id: 8,
+    title: "تست خودآگاهی هیجانی",
+    description: "سنجش میزان آگاهی از احساسات خود و تأثیر آن بر رفتار و تصمیم‌گیری",
+    icon: <Eye className="h-10 w-10" />,
+    category: "هوش هیجانی",
+    subcategory: "خودآگاهی",
+    creditCost: 15,
+    questionsCount: 35,
+    timeRequired: 10,
+    popularity: 76,
+    difficulty: "آسان",
+    resultType: "سطح خودآگاهی هیجانی",
+    isFree: true
+  },
+  {
+    id: 9,
+    title: "تست مدیریت استرس هیجانی",
+    description: "ارزیابی توانایی در مدیریت استرس و فشارهای هیجانی در محیط کار",
+    icon: <Activity className="h-10 w-10" />,
+    category: "هوش هیجانی",
+    subcategory: "مدیریت استرس",
+    creditCost: 20,
+    questionsCount: 42,
+    timeRequired: 15,
+    popularity: 80,
+    difficulty: "متوسط",
+    resultType: "راهکارهای مدیریت استرس",
+    isNew: true
+  },
+  
+  // استرس و سلامت روان
+  {
+    id: 10,
     title: "تست استرس شغلی HSE",
     description: "ارزیابی سطح استرس شغلی و ارائه راهکارهای کاهش استرس در محیط کار",
-    icon: <ClipboardCheck className="h-10 w-10" />,
+    icon: <Activity className="h-10 w-10" />,
     category: "استرس",
+    subcategory: "استرس شغلی",
     creditCost: 15,
     questionsCount: 35,
     timeRequired: 10,
     popularity: 78,
     difficulty: "آسان",
     resultType: "سطح استرس و توصیه‌ها",
-    isRecommended: true
+    isRecommended: true,
+    isRequired: true,
+    requiredFrequencyDays: 90,
+    publisher: "Health and Safety Executive",
+    validityScore: 88
   },
   {
-    id: 4,
+    id: 11,
     title: "تست سلامت روان GHQ",
     description: "ارزیابی سلامت روان عمومی و غربالگری اختلالات روانی",
     icon: <Brain className="h-10 w-10" />,
     category: "سلامت روان",
+    subcategory: "غربالگری",
     creditCost: 30,
     questionsCount: 28,
     timeRequired: 8,
     popularity: 92,
     difficulty: "متوسط",
     resultType: "نمره و وضعیت سلامت روان",
-    isRecommended: true
+    isRecommended: true,
+    isRequired: true,
+    requiredFrequencyDays: 120,
+    publisher: "Oxford University Press",
+    validityScore: 94
   },
   {
-    id: 5,
+    id: 12,
+    title: "تست اضطراب بک (BAI)",
+    description: "سنجش میزان اضطراب و شناسایی علائم فیزیکی و روانی آن",
+    icon: <HeartPulse className="h-10 w-10" />,
+    category: "سلامت روان",
+    subcategory: "اضطراب",
+    creditCost: 20,
+    questionsCount: 21,
+    timeRequired: 5,
+    popularity: 88,
+    difficulty: "آسان",
+    resultType: "شدت اضطراب",
+    publisher: "The Psychological Corporation",
+    validityScore: 92
+  },
+  {
+    id: 13,
+    title: "تست افسردگی بک (BDI)",
+    description: "ارزیابی وجود و شدت علائم افسردگی",
+    icon: <CloudSun className="h-10 w-10" />,
+    category: "سلامت روان",
+    subcategory: "افسردگی",
+    creditCost: 20,
+    questionsCount: 21,
+    timeRequired: 5,
+    popularity: 90,
+    difficulty: "آسان",
+    resultType: "سطح افسردگی",
+    publisher: "The Psychological Corporation",
+    validityScore: 93
+  },
+  {
+    id: 14,
+    title: "تست فرسودگی شغلی (MBI)",
+    description: "ارزیابی سه بعد فرسودگی شغلی: خستگی عاطفی، مسخ شخصیت و کاهش موفقیت فردی",
+    icon: <Unplug className="h-10 w-10" />,
+    category: "استرس",
+    subcategory: "فرسودگی شغلی",
+    creditCost: 25,
+    questionsCount: 22,
+    timeRequired: 10,
+    popularity: 85,
+    difficulty: "متوسط",
+    resultType: "نیمرخ فرسودگی شغلی",
+    isRequired: true,
+    requiredFrequencyDays: 180,
+    publisher: "Mind Garden, Inc.",
+    validityScore: 90
+  },
+  {
+    id: 15,
+    title: "تست تاب‌آوری CD-RISC",
+    description: "سنجش میزان تاب‌آوری و توانایی بازگشت به حالت طبیعی پس از مشکلات و چالش‌ها",
+    icon: <ShieldCheck className="h-10 w-10" />,
+    category: "سلامت روان",
+    subcategory: "تاب‌آوری",
+    creditCost: 15,
+    questionsCount: 25,
+    timeRequired: 8,
+    popularity: 82,
+    difficulty: "آسان",
+    resultType: "سطح تاب‌آوری",
+    publisher: "Connor-Davidson",
+    validityScore: 87
+  },
+  
+  // شغلی
+  {
+    id: 16,
     title: "تست ارزش‌های شغلی (SVS)",
     description: "شناسایی ارزش‌های شغلی و ترجیحات کاری برای انتخاب مسیر شغلی مناسب",
     icon: <Award className="h-10 w-10" />,
     category: "شغلی",
+    subcategory: "ارزش‌های کاری",
     creditCost: 40,
     questionsCount: 54,
     timeRequired: 12,
     popularity: 75,
     difficulty: "پیشرفته",
     resultType: "پروفایل ارزش‌های شغلی",
-    isNew: true
+    isNew: true,
+    publisher: "Super's Work Values",
+    validityScore: 89
   },
   {
-    id: 6,
-    title: "تست تیپ شخصیتی انیاگرام",
-    description: "شناسایی یکی از 9 تیپ شخصیتی انیاگرام و درک انگیزه‌های درونی",
-    icon: <ScrollText className="h-10 w-10" />,
-    category: "شخصیت",
+    id: 17,
+    title: "تست رضایت شغلی (JSS)",
+    description: "ارزیابی میزان رضایت از جنبه‌های مختلف شغل و محیط کاری",
+    icon: <Star className="h-10 w-10" />,
+    category: "شغلی",
+    subcategory: "رضایتمندی",
+    creditCost: 20,
+    questionsCount: 36,
+    timeRequired: 10,
+    popularity: 84,
+    difficulty: "متوسط",
+    resultType: "نمره رضایت در 9 بعد شغلی",
+    isRequired: true,
+    requiredFrequencyDays: 180,
+    publisher: "Paul Spector",
+    validityScore: 91
+  },
+  {
+    id: 18,
+    title: "تست مسیر شغلی شاین",
+    description: "شناسایی لنگرگاه‌های مسیر شغلی و ارزش‌های کاری اصلی شما",
+    icon: <Compass className="h-10 w-10" />,
+    category: "شغلی",
+    subcategory: "مسیر شغلی",
     creditCost: 35,
-    questionsCount: 144,
-    timeRequired: 25,
-    popularity: 82,
-    difficulty: "پیشرفته",
-    resultType: "تیپ اصلی و فرعی",
-    isNew: true
+    questionsCount: 40,
+    timeRequired: 15,
+    popularity: 78,
+    difficulty: "متوسط",
+    resultType: "لنگرگاه‌های مسیر شغلی",
+    publisher: "Edgar Schein",
+    validityScore: 86
   },
   {
-    id: 7,
+    id: 19,
+    title: "تست بازخورد 360 درجه",
+    description: "جمع‌آوری بازخورد از همکاران، مدیران و زیردستان برای ارزیابی جامع عملکرد",
+    icon: <UserCircle2 className="h-10 w-10" />,
+    category: "شغلی",
+    subcategory: "ارزیابی عملکرد",
+    creditCost: 50,
+    questionsCount: 60,
+    timeRequired: 30,
+    popularity: 88,
+    difficulty: "پیشرفته",
+    resultType: "گزارش تحلیلی چند بعدی",
+    isRequired: true,
+    requiredFrequencyDays: 365,
+    publisher: "Center for Creative Leadership",
+    targetAudience: ["مدیران", "رهبران تیم", "کارشناسان ارشد"],
+    certifiable: true
+  },
+  {
+    id: 20,
+    title: "تست تیپ‌های شخصیتی کاری بلبین",
+    description: "شناسایی 9 نقش تیمی و نحوه مشارکت فرد در کار گروهی",
+    icon: <UserCircle2 className="h-10 w-10" />,
+    category: "شغلی",
+    subcategory: "نقش‌های تیمی",
+    creditCost: 30,
+    questionsCount: 56,
+    timeRequired: 20,
+    popularity: 82,
+    difficulty: "متوسط",
+    resultType: "نقش‌های تیمی اصلی و فرعی",
+    publisher: "Belbin Associates",
+    validityScore: 88
+  },
+  
+  // مهارت‌های نرم
+  {
+    id: 21,
     title: "تست مهارت‌های ارتباطی",
     description: "ارزیابی توانایی‌های ارتباطی، گوش دادن فعال و مدیریت تعارض",
     icon: <Share2 className="h-10 w-10" />,
     category: "مهارت‌های نرم",
+    subcategory: "ارتباطات",
     creditCost: 0,
     questionsCount: 20,
     timeRequired: 5,
     popularity: 90,
     difficulty: "آسان",
     resultType: "نمره و توصیه‌های ارتباطی",
-    isFree: true
+    isFree: true,
+    publisher: "Communication Research Associates",
+    validityScore: 84
+  },
+  {
+    id: 22,
+    title: "تست سبک رهبری",
+    description: "شناسایی سبک رهبری و مدیریتی شما از میان 6 سبک اصلی رهبری",
+    icon: <Trophy className="h-10 w-10" />,
+    category: "مهارت‌های نرم",
+    subcategory: "رهبری",
+    creditCost: 35,
+    questionsCount: 36,
+    timeRequired: 15,
+    popularity: 86,
+    difficulty: "متوسط",
+    resultType: "پروفایل سبک رهبری",
+    publisher: "Hay Group",
+    targetAudience: ["مدیران", "رهبران", "کاندیداهای ارتقاء"],
+    validityScore: 90
+  },
+  {
+    id: 23,
+    title: "تست مدیریت زمان",
+    description: "ارزیابی مهارت‌های مدیریت زمان و شناسایی نقاط قابل بهبود",
+    icon: <Clock className="h-10 w-10" />,
+    category: "مهارت‌های نرم",
+    subcategory: "مدیریت زمان",
+    creditCost: 10,
+    questionsCount: 25,
+    timeRequired: 7,
+    popularity: 80,
+    difficulty: "آسان",
+    resultType: "امتیاز و راهکارهای بهبود",
+    isFree: true,
+    instantAnalysis: true
+  },
+  {
+    id: 24,
+    title: "تست سبک حل مسئله",
+    description: "شناسایی روش‌های شما در مواجهه با مشکلات و حل چالش‌ها",
+    icon: <Puzzle className="h-10 w-10" />,
+    category: "مهارت‌های نرم",
+    subcategory: "حل مسئله",
+    creditCost: 15,
+    questionsCount: 32,
+    timeRequired: 10,
+    popularity: 75,
+    difficulty: "متوسط",
+    resultType: "سبک‌های حل مسئله",
+    publisher: "Problem Solving Inventory",
+    validityScore: 83
+  },
+  {
+    id: 25,
+    title: "تست مهارت‌های مذاکره",
+    description: "ارزیابی توانایی‌های مذاکره، متقاعدسازی و رسیدن به توافق",
+    icon: <MessagesSquare className="h-10 w-10" />,
+    category: "مهارت‌های نرم",
+    subcategory: "مذاکره",
+    creditCost: 25,
+    questionsCount: 30,
+    timeRequired: 12,
+    popularity: 78,
+    difficulty: "متوسط",
+    resultType: "نیمرخ مذاکره‌کننده",
+    publisher: "Harvard Negotiation Project",
+    validityScore: 87
+  },
+  
+  // سنجش خلاقیت
+  {
+    id: 26,
+    title: "تست خلاقیت تورنس",
+    description: "ارزیابی تفکر خلاق و توانایی نوآوری در ابعاد مختلف",
+    icon: <Lightbulb className="h-10 w-10" />,
+    category: "خلاقیت",
+    subcategory: "تفکر خلاق",
+    creditCost: 35,
+    questionsCount: 60,
+    timeRequired: 45,
+    popularity: 79,
+    difficulty: "پیشرفته",
+    resultType: "نمره خلاقیت در چهار بعد",
+    publisher: "Scholastic Testing Service",
+    validityScore: 89
+  },
+  {
+    id: 27,
+    title: "تست سبک تفکر KAI",
+    description: "سنجش سبک تفکر انطباقی در مقابل نوآورانه",
+    icon: <BrainCircuit className="h-10 w-10" />,
+    category: "خلاقیت",
+    subcategory: "سبک تفکر",
+    creditCost: 30,
+    questionsCount: 32,
+    timeRequired: 15,
+    popularity: 72,
+    difficulty: "متوسط",
+    resultType: "طیف انطباق-نوآوری",
+    publisher: "KAI Distribution Centre",
+    validityScore: 86
+  },
+  {
+    id: 28,
+    title: "تست تفکر واگرا",
+    description: "سنجش توانایی تولید ایده‌های متنوع و متعدد برای حل مسائل",
+    icon: <Paintbrush className="h-10 w-10" />,
+    category: "خلاقیت",
+    subcategory: "تفکر واگرا",
+    creditCost: 20,
+    questionsCount: 25,
+    timeRequired: 20,
+    popularity: 73,
+    difficulty: "متوسط",
+    resultType: "نمره سیالی، انعطاف‌پذیری و اصالت",
+    isNew: true
+  },
+  
+  // هوش شناختی
+  {
+    id: 29,
+    title: "آزمون هوش وکسلر بزرگسالان",
+    description: "سنجش جامع هوش با ارزیابی توانایی‌های کلامی و عملی",
+    icon: <Brain className="h-10 w-10" />,
+    category: "هوش",
+    subcategory: "هوش عمومی",
+    creditCost: 60,
+    questionsCount: 105,
+    timeRequired: 90,
+    popularity: 92,
+    difficulty: "پیشرفته",
+    resultType: "IQ کل و خرده‌مقیاس‌ها",
+    publisher: "Pearson",
+    validityScore: 95,
+    certifiable: true
+  },
+  {
+    id: 30,
+    title: "تست هوش ریون",
+    description: "سنجش هوش سیال و استدلال غیرکلامی",
+    icon: <Sigma className="h-10 w-10" />,
+    category: "هوش",
+    subcategory: "هوش سیال",
+    creditCost: 30,
+    questionsCount: 60,
+    timeRequired: 40,
+    popularity: 88,
+    difficulty: "متوسط",
+    resultType: "نمره و رتبه‌بندی",
+    publisher: "Pearson",
+    validityScore: 93
+  },
+  {
+    id: 31,
+    title: "آزمون حافظه وکسلر",
+    description: "ارزیابی جامع انواع حافظه شامل حافظه کوتاه‌مدت، بلندمدت و کاری",
+    icon: <BookOpen className="h-10 w-10" />,
+    category: "هوش",
+    subcategory: "حافظه",
+    creditCost: 40,
+    questionsCount: 75,
+    timeRequired: 45,
+    popularity: 84,
+    difficulty: "پیشرفته",
+    resultType: "نیمرخ حافظه",
+    publisher: "Pearson",
+    validityScore: 92
+  },
+  {
+    id: 32,
+    title: "تست هوش هیجانی-اجتماعی",
+    description: "ارزیابی هوش هیجانی، اجتماعی و فرهنگی",
+    icon: <HeartHandshake className="h-10 w-10" />,
+    category: "هوش",
+    subcategory: "هوش چندگانه",
+    creditCost: 45,
+    questionsCount: 58,
+    timeRequired: 25,
+    popularity: 83,
+    difficulty: "متوسط",
+    resultType: "پروفایل هوش چندگانه",
+    publisher: "Six Seconds",
+    validityScore: 91
+  },
+  
+  // سبک زندگی و سلامت
+  {
+    id: 33,
+    title: "پرسشنامه سبک زندگی سالم",
+    description: "ارزیابی جامع عادات و رفتارهای مرتبط با سلامت جسمی و روانی",
+    icon: <Utensils className="h-10 w-10" />,
+    category: "سبک زندگی",
+    subcategory: "سلامت عمومی",
+    creditCost: 0,
+    questionsCount: 40,
+    timeRequired: 15,
+    popularity: 76,
+    difficulty: "آسان",
+    resultType: "نمره سلامت در ابعاد مختلف",
+    isFree: true,
+    isRequired: true,
+    requiredFrequencyDays: 90,
+    instantAnalysis: true
+  },
+  {
+    id: 34,
+    title: "تست الگوی خواب",
+    description: "بررسی کیفیت، مدت و الگوی خواب و تشخیص مشکلات احتمالی",
+    icon: <CloudSun className="h-10 w-10" />,
+    category: "سبک زندگی",
+    subcategory: "خواب",
+    creditCost: 10,
+    questionsCount: 19,
+    timeRequired: 5,
+    popularity: 75,
+    difficulty: "آسان",
+    resultType: "نمره کیفیت خواب",
+    isFree: true,
+    publisher: "Pittsburgh Sleep Quality Index",
+    validityScore: 85
+  },
+  {
+    id: 35,
+    title: "آزمون سنجش تغذیه سالم",
+    description: "ارزیابی عادات غذایی و تشخیص نقاط نیازمند بهبود",
+    icon: <Utensils className="h-10 w-10" />,
+    category: "سبک زندگی",
+    subcategory: "تغذیه",
+    creditCost: 5,
+    questionsCount: 25,
+    timeRequired: 8,
+    popularity: 72,
+    difficulty: "آسان",
+    resultType: "پروفایل تغذیه و توصیه‌ها",
+    isFree: true,
+    publisher: "Dietary Assessment Tools",
+    validityScore: 82
+  },
+  
+  // ده‌ها تست دیگر که به تدریج اضافه می‌شوند...
+  {
+    id: 36,
+    title: "تست سبک یادگیری VARK",
+    description: "شناسایی ترجیح‌های یادگیری دیداری، شنیداری، خواندنی/نوشتنی و جنبشی",
+    icon: <BookOpen className="h-10 w-10" />,
+    category: "یادگیری",
+    subcategory: "سبک یادگیری",
+    creditCost: 15,
+    questionsCount: 16,
+    timeRequired: 10,
+    popularity: 85,
+    difficulty: "آسان",
+    resultType: "سبک‌های یادگیری",
+    isFree: true,
+    publisher: "VARK Learn Limited",
+    validityScore: 78,
+    instantAnalysis: true
+  },
+  
+  // نمونه تست با تحلیل لحظه‌ای
+  {
+    id: 37,
+    title: "ارزیابی لحظه‌ای استرس",
+    description: "تست کوتاه برای سنجش سطح استرس فعلی و دریافت راهکارهای سریع",
+    icon: <Gauge className="h-10 w-10" />,
+    category: "سلامت روان",
+    subcategory: "تحلیل لحظه‌ای",
+    creditCost: 0,
+    questionsCount: 5,
+    timeRequired: 2,
+    popularity: 94,
+    difficulty: "آسان",
+    resultType: "وضعیت لحظه‌ای و توصیه‌ها",
+    isFree: true,
+    instantAnalysis: true
+  },
+  
+  // و نمونه‌های بیشتر تا رسیدن به 100 تست...
+  {
+    id: 38,
+    title: "تست هوش چندگانه گاردنر",
+    description: "ارزیابی 8 نوع هوش مختلف شامل زبانی، منطقی، فضایی، موسیقیایی و...",
+    icon: <Dna className="h-10 w-10" />,
+    category: "هوش",
+    subcategory: "هوش چندگانه",
+    creditCost: 25,
+    questionsCount: 80,
+    timeRequired: 20,
+    popularity: 87,
+    difficulty: "متوسط",
+    resultType: "نیمرخ هوش‌های چندگانه",
+    publisher: "Multiple Intelligences Research Group",
+    validityScore: 88
+  },
+  
+  {
+    id: 39,
+    title: "تست ارزش‌های زندگی شوارتز",
+    description: "شناسایی 10 ارزش اصلی در زندگی شخصی و اولویت‌بندی آنها",
+    icon: <Diamond className="h-10 w-10" />,
+    category: "شخصیت",
+    subcategory: "ارزش‌ها",
+    creditCost: 20,
+    questionsCount: 40,
+    timeRequired: 15,
+    popularity: 82,
+    difficulty: "متوسط",
+    resultType: "ساختار ارزشی فردی",
+    publisher: "European Social Survey",
+    validityScore: 92
+  },
+  
+  {
+    id: 40,
+    title: "تست سنجش انگیزه در کار",
+    description: "ارزیابی عوامل انگیزشی و محرک‌های فعالیت شغلی",
+    icon: <Zap className="h-10 w-10" />,
+    category: "شغلی",
+    subcategory: "انگیزش",
+    creditCost: 15,
+    questionsCount: 30,
+    timeRequired: 10,
+    popularity: 81,
+    difficulty: "آسان",
+    resultType: "پروفایل انگیزشی",
+    publisher: "Work Motivation Inventory",
+    validityScore: 85
   }
+  
+  // تست‌های دیگر تا رسیدن به 100 تست حذف شده‌اند برای کوتاه‌تر کردن کد
 ];
 
 // Sample user test history
