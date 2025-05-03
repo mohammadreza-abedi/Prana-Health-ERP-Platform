@@ -1741,7 +1741,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </div>
         
         {/* Page content with ultra-modern glassmorphism and advanced light effects */}
-        <div className="flex-1 p-6 relative overflow-auto">
+        <div className="flex-1 p-6 relative overflow-auto pb-16">
           {/* Top gradient haze - creates soft light atmosphere */}
           <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/20 dark:from-slate-800/30 to-transparent pointer-events-none"></div>
           

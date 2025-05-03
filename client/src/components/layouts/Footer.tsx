@@ -69,7 +69,7 @@ export default function Footer() {
   ];
   
   return (
-    <footer className="relative bg-slate-50/50 dark:bg-slate-900/50 py-12 border-t backdrop-blur-md">
+    <footer className="sticky bottom-0 w-full relative bg-slate-50/60 dark:bg-slate-900/60 py-6 border-t backdrop-blur-xl shadow-[0_-4px_30px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_30px_-15px_rgba(0,0,0,0.3)] z-10">
       {/* خط تزئینی بالای فوتر */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-300/50 dark:via-slate-700/50 to-transparent"></div>
       
