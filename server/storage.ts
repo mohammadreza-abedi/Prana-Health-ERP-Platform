@@ -422,7 +422,29 @@ export class DatabaseStorage implements IStorage {
 
   async getAllDepartments(): Promise<Department[]> {
     try {
-      return await db.select().from(departments);
+      const result = await db.select().from(departments);
+      
+      // اگر داده‌های واقعی موجود باشند، آنها را برمی‌گردانیم
+      if (result && result.length > 0) {
+        return result;
+      }
+      
+      // در غیر این صورت داده‌های ساختگی دپارتمان‌ها را برمی‌گردانیم
+      console.log("Creating mock departments data");
+      
+      // دپارتمان‌های ساختگی برای شرکت
+      const mockDepartments: Department[] = [
+        { id: 1, name: "منابع انسانی", createdAt: new Date() },
+        { id: 2, name: "فنی", createdAt: new Date() },
+        { id: 3, name: "IT", createdAt: new Date() },
+        { id: 4, name: "مارکتینگ", createdAt: new Date() },
+        { id: 5, name: "فروش", createdAt: new Date() },
+        { id: 6, name: "تولید", createdAt: new Date() },
+        { id: 7, name: "مالی", createdAt: new Date() },
+        { id: 8, name: "توسعه محصول", createdAt: new Date() }
+      ];
+      
+      return mockDepartments;
     } catch (error) {
       console.error("Error in getAllDepartments:", error);
       return [];
@@ -576,9 +598,10 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getLeaderboard(limit: number = 10): Promise<{ id: number; displayName: string; avatar?: string; xp: number; level: number }[]> {
+  async getLeaderboard(limit: number = 10): Promise<{ id: number; displayName: string; avatar?: string; xp: number; level: number; department?: string; rank?: number; previousRank?: number; streak?: number; badges?: number; challengesCompleted?: number; title?: string; }[]> {
     try {
-      const result = await db.select({
+      // اول سعی می‌کنیم داده‌های واقعی را از دیتابیس بگیریم
+      const dbResult = await db.select({
         id: users.id,
         displayName: users.displayName,
         avatar: users.avatar,
@@ -589,7 +612,79 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(users.xp))
       .limit(limit);
       
-      return result;
+      // اگر داده‌های واقعی موجود باشند، آنها را با فرمت صحیح برمی‌گردانیم
+      if (dbResult && dbResult.length > 0) {
+        return dbResult.map(user => ({
+          id: user.id,
+          displayName: user.displayName,
+          avatar: user.avatar === null ? undefined : user.avatar,
+          xp: user.xp,
+          level: user.level,
+          department: undefined,
+          rank: undefined,
+          previousRank: undefined,
+          streak: undefined,
+          badges: undefined,
+          challengesCompleted: undefined,
+          title: undefined
+        }));
+      }
+      
+      // در غیر این صورت داده‌های ساختگی برای شرکت فرضی ایجاد می‌کنیم
+      console.log("Creating mock leaderboard data for company");
+      
+      // اسامی ساختگی برای کارمندان شرکت
+      const mockNames = [
+        "علی محمدی", "سارا رضایی", "محمد کریمی", "مریم حسینی", 
+        "امیر نجفی", "فاطمه قاسمی", "رضا عباسی", "زهرا اکبری",
+        "حسین میرزایی", "نسرین صادقی", "مهدی احمدی", "الهام فتحی",
+        "محسن توکلی", "شیما جلالی", "جواد رحیمی"
+      ];
+      
+      // عنوان‌های ساختگی
+      const mockTitles = [
+        "مدیر منابع انسانی", "کارشناس فنی", "کارشناس IT", "مدیر مارکتینگ",
+        "کارشناس فروش", "مدیر تولید", "حسابدار", "مدیر پروژه",
+        "گرافیست", "مدیر مالی", "کارشناس پشتیبانی", "برنامه‌نویس ارشد",
+        "کارشناس QA", "مدیر محصول", "مسئول لجستیک"
+      ];
+      
+      // دپارتمان‌های ساختگی
+      const mockDepartments = [
+        "منابع انسانی", "فنی", "IT", "مارکتینگ",
+        "فروش", "تولید", "مالی", "توسعه محصول"
+      ];
+      
+      const mockLeaderboard = mockNames.map((name, index) => {
+        // ایجاد اکسپی تصادفی با ترتیب نزولی
+        const xp = 10000 - (index * 250) + Math.floor(Math.random() * 200);
+        // محاسبه سطح بر اساس اکسپی
+        const level = Math.floor(xp / 1000) + 1;
+        // سایر مقادیر
+        const department = mockDepartments[Math.floor(Math.random() * mockDepartments.length)];
+        const rank = index + 1;
+        const previousRank = rank + (Math.random() > 0.7 ? Math.floor(Math.random() * 3) + 1 : 0) * (Math.random() > 0.5 ? 1 : -1);
+        const streak = Math.floor(Math.random() * 30) + 1;
+        const badges = Math.floor(Math.random() * 15) + 1;
+        const challengesCompleted = Math.floor(Math.random() * 20) + 1;
+        const title = mockTitles[index];
+        
+        return {
+          id: index + 1,
+          displayName: name,
+          xp,
+          level,
+          department,
+          rank,
+          previousRank,
+          streak,
+          badges,
+          challengesCompleted,
+          title
+        };
+      });
+      
+      return mockLeaderboard.slice(0, limit);
     } catch (error) {
       console.error("Error in getLeaderboard:", error);
       return [];
