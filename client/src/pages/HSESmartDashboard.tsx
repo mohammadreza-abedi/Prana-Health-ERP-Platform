@@ -44,7 +44,12 @@ import {
   GraduationCap,
   ClipboardCheck,
   User,
-  Plus
+  Plus,
+  Users,
+  Heart,
+  ChevronRight,
+  ChevronLeft,
+  Calendar
 } from 'lucide-react';
 
 // داده‌های ساختگی برای نمودارها
