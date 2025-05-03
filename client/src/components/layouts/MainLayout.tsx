@@ -276,17 +276,168 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
           {/* User info */}
           <div className={`px-4 py-3 flex items-center ${isExpanded ? 'justify-start' : 'justify-center'}`}>
-            <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/10 to-aqua/5 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800 overflow-hidden`}>
-              {activeAvatarUrl ? (
-                <img 
-                  src={activeAvatarUrl} 
-                  alt={avatarName || "آواتار کاربر"}
-                  className="w-full h-full object-cover"
+            <div className="relative w-11 h-11">
+              {/* پس‌زمینه حرفه‌ای با افکت‌های متحرک */}
+              <div className="absolute inset-0 rounded-full overflow-hidden z-0">
+                {/* لایه گرادیان اصلی و پس‌زمینه */}
+                <div className="absolute inset-0 bg-gradient-to-br from-tiffany/20 to-aqua/10 z-0"></div>
+                
+                {/* الگوی هندسی متحرک */}
+                <motion.div 
+                  className="absolute inset-0 bg-grid-slate-300/[0.02] dark:bg-grid-slate-100/[0.02] bg-[size:10px_10px] z-0"
+                  animate={{
+                    backgroundPosition: ['0% 0%', '100% 100%'],
+                  }}
+                  transition={{
+                    duration: 20,
+                    ease: "linear",
+                    repeat: Infinity,
+                    repeatType: "loop"
+                  }}
+                ></motion.div>
+                
+                {/* هاله‌های رنگی متحرک */}
+                <motion.div
+                  className="absolute -top-6 -left-6 w-10 h-10 rounded-full bg-tiffany/20 blur-md"
+                  animate={{ 
+                    top: ['-1.5rem', '-1rem', '-1.5rem'],
+                    left: ['-1.5rem', '-1rem', '-1.5rem'],
+                    scale: [1, 1.2, 1],
+                    opacity: [0.2, 0.3, 0.2]
+                  }}
+                  transition={{ 
+                    duration: 4, 
+                    ease: "easeInOut", 
+                    repeat: Infinity,
+                    repeatType: "mirror"
+                  }}
+                ></motion.div>
+                
+                <motion.div
+                  className="absolute -bottom-6 -right-6 w-10 h-10 rounded-full bg-aqua/20 blur-md"
+                  animate={{ 
+                    bottom: ['-1.5rem', '-1rem', '-1.5rem'],
+                    right: ['-1.5rem', '-1rem', '-1.5rem'],
+                    scale: [1, 1.2, 1],
+                    opacity: [0.2, 0.3, 0.2]
+                  }}
+                  transition={{ 
+                    duration: 4, 
+                    ease: "easeInOut", 
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                    delay: 0.5
+                  }}
+                ></motion.div>
+                
+                {/* خطوط نور ظریف متحرک */}
+                <motion.div
+                  className="absolute top-1/2 h-px w-full bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"
+                  animate={{ 
+                    opacity: [0, 0.8, 0],
+                    width: ['0%', '100%', '0%'],
+                    left: ['0%', '0%', '100%']
+                  }}
+                  transition={{ 
+                    duration: 2.5, 
+                    ease: "easeInOut", 
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    repeatDelay: 1
+                  }}
+                ></motion.div>
+                
+                <motion.div
+                  className="absolute left-1/2 w-px h-full bg-gradient-to-b from-transparent via-tiffany/30 to-transparent"
+                  animate={{ 
+                    opacity: [0, 0.8, 0],
+                    height: ['0%', '100%', '0%'],
+                    top: ['0%', '0%', '100%']
+                  }}
+                  transition={{ 
+                    duration: 2.5, 
+                    ease: "easeInOut", 
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    repeatDelay: 1.2,
+                    delay: 0.5
+                  }}
+                ></motion.div>
+                
+                {/* افکت شیشه‌ای */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent dark:from-white/5 z-0"></div>
+              </div>
+              
+              {/* کانتینر اصلی آواتار */}
+              <div className="absolute inset-0.5 rounded-full bg-white dark:bg-slate-800 z-10 overflow-hidden border border-white/30 dark:border-slate-700/30">
+                {activeAvatarUrl ? (
+                  <img 
+                    src={activeAvatarUrl} 
+                    alt={avatarName || "آواتار کاربر"}
+                    className="w-full h-full object-cover z-20"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-tiffany font-bold z-20">
+                    <span>م</span>
+                  </div>
+                )}
+                
+                {/* نقطه‌های درخشان روی عکس */}
+                <motion.div
+                  className="absolute top-[15%] left-[15%] w-1 h-1 rounded-full bg-tiffany/60 z-30"
+                  animate={{ 
+                    opacity: [0, 0.8, 0],
+                    scale: [0.8, 1.2, 0.8]
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    ease: "easeInOut", 
+                    repeat: Infinity,
+                    repeatType: "loop"
+                  }}
+                ></motion.div>
+                
+                <motion.div
+                  className="absolute bottom-[20%] right-[20%] w-0.5 h-0.5 rounded-full bg-aqua/70 z-30"
+                  animate={{ 
+                    opacity: [0, 0.8, 0],
+                    scale: [0.8, 1.2, 0.8]
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    ease: "easeInOut", 
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    delay: 0.5
+                  }}
+                ></motion.div>
+                
+                {/* افکت شیشه‌ای روی آواتار */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent dark:from-white/2 z-30"
+                  animate={{ 
+                    opacity: [0.2, 0.3, 0.2],
+                  }}
+                  transition={{ 
+                    duration: 3, 
+                    repeat: Infinity, 
+                    repeatType: "reverse" 
+                  }}
+                ></motion.div>
+              </div>
+              
+              {/* نشانگر وضعیت آنلاین */}
+              <div className="absolute -bottom-0.5 -left-0.5 w-3.5 h-3.5 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 border-2 border-white dark:border-slate-800 z-40 shadow-lg shadow-green-500/20 flex items-center justify-center">
+                <motion.div 
+                  className="w-1.5 h-1.5 rounded-full bg-white/80"
+                  animate={{ scale: [1, 0.8, 1] }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
                 />
-              ) : (
-                <span>م</span>
-              )}
-              <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white dark:border-slate-800"></div>
+              </div>
             </div>
             
             {isExpanded && (

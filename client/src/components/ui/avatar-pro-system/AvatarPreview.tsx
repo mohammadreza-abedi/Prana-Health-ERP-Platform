@@ -156,8 +156,7 @@ export const AvatarPreview: React.FC<AvatarPreviewProps> = ({
     <div className={cn("flex flex-col items-center", className)}>
       <motion.div 
         className={cn(
-          "relative flex items-center justify-center rounded-full overflow-hidden bg-gradient-to-br border-4",
-          rarityGradients[rarity],
+          "relative flex items-center justify-center rounded-full overflow-hidden border-4",
           rarityBorderColors[rarity],
           rarityColors[rarity],
           isActive && "ring-4 ring-tiffany ring-offset-2 dark:ring-offset-slate-800",
@@ -166,9 +165,125 @@ export const AvatarPreview: React.FC<AvatarPreviewProps> = ({
         whileHover={{ scale: 1.05 }}
         transition={{ type: "spring", stiffness: 300, damping: 15 }}
       >
+        {/* پس‌زمینه حرفه‌ای با افکت‌های پیشرفته */}
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-full">
+          {/* لایه گرادیان اصلی */}
+          <div className={cn(
+            "absolute inset-0 bg-gradient-to-br",
+            rarityGradients[rarity]
+          )}></div>
+          
+          {/* پترن هندسی متحرک */}
+          <motion.div 
+            className="absolute inset-0 bg-grid-slate-300/[0.025] dark:bg-grid-slate-100/[0.025] bg-[size:20px_20px]"
+            animate={{
+              backgroundPosition: ['0% 0%', '100% 100%'],
+            }}
+            transition={{
+              duration: 30,
+              ease: "linear",
+              repeat: Infinity,
+              repeatType: "loop"
+            }}
+          ></motion.div>
+          
+          {/* هاله‌های رنگی متحرک */}
+          <motion.div
+            className={cn(
+              "absolute -top-16 -left-16 w-32 h-32 rounded-full opacity-60 blur-xl",
+              rarity === 'legendary' ? "bg-amber-400/30" :
+              rarity === 'epic' ? "bg-purple-400/30" :
+              rarity === 'rare' ? "bg-blue-400/30" : "bg-tiffany/20"
+            )}
+            animate={{ 
+              top: ['-4rem', '-2rem', '-4rem'],
+              left: ['-4rem', '-2rem', '-4rem'],
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0.3, 0.2]
+            }}
+            transition={{ 
+              duration: 8, 
+              ease: "easeInOut", 
+              repeat: Infinity,
+              repeatType: "mirror"
+            }}
+          ></motion.div>
+          
+          <motion.div
+            className={cn(
+              "absolute -bottom-16 -right-16 w-32 h-32 rounded-full opacity-60 blur-xl",
+              rarity === 'legendary' ? "bg-amber-500/30" :
+              rarity === 'epic' ? "bg-purple-500/30" :
+              rarity === 'rare' ? "bg-blue-500/30" : "bg-aqua/20"
+            )}
+            animate={{ 
+              bottom: ['-4rem', '-3rem', '-4rem'],
+              right: ['-4rem', '-3rem', '-4rem'],
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0.3, 0.2]
+            }}
+            transition={{ 
+              duration: 7, 
+              ease: "easeInOut", 
+              repeat: Infinity,
+              repeatType: "mirror",
+              delay: 0.5
+            }}
+          ></motion.div>
+          
+          {/* خطوط نور متحرک */}
+          <motion.div
+            className={cn(
+              "absolute h-px w-full top-1/3 left-0 right-0",
+              rarity === 'legendary' ? "bg-gradient-to-r from-transparent via-amber-300/40 to-transparent" :
+              rarity === 'epic' ? "bg-gradient-to-r from-transparent via-purple-300/40 to-transparent" :
+              rarity === 'rare' ? "bg-gradient-to-r from-transparent via-blue-300/40 to-transparent" :
+              "bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"
+            )}
+            animate={{ 
+              opacity: [0, 0.8, 0],
+              width: ['0%', '100%', '0%'],
+              left: ['0%', '0%', '100%']
+            }}
+            transition={{ 
+              duration: 3, 
+              ease: "easeInOut", 
+              repeat: Infinity,
+              repeatType: "loop",
+              repeatDelay: 2
+            }}
+          ></motion.div>
+          
+          <motion.div
+            className={cn(
+              "absolute w-px h-full top-0 bottom-0 left-2/3",
+              rarity === 'legendary' ? "bg-gradient-to-b from-transparent via-amber-300/40 to-transparent" :
+              rarity === 'epic' ? "bg-gradient-to-b from-transparent via-purple-300/40 to-transparent" :
+              rarity === 'rare' ? "bg-gradient-to-b from-transparent via-blue-300/40 to-transparent" :
+              "bg-gradient-to-b from-transparent via-tiffany/30 to-transparent"
+            )}
+            animate={{ 
+              opacity: [0, 0.8, 0],
+              height: ['0%', '100%', '0%'],
+              top: ['0%', '0%', '100%']
+            }}
+            transition={{ 
+              duration: 3, 
+              ease: "easeInOut", 
+              repeat: Infinity,
+              repeatType: "loop",
+              repeatDelay: 3,
+              delay: 1
+            }}
+          ></motion.div>
+          
+          {/* افکت شیشه‌ای */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent dark:from-white/5"></div>
+        </div>
+        
         {/* لایه تیره برای آواتارهای قفل شده */}
         {!unlocked && (
-          <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-10 flex items-center justify-center flex-col">
+          <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-20 flex items-center justify-center flex-col">
             <Sparkles className="h-8 w-8 text-amber-400 mb-2" />
             <div className="text-white text-xs font-bold px-2 py-1 rounded-full bg-amber-600/80 backdrop-blur-sm">
               {price?.toLocaleString('fa-IR')} 
@@ -176,32 +291,99 @@ export const AvatarPreview: React.FC<AvatarPreviewProps> = ({
           </div>
         )}
         
-        {avatarImage ? (
-          <img 
-            src={avatarImage} 
-            alt={avatarName}
-            className={cn(
-              "h-full w-full object-contain",
-              !unlocked && "filter blur-sm"
-            )}
-          />
-        ) : (
-          <User className="h-1/2 w-1/2 text-slate-400" />
-        )}
+        {/* شکل حلقوی نور لبه‌ای */}
+        <div className="absolute inset-[2px] rounded-full overflow-hidden border border-white/10 dark:border-white/5 z-10"></div>
         
-        {/* حلقه درخشان دور آواتار */}
-        <div className="absolute inset-0 border-2 border-white/30 dark:border-white/10 rounded-full"></div>
+        {/* دایره داخلی با افکت هاله */}
+        <div className={cn(
+          "absolute inset-[4px] rounded-full overflow-hidden z-10",
+          rarity === 'legendary' ? "shadow-[inset_0_0_15px_rgba(245,158,11,0.3)]" :
+          rarity === 'epic' ? "shadow-[inset_0_0_15px_rgba(168,85,247,0.3)]" :
+          rarity === 'rare' ? "shadow-[inset_0_0_15px_rgba(59,130,246,0.3)]" :
+          "shadow-[inset_0_0_15px_rgba(45,212,191,0.2)]"
+        )}>
+          {/* نقطه‌های درخشان روی عکس */}
+          <motion.div
+            className={cn(
+              "absolute top-[15%] left-[15%] w-2 h-2 rounded-full",
+              rarity === 'legendary' ? "bg-amber-300/60" :
+              rarity === 'epic' ? "bg-purple-300/60" :
+              rarity === 'rare' ? "bg-blue-300/60" :
+              "bg-tiffany/50"
+            )}
+            animate={{ 
+              opacity: [0, 0.8, 0],
+              scale: [0.8, 1.2, 0.8]
+            }}
+            transition={{ 
+              duration: 2, 
+              ease: "easeInOut", 
+              repeat: Infinity,
+              repeatType: "loop"
+            }}
+          ></motion.div>
+          
+          <motion.div
+            className={cn(
+              "absolute bottom-[20%] right-[20%] w-1 h-1 rounded-full",
+              rarity === 'legendary' ? "bg-amber-300/70" :
+              rarity === 'epic' ? "bg-purple-300/70" :
+              rarity === 'rare' ? "bg-blue-300/70" :
+              "bg-aqua/60"
+            )}
+            animate={{ 
+              opacity: [0, 0.8, 0],
+              scale: [0.8, 1.2, 0.8]
+            }}
+            transition={{ 
+              duration: 2, 
+              ease: "easeInOut", 
+              repeat: Infinity,
+              repeatType: "loop",
+              delay: 0.5
+            }}
+          ></motion.div>
+          
+          {/* کانتینر آواتار */}
+          <div className="relative w-full h-full bg-slate-50 dark:bg-slate-800 z-10">
+            {avatarImage ? (
+              <img 
+                src={avatarImage} 
+                alt={avatarName}
+                className={cn(
+                  "h-full w-full object-contain relative z-20",
+                  !unlocked && "filter blur-sm"
+                )}
+              />
+            ) : (
+              <User className="h-1/2 w-1/2 text-slate-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20" />
+            )}
+            
+            {/* افکت شیشه‌ای روی آواتار */}
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent dark:from-white/5 z-30"
+              animate={{ 
+                opacity: [0.3, 0.5, 0.3],
+              }}
+              transition={{ 
+                duration: 3, 
+                repeat: Infinity, 
+                repeatType: "reverse" 
+              }}
+            ></motion.div>
+          </div>
+        </div>
         
         {/* نشان نمایش آواتار فعال */}
         {isActive && (
-          <div className="absolute -bottom-1 -left-1 bg-tiffany text-white rounded-full h-6 w-6 flex items-center justify-center text-xs font-bold border-2 border-white dark:border-slate-800">
+          <div className="absolute -bottom-1 -left-1 bg-tiffany text-white rounded-full h-6 w-6 flex items-center justify-center text-xs font-bold border-2 border-white dark:border-slate-800 z-40 shadow-lg">
             <Zap className="h-3 w-3" />
           </div>
         )}
         
         {/* نمایش کمیابی */}
         {rarity !== 'common' && (
-          <div className="absolute -top-1 -right-1 rounded-full h-7 w-7 flex items-center justify-center text-xs font-bold border-2 border-white dark:border-slate-800 bg-gradient-to-r">
+          <div className="absolute -top-1 -right-1 rounded-full h-7 w-7 flex items-center justify-center text-xs font-bold border-2 border-white dark:border-slate-800 bg-gradient-to-r z-40 shadow-lg">
             {rarity === 'rare' && <Badge className="bg-blue-500 hover:bg-blue-600 text-[10px] px-1">R</Badge>}
             {rarity === 'epic' && <Badge className="bg-purple-500 hover:bg-purple-600 text-[10px] px-1">E</Badge>}
             {rarity === 'legendary' && <Badge className="bg-amber-500 hover:bg-amber-600 text-[10px] px-1">L</Badge>}
