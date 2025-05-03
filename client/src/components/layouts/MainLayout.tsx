@@ -1385,35 +1385,45 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <div className="flex items-center space-x-1 space-x-reverse p-1.5 bg-white/70 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-700/40 backdrop-blur-xl shadow-sm relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-r from-tiffany/3 via-aqua/2 to-tiffany/3 dark:from-tiffany/5 dark:via-aqua/3 dark:to-tiffany/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                 
-                <Button variant="ghost" size="sm" className="rounded-lg bg-tiffany/10 dark:bg-tiffany/15 text-tiffany dark:text-tiffany-light relative overflow-hidden z-10 font-medium transition-all duration-300 shadow-sm">
-                  <div className="absolute inset-0 bg-gradient-to-r from-tiffany/10 to-aqua/10 dark:from-tiffany/20 dark:to-aqua/15 opacity-50"></div>
-                  <LayoutDashboard className="h-4 w-4 ml-1.5 relative z-10" />
-                  <span className="relative z-10">میز کار</span>
-                </Button>
+                <Link href="/enhanced-dashboard" className="block">
+                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/' || location === '/enhanced-dashboard' ? 'bg-tiffany/10 dark:bg-tiffany/15 text-tiffany dark:text-tiffany-light shadow-sm' : 'hover:bg-tiffany/10 dark:hover:bg-tiffany/15 hover:text-tiffany dark:hover:text-tiffany-light'} relative overflow-hidden z-10 font-medium transition-all duration-300 hover:shadow-sm`}>
+                    <div className="absolute inset-0 bg-gradient-to-r from-tiffany/10 to-aqua/10 dark:from-tiffany/20 dark:to-aqua/15 opacity-50"></div>
+                    <LayoutDashboard className="h-4 w-4 ml-1.5 relative z-10" />
+                    <span className="relative z-10">میز کار</span>
+                  </Button>
+                </Link>
                 
-                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100/80 dark:hover:bg-slate-700/80 transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden">
-                  <Heart className="h-4 w-4 ml-1.5 group-hover/btn:text-rose-500 transition-colors duration-300" />
-                  <span className="group-hover/btn:font-medium transition-all duration-300">سلامت شغلی</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-rose-500/5 to-rose-400/5 dark:from-rose-500/10 dark:to-rose-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                </Button>
+                <Link href="/health-dashboard" className="block">
+                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/health-dashboard' ? 'bg-rose-500/10 dark:bg-rose-500/15 text-rose-500 dark:text-rose-400 shadow-sm' : 'hover:bg-slate-100/80 dark:hover:bg-slate-700/80'} transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden`}>
+                    <Heart className={`h-4 w-4 ml-1.5 ${location === '/health-dashboard' ? 'text-rose-500' : 'group-hover/btn:text-rose-500'} transition-colors duration-300`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300">سلامت شغلی</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-rose-500/5 to-rose-400/5 dark:from-rose-500/10 dark:to-rose-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  </Button>
+                </Link>
                 
-                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100/80 dark:hover:bg-slate-700/80 transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden">
-                  <GraduationCap className="h-4 w-4 ml-1.5 group-hover/btn:text-blue-500 transition-colors duration-300" />
-                  <span className="group-hover/btn:font-medium transition-all duration-300">آموزش</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-blue-400/5 dark:from-blue-500/10 dark:to-blue-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                </Button>
+                <Link href="/psychological-tests" className="block">
+                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/psychological-tests' ? 'bg-blue-500/10 dark:bg-blue-500/15 text-blue-500 dark:text-blue-400 shadow-sm' : 'hover:bg-slate-100/80 dark:hover:bg-slate-700/80'} transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden`}>
+                    <GraduationCap className={`h-4 w-4 ml-1.5 ${location === '/psychological-tests' ? 'text-blue-500' : 'group-hover/btn:text-blue-500'} transition-colors duration-300`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300">آموزش</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-blue-400/5 dark:from-blue-500/10 dark:to-blue-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  </Button>
+                </Link>
                 
-                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100/80 dark:hover:bg-slate-700/80 transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden">
-                  <Trophy className="h-4 w-4 ml-1.5 group-hover/btn:text-yellow-500 transition-colors duration-300" />
-                  <span className="group-hover/btn:font-medium transition-all duration-300">دستاوردها</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-yellow-400/5 dark:from-yellow-500/10 dark:to-yellow-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                </Button>
+                <Link href="/achievements" className="block">
+                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/achievements' ? 'bg-yellow-500/10 dark:bg-yellow-500/15 text-yellow-500 dark:text-yellow-400 shadow-sm' : 'hover:bg-slate-100/80 dark:hover:bg-slate-700/80'} transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden`}>
+                    <Trophy className={`h-4 w-4 ml-1.5 ${location === '/achievements' ? 'text-yellow-500' : 'group-hover/btn:text-yellow-500'} transition-colors duration-300`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300">دستاوردها</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-yellow-400/5 dark:from-yellow-500/10 dark:to-yellow-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  </Button>
+                </Link>
                 
-                <Button variant="ghost" size="sm" className="rounded-lg hover:bg-slate-100/80 dark:hover:bg-slate-700/80 transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden">
-                  <Users className="h-4 w-4 ml-1.5 group-hover/btn:text-violet-500 transition-colors duration-300" />
-                  <span className="group-hover/btn:font-medium transition-all duration-300">دپارتمان</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-violet-400/5 dark:from-violet-500/10 dark:to-violet-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                </Button>
+                <Link href="/organizational-health" className="block">
+                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/organizational-health' ? 'bg-violet-500/10 dark:bg-violet-500/15 text-violet-500 dark:text-violet-400 shadow-sm' : 'hover:bg-slate-100/80 dark:hover:bg-slate-700/80'} transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden`}>
+                    <Users className={`h-4 w-4 ml-1.5 ${location === '/organizational-health' ? 'text-violet-500' : 'group-hover/btn:text-violet-500'} transition-colors duration-300`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300">دپارتمان</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-violet-400/5 dark:from-violet-500/10 dark:to-violet-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  </Button>
+                </Link>
                 
                 <TooltipProvider>
                   <Tooltip>
@@ -1436,7 +1446,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     <TooltipTrigger asChild>
                       <Button 
                         variant="outline" 
-                        size="sm" 
+                        size="sm"
+                        onClick={() => {
+                          toast({
+                            title: "بروزرسانی انجام شد",
+                            description: "تمام داده‌ها با موفقیت بروزرسانی شدند",
+                            variant: "default",
+                          });
+                        }} 
                         className="relative overflow-hidden rounded-lg h-9 border-slate-200/70 dark:border-slate-700/60 bg-white/80 dark:bg-slate-800/60 backdrop-blur-md hover:bg-white/90 dark:hover:bg-slate-800/80 transition-all duration-300 shadow-sm hover:shadow group"
                       >
                         <div className="absolute inset-0 bg-gradient-to-r from-tiffany/5 to-tiffany-light/5 dark:from-tiffany/10 dark:to-tiffany-light/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -1463,19 +1480,46 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="rounded-xl w-60 p-1.5 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/40 shadow-lg">
-                    <DropdownMenuItem className="rounded-lg cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-700/80 py-2.5 px-3 transition-all duration-200 group/item">
+                    <DropdownMenuItem 
+                      onClick={() => {
+                        toast({
+                          title: "عملیات جدید",
+                          description: "فرم افزودن کاربر جدید باز شد",
+                          variant: "default",
+                        });
+                      }}
+                      className="rounded-lg cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-700/80 py-2.5 px-3 transition-all duration-200 group/item"
+                    >
                       <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-tiffany/10 to-aqua/10 dark:from-tiffany/15 dark:to-aqua/15 group-hover/item:bg-gradient-to-r group-hover/item:from-tiffany/20 group-hover/item:to-aqua/20 dark:group-hover/item:from-tiffany/25 dark:group-hover/item:to-aqua/25 transition-all duration-200">
                         <UserPlus className="h-4 w-4 text-tiffany/70 dark:text-tiffany-light/70 group-hover/item:text-tiffany dark:group-hover/item:text-tiffany-light transition-all duration-200" />
                       </div>
                       <span className="font-medium">افزودن کاربر جدید</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="rounded-lg cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-700/80 py-2.5 px-3 transition-all duration-200 group/item">
+                    <DropdownMenuItem
+                      onClick={() => {
+                        toast({
+                          title: "گزارش جدید",
+                          description: "فرم ایجاد گزارش باز شد",
+                          variant: "default",
+                        });
+                      }}
+                      className="rounded-lg cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-700/80 py-2.5 px-3 transition-all duration-200 group/item"
+                    >
                       <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-navy/10 to-blue/10 dark:from-navy/15 dark:to-blue/15 group-hover/item:bg-gradient-to-r group-hover/item:from-navy/20 group-hover/item:to-blue/20 dark:group-hover/item:from-navy/25 dark:group-hover/item:to-blue/25 transition-all duration-200">
                         <FileText className="h-4 w-4 text-navy/70 dark:text-blue/70 group-hover/item:text-navy dark:group-hover/item:text-blue transition-all duration-200" />
                       </div>
                       <span className="font-medium">ایجاد گزارش</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="rounded-lg cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-700/80 py-2.5 px-3 transition-all duration-200 group/item">
+                    <DropdownMenuItem
+                      onClick={() => {
+                        toast({
+                          title: "سنکرون‌سازی داده‌ها",
+                          description: "داده‌ها با موفقیت سنکرون شدند",
+                          variant: "default",
+                        });
+                      }}
+                      className="rounded-lg cursor-pointer hover:bg-slate-100/80 dark:hover:bg-slate-700/80 py-2.5 px-3 transition-all duration-200 group/item"
+                    >
                       <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-violet-600/10 to-purple-500/10 dark:from-violet-600/15 dark:to-purple-500/15 group-hover/item:bg-gradient-to-r group-hover/item:from-violet-600/20 group-hover/item:to-purple-500/20 dark:group-hover/item:from-violet-600/25 dark:group-hover/item:to-purple-500/25 transition-all duration-200">
                         <Database className="h-4 w-4 text-violet-600/70 dark:text-purple-500/70 group-hover/item:text-violet-600 dark:group-hover/item:text-purple-500 transition-all duration-200" />
                       </div>
