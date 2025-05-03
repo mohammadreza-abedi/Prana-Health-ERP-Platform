@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest, queryClient } from '@/lib/queryClient';
-import { Loader2, ShoppingCart, Sparkles, Lock, Star, Coins } from 'lucide-react';
+import { Link } from 'wouter';
+import { Loader2, ShoppingCart, Sparkles, Lock, Star, Coins, ChevronRight, User } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ShopItem, Avatar as AvatarType, UserItem } from '@shared/avatar-schema';
@@ -211,6 +212,12 @@ export function AvatarShop() {
           <p className="text-muted-foreground">آیتم‌های جدید و ویژه را کشف کنید</p>
         </div>
         <div className="flex items-center gap-3">
+          <Button variant="outline" className="border-tiffany/30 text-tiffany" asChild>
+            <Link href="/avatar-studio">
+              <User className="h-5 w-5 ml-1" />
+              استودیوی آواتار
+            </Link>
+          </Button>
           <div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm p-2 rounded-lg border">
             <Coins className="w-5 h-5 text-yellow-500" />
             <span className="font-bold text-lg">{userData?.credits?.toLocaleString('fa-IR') || 0}</span>
