@@ -205,7 +205,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     {
       title: "سفارشی‌سازی آواتار",
       icon: <UserRound className="h-5 w-5" />,
-      path: "/avatar-customizer",
+      path: "/avatar-studio",
     },
     {
       title: "داشبورد HR",

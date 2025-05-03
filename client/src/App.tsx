@@ -16,8 +16,6 @@ import Challenges from "@/pages/Challenges";
 import Leaderboard from "@/pages/Leaderboard";
 import Profile from "@/pages/Profile";
 import UserProfile from "@/pages/UserProfile";
-import AvatarCustomizer from "@/pages/AvatarCustomizer";
-import AvatarEditor from "@/pages/AvatarEditor";
 import ProAvatarPage from "@/pages/ProAvatarPage";
 import AvatarShopPage from "@/pages/AvatarShopPage";
 import AutoLogin from "@/pages/auto-login";
@@ -74,8 +72,6 @@ function Router() {
         <Route path="/profile" component={Profile} />
         <Route path="/user-profile" component={UserProfile} />
         <Route path="/advanced-profile" component={AdvancedProfilePage} />
-        <Route path="/avatar-customizer" component={AvatarCustomizer} />
-        <Route path="/avatar-editor" component={AvatarEditor} />
         <Route path="/avatar-studio" component={ProAvatarPage} />
         <Route path="/avatar-shop" component={AvatarShopPage} />
         <Route path="/psychological-tests" component={PsychologicalTests} />
