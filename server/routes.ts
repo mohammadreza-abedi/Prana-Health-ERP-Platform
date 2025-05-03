@@ -589,12 +589,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Department routes
-  app.get('/api/departments', requireAuth, async (req, res) => {
+  app.get('/api/departments', async (req, res) => {
     try {
       const departments = await storage.getAllDepartments();
+      console.log("Departments data:", departments); // Debug log
       
       res.json(departments);
     } catch (error) {
+      console.error("Departments API error:", error);
       res.status(500).json({ message: 'Server error' });
     }
   });
@@ -716,14 +718,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Leaderboard route
-  app.get('/api/leaderboard', requireAuth, async (req, res) => {
+  app.get('/api/leaderboard', async (req, res) => {
     try {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
       
       const leaderboard = await storage.getLeaderboard(limit);
+      console.log("Leaderboard data:", leaderboard); // Debug log
       
       res.json(leaderboard);
     } catch (error) {
+      console.error("Leaderboard API error:", error);
       res.status(500).json({ message: 'Server error' });
     }
   });
