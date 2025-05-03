@@ -29,7 +29,7 @@ export interface ShopItemData {
   price: number;
   xpPrice?: number;
   category: string;
-  rarity: string;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
   requiredLevel?: number;
   isAvailable: boolean;
   isLimited?: boolean;
@@ -63,7 +63,7 @@ const AvatarShop: React.FC<AvatarShopProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [userItems, setUserItems] = useState<number[]>([]);
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
-  const [filterRarity, setFilterRarity] = useState<string | null>(null);
+  const [filterRarity, setFilterRarity] = useState<'common' | 'rare' | 'epic' | 'legendary' | null>(null);
 
   // داده‌های فروشگاه (در یک اپلیکیشن واقعی باید از API گرفته شود)
   const shopItems: ShopItemData[] = [
