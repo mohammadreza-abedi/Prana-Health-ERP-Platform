@@ -124,6 +124,7 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [location] = useLocation();
+  const pathname = location;
   const isMobile = useIsMobile();
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark" ||
@@ -1532,13 +1533,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
         </div>
         
-        {/* Page content with enhanced container and subtle decoration */}
+        {/* Page content with enhanced container and subtle decoration - optimized */}
         <div className="flex-1 p-6 relative">
           <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/20 dark:from-slate-800/30 to-transparent pointer-events-none"></div>
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/3 right-0 w-96 h-96 bg-tiffany/3 dark:bg-tiffany/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift"></div>
-            <div className="absolute top-2/3 left-0 w-64 h-64 bg-aqua/3 dark:bg-aqua/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift-slow"></div>
-          </div>
+          {/* Background effects - only applied to main layout, not duplicated in nested components */}
+          {pathname === '/' && (
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute top-1/3 right-0 w-96 h-96 bg-tiffany/3 dark:bg-tiffany/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift"></div>
+              <div className="absolute top-2/3 left-0 w-64 h-64 bg-aqua/3 dark:bg-aqua/5 rounded-full filter blur-3xl opacity-50 -z-10 animate-drift-slow"></div>
+            </div>
+          )}
           <div className="relative z-10">
             {children}
           </div>
