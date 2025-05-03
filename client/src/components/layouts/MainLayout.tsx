@@ -523,17 +523,21 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </Link>
                 </li>
                 
+                {/* بخش داشبوردهای پیشرفته - با طراحی بهبودیافته */}
+                <div className="mb-2 px-3">
+                  <h2 className="text-xs font-semibold text-slate-600 dark:text-slate-300">داشبوردهای پیشرفته</h2>
+                </div>
                 {/* دکمه داشبورد تحلیل پیشرفته */}
                 <li>
-                  <Link href="/advanced-analysis-dashboard">
+                  <Link href="/ai-analytics">
                     <div className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 relative group
-                      ${location === '/advanced-analysis-dashboard' 
+                      ${location === '/ai-analytics' 
                         ? "bg-gradient-to-l from-purple-500/90 to-violet-500 text-white shadow-lg shadow-purple-500/20 dark:shadow-purple-500/10 ring-1 ring-white/10"
                         : "hover:bg-white dark:hover:bg-slate-800/80 hover:shadow-md hover:scale-[1.02] dark:hover:shadow-black/5"
                       }`}
                     >
                       <div className={`relative z-10 transition-transform duration-300 group-hover:scale-110 ${
-                        location === '/advanced-analysis-dashboard' ? "text-white" : "text-slate-500 dark:text-slate-400"
+                        location === '/ai-analytics' ? "text-white" : "text-slate-500 dark:text-slate-400"
                       }`}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
                           <path d="M3 3v18h18"></path>
@@ -549,12 +553,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -5 }}
                           transition={{ duration: 0.3 }}
-                          className={`mr-3 font-medium tracking-wide ${location === '/advanced-analysis-dashboard' ? "text-white" : "group-hover:text-purple-500 dark:group-hover:text-purple-300"}`}
+                          className={`mr-3 font-medium tracking-wide ${location === '/ai-analytics' ? "text-white" : "group-hover:text-purple-500 dark:group-hover:text-purple-300"}`}
                         >
                           داشبورد تحلیل پیشرفته
                         </motion.span>
                       )}
-                      {location === '/advanced-analysis-dashboard' && (
+                      {location === '/ai-analytics' && (
                         <motion.div 
                           className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600 to-violet-400 overflow-hidden"
                           initial={{ opacity: 0 }}
@@ -564,12 +568,62 @@ export default function MainLayout({ children }: MainLayoutProps) {
                           <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px]"></div>
                         </motion.div>
                       )}
-                      {location !== '/advanced-analysis-dashboard' && (
+                      {location !== '/ai-analytics' && (
                         <div 
                           className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           style={{ zIndex: -1 }}
                         >
                           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-400/5 to-white/30 dark:from-purple-500/10 dark:to-slate-800/50"></div>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+                
+                {/* دکمه داشبورد HSE */}
+                <li>
+                  <Link href="/hse-smart-dashboard">
+                    <div className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 relative group
+                      ${location === '/hse-smart-dashboard' 
+                        ? "bg-gradient-to-l from-tiffany/90 to-green-500 text-white shadow-lg shadow-tiffany/20 dark:shadow-tiffany/10 ring-1 ring-white/10"
+                        : "hover:bg-white dark:hover:bg-slate-800/80 hover:shadow-md hover:scale-[1.02] dark:hover:shadow-black/5"
+                      }`}
+                    >
+                      <div className={`relative z-10 transition-transform duration-300 group-hover:scale-110 ${
+                        location === '/hse-smart-dashboard' ? "text-white" : "text-slate-500 dark:text-slate-400"
+                      }`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                          <path d="m9 12 2 2 4-4"></path>
+                        </svg>
+                      </div>
+                      {isExpanded && (
+                        <motion.span
+                          initial={{ opacity: 0, x: -5 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -5 }}
+                          transition={{ duration: 0.3 }}
+                          className={`mr-3 font-medium tracking-wide ${location === '/hse-smart-dashboard' ? "text-white" : "group-hover:text-tiffany dark:group-hover:text-tiffany-light"}`}
+                        >
+                          داشبورد هوشمند HSE
+                        </motion.span>
+                      )}
+                      {location === '/hse-smart-dashboard' && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-xl bg-gradient-to-r from-tiffany to-green-400 overflow-hidden"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px]"></div>
+                        </motion.div>
+                      )}
+                      {location !== '/hse-smart-dashboard' && (
+                        <div 
+                          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-tiffany/5 to-white/30 dark:from-tiffany/10 dark:to-slate-800/50"></div>
                         </div>
                       )}
                     </div>

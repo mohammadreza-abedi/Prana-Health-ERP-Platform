@@ -79,6 +79,7 @@ function Router() {
         <Route path="/hse-smart-dashboard" component={HSESmartDashboard} />
         <Route path="/weather-info" component={WeatherInfo} />
         <Route path="/ai-analytics" component={AIAnalyticsDashboard} />
+        <Route path="/advanced-analysis-dashboard" component={AIAnalyticsDashboard} />
         <Route path="/gamification" component={GamificationHub} />
         <Route component={NotFound} />
       </Switch>
