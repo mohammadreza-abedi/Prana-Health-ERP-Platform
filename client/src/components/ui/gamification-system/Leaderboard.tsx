@@ -18,7 +18,8 @@ import {
   Share2, 
   ArrowUp, 
   ArrowDown, 
-  Minus 
+  Minus,
+  Star
 } from 'lucide-react';
 
 export interface LeaderboardUser {
