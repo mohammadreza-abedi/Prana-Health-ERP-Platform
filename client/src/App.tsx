@@ -19,6 +19,7 @@ import UserProfile from "@/pages/UserProfile";
 import AvatarCustomizer from "@/pages/AvatarCustomizer";
 import AvatarEditor from "@/pages/AvatarEditor";
 import ProAvatarPage from "@/pages/ProAvatarPage";
+import AvatarShopPage from "@/pages/AvatarShopPage";
 import AutoLogin from "@/pages/auto-login";
 import PsychologicalTests from "@/pages/PsychologicalTests";
 import Settings from "@/pages/Settings";
@@ -76,6 +77,7 @@ function Router() {
         <Route path="/avatar-customizer" component={AvatarCustomizer} />
         <Route path="/avatar-editor" component={AvatarEditor} />
         <Route path="/avatar-studio" component={ProAvatarPage} />
+        <Route path="/avatar-shop" component={AvatarShopPage} />
         <Route path="/psychological-tests" component={PsychologicalTests} />
         <Route path="/settings" component={Settings} />
         <Route path="/auto-login" component={AutoLogin} />

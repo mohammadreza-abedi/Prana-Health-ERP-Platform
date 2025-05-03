@@ -3,7 +3,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { AvatarStudio } from '@/components/ui/avatar-pro-system/AvatarStudio';
-import { ChevronRight, User, Users, Sparkles, LayoutDashboard, UserCog, Save } from 'lucide-react';
+import { ChevronRight, User, Users, Sparkles, LayoutDashboard, UserCog, Save, ShoppingCart } from 'lucide-react';
 import { Link } from 'wouter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -138,6 +138,13 @@ export default function ProAvatarPage() {
               <Link href="/profile">
                 <ChevronRight className="h-5 w-5 ml-1" />
                 بازگشت به پروفایل
+              </Link>
+            </Button>
+
+            <Button variant="outline" className="ml-2 bg-amber-50 hover:bg-amber-100 text-amber-600 hover:text-amber-700 border-amber-200" asChild>
+              <Link href="/avatar-shop">
+                <ShoppingCart className="h-5 w-5 ml-1" />
+                فروشگاه آواتار
               </Link>
             </Button>
 
