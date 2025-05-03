@@ -1421,63 +1421,128 @@ export default function MainLayout({ children }: MainLayoutProps) {
               </div>
             </div>
             
-            {/* Enhanced modern fluid tab navigation with improved aesthetics */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-1 space-x-reverse p-1.5 bg-white/70 dark:bg-slate-800/60 rounded-xl border border-slate-200/60 dark:border-slate-700/40 backdrop-blur-xl shadow-sm relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-tiffany/3 via-aqua/2 to-tiffany/3 dark:from-tiffany/5 dark:via-aqua/3 dark:to-tiffany/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            {/* Enhanced modern fluid tab navigation with improved aesthetics and 2025 design trends */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-1 space-x-reverse p-1.5 bg-white/80 dark:bg-slate-800/70 rounded-2xl border border-slate-200/60 dark:border-slate-700/40 backdrop-blur-xl shadow-md relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-r from-tiffany/5 via-aqua/3 to-tiffany/5 dark:from-tiffany/10 dark:via-aqua/5 dark:to-tiffany/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                 
+                {/* Dashboard Button with enhanced styling */}
                 <Link href="/enhanced-dashboard" className="block">
-                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/' || location === '/enhanced-dashboard' ? 'bg-tiffany/10 dark:bg-tiffany/15 text-tiffany dark:text-tiffany-light shadow-sm' : 'hover:bg-tiffany/10 dark:hover:bg-tiffany/15 hover:text-tiffany dark:hover:text-tiffany-light'} relative overflow-hidden z-10 font-medium transition-all duration-300 hover:shadow-sm`}>
-                    <div className="absolute inset-0 bg-gradient-to-r from-tiffany/10 to-aqua/10 dark:from-tiffany/20 dark:to-aqua/15 opacity-50"></div>
-                    <LayoutDashboard className="h-4 w-4 ml-1.5 relative z-10" />
+                  <Button variant="ghost" size="sm" className={`rounded-xl ${location === '/' || location === '/enhanced-dashboard' ? 'bg-gradient-to-r from-tiffany/15 to-aqua/15 dark:from-tiffany/25 dark:to-aqua/20 text-tiffany dark:text-tiffany-light shadow-md ring-1 ring-tiffany/20 dark:ring-tiffany/30' : 'hover:bg-gradient-to-r hover:from-tiffany/10 hover:to-aqua/10 dark:hover:from-tiffany/20 dark:hover:to-aqua/15 hover:text-tiffany dark:hover:text-tiffany-light hover:shadow-sm'} relative overflow-hidden z-10 font-medium transition-all duration-300`}>
+                    <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/30 opacity-20 z-0"></div>
+                    <LayoutDashboard className="h-5 w-5 ml-1.5 relative z-10" />
                     <span className="relative z-10">میز کار</span>
+                    {(location === '/' || location === '/enhanced-dashboard') && 
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-tiffany to-aqua animate-pulse"></div>
+                    }
                   </Button>
                 </Link>
                 
+                {/* Health Dashboard Button with enhanced styling */}
                 <Link href="/health-dashboard" className="block">
-                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/health-dashboard' ? 'bg-rose-500/10 dark:bg-rose-500/15 text-rose-500 dark:text-rose-400 shadow-sm' : 'hover:bg-slate-100/80 dark:hover:bg-slate-700/80'} transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden`}>
-                    <Heart className={`h-4 w-4 ml-1.5 ${location === '/health-dashboard' ? 'text-rose-500' : 'group-hover/btn:text-rose-500'} transition-colors duration-300`} />
-                    <span className="group-hover/btn:font-medium transition-all duration-300">سلامت شغلی</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-rose-500/5 to-rose-400/5 dark:from-rose-500/10 dark:to-rose-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  <Button variant="ghost" size="sm" className={`rounded-xl ${location === '/health-dashboard' ? 'bg-gradient-to-r from-rose-500/15 to-red-400/15 dark:from-rose-500/25 dark:to-red-400/20 text-rose-500 dark:text-rose-400 shadow-md ring-1 ring-rose-500/20 dark:ring-rose-500/30' : 'hover:bg-gradient-to-r hover:from-rose-500/10 hover:to-red-400/10 dark:hover:from-rose-500/20 dark:hover:to-red-400/15 hover:text-rose-500 dark:hover:text-rose-400 hover:shadow-sm'} transition-all duration-300 relative group/btn overflow-hidden`}>
+                    <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/30 opacity-20 z-0"></div>
+                    <Heart className={`h-5 w-5 ml-1.5 ${location === '/health-dashboard' ? 'text-rose-500' : 'group-hover/btn:text-rose-500'} transition-colors duration-300 relative z-10`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300 relative z-10">سلامت شغلی</span>
+                    {location === '/health-dashboard' && 
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-rose-500 to-red-400 animate-pulse"></div>
+                    }
                   </Button>
                 </Link>
                 
+                {/* Education Button with enhanced styling */}
                 <Link href="/psychological-tests" className="block">
-                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/psychological-tests' ? 'bg-blue-500/10 dark:bg-blue-500/15 text-blue-500 dark:text-blue-400 shadow-sm' : 'hover:bg-slate-100/80 dark:hover:bg-slate-700/80'} transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden`}>
-                    <GraduationCap className={`h-4 w-4 ml-1.5 ${location === '/psychological-tests' ? 'text-blue-500' : 'group-hover/btn:text-blue-500'} transition-colors duration-300`} />
-                    <span className="group-hover/btn:font-medium transition-all duration-300">آموزش</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-blue-400/5 dark:from-blue-500/10 dark:to-blue-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  <Button variant="ghost" size="sm" className={`rounded-xl ${location === '/psychological-tests' ? 'bg-gradient-to-r from-blue-500/15 to-sky-400/15 dark:from-blue-500/25 dark:to-sky-400/20 text-blue-500 dark:text-blue-400 shadow-md ring-1 ring-blue-500/20 dark:ring-blue-500/30' : 'hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-sky-400/10 dark:hover:from-blue-500/20 dark:hover:to-sky-400/15 hover:text-blue-500 dark:hover:text-blue-400 hover:shadow-sm'} transition-all duration-300 relative group/btn overflow-hidden`}>
+                    <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/30 opacity-20 z-0"></div>
+                    <GraduationCap className={`h-5 w-5 ml-1.5 ${location === '/psychological-tests' ? 'text-blue-500' : 'group-hover/btn:text-blue-500'} transition-colors duration-300 relative z-10`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300 relative z-10">آموزش</span>
+                    {location === '/psychological-tests' && 
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-sky-400 animate-pulse"></div>
+                    }
                   </Button>
                 </Link>
                 
+                {/* Achievements Button with enhanced styling */}
                 <Link href="/achievements" className="block">
-                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/achievements' ? 'bg-yellow-500/10 dark:bg-yellow-500/15 text-yellow-500 dark:text-yellow-400 shadow-sm' : 'hover:bg-slate-100/80 dark:hover:bg-slate-700/80'} transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden`}>
-                    <Trophy className={`h-4 w-4 ml-1.5 ${location === '/achievements' ? 'text-yellow-500' : 'group-hover/btn:text-yellow-500'} transition-colors duration-300`} />
-                    <span className="group-hover/btn:font-medium transition-all duration-300">دستاوردها</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-yellow-400/5 dark:from-yellow-500/10 dark:to-yellow-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  <Button variant="ghost" size="sm" className={`rounded-xl ${location === '/achievements' ? 'bg-gradient-to-r from-amber-500/15 to-yellow-400/15 dark:from-amber-500/25 dark:to-yellow-400/20 text-amber-500 dark:text-amber-400 shadow-md ring-1 ring-amber-500/20 dark:ring-amber-500/30' : 'hover:bg-gradient-to-r hover:from-amber-500/10 hover:to-yellow-400/10 dark:hover:from-amber-500/20 dark:hover:to-yellow-400/15 hover:text-amber-500 dark:hover:text-amber-400 hover:shadow-sm'} transition-all duration-300 relative group/btn overflow-hidden`}>
+                    <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/30 opacity-20 z-0"></div>
+                    <Trophy className={`h-5 w-5 ml-1.5 ${location === '/achievements' ? 'text-amber-500' : 'group-hover/btn:text-amber-500'} transition-colors duration-300 relative z-10`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300 relative z-10">دستاوردها</span>
+                    {location === '/achievements' && 
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 to-yellow-400 animate-pulse"></div>
+                    }
                   </Button>
                 </Link>
                 
+                {/* Department Button with enhanced styling */}
                 <Link href="/organizational-health" className="block">
-                  <Button variant="ghost" size="sm" className={`rounded-lg ${location === '/organizational-health' ? 'bg-violet-500/10 dark:bg-violet-500/15 text-violet-500 dark:text-violet-400 shadow-sm' : 'hover:bg-slate-100/80 dark:hover:bg-slate-700/80'} transition-all duration-300 hover:shadow-sm relative group/btn overflow-hidden`}>
-                    <Users className={`h-4 w-4 ml-1.5 ${location === '/organizational-health' ? 'text-violet-500' : 'group-hover/btn:text-violet-500'} transition-colors duration-300`} />
-                    <span className="group-hover/btn:font-medium transition-all duration-300">دپارتمان</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-violet-400/5 dark:from-violet-500/10 dark:to-violet-400/10 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  <Button variant="ghost" size="sm" className={`rounded-xl ${location === '/organizational-health' ? 'bg-gradient-to-r from-violet-500/15 to-purple-400/15 dark:from-violet-500/25 dark:to-purple-400/20 text-violet-500 dark:text-violet-400 shadow-md ring-1 ring-violet-500/20 dark:ring-violet-500/30' : 'hover:bg-gradient-to-r hover:from-violet-500/10 hover:to-purple-400/10 dark:hover:from-violet-500/20 dark:hover:to-purple-400/15 hover:text-violet-500 dark:hover:text-violet-400 hover:shadow-sm'} transition-all duration-300 relative group/btn overflow-hidden`}>
+                    <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/30 opacity-20 z-0"></div>
+                    <Users className={`h-5 w-5 ml-1.5 ${location === '/organizational-health' ? 'text-violet-500' : 'group-hover/btn:text-violet-500'} transition-colors duration-300 relative z-10`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300 relative z-10">دپارتمان</span>
+                    {location === '/organizational-health' && 
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-500 to-purple-400 animate-pulse"></div>
+                    }
                   </Button>
                 </Link>
                 
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="sm" className="rounded-full w-8 h-8 p-0 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-all duration-300">
-                        <ChevronDown className="h-4 w-4 transition-transform duration-300 hover:scale-110" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" className="px-3 py-1.5 rounded-lg bg-white/95 dark:bg-slate-800/95 text-sm font-medium text-slate-700 dark:text-slate-200 shadow-lg border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-xl">
-                      <p>بخش‌های بیشتر</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                {/* NEW: Gamification System Button with enhanced styling */}
+                <Link href="/gamification-system" className="block">
+                  <Button variant="ghost" size="sm" className={`rounded-xl ${location === '/gamification-system' ? 'bg-gradient-to-r from-emerald-500/15 to-green-400/15 dark:from-emerald-500/25 dark:to-green-400/20 text-emerald-500 dark:text-emerald-400 shadow-md ring-1 ring-emerald-500/20 dark:ring-emerald-500/30' : 'hover:bg-gradient-to-r hover:from-emerald-500/10 hover:to-green-400/10 dark:hover:from-emerald-500/20 dark:hover:to-green-400/15 hover:text-emerald-500 dark:hover:text-emerald-400 hover:shadow-sm'} transition-all duration-300 relative group/btn overflow-hidden`}>
+                    <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/30 opacity-20 z-0"></div>
+                    <Award className={`h-5 w-5 ml-1.5 ${location === '/gamification-system' ? 'text-emerald-500' : 'group-hover/btn:text-emerald-500'} transition-colors duration-300 relative z-10`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300 relative z-10">گیمیفیکیشن</span>
+                    {location === '/gamification-system' && 
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-emerald-500 to-green-400 animate-pulse"></div>
+                    }
+                  </Button>
+                </Link>
+                
+                {/* AI Analytics Button with enhanced styling */}
+                <Link href="/ai-analytics" className="block">
+                  <Button variant="ghost" size="sm" className={`rounded-xl ${location === '/ai-analytics' || location === '/advanced-analysis-dashboard' ? 'bg-gradient-to-r from-cyan-500/15 to-teal-400/15 dark:from-cyan-500/25 dark:to-teal-400/20 text-cyan-500 dark:text-cyan-400 shadow-md ring-1 ring-cyan-500/20 dark:ring-cyan-500/30' : 'hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-teal-400/10 dark:hover:from-cyan-500/20 dark:hover:to-teal-400/15 hover:text-cyan-500 dark:hover:text-cyan-400 hover:shadow-sm'} transition-all duration-300 relative group/btn overflow-hidden`}>
+                    <div className="absolute inset-0 bg-white/50 dark:bg-slate-900/30 opacity-20 z-0"></div>
+                    <BarChart className={`h-5 w-5 ml-1.5 ${location === '/ai-analytics' || location === '/advanced-analysis-dashboard' ? 'text-cyan-500' : 'group-hover/btn:text-cyan-500'} transition-colors duration-300 relative z-10`} />
+                    <span className="group-hover/btn:font-medium transition-all duration-300 relative z-10">تحلیل هوشمند</span>
+                    {(location === '/ai-analytics' || location === '/advanced-analysis-dashboard') && 
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 to-teal-400 animate-pulse"></div>
+                    }
+                  </Button>
+                </Link>
+                
+                {/* More sections dropdown with enhanced styling */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="rounded-xl w-10 h-10 p-0 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-all duration-300 hover:shadow-sm">
+                      <ChevronDown className="h-5 w-5 transition-transform duration-300 hover:scale-110" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56 p-2 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/40 rounded-xl shadow-xl">
+                    <div className="text-sm font-medium px-2 py-1.5 text-slate-500 dark:text-slate-400">بخش‌های بیشتر</div>
+                    <DropdownMenuSeparator className="bg-slate-200/60 dark:bg-slate-700/60 my-1" />
+                    
+                    <DropdownMenuItem className="rounded-lg cursor-pointer focus:bg-slate-100/80 dark:focus:bg-slate-700/80 py-2 px-2.5 transition-all duration-200 flex gap-2 items-center">
+                      <div className="p-1.5 rounded-md bg-gradient-to-r from-orange-500/10 to-red-400/10 dark:from-orange-500/20 dark:to-red-400/15">
+                        <Activity className="h-4 w-4 text-orange-500" />
+                      </div>
+                      <span>چالش‌ها</span>
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem className="rounded-lg cursor-pointer focus:bg-slate-100/80 dark:focus:bg-slate-700/80 py-2 px-2.5 transition-all duration-200 flex gap-2 items-center">
+                      <div className="p-1.5 rounded-md bg-gradient-to-r from-pink-500/10 to-rose-400/10 dark:from-pink-500/20 dark:to-rose-400/15">
+                        <User className="h-4 w-4 text-pink-500" />
+                      </div>
+                      <span>پروفایل</span>
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem className="rounded-lg cursor-pointer focus:bg-slate-100/80 dark:focus:bg-slate-700/80 py-2 px-2.5 transition-all duration-200 flex gap-2 items-center">
+                      <div className="p-1.5 rounded-md bg-gradient-to-r from-indigo-500/10 to-blue-400/10 dark:from-indigo-500/20 dark:to-blue-400/15">
+                        <Settings className="h-4 w-4 text-indigo-500" />
+                      </div>
+                      <span>تنظیمات</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               
               {/* Enhanced Quick Actions with modern UI effects */}
