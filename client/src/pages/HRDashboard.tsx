@@ -148,7 +148,7 @@ export default function HRDashboard() {
       >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold mb-2">داشبورد مدیریتی HR/HSE</h1>
+            <h1 className="text-2xl font-bold mb-2">داشبورد هوشمند HR</h1>
             <p className="text-slate-500 dark:text-slate-400">
               گزارش عملکرد سلامت سازمانی - {getCurrentMonthName()} {new Date().getFullYear()}
             </p>
