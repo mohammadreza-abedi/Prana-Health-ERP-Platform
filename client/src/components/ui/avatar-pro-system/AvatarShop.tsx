@@ -10,7 +10,6 @@ import { Loader2, ShoppingCart, Sparkles, Lock, Star, Coins } from 'lucide-react
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { ShopItem, Avatar as AvatarType, UserItem } from '@shared/avatar-schema';
-import { AvatarPreview } from './AvatarPreview';
 
 const rarityColors = {
   common: 'bg-slate-400 text-slate-900',

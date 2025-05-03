@@ -28,9 +28,9 @@ export const AvatarPreview: React.FC<AvatarPreviewProps> = ({
   
   // پیدا کردن مسیر تصویر
   const imagePath = 'imagePath' in avatar 
-    ? avatar.imagePath 
+    ? avatar.imagePath as string
     : 'avatarPath' in avatar 
-      ? avatar.avatarPath 
+      ? avatar.avatarPath as string
       : '';
       
   // پیدا کردن نام
@@ -41,7 +41,7 @@ export const AvatarPreview: React.FC<AvatarPreviewProps> = ({
       : 'آواتار';
   
   // پیدا کردن رتبه کمیابی
-  const rarity = 'rarity' in avatar ? avatar.rarity : undefined;
+  const rarity = 'rarity' in avatar ? avatar.rarity as string : undefined;
       
   // رنگ‌های متناسب با کمیابی
   const rarityColors = {

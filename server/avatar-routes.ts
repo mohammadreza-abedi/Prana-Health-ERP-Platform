@@ -1,6 +1,16 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { db } from './db';
 import { eq, desc, and } from 'drizzle-orm';
+
+// گسترش تایپ Request برای پشتیبانی از isAuthenticated و user
+declare global {
+  namespace Express {
+    interface Request {
+      isAuthenticated(): boolean;
+      user: any;
+    }
+  }
+}
 import { 
   avatars, 
   shopItems, 

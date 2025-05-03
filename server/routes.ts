@@ -7,6 +7,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 import gamificationRoutes from "./routes/gamification";
 import aiService from "./ai";
+import { avatarRouter } from "./avatar-routes";
 import { 
   insertUserSchema, 
   insertHealthMetricsSchema, 
@@ -1085,6 +1086,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // ثبت مسیرهای مربوط به آواتار
+  app.use('/api', avatarRouter);
 
   const httpServer = createServer(app);
 
