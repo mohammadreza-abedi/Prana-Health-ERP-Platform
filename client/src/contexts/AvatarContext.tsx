@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+
+export interface Avatar {
+  id?: number;
+  imageUrl: string;
+  name: string;
+  level?: number;
+}
 
 export interface AvatarContextType {
   activeAvatarUrl: string;
@@ -7,15 +14,20 @@ export interface AvatarContextType {
   setAvatarName: (name: string) => void;
   avatarLevel: number;
   setAvatarLevel: (level: number) => void;
+  activeAvatar: Avatar | null;
 }
 
+// Use a default avatar from attached assets
+import defaultAvatarImage from '@assets/Pria Rambut Pendek.png';
+
 const defaultContext: AvatarContextType = {
-  activeAvatarUrl: '/avatar-images/Pria Gimbal Kacamata.png',
+  activeAvatarUrl: defaultAvatarImage,
   setActiveAvatarUrl: () => {},
   avatarName: 'کاراکتر سبز',
   setAvatarName: () => {},
   avatarLevel: 1,
   setAvatarLevel: () => {},
+  activeAvatar: null,
 };
 
 export const AvatarContext = createContext<AvatarContextType>(defaultContext);
@@ -31,6 +43,15 @@ export const AvatarProvider: React.FC<AvatarProviderProps> = ({ children }) => {
   const [activeAvatarUrl, setActiveAvatarUrl] = useState<string>(defaultContext.activeAvatarUrl);
   const [avatarName, setAvatarName] = useState<string>(defaultContext.avatarName);
   const [avatarLevel, setAvatarLevel] = useState<number>(defaultContext.avatarLevel);
+
+  // Calculate the active avatar based on current state
+  const activeAvatar: Avatar | null = useMemo(() => {
+    return {
+      imageUrl: activeAvatarUrl,
+      name: avatarName,
+      level: avatarLevel
+    };
+  }, [activeAvatarUrl, avatarName, avatarLevel]);
 
   // ذخیره‌ی تنظیمات در localStorage
   useEffect(() => {
@@ -64,7 +85,8 @@ export const AvatarProvider: React.FC<AvatarProviderProps> = ({ children }) => {
         avatarName, 
         setAvatarName, 
         avatarLevel, 
-        setAvatarLevel 
+        setAvatarLevel,
+        activeAvatar
       }}
     >
       {children}

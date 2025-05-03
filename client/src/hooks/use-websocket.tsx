@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef, createContext, useContext, ReactNode } from 'react';
-import { useAuth } from '../lib/useAuth';
+// Comment out useAuth to prevent API requests
+// import { useAuth } from '../lib/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 // Types for websocket messages
@@ -41,7 +42,8 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
   const [connectionError, setConnectionError] = useState<string | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
-  const { user } = useAuth();
+  // Mock user data instead of using useAuth
+  const user = { id: 1, username: 'demo_user' };
   const { toast } = useToast();
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const maxRetries = 3;
@@ -210,40 +212,17 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   
   // Connect when component mounts
   useEffect(() => {
-    // تلاش برای اتصال وب‌سوکت غیرفعال شده است تا عملکرد اصلی برنامه حفظ شود
-    // اتصال وب‌سوکت را غیرفعال می‌کنیم تا صفحه بدون خطا بارگذاری شود
-    // setTimeout(() => {
-    //   connectWebSocket();
-    // }, 1000);
+    // اتصال وب‌سوکت کاملاً غیرفعال شده است تا برنامه بدون خطا بارگذاری شود
+    console.log('WebSocket functionality is disabled to prevent connection errors');
     
-    // Set up ping interval - but we're disabling it for now
-    const pingInterval = setInterval(() => {
-      // Temporarily disabled
-      // if (isConnected && socketRef.current?.readyState === WebSocket.OPEN) {
-      //   sendPing();
-      // } else if (socketRef.current?.readyState !== WebSocket.CONNECTING) {
-      //   connectWebSocket();
-      // }
-    }, 15000);
-    
-    // Clean up on unmount
+    // No connection attempted, no ping interval
     return () => {
-      clearInterval(pingInterval);
-      
+      // No cleanup needed since we're not connecting
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
-      
-      if (socketRef.current) {
-        socketRef.current.onclose = null;
-        socketRef.current.onerror = null;
-        socketRef.current.onmessage = null;
-        socketRef.current.onopen = null;
-        socketRef.current.close();
-        socketRef.current = null;
-      }
     };
-  }, [connectWebSocket]);
+  }, []);
   
   // Reconnect when user changes
   useEffect(() => {

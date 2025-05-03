@@ -95,15 +95,14 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <WebSocketProvider>
-        <AvatarProvider>
-          <TooltipProvider>
-            <Toaster />
-            <PWAManager />
-            <Router />
-          </TooltipProvider>
-        </AvatarProvider>
-      </WebSocketProvider>
+      {/* Temporarily removed WebSocketProvider to prevent connection issues */}
+      <AvatarProvider>
+        <TooltipProvider>
+          <Toaster />
+          <PWAManager />
+          <Router />
+        </TooltipProvider>
+      </AvatarProvider>
     </QueryClientProvider>
   );
 }
