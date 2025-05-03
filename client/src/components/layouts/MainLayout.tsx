@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import PWAInstallButton from "@/components/pwa/PWAInstallButton";
+import { useAvatar } from "@/contexts/AvatarContext";
 import {
   Home,
   Award,
@@ -133,6 +134,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [showHealthReminders, setShowHealthReminders] = useState(true);
   const { toast } = useToast();
   const { user, logout } = useAuth();
+  const { activeAvatarUrl, avatarName } = useAvatar();
   
   // نوتیفیکیشن‌های سیستم
   const { 
@@ -278,8 +280,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
           {/* User info */}
           <div className={`px-4 py-3 flex items-center ${isExpanded ? 'justify-start' : 'justify-center'}`}>
-            <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/20 to-aqua/10 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800`}>
-              <span>م</span>
+            <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/10 to-aqua/5 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800 overflow-hidden`}>
+              {activeAvatarUrl ? (
+                <img 
+                  src={activeAvatarUrl} 
+                  alt={avatarName || "آواتار کاربر"}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span>م</span>
+              )}
               <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white dark:border-slate-800"></div>
             </div>
             
@@ -290,7 +300,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 exit={{ opacity: 0 }}
                 className="mr-3 overflow-hidden"
               >
-                <h3 className="text-sm font-bold truncate">مدیر سیستم</h3>
+                <h3 className="text-sm font-bold truncate">
+                  {avatarName || "مدیر سیستم"}
+                </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
                   پرانا - دستیار هوشمند سلامت
                 </p>
