@@ -159,68 +159,245 @@ const teamInsights = [
 
 const DashboardHeader = () => {
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0 mb-6">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
-          داشبورد سلامت و تندرستی
-        </h1>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">
-          وضعیت سلامتی خود را پیگیری کنید و به اهداف خود برسید
-        </p>
-      </div>
+    <div className="relative z-10">
+      {/* افکت های پس زمینه */}
+      <div className="absolute -top-10 -right-10 w-60 h-60 bg-gradient-radial from-rose-500/5 to-transparent rounded-full blur-3xl"></div>
+      <div className="absolute -bottom-20 -left-10 w-60 h-60 bg-gradient-radial from-tiffany/5 to-transparent rounded-full blur-3xl"></div>
       
-      <div className="flex items-center space-x-3 space-x-reverse">
-        <Select defaultValue="today">
-          <SelectTrigger className="w-[140px] h-9 text-sm bg-white dark:bg-slate-800">
-            <SelectValue placeholder="بازه زمانی" />
-          </SelectTrigger>
-          <SelectContent align="end">
-            <SelectItem value="today">امروز</SelectItem>
-            <SelectItem value="week">هفته جاری</SelectItem>
-            <SelectItem value="month">ماه جاری</SelectItem>
-            <SelectItem value="quarter">سه ماهه اخیر</SelectItem>
-          </SelectContent>
-        </Select>
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0 mb-10 relative z-10"
+      >
+        <div className="relative">
+          {/* خط تزئینی */}
+          <div className="absolute -left-3 top-0 bottom-0 w-1 overflow-hidden">
+            <div className="h-full w-full bg-gradient-to-b from-transparent via-tiffany/40 to-transparent"></div>
+            <motion.div
+              className="absolute top-0 h-[30%] w-full bg-gradient-to-b from-transparent via-white/40 to-transparent"
+              animate={{ y: ['-100%', '400%'] }}
+              transition={{ 
+                duration: 3, 
+                ease: "easeInOut", 
+                repeat: Infinity,
+              }}
+            />
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-tiffany via-aqua to-blue-500 relative">
+            داشبورد سلامت و تندرستی
+            <motion.span
+              className="absolute -top-1 -right-2 text-sm text-rose-400"
+              animate={{ 
+                y: [0, -3, 0],
+                opacity: [1, 0.7, 1]
+              }}
+              transition={{ 
+                duration: 2, 
+                ease: "easeInOut", 
+                repeat: Infinity 
+              }}
+            >
+              <Sparkles className="h-5 w-5" />
+            </motion.span>
+          </h1>
+          
+          <motion.p 
+            className="text-slate-500 dark:text-slate-400 mt-2 mr-1 max-w-lg relative"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            وضعیت سلامتی خود را پیگیری کنید و به اهداف خود برسید
+            <motion.div 
+              className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-300 dark:via-slate-600 to-transparent"
+              animate={{ 
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{ 
+                duration: 3, 
+                ease: "easeInOut", 
+                repeat: Infinity 
+              }}
+            />
+          </motion.p>
+        </div>
         
-        <Button variant="outline" size="sm" className="h-9">
-          <Calendar className="h-4 w-4 ml-1" />
-          <span>انتخاب تاریخ</span>
-        </Button>
-        
-        <Button className="h-9 bg-tiffany text-white hover:bg-tiffany-hover">
-          <Activity className="h-4 w-4 ml-1" />
-          <span>ثبت داده جدید</span>
-        </Button>
-      </div>
+        <motion.div 
+          className="flex items-center space-x-3 space-x-reverse"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+        >
+          <Select defaultValue="today">
+            <SelectTrigger className="w-[140px] h-10 text-sm bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-xl">
+              <SelectValue placeholder="بازه زمانی" />
+            </SelectTrigger>
+            <SelectContent align="end" className="rounded-xl border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm">
+              <motion.div 
+                className="absolute inset-0 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl z-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
+              />
+              <div className="relative z-10">
+                <SelectItem value="today">امروز</SelectItem>
+                <SelectItem value="week">هفته جاری</SelectItem>
+                <SelectItem value="month">ماه جاری</SelectItem>
+                <SelectItem value="quarter">سه ماهه اخیر</SelectItem>
+              </div>
+            </SelectContent>
+          </Select>
+          
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            <Button variant="outline" size="sm" className="h-10 px-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all rounded-xl">
+              <Calendar className="h-4 w-4 ml-2 text-tiffany dark:text-tiffany-light" />
+              <span>انتخاب تاریخ</span>
+            </Button>
+          </motion.div>
+          
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+            <Button className="h-10 px-4 bg-gradient-to-r from-tiffany to-aqua hover:from-tiffany-hover hover:to-aqua-light text-white shadow-md hover:shadow-lg transition-all duration-300 rounded-xl border-0 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-black/5 to-transparent" />
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                initial={{ x: '-100%' }}
+                whileHover={{ x: '100%' }}
+                transition={{ duration: 0.6 }}
+              />
+              <Activity className="h-4 w-4 ml-2 relative z-10" />
+              <span className="relative z-10">ثبت داده جدید</span>
+            </Button>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
 
 const InsightCard = ({ insight }: { insight: any }) => {
+  // مشخص کردن رنگ‌های مناسب برای هر نوع بینش
+  const getCardStyle = () => {
+    if (insight.id === '1') return { color: 'tiffany', icon: <Activity className="h-5 w-5" /> };
+    if (insight.id === '2') return { color: 'aqua', icon: <Heart className="h-5 w-5" /> };
+    if (insight.id === '3') return { color: 'amber', icon: <Clock className="h-5 w-5" /> };
+    if (insight.id === '4') return { color: 'fuchsia', icon: <Sparkles className="h-5 w-5" /> };
+    return { color: 'tiffany', icon: <Activity className="h-5 w-5" /> };
+  };
+
+  const { color, icon } = getCardStyle();
+  const colorMap = {
+    tiffany: {
+      bg: 'bg-tiffany',
+      bgLight: 'bg-tiffany/10 dark:bg-tiffany/20',
+      text: 'text-tiffany dark:text-tiffany-light',
+      gradient: 'from-tiffany to-cyan-500'
+    },
+    aqua: {
+      bg: 'bg-aqua',
+      bgLight: 'bg-aqua/10 dark:bg-aqua/20',
+      text: 'text-aqua dark:text-aqua-light',
+      gradient: 'from-aqua to-blue-500'
+    },
+    amber: {
+      bg: 'bg-amber-500',
+      bgLight: 'bg-amber-500/10 dark:bg-amber-500/20',
+      text: 'text-amber-500 dark:text-amber-400',
+      gradient: 'from-amber-500 to-orange-500'
+    },
+    fuchsia: {
+      bg: 'bg-fuchsia-500',
+      bgLight: 'bg-fuchsia-500/10 dark:bg-fuchsia-500/20',
+      text: 'text-fuchsia-500 dark:text-fuchsia-400',
+      gradient: 'from-fuchsia-500 to-pink-500'
+    }
+  };
+
+  const colorStyle = colorMap[color];
+  const isPositive = insight.impactType === 'positive';
+  const trendColor = isPositive ? 'text-success dark:text-success-light' : 'text-error dark:text-error-light';
+  
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-slate-600 dark:text-slate-400">{insight.title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-end">
-          <div className="text-2xl font-bold">{insight.value}</div>
-          <div className="text-xs text-slate-500 dark:text-slate-400 mr-1 mb-1">{insight.unit}</div>
+    <motion.div
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      className="group"
+    >
+      <Card className={`overflow-hidden relative shadow-sm hover:shadow-md transition-all duration-300 border-slate-200 dark:border-slate-700 ${isPositive ? 'hover:border-success/30' : 'hover:border-error/30'}`}>
+        {/* پس زمینه گرادیانی متحرک */}
+        <div className={`absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br ${colorStyle.gradient} rounded-full blur-3xl opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+        
+        {/* خط تزئینی بالای کارت */}
+        <div className="absolute top-0 left-0 right-0 h-0.5 overflow-hidden">
+          <div className={`h-full w-full ${colorStyle.bgLight}`}></div>
+          <motion.div 
+            className={`absolute top-0 h-full w-20 ${colorStyle.bg} opacity-40`}
+            animate={{ x: ['-100%', '300%'] }}
+            transition={{ 
+              duration: 3, 
+              ease: "easeInOut", 
+              repeat: Infinity,
+              repeatDelay: 1
+            }}
+          />
         </div>
-        <div className={`mt-2 text-xs ${insight.impactType === 'positive' ? 'text-success dark:text-success-light' : 'text-error dark:text-error-light'} flex items-center`}>
-          {insight.trend === 'up' ? (
-            <svg className="w-3 h-3 mr-0.5" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5l7 7-1.41 1.41L13 8.83V19h-2V8.83l-4.59 4.58L5 12l7-7z" fill="currentColor"/>
-            </svg>
-          ) : (
-            <svg className="w-3 h-3 mr-0.5" viewBox="0 0 24 24" fill="none">
-              <path d="M12 19l-7-7 1.41-1.41L11 15.17V5h2v10.17l4.59-4.58L19 12l-7 7z" fill="currentColor"/>
-            </svg>
-          )}
-          <span>{insight.comparison}</span>
-        </div>
-      </CardContent>
-    </Card>
+        
+        <CardHeader className="pb-1 relative">
+          <div className="flex items-center space-x-2 space-x-reverse">
+            <div className={`p-1.5 rounded-full ${colorStyle.bgLight}`}>
+              <div className={colorStyle.text}>
+                {icon}
+              </div>
+            </div>
+            <CardTitle className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              {insight.title}
+            </CardTitle>
+          </div>
+        </CardHeader>
+        
+        <CardContent>
+          <div className="flex items-end">
+            <motion.div 
+              className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-700 to-slate-900 dark:from-white dark:to-slate-300"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              {insight.value}
+            </motion.div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 mr-1 mb-1">{insight.unit}</div>
+          </div>
+          
+          <div className={`mt-3 text-xs ${trendColor} flex items-center`}>
+            <motion.div 
+              animate={{ 
+                y: isPositive ? [0, -3, 0] : [0, 3, 0]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity
+              }}
+              className="flex items-center"
+            >
+              {insight.trend === 'up' ? (
+                <svg className="w-3 h-3 mr-1" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5l7 7-1.41 1.41L13 8.83V19h-2V8.83l-4.59 4.58L5 12l7-7z" fill="currentColor"/>
+                </svg>
+              ) : (
+                <svg className="w-3 h-3 mr-1" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 19l-7-7 1.41-1.41L11 15.17V5h2v10.17l4.59-4.58L19 12l-7 7z" fill="currentColor"/>
+                </svg>
+              )}
+              <span>{insight.comparison}</span>
+            </motion.div>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 
@@ -236,16 +413,183 @@ export default function HealthDashboard() {
           onValueChange={setActiveTab}
           className="pro-tabs"
         >
-          <TabsList className="mb-6">
-            <TabsTrigger value="personal" className="pro-tab">
-              <User className="h-4 w-4 ml-1.5" />
-              داده‌های شخصی
-            </TabsTrigger>
-            <TabsTrigger value="team" className="pro-tab">
-              <Users className="h-4 w-4 ml-1.5" />
-              سلامت تیمی
-            </TabsTrigger>
-          </TabsList>
+          {/* تب‌ها با افکت‌های بصری پیشرفته */}
+          <div className="relative overflow-hidden mb-8">
+            {/* افکت هاله پشت تب‌ها */}
+            <div className="absolute -left-6 -top-6 w-40 h-40 bg-gradient-radial from-fuchsia-500/10 to-transparent rounded-full blur-3xl"></div>
+            <div className="absolute -right-6 -top-6 w-40 h-40 bg-gradient-radial from-tiffany/10 to-transparent rounded-full blur-3xl"></div>
+            
+            {/* خط تزئینی بالای تب‌ها */}
+            <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent mb-3 relative overflow-hidden">
+              <motion.div 
+                className="absolute top-0 h-full w-20 bg-gradient-to-r from-transparent via-tiffany/50 to-transparent"
+                animate={{ x: ['-100%', '500%'] }}
+                transition={{ 
+                  duration: 5, 
+                  ease: "easeInOut", 
+                  repeat: Infinity
+                }}
+              />
+            </div>
+            
+            {/* تب‌ها با انیمیشن پیشرفته */}
+            <motion.div
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <TabsList className="relative z-10 p-1 h-14 bg-white/70 dark:bg-slate-800/70 backdrop-blur-lg border-0 shadow-lg rounded-xl">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-slate-100/80 to-white/80 dark:from-slate-900/80 dark:to-slate-800/80 rounded-xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+                
+                {/* افکت خط جاری تب */}
+                <motion.div 
+                  className="absolute bottom-0 h-0.5 bg-gradient-to-r from-rose-500 via-fuchsia-500 to-tiffany rounded-full"
+                  style={{ 
+                    left: activeTab === 'personal' ? '0%' : '50%',
+                    width: '50%',
+                  }}
+                  animate={{ 
+                    left: activeTab === 'personal' ? '0%' : '50%',
+                  }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  layoutId="activeTabLine"
+                />
+                
+                {/* دکمه تب اول */}
+                <TabsTrigger 
+                  value="personal" 
+                  className={`relative z-20 p-2 px-5 transition-all duration-300 ${
+                    activeTab === 'personal' 
+                      ? 'text-rose-600 dark:text-rose-400 font-bold' 
+                      : 'text-slate-600 dark:text-slate-400'
+                  } hover:text-rose-500 dark:hover:text-rose-400 group`}
+                >
+                  <div className="flex items-center">
+                    <div className={`relative p-1.5 rounded-full mr-3 transition-all duration-300 ${
+                      activeTab === 'personal' 
+                        ? 'bg-gradient-to-br from-rose-500 to-fuchsia-600 shadow-md shadow-rose-500/20'
+                        : 'bg-slate-100 dark:bg-slate-700'
+                    }`}>
+                      <User className={`h-5 w-5 ${
+                        activeTab === 'personal' 
+                          ? 'text-white' 
+                          : 'text-slate-500 dark:text-slate-400'
+                      } transition-all duration-300`} />
+                      
+                      {/* حلقه متحرک */}
+                      {activeTab === 'personal' && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-full"
+                          animate={{ 
+                            boxShadow: [
+                              '0 0 0 0 rgba(244, 63, 94, 0)',
+                              '0 0 0 3px rgba(244, 63, 94, 0.2)',
+                              '0 0 0 0 rgba(244, 63, 94, 0)'
+                            ]
+                          }}
+                          transition={{ 
+                            duration: 2, 
+                            ease: "easeInOut", 
+                            repeat: Infinity
+                          }}
+                        />
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">داده‌های شخصی</span>
+                      <span className={`text-[10px] ${
+                        activeTab === 'personal' 
+                          ? 'text-rose-500 dark:text-rose-400' 
+                          : 'text-slate-400 dark:text-slate-500'
+                      }`}>گزارش‌های فردی</span>
+                    </div>
+                    
+                    {/* ایکون اشاره‌گر انتخاب شده */}
+                    <div className={`absolute left-3 transition-all duration-300 ${
+                      activeTab === 'personal' ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                      <motion.div
+                        animate={{ x: [-2, 2, -2] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <Sparkles className="h-4 w-4 text-rose-500" />
+                      </motion.div>
+                    </div>
+                  </div>
+                </TabsTrigger>
+                
+                {/* دکمه تب دوم */}
+                <TabsTrigger 
+                  value="team" 
+                  className={`relative z-20 p-2 px-5 transition-all duration-300 ${
+                    activeTab === 'team' 
+                      ? 'text-tiffany dark:text-tiffany-light font-bold' 
+                      : 'text-slate-600 dark:text-slate-400'
+                  } hover:text-tiffany dark:hover:text-tiffany-light group`}
+                >
+                  <div className="flex items-center">
+                    <div className={`relative p-1.5 rounded-full mr-3 transition-all duration-300 ${
+                      activeTab === 'team' 
+                        ? 'bg-gradient-to-br from-tiffany to-cyan-500 shadow-md shadow-tiffany/20'
+                        : 'bg-slate-100 dark:bg-slate-700'
+                    }`}>
+                      <Users className={`h-5 w-5 ${
+                        activeTab === 'team' 
+                          ? 'text-white' 
+                          : 'text-slate-500 dark:text-slate-400'
+                      } transition-all duration-300`} />
+                      
+                      {/* حلقه متحرک */}
+                      {activeTab === 'team' && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-full"
+                          animate={{ 
+                            boxShadow: [
+                              '0 0 0 0 rgba(45, 212, 191, 0)',
+                              '0 0 0 3px rgba(45, 212, 191, 0.2)',
+                              '0 0 0 0 rgba(45, 212, 191, 0)'
+                            ]
+                          }}
+                          transition={{ 
+                            duration: 2, 
+                            ease: "easeInOut", 
+                            repeat: Infinity
+                          }}
+                        />
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">سلامت تیمی</span>
+                      <span className={`text-[10px] ${
+                        activeTab === 'team' 
+                          ? 'text-tiffany dark:text-tiffany-light' 
+                          : 'text-slate-400 dark:text-slate-500'
+                      }`}>عملکرد گروهی</span>
+                    </div>
+                    
+                    {/* ایکون اشاره‌گر انتخاب شده */}
+                    <div className={`absolute left-3 transition-all duration-300 ${
+                      activeTab === 'team' ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                      <motion.div
+                        animate={{ x: [-2, 2, -2] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <Award className="h-4 w-4 text-tiffany" />
+                      </motion.div>
+                    </div>
+                  </div>
+                </TabsTrigger>
+              </TabsList>
+            </motion.div>
+          </div>
           
           <TabsContent value="personal" className="pro-tab-content mt-6">
             <div className="relative">
