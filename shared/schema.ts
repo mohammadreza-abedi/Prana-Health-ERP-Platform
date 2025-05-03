@@ -2,6 +2,16 @@ import { pgTable, text, serial, integer, boolean, timestamp, date, jsonb, real, 
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
+import { 
+  userAvatars, 
+  userItems, 
+  walletTransactions, 
+  avatars, 
+  shopItems, 
+  avatarFeatures, 
+  userAvatarFeatures, 
+  promotions 
+} from "./avatar-schema";
 
 // User model - بهبود یافته و کامل
 // ----------------- نقطه ورودی مدل‌های دیتابیس -----------------
@@ -44,7 +54,11 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   creditTransactions: many(creditTransactions),
   eventParticipations: many(eventParticipants),
   departmentMemberships: many(departmentMembers),
-  // روابط سیستم آواتار از طریق کامپوننت‌های واسط در AvatarSystem ارائه می‌شوند
+  
+  // روابط سیستم آواتار
+  userAvatars: many(userAvatars, { relationName: "user" }),
+  userItems: many(userItems, { relationName: "user" }),
+  walletTransactions: many(walletTransactions, { relationName: "user" }),
 }));
 
 // مدل پروفایل کاربر برای اطلاعات گسترده‌تر
