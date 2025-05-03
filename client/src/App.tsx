@@ -32,6 +32,7 @@ import AdvancedProfilePage from "@/pages/AdvancedProfilePage";
 import WeatherInfo from "@/pages/WeatherInfo";
 import AIAnalyticsDashboard from "@/pages/Dashboard/AnalyticsDashboard";
 import GamificationHub from "@/pages/Gamification/GamificationHub";
+import GamificationPage from "@/pages/GamificationPage";
 import MainLayout from "@/components/layouts/MainLayout";
 import PulsingLogo from "@/components/ui/pulsing-logo";
 
@@ -84,6 +85,7 @@ function Router() {
         <Route path="/ai-analytics" component={AIAnalyticsDashboard} />
         <Route path="/advanced-analysis-dashboard" component={AIAnalyticsDashboard} />
         <Route path="/gamification" component={GamificationHub} />
+        <Route path="/gamification-system" component={GamificationPage} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
