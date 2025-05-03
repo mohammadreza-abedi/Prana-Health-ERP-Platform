@@ -957,7 +957,15 @@ export default function PsychologicalTests() {
     
     if (selectedTest) {
       // هدایت کاربر به صفحه انجام تست
-      setLocation(`/tests/${selectedTest.id}`);
+      if (completedTests.includes(selectedTest.id)) {
+        setLocation(`/tests/${selectedTest.id}`);
+      } else {
+        toast({
+          title: "تست فعال نیست",
+          description: "این تست هنوز فعال نشده است.",
+          variant: "destructive"
+        });
+      }
     }
   };
   
@@ -966,20 +974,52 @@ export default function PsychologicalTests() {
     ? psychologicalTests.filter(test => test.category === filterCategory)
     : psychologicalTests;
   
+  // آزمون‌های فعال و کامل
+  const completedTests = [1, 12, 36]; // آی‌دی آزمون‌هایی که کامل شده‌اند
+  
+  // نمایش آیکون فعال یا غیرفعال برای هر تست
+  const getTestStatusBadge = (testId: number) => {
+    if (completedTests.includes(testId)) {
+      return (
+        <div className="absolute top-3 left-3 bg-tiffany/15 dark:bg-tiffany/25 p-1.5 rounded-full">
+          <CheckCircle2 className="h-4 w-4 text-tiffany" />
+        </div>
+      );
+    }
+    return (
+      <div className="absolute top-3 left-3 bg-slate-200/50 dark:bg-slate-700/50 p-1.5 rounded-full">
+        <LockKeyhole className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+      </div>
+    );
+  };
+  
   // Filter tests by tab
   const getTabTests = () => {
+    // ابتدا همه آزمون‌ها را به دو گروه تقسیم می‌کنیم: کامل شده و ناقص
+    const completed = filteredTests.filter(test => completedTests.includes(test.id));
+    const incomplete = filteredTests.filter(test => !completedTests.includes(test.id));
+    
+    // بر اساس تب انتخاب شده فیلتر می‌کنیم
+    let result;
     switch(activeTab) {
       case "popular":
-        return filteredTests.filter(test => test.isPopular);
+        result = [...completed.filter(test => test.isPopular), ...incomplete.filter(test => test.isPopular)];
+        break;
       case "recommended":
-        return filteredTests.filter(test => test.isRecommended);
+        result = [...completed.filter(test => test.isRecommended), ...incomplete.filter(test => test.isRecommended)];
+        break;
       case "new":
-        return filteredTests.filter(test => test.isNew);
+        result = [...completed.filter(test => test.isNew), ...incomplete.filter(test => test.isNew)];
+        break;
       case "free":
-        return filteredTests.filter(test => test.isFree);
+        result = [...completed.filter(test => test.isFree), ...incomplete.filter(test => test.isFree)];
+        break;
       default:
-        return filteredTests;
+        result = [...completed, ...incomplete];
+        break;
     }
+    
+    return result;
   };
   
   // Get all unique categories
