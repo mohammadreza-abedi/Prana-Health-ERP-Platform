@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/hover-card";
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
+import { useAvatar } from '@/contexts/AvatarContext';
 
 // تعریف تایپ‌های مورد نیاز
 export interface AvatarData {
@@ -62,12 +63,13 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
   onExport
 }) => {
   const { toast } = useToast();
+  const { activeAvatarUrl, setActiveAvatarUrl, avatarName, setAvatarName } = useAvatar();
   const [activeTab, setActiveTab] = useState('avatars');
   const [selectedAvatarId, setSelectedAvatarId] = useState<number | undefined>(initialData.activeAvatarId);
   const [isLoading, setIsLoading] = useState(false);
   const [userAvatarList, setUserAvatarList] = useState<AvatarData[]>([]);
 
-  // داده‌های آواتارهای پیش‌فرض (در نسخه واقعی باید از API گرفته شود)
+  // داده‌های آواتارهای پیش‌فرض و متنوع (در نسخه واقعی باید از API گرفته شود)
   const defaultAvatars: AvatarData[] = [
     {
       id: 1,
@@ -75,70 +77,79 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
       imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
       category: "male",
       rarity: "common",
-      description: "یک آواتار ساده با موهای سبز",
+      description: "آواتار اصلی سبز با طراحی خاص و عینک",
       isDefault: true
     },
     {
       id: 2,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
+      name: "کاراکتر آبی",
+      imagePath: "/avatar-images/Pria Mohawk.png",
       category: "male",
       rarity: "common",
-      description: "یک آواتار ساده با موهای سبز",
+      description: "آواتار پسر با موهای آبی و طرح خاص",
       isDefault: true
     },
     {
       id: 3,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
-      category: "male",
+      name: "دختر با کلاه",
+      imagePath: "/avatar-images/Wanita Urai Topi.png",
+      category: "female",
       rarity: "common", 
-      description: "یک آواتار ساده با موهای سبز",
+      description: "آواتار دختر با کلاه و طرح ویژه",
       isDefault: true
     },
     {
       id: 4,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
+      name: "پسر با ریش",
+      imagePath: "/avatar-images/Pria Poni Brewokan.png",
       category: "male",
-      rarity: "common",
-      description: "یک آواتار ساده با موهای سبز",
-      isDefault: true
+      rarity: "rare",
+      description: "آواتار پسر با طراحی ریش و موی خاص",
+      isDefault: false
     },
     {
       id: 5,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
+      name: "پسر با کلاه",
+      imagePath: "/avatar-images/Pria Rambut Lepek Topi.png",
       category: "male",
       rarity: "rare",
-      description: "یک آواتار ساده با موهای سبز",
+      description: "آواتار کاراکتر پسر با کلاه مخصوص",
       isDefault: false
     },
     {
       id: 6,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
-      category: "male",
-      rarity: "rare",
-      description: "یک آواتار ساده با موهای سبز",
+      name: "دختر با حجاب",
+      imagePath: "/avatar-images/Wanita Hijab Sweater.png",
+      category: "female",
+      rarity: "epic",
+      description: "آواتار دختر با حجاب و لباس گرم",
       isDefault: false
     },
     {
       id: 7,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
-      category: "male",
+      name: "دختر کلاه‌دار",
+      imagePath: "/avatar-images/Wanita Kuncir Topi.png",
+      category: "female",
       rarity: "epic",
-      description: "یک آواتار ساده با موهای سبز",
+      description: "آواتار دختر با مو بسته و کلاه ویژه",
       isDefault: false
     },
     {
       id: 8,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
+      name: "دختر با حجاب و عینک",
+      imagePath: "/avatar-images/Wanita Berhijab Berkacamata.png",
+      category: "female",
+      rarity: "legendary",
+      description: "آواتار ویژه و کمیاب دختر با حجاب و عینک طبی",
+      isDefault: false
+    },
+    {
+      id: 9,
+      name: "کاراکتر افسانه‌ای",
+      imagePath: "/avatar-images/Pria Gimbal sebelah Kacamata.png",
       category: "male",
       rarity: "legendary",
-      description: "یک آواتار ساده با موهای سبز",
+      description: "آواتار پسر با طراحی فوق‌العاده خاص و نادر",
       isDefault: false
     }
   ];
@@ -183,7 +194,7 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
     setSelectedAvatarId(avatarId);
   };
 
-  // ذخیره آواتار انتخابی
+  // ذخیره آواتار انتخابی و به‌روزرسانی آواتار فعال در کانتکست
   const handleSaveAvatar = () => {
     if (!selectedAvatarId) {
       toast({
@@ -196,9 +207,25 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
 
     setIsLoading(true);
     
+    // یافتن آواتار انتخاب شده
+    const avatar = defaultAvatars.find(a => a.id === selectedAvatarId);
+    if (!avatar) {
+      toast({
+        title: "خطا",
+        description: "آواتار انتخاب شده یافت نشد",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+    
     // شبیه‌سازی API call
     setTimeout(() => {
       setIsLoading(false);
+      
+      // به‌روزرسانی آواتار فعال در کانتکست
+      setActiveAvatarUrl(avatar.imagePath);
+      setAvatarName(avatar.name);
       
       toast({
         title: "موفقیت‌آمیز",

@@ -94,11 +94,13 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <WebSocketProvider>
-        <TooltipProvider>
-          <Toaster />
-          <PWAManager />
-          <Router />
-        </TooltipProvider>
+        <AvatarProvider>
+          <TooltipProvider>
+            <Toaster />
+            <PWAManager />
+            <Router />
+          </TooltipProvider>
+        </AvatarProvider>
       </WebSocketProvider>
     </QueryClientProvider>
   );
