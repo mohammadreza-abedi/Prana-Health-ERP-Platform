@@ -24,7 +24,11 @@ import {
   BadgeCheck,
   ChevronRight,
   Search,
-  Filter
+  Filter,
+  CheckCircle2,
+  Calendar,
+  Heart,
+  Dumbbell
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/design-system/atoms/Card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -35,14 +39,183 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
-// Components
-import Challenges from '@/components/gamification/Challenges';
-import Achievements from '@/components/gamification/Achievements';
-import Rewards from '@/components/gamification/Rewards';
-import Leaderboard from '@/components/gamification/Leaderboard';
-import UserLevel from '@/components/gamification/UserLevel';
-import DailyStreak from '@/components/gamification/DailyStreak';
-import UserProgress from '@/components/gamification/UserProgress';
+// تعریف موقت کامپوننت ها
+const Challenges = ({ data, isLoading, filterCategory, searchQuery }: any) => (
+  <div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Array.from({ length: 6 }).map((_, index) => (
+        <Card key={index}>
+          <CardHeader>
+            <div className="flex items-center">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-300 mr-3">
+                {index % 2 === 0 ? <Dumbbell className="h-5 w-5" /> : <Heart className="h-5 w-5" />}
+              </div>
+              <CardTitle>چالش {index + 1}</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4">توضیحات چالش شماره {index + 1}</p>
+            <div className="flex justify-between mb-1">
+              <span className="text-xs">پیشرفت</span>
+              <span className="text-xs font-medium">{Math.floor(Math.random() * 70)}/100</span>
+            </div>
+            <Progress value={Math.floor(Math.random() * 100)} className="h-2" />
+          </CardContent>
+          <CardFooter>
+            <Button variant="primary" className="w-full">مشاهده جزئیات</Button>
+          </CardFooter>
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
+const Achievements = ({ data, isLoading, filterCategory, searchQuery }: any) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {Array.from({ length: 6 }).map((_, index) => (
+      <Card key={index} className="text-center p-6">
+        <div className="flex justify-center mb-4">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-primary-100 dark:bg-primary-900/30">
+            <Award className="h-8 w-8 text-primary-600 dark:text-primary-300" />
+          </div>
+        </div>
+        <CardTitle className="mb-2">نشان {index + 1}</CardTitle>
+        <p className="text-muted-foreground mb-4">توضیحات نشان {index + 1}</p>
+        <Badge variant="secondary">کسب شده در تاریخ ۱۴۰۲/۸/۱۵</Badge>
+      </Card>
+    ))}
+  </div>
+);
+
+const Rewards = ({ data, isLoading, filterCategory, searchQuery }: any) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {Array.from({ length: 6 }).map((_, index) => (
+      <Card key={index}>
+        <CardHeader>
+          <CardTitle>جایزه {index + 1}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center bg-amber-100 dark:bg-amber-900/30">
+              <Gift className="h-8 w-8 text-amber-600 dark:text-amber-300" />
+            </div>
+          </div>
+          <p className="text-center mb-2">توضیحات جایزه {index + 1}</p>
+          <div className="text-center text-2xl font-bold text-amber-500 mb-4">{(index + 1) * 100} امتیاز</div>
+        </CardContent>
+        <CardFooter>
+          <Button variant="outline" className="w-full">مشاهده جزئیات</Button>
+        </CardFooter>
+      </Card>
+    ))}
+  </div>
+);
+
+const Leaderboard = ({ data, isLoading }: any) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>جدول رده‌بندی</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <div key={index} className="flex items-center p-3 rounded-lg bg-muted/40">
+            <div className="w-8 text-center font-bold">{index + 1}</div>
+            <Avatar className="h-10 w-10 mr-3">
+              <AvatarFallback>{String.fromCharCode(65 + index)}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <p className="font-medium">کاربر {index + 1}</p>
+              <p className="text-xs text-muted-foreground">سطح {10 - Math.floor(index / 2)}</p>
+            </div>
+            <div className="font-bold">{1000 - index * 50} XP</div>
+          </div>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const UserLevel = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center">
+        <Star className="h-5 w-5 text-amber-500 mr-2" />
+        سطح کاربری
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="flex flex-col items-center">
+        <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">سطح ۱۲</div>
+        <div className="text-muted-foreground mb-3">۲۴۵۰ از ۳۰۰۰ امتیاز تا سطح بعدی</div>
+        <Progress value={82} className="h-2 w-full mb-3" />
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const DailyStreak = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center">
+        <Flame className="h-5 w-5 text-orange-500 mr-2" />
+        روزهای متوالی
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="flex flex-col items-center">
+        <div className="text-4xl font-bold text-orange-500 mb-2">۱۶</div>
+        <div className="text-muted-foreground mb-3">روز متوالی فعالیت</div>
+        <div className="flex justify-between w-full">
+          {Array.from({ length: 7 }).map((_, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${index < 5 ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400' : 'bg-muted text-muted-foreground'}`}>
+                {index < 5 ? <CheckCircle2 className="h-4 w-4" /> : <Calendar className="h-4 w-4" />}
+              </div>
+              <span className="text-xs">{['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'][index]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const UserProgress = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center">
+        <Target className="h-5 w-5 text-green-500 mr-2" />
+        اهداف و پیشرفت
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-3">
+        <div>
+          <div className="flex justify-between mb-1">
+            <span className="text-sm">پیاده‌روی روزانه</span>
+            <span className="text-sm">۸۵٪</span>
+          </div>
+          <Progress value={85} className="h-2" />
+        </div>
+        <div>
+          <div className="flex justify-between mb-1">
+            <span className="text-sm">مصرف آب</span>
+            <span className="text-sm">۶۵٪</span>
+          </div>
+          <Progress value={65} className="h-2" />
+        </div>
+        <div>
+          <div className="flex justify-between mb-1">
+            <span className="text-sm">خواب کافی</span>
+            <span className="text-sm">۴۰٪</span>
+          </div>
+          <Progress value={40} className="h-2" />
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
 
 // GamificationHub component
 const GamificationHub: React.FC = () => {
