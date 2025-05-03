@@ -1,14 +1,14 @@
 import { createRoot } from "react-dom/client";
-import SimplestApp from "./SimplestApp"; // Importing the simplest app possible
+import App from "./App";
+import "./index.css";
+import { ThemeProvider } from "./components/ui/theme-provider";
+import { registerServiceWorker } from "./sw-register";
 
-// Remove all imports that might cause issues
-// import "./index.css";
-// import { ThemeProvider } from "./components/ui/theme-provider";
-// import { registerServiceWorker } from "./sw-register";
-
-// Comment out service worker registration
-// registerServiceWorker();
+// ثبت سرویس ورکر برای قابلیت‌های PWA
+registerServiceWorker();
 
 createRoot(document.getElementById("root")!).render(
-  <SimplestApp />
+  <ThemeProvider defaultTheme="dark" storageKey="prana-theme">
+    <App />
+  </ThemeProvider>
 );

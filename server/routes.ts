@@ -1093,9 +1093,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
 
   // WebSocket Server Implementation - با پیاده‌سازی بسیار ساده و مستقیم (بدون پیچیدگی)
+  // Fixed WebSocket path to avoid conflicts with Vite's WebSocket
   const wss = new WebSocketServer({ 
     server: httpServer, 
-    path: '/ws',
+    path: '/pranaapi/ws',
     clientTracking: true
   });
 

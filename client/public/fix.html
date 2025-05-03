@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پرانا - سیستم عیب‌یابی و بازیابی</title>
+  <style>
+    body {
+      background-color: #0f172a;
+      color: white;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 600px;
+      padding: 2rem;
+      background-color: #1e293b;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      width: 100%;
+    }
+    
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .card {
+      background-color: #334155;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .button {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: #0ea5e9;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .button:hover {
+      transform: translateY(-2px);
+      background-color: #0284c7;
+    }
+    
+    .button.secondary {
+      background-color: #475569;
+    }
+    
+    .button.secondary:hover {
+      background-color: #334155;
+    }
+    
+    .button.danger {
+      background-color: #ef4444;
+    }
+    
+    .button.danger:hover {
+      background-color: #dc2626;
+    }
+    
+    .button.success {
+      background-color: #10b981;
+    }
+    
+    .button.success:hover {
+      background-color: #059669;
+    }
+    
+    .status {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+    
+    #status {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+    
+    .alert {
+      background-color: #881337;
+      color: white;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .help-text {
+      color: #94a3b8;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>پرانا - سیستم عیب‌یابی و بازیابی</h1>
+    
+    <div class="alert">
+      این صفحه برای عیب‌یابی و رفع مشکلات بارگذاری برنامه طراحی شده است.
+    </div>
+    
+    <div class="card">
+      <h2>حالت‌های نمایش</h2>
+      <p class="help-text">با استفاده از این دکمه‌ها می‌توانید بین نسخه‌های مختلف برنامه جابجا شوید:</p>
+      
+      <button class="button" onclick="setMode('NORMAL')">حالت کامل (اصلی)</button>
+      <button class="button secondary" onclick="setMode('MINIMAL')">حالت ساده‌شده</button>
+      <button class="button secondary" onclick="setMode('SIMPLEST')">ساده‌ترین حالت</button>
+    </div>
+    
+    <div class="card">
+      <h2>عملیات پیشرفته</h2>
+      <p class="help-text">این عملیات به رفع مشکلات پیچیده‌تر کمک می‌کنند:</p>
+      
+      <button class="button danger" onclick="clearCache()">پاکسازی کش برنامه</button>
+      <button class="button success" onclick="runDiagnostic()">اجرای عیب‌یابی خودکار</button>
+      <a class="button" href="/">بازگشت به صفحه اصلی</a>
+    </div>
+    
+    <div class="status">
+      وضعیت فعلی: <span id="status">در حال بررسی...</span>
+    </div>
+  </div>
+  
+  <script>
+    // Update status on load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateStatus();
+    });
+    
+    // Set app mode
+    function setMode(mode) {
+      if (mode === 'NORMAL') {
+        localStorage.removeItem('prana_app_mode');
+      } else {
+        localStorage.setItem('prana_app_mode', mode);
+      }
+      
+      updateStatus();
+      
+      // Reload with a slight delay
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 500);
+    }
+    
+    // Clear application cache
+    function clearCache() {
+      // Clear localStorage
+      localStorage.clear();
+      
+      // Clear sessionStorage
+      sessionStorage.clear();
+      
+      // Clear IndexedDB
+      const databases = indexedDB.databases();
+      databases.then(dbs => {
+        for (const db of dbs) {
+          if (db.name) indexedDB.deleteDatabase(db.name);
+        }
+      }).catch(err => {
+        console.error('Error clearing IndexedDB:', err);
+      });
+      
+      // Clear caches using Cache API
+      if ('caches' in window) {
+        caches.keys().then(cacheNames => {
+          return Promise.all(
+            cacheNames.map(cacheName => {
+              return caches.delete(cacheName);
+            })
+          );
+        });
+      }
+      
+      updateStatus();
+      
+      alert('کش برنامه با موفقیت پاکسازی شد. صفحه مجدداً بارگذاری خواهد شد.');
+      
+      // Reload after clearing cache
+      setTimeout(() => {
+        window.location.reload(true);
+      }, 1000);
+    }
+    
+    // Run diagnostic routine
+    function runDiagnostic() {
+      const diagnosticResults = {
+        localStorage: testLocalStorage(),
+        cookies: navigator.cookieEnabled,
+        webgl: testWebGL(),
+        indexedDB: testIndexedDB(),
+        webSockets: typeof WebSocket !== 'undefined',
+        userAgent: navigator.userAgent,
+        windowSize: `${window.innerWidth}x${window.innerHeight}`,
+        devicePixelRatio: window.devicePixelRatio || 1,
+        supportsFetchAPI: typeof fetch !== 'undefined',
+        supportsAsync: testAsyncSupport(),
+      };
+      
+      console.log('Diagnostic Results:', diagnosticResults);
+      
+      let message = 'نتایج عیب‌یابی:\n\n';
+      
+      for (const [key, value] of Object.entries(diagnosticResults)) {
+        message += `${key}: ${value}\n`;
+      }
+      
+      alert(message);
+      
+      return diagnosticResults;
+    }
+    
+    // Test localStorage functionality
+    function testLocalStorage() {
+      try {
+        localStorage.setItem('test', 'test');
+        const result = localStorage.getItem('test') === 'test';
+        localStorage.removeItem('test');
+        return result;
+      } catch (e) {
+        return false;
+      }
+    }
+    
+    // Test WebGL support
+    function testWebGL() {
+      try {
+        const canvas = document.createElement('canvas');
+        return !!window.WebGLRenderingContext && 
+               (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+      } catch (e) {
+        return false;
+      }
+    }
+    
+    // Test IndexedDB support
+    function testIndexedDB() {
+      return 'indexedDB' in window;
+    }
+    
+    // Test async/await support
+    function testAsyncSupport() {
+      try {
+        eval('(async function() {})()');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    
+    // Update the status display
+    function updateStatus() {
+      const statusElement = document.getElementById('status');
+      const currentMode = localStorage.getItem('prana_app_mode') || 'NORMAL';
+      statusElement.textContent = currentMode;
+    }
+  </script>
+</body>
+</html>

@@ -74,9 +74,9 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         reconnectTimeoutRef.current = null;
       }
       
-      // Create new connection
+      // Create new connection with updated path to match server
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}/ws?t=${Date.now()}`;
+      const wsUrl = `${protocol}//${window.location.host}/pranaapi/ws?t=${Date.now()}`;
       
       console.log(`Connecting to WebSocket (attempt ${retryCount + 1}/${maxRetries})...`);
       const socket = new WebSocket(wsUrl);
@@ -212,17 +212,27 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   
   // Connect when component mounts
   useEffect(() => {
-    // اتصال وب‌سوکت کاملاً غیرفعال شده است تا برنامه بدون خطا بارگذاری شود
-    console.log('WebSocket functionality is disabled to prevent connection errors');
+    // Initialize the WebSocket connection
+    connectWebSocket();
     
-    // No connection attempted, no ping interval
+    // Set up ping interval to keep the connection alive
+    const pingInterval = setInterval(() => {
+      if (isConnected) {
+        sendPing();
+      }
+    }, 30000); // every 30 seconds
+    
+    // Clean up on unmount
     return () => {
-      // No cleanup needed since we're not connecting
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
+      if (pingInterval) clearInterval(pingInterval);
+      if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+      
+      if (socketRef.current) {
+        socketRef.current.onclose = null; // Prevent reconnect on intentional close
+        socketRef.current.close();
       }
     };
-  }, []);
+  }, [connectWebSocket, isConnected, sendPing]);
   
   // Reconnect when user changes
   useEffect(() => {
