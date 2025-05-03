@@ -1,16 +1,37 @@
 import { useQuery } from "@tanstack/react-query";
 import { LeaderboardEntry, Department } from "@/types";
 import { GlassCard } from "@/components/ui/glass-card";
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/useAuth";
-import { Medal, Trophy, Sparkles, Award, Star, Filter, ChevronDown } from "lucide-react";
+import { 
+  Medal, Trophy, Sparkles, Award, Star, Filter, ChevronDown, ChevronUp,
+  Crown, Gift, Rocket, Zap, ThumbsUp, Users, User, Flag, Target, 
+  TrendingUp, Flame, Shield, Heart, BarChart3, Clock, Calendar, Lightning,
+  ArrowUp, ArrowDown, Repeat, Search, Shuffle, BellRing, BadgeCheck, 
+  Beaker, Clock8, Timer, Flashlight, Globe, Lightning as LightningIcon,
+  Share2, Eye, Gift as GiftIcon, Tag
+} from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
+  DropdownMenuGroup,
+  DropdownMenuSeparator,
+  DropdownMenuLabel
 } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Leaderboard() {
   const [leaderboardType, setLeaderboardType] = useState<'internal' | 'public'>('internal');
