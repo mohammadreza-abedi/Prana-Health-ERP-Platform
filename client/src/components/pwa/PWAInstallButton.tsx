@@ -15,14 +15,12 @@ interface PWAInstallButtonProps {
   variant?: 'default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive';
   size?: 'default' | 'sm' | 'lg' | 'icon';
   className?: string;
-  isExpanded?: boolean;
 }
 
 export const PWAInstallButton = ({ 
   variant = 'default', 
   size = 'default',
   className = '',
-  isExpanded = true,
 }: PWAInstallButtonProps) => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -94,8 +92,8 @@ export const PWAInstallButton = ({
       className={className}
       onClick={handleInstallClick}
     >
-      <Download className="h-4 w-4 mr-0 ml-1" />
-      {isExpanded && <span>نصب اپلیکیشن</span>}
+      <Download className="h-4 w-4 ml-1" />
+      <span>نصب اپلیکیشن</span>
     </Button>
   );
 };

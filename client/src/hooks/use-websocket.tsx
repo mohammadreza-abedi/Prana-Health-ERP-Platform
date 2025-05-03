@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef, createContext, useContext, ReactNode } from 'react';
-// Comment out useAuth to prevent API requests
-// import { useAuth } from '../lib/useAuth';
+import { useAuth } from '../lib/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 // Types for websocket messages
@@ -42,8 +41,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
   const [connectionError, setConnectionError] = useState<string | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
-  // Mock user data instead of using useAuth
-  const user = { id: 1, username: 'demo_user' };
+  const { user } = useAuth();
   const { toast } = useToast();
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const maxRetries = 3;
@@ -74,9 +72,9 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         reconnectTimeoutRef.current = null;
       }
       
-      // Create new connection with updated path to match server
+      // Create new connection
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}/pranaapi/ws?t=${Date.now()}`;
+      const wsUrl = `${protocol}//${window.location.host}/ws?t=${Date.now()}`;
       
       console.log(`Connecting to WebSocket (attempt ${retryCount + 1}/${maxRetries})...`);
       const socket = new WebSocket(wsUrl);
@@ -212,27 +210,40 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   
   // Connect when component mounts
   useEffect(() => {
-    // Initialize the WebSocket connection
-    connectWebSocket();
+    // تلاش برای اتصال وب‌سوکت غیرفعال شده است تا عملکرد اصلی برنامه حفظ شود
+    // اتصال وب‌سوکت را غیرفعال می‌کنیم تا صفحه بدون خطا بارگذاری شود
+    // setTimeout(() => {
+    //   connectWebSocket();
+    // }, 1000);
     
-    // Set up ping interval to keep the connection alive
+    // Set up ping interval - but we're disabling it for now
     const pingInterval = setInterval(() => {
-      if (isConnected) {
-        sendPing();
-      }
-    }, 30000); // every 30 seconds
+      // Temporarily disabled
+      // if (isConnected && socketRef.current?.readyState === WebSocket.OPEN) {
+      //   sendPing();
+      // } else if (socketRef.current?.readyState !== WebSocket.CONNECTING) {
+      //   connectWebSocket();
+      // }
+    }, 15000);
     
     // Clean up on unmount
     return () => {
-      if (pingInterval) clearInterval(pingInterval);
-      if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+      clearInterval(pingInterval);
+      
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
       
       if (socketRef.current) {
-        socketRef.current.onclose = null; // Prevent reconnect on intentional close
+        socketRef.current.onclose = null;
+        socketRef.current.onerror = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.onopen = null;
         socketRef.current.close();
+        socketRef.current = null;
       }
     };
-  }, [connectWebSocket, isConnected, sendPing]);
+  }, [connectWebSocket]);
   
   // Reconnect when user changes
   useEffect(() => {

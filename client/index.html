@@ -1,124 +1,61 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>پرانا - حالت ساده</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, sans-serif;
-      background-color: #0f172a;
-      color: white;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-    .card {
-      background-color: #1e293b;
-      border-radius: 1rem;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      padding: 2rem;
-      width: 100%;
-      max-width: 500px;
-      text-align: center;
-    }
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    .button {
-      display: block;
-      width: 100%;
-      padding: 0.75rem 1rem;
-      margin-top: 1rem;
-      border: none;
-      border-radius: 0.5rem;
-      background-color: #0ea5e9;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .button:hover {
-      background-color: #0284c7;
-      transform: translateY(-2px);
-    }
-    .button.secondary {
-      background-color: #475569;
-    }
-    .button.secondary:hover {
-      background-color: #334155;
-    }
-    .status {
-      margin-top: 1.5rem;
-      font-size: 0.875rem;
-      color: #94a3b8;
-    }
-    .loader {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      margin: 1rem auto;
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      border-top-color: #0ea5e9;
-      animation: spin 1s ease-in-out infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="card">
-      <h1>پرانا - دستیار هوشمند سلامت</h1>
-      <p>حالت بازیابی و عیب‌یابی</p>
-      
-      <div class="loader"></div>
-      
-      <div>
-        <button class="button" onclick="location.href='/'">بارگذاری برنامه اصلی</button>
-        
-        <button class="button secondary" onclick="location.href='/fix.html'">ابزار عیب‌یابی</button>
-        
-        <button class="button secondary" onclick="setModeAndRedirect('MINIMAL')">فعال‌سازی حالت ساده</button>
-        
-        <button class="button secondary" onclick="setModeAndRedirect('SIMPLEST')">فعال‌سازی ساده‌ترین حالت</button>
-      </div>
-      
-      <div class="status">
-        حالت فعلی: <span id="currentMode">در حال بررسی...</span>
-      </div>
-    </div>
-  </div>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      updateStatus();
-    });
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+    <title>پرانا - دستیار هوشمند سلامت</title>
     
-    function setModeAndRedirect(mode) {
-      localStorage.setItem('prana_app_mode', mode);
-      location.href = '/';
-    }
+    <!-- PWA متادیتا -->
+    <meta name="description" content="سیستم هوشمند مدیریت سلامت کارکنان با امکانات گیمیفیکیشن" />
+    <meta name="theme-color" content="#2EC4B6" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="پرانا" />
     
-    function updateStatus() {
-      const modeElement = document.getElementById('currentMode');
-      if (modeElement) {
-        const currentMode = localStorage.getItem('prana_app_mode') || 'NORMAL';
-        modeElement.textContent = currentMode;
+    <!-- PWA آیکون‌ها -->
+    <link rel="icon" href="/icons/favicon.ico" sizes="any" />
+    <link rel="icon" href="/icons/icon-192x192.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- فونت‌ها -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+      @font-face {
+        font-family: 'YekanBakh';
+        src: url('./attached_assets/YekanBakh-Regular.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
       }
-    }
-  </script>
-</body>
+
+      @font-face {
+        font-family: 'YekanBakh';
+        src: url('./attached_assets/YekanBakh-Light.ttf') format('truetype');
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: 'YekanBakh';
+        src: url('./attached_assets/YekanBakh-Black.ttf') format('truetype');
+        font-weight: 900;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      html, body {
+        font-family: 'YekanBakh', system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
 </html>

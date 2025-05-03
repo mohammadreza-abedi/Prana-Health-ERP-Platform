@@ -8,7 +8,7 @@ import { registerServiceWorker } from "./sw-register";
 registerServiceWorker();
 
 createRoot(document.getElementById("root")!).render(
-  <ThemeProvider defaultTheme="dark" storageKey="prana-theme">
+  <ThemeProvider defaultTheme="system" storageKey="prana-theme">
     <App />
   </ThemeProvider>
 );
