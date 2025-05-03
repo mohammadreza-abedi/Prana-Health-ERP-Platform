@@ -246,78 +246,419 @@ export default function HealthDashboard() {
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="personal" className="pro-tab-content">
-            <h2 className="text-xl font-bold mb-4">وضعیت سلامتی</h2>
-            <HealthMetricsGrid metrics={healthMetrics} />
-          </TabsContent>
-          
-          <TabsContent value="team" className="pro-tab-content">
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-xl font-bold mb-4">سلامت تیمی</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {teamInsights.map(insight => (
-                    <InsightCard key={insight.id} insight={insight} />
-                  ))}
+          <TabsContent value="personal" className="pro-tab-content mt-6">
+            <div className="relative">
+              {/* هدر با انیمیشن و افکت */}
+              <div className="relative mb-6 overflow-hidden">
+                <div className="flex items-center space-x-4 space-x-reverse">
+                  <div className="relative">
+                    <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-pink-500 to-rose-600 p-0.5">
+                      <div className="absolute inset-0 rounded-lg bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
+                      <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-pink-500 to-rose-600 rounded-[7px]">
+                        <Heart className="h-6 w-6 text-white" />
+                      </div>
+                      
+                      {/* افکت هاله متحرک */}
+                      <motion.div 
+                        className="absolute inset-0 rounded-lg opacity-40"
+                        animate={{ 
+                          boxShadow: [
+                            '0 0 0 0 rgba(244, 63, 94, 0)',
+                            '0 0 0 6px rgba(244, 63, 94, 0.1)',
+                            '0 0 0 0 rgba(244, 63, 94, 0)'
+                          ]
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          ease: "easeInOut", 
+                          repeat: Infinity
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h2 className="text-2xl font-bold flex items-center bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-500">
+                      وضعیت سلامتی
+                      <motion.div 
+                        animate={{ rotate: [0, 5, 0, -5, 0] }}
+                        transition={{ duration: 5, repeat: Infinity }}
+                        className="mr-2 text-rose-500"
+                      >
+                        <Sparkles className="h-5 w-5" />
+                      </motion.div>
+                    </h2>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
+                      همین الان دیتای سلامتی شما به‌روز شده است
+                    </p>
+                  </div>
+                </div>
+                
+                {/* خط دکوراتیو */}
+                <div className="h-0.5 w-full mt-6 bg-gradient-to-r from-rose-500/30 via-pink-500/0 to-rose-500/0 relative overflow-hidden">
+                  <motion.div 
+                    className="absolute top-0 h-full bg-gradient-to-r from-transparent via-rose-500 to-transparent"
+                    style={{ width: '30%' }}
+                    animate={{ 
+                      left: ['-30%', '100%'],
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      ease: "easeInOut", 
+                      repeat: Infinity,
+                      repeatDelay: 3
+                    }}
+                  />
                 </div>
               </div>
               
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold">چالش‌های فعال تیمی</h2>
-                  <Button variant="link" className="text-tiffany dark:text-tiffany-light">
-                    مشاهده همه
+              {/* افکت های بصری پس زمینه */}
+              <div className="absolute top-0 right-0 opacity-20 pointer-events-none">
+                <motion.div 
+                  className="text-rose-500"
+                  animate={{ 
+                    y: [0, -15, 0], 
+                    opacity: [0.2, 0.5, 0.2]
+                  }}
+                  transition={{ 
+                    duration: 4, 
+                    repeat: Infinity
+                  }}
+                >
+                  <Activity className="h-24 w-24" />
+                </motion.div>
+              </div>
+              
+              <div className="absolute bottom-0 left-0 opacity-10 pointer-events-none">
+                <motion.div 
+                  className="text-pink-400"
+                  animate={{ 
+                    y: [0, 10, 0], 
+                    opacity: [0.1, 0.3, 0.1]
+                  }}
+                  transition={{ 
+                    duration: 5, 
+                    delay: 1,
+                    repeat: Infinity
+                  }}
+                >
+                  <Clock className="h-20 w-20" />
+                </motion.div>
+              </div>
+              
+              {/* محتوای اصلی با انیمیشن ورود */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <HealthMetricsGrid metrics={healthMetrics} />
+              </motion.div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="team" className="pro-tab-content mt-6">
+            <div className="space-y-8 relative">
+              {/* افکت های بصری پس زمینه */}
+              <div className="absolute top-40 right-20 opacity-10 pointer-events-none">
+                <motion.div 
+                  className="text-tiffany"
+                  animate={{ 
+                    y: [0, -10, 0], 
+                    opacity: [0.1, 0.2, 0.1],
+                    rotate: [0, 5, 0]
+                  }}
+                  transition={{ 
+                    duration: 5, 
+                    repeat: Infinity
+                  }}
+                >
+                  <Users className="h-32 w-32" />
+                </motion.div>
+              </div>
+              
+              <div className="absolute bottom-20 left-10 opacity-10 pointer-events-none">
+                <motion.div 
+                  className="text-aqua"
+                  animate={{ 
+                    y: [0, 15, 0], 
+                    opacity: [0.1, 0.25, 0.1]
+                  }}
+                  transition={{ 
+                    duration: 6, 
+                    repeat: Infinity
+                  }}
+                >
+                  <Award className="h-24 w-24" />
+                </motion.div>
+              </div>
+              
+              {/* هدر با انیمیشن و افکت */}
+              <div className="relative mb-6">
+                <div className="flex items-center space-x-4 space-x-reverse">
+                  <div className="relative">
+                    <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-tiffany to-aqua p-0.5">
+                      <div className="absolute inset-0 rounded-lg bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
+                      <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-tiffany to-aqua rounded-[7px]">
+                        <Users className="h-6 w-6 text-white" />
+                      </div>
+                      
+                      {/* افکت هاله متحرک */}
+                      <motion.div 
+                        className="absolute inset-0 rounded-lg opacity-40"
+                        animate={{ 
+                          boxShadow: [
+                            '0 0 0 0 rgba(45, 212, 191, 0)',
+                            '0 0 0 6px rgba(45, 212, 191, 0.1)',
+                            '0 0 0 0 rgba(45, 212, 191, 0)'
+                          ]
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          ease: "easeInOut", 
+                          repeat: Infinity
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h2 className="text-2xl font-bold flex items-center bg-clip-text text-transparent bg-gradient-to-r from-tiffany to-aqua">
+                      سلامت تیمی
+                      <motion.div 
+                        animate={{ 
+                          scale: [1, 1.1, 1],
+                          rotate: [0, 10, 0] 
+                        }}
+                        transition={{ duration: 4, repeat: Infinity }}
+                        className="mr-2 text-tiffany"
+                      >
+                        <Award className="h-5 w-5" />
+                      </motion.div>
+                    </h2>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
+                      گزارش عملکرد تیمی در هفته اخیر
+                    </p>
+                  </div>
+                </div>
+                
+                {/* خط دکوراتیو */}
+                <div className="h-0.5 w-full mt-6 bg-gradient-to-r from-tiffany/30 via-aqua/0 to-tiffany/0 relative overflow-hidden">
+                  <motion.div 
+                    className="absolute top-0 h-full bg-gradient-to-r from-transparent via-tiffany to-transparent"
+                    style={{ width: '30%' }}
+                    animate={{ 
+                      left: ['-30%', '100%'],
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      ease: "easeInOut", 
+                      repeat: Infinity,
+                      repeatDelay: 3
+                    }}
+                  />
+                </div>
+              </div>
+              
+              {/* کارت‌های بینش‌ها با انیمیشن ورود */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {teamInsights.map((insight, index) => (
+                    <motion.div
+                      key={insight.id}
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.3, delay: 0.1 * index }}
+                    >
+                      <InsightCard insight={insight} />
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+              
+              {/* چالش‌های تیمی */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mt-12"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-2 space-x-reverse">
+                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                      <Trophy className="h-5 w-5 text-white" />
+                    </div>
+                    <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-600">
+                      چالش‌های فعال تیمی
+                    </h2>
+                  </div>
+                  <Button variant="ghost" className="text-amber-500 dark:text-amber-400 flex items-center group">
+                    <span>مشاهده همه</span>
+                    <motion.div
+                      animate={{ x: [0, 4, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ChevronRight className="h-4 w-4 mr-1 group-hover:mr-2 transition-all" />
+                    </motion.div>
                   </Button>
                 </div>
                 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <Card className="pro-card tiffany overflow-hidden">
-                    <div className="absolute top-0 right-0 bg-tiffany/10 dark:bg-tiffany/20 text-tiffany dark:text-tiffany-light text-xs font-medium py-1 px-2.5 rounded-bl-lg">
-                      در حال انجام
-                    </div>
-                    <CardHeader>
-                      <CardTitle>چالش ۱۰،۰۰۰ قدم روزانه</CardTitle>
-                      <CardDescription>۷ روز باقیمانده</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span>پیشرفت تیمی</span>
-                        <span className="font-medium">۶۸%</span>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <motion.div
+                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                    className="group"
+                  >
+                    <Card className="pro-card tiffany overflow-hidden group-hover:shadow-lg group-hover:shadow-tiffany/10 dark:group-hover:shadow-tiffany/5 transition-all duration-300">
+                      <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-tiffany/40 to-transparent rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                      <div className="absolute top-0 right-0 z-10">
+                        <div className="relative flex items-center bg-tiffany text-white text-xs font-medium py-1 pr-2 pl-3 rounded-bl-lg">
+                          <span className="relative z-10 flex items-center">
+                            <motion.div
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                              className="mr-1"
+                            >
+                              <div className="h-2 w-2 rounded-full bg-white"></div>
+                            </motion.div>
+                            در حال انجام
+                          </span>
+                          <div className="absolute top-0 right-0 h-full w-full bg-gradient-to-l from-tiffany/80 to-tiffany"></div>
+                        </div>
                       </div>
-                      <div className="h-2 bg-tiffany/10 dark:bg-tiffany/20 rounded-full overflow-hidden">
-                        <div className="h-full bg-tiffany dark:bg-tiffany-light rounded-full" style={{ width: '68%' }}></div>
-                      </div>
-                      <div className="mt-4 flex justify-between text-sm text-slate-500 dark:text-slate-400">
-                        <span>۱۵ مشارکت‌کننده</span>
-                        <span>شروع: ۱۴۰۲/۱۱/۱۰</span>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      
+                      <CardHeader>
+                        <CardTitle className="flex items-start">
+                          <Activity className="h-5 w-5 mr-1 text-tiffany flex-shrink-0 mt-1" />
+                          <span>چالش ۱۰،۰۰۰ قدم روزانه</span>
+                        </CardTitle>
+                        <CardDescription className="flex items-center">
+                          <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                          <span>۷ روز باقیمانده</span>
+                        </CardDescription>
+                      </CardHeader>
+                      
+                      <CardContent>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span>پیشرفت تیمی</span>
+                          <span className="font-medium text-tiffany">۶۸%</span>
+                        </div>
+                        
+                        <div className="h-3 bg-tiffany/10 dark:bg-tiffany/20 rounded-full overflow-hidden backdrop-blur-sm">
+                          <motion.div 
+                            initial={{ width: '0%' }}
+                            animate={{ width: '68%' }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            className="h-full bg-gradient-to-r from-tiffany to-tiffany-light rounded-full relative"
+                          >
+                            <div className="absolute inset-0 overflow-hidden">
+                              <motion.div 
+                                className="w-20 h-full bg-white/20"
+                                animate={{ x: ['-100%', '400%'] }}
+                                transition={{ 
+                                  duration: 2, 
+                                  ease: "easeInOut", 
+                                  repeat: Infinity,
+                                  repeatDelay: 1
+                                }}
+                              />
+                            </div>
+                          </motion.div>
+                        </div>
+                        
+                        <div className="mt-4 flex justify-between text-sm text-slate-500 dark:text-slate-400">
+                          <div className="flex items-center">
+                            <Users className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                            <span>۱۵ مشارکت‌کننده</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Calendar className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                            <span>شروع: ۱۴۰۲/۱۱/۱۰</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                   
-                  <Card className="pro-card aqua overflow-hidden">
-                    <div className="absolute top-0 right-0 bg-aqua/10 dark:bg-aqua/20 text-aqua dark:text-aqua-light text-xs font-medium py-1 px-2.5 rounded-bl-lg">
-                      در حال انجام
-                    </div>
-                    <CardHeader>
-                      <CardTitle>چالش نوشیدن ۲.۵ لیتر آب روزانه</CardTitle>
-                      <CardDescription>۱۴ روز باقیمانده</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span>پیشرفت تیمی</span>
-                        <span className="font-medium">۴۵%</span>
+                  <motion.div
+                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                    className="group"
+                  >
+                    <Card className="pro-card aqua overflow-hidden group-hover:shadow-lg group-hover:shadow-aqua/10 dark:group-hover:shadow-aqua/5 transition-all duration-300">
+                      <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-aqua/40 to-transparent rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                      <div className="absolute top-0 right-0 z-10">
+                        <div className="relative flex items-center bg-aqua text-white text-xs font-medium py-1 pr-2 pl-3 rounded-bl-lg">
+                          <span className="relative z-10 flex items-center">
+                            <motion.div
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                              className="mr-1"
+                            >
+                              <div className="h-2 w-2 rounded-full bg-white"></div>
+                            </motion.div>
+                            در حال انجام
+                          </span>
+                          <div className="absolute top-0 right-0 h-full w-full bg-gradient-to-l from-aqua/80 to-aqua"></div>
+                        </div>
                       </div>
-                      <div className="h-2 bg-aqua/10 dark:bg-aqua/20 rounded-full overflow-hidden">
-                        <div className="h-full bg-aqua dark:bg-aqua-light rounded-full" style={{ width: '45%' }}></div>
-                      </div>
-                      <div className="mt-4 flex justify-between text-sm text-slate-500 dark:text-slate-400">
-                        <span>۲۰ مشارکت‌کننده</span>
-                        <span>شروع: ۱۴۰۲/۱۱/۱۵</span>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      
+                      <CardHeader>
+                        <CardTitle className="flex items-start">
+                          <Heart className="h-5 w-5 mr-1 text-aqua flex-shrink-0 mt-1" />
+                          <span>چالش نوشیدن ۲.۵ لیتر آب روزانه</span>
+                        </CardTitle>
+                        <CardDescription className="flex items-center">
+                          <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                          <span>۱۴ روز باقیمانده</span>
+                        </CardDescription>
+                      </CardHeader>
+                      
+                      <CardContent>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span>پیشرفت تیمی</span>
+                          <span className="font-medium text-aqua">۴۵%</span>
+                        </div>
+                        
+                        <div className="h-3 bg-aqua/10 dark:bg-aqua/20 rounded-full overflow-hidden backdrop-blur-sm">
+                          <motion.div 
+                            initial={{ width: '0%' }}
+                            animate={{ width: '45%' }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            className="h-full bg-gradient-to-r from-aqua to-aqua-light rounded-full relative"
+                          >
+                            <div className="absolute inset-0 overflow-hidden">
+                              <motion.div 
+                                className="w-20 h-full bg-white/20"
+                                animate={{ x: ['-100%', '200%'] }}
+                                transition={{ 
+                                  duration: 2, 
+                                  ease: "easeInOut", 
+                                  repeat: Infinity,
+                                  repeatDelay: 1
+                                }}
+                              />
+                            </div>
+                          </motion.div>
+                        </div>
+                        
+                        <div className="mt-4 flex justify-between text-sm text-slate-500 dark:text-slate-400">
+                          <div className="flex items-center">
+                            <Users className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                            <span>۲۰ مشارکت‌کننده</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Calendar className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                            <span>شروع: ۱۴۰۲/۱۱/۱۵</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </TabsContent>
         </Tabs>
