@@ -184,11 +184,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       icon: <Brain className="h-5 w-5" />,
       path: "/psychological-tests",
     },
-    {
-      title: "سیستم گیمیفیکیشن",
-      icon: <Trophy className="h-5 w-5" />,
-      path: "/gamification",
-    },
+
     {
       title: "چالش‌ها",
       icon: <Award className="h-5 w-5" />,
