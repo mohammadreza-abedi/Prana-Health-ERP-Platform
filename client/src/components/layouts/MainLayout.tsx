@@ -243,7 +243,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar - fixed height */}
+      {/* Sidebar */}
       <AnimatePresence>
         <motion.aside
           initial={{ width: isMobile ? 0 : 280 }}
@@ -969,7 +969,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       </AnimatePresence>
 
       {/* Enhanced Main content area with modernized glass effect */}
-      <div className="flex-1 overflow-hidden relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 flex flex-col transition-all duration-300 ease-in-out">
+      <div className="flex-1 overflow-y-auto relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 flex flex-col transition-all duration-300 ease-in-out">
         {/* Enhanced Fixed Header with advanced glassmorphism */}
         <div className="sticky top-0 z-20 p-4 bg-white/80 dark:bg-slate-900/75 border-b border-slate-200/30 dark:border-slate-800/30 backdrop-blur-xl shadow-[0_4px_30px_-10px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_30px_-10px_rgba(0,0,0,0.2)] flex flex-col motion-safe:animate-fade-in transition-all duration-300">
           {/* Top row with logo, menu and actions */}
@@ -1740,22 +1740,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
         </div>
         
-        {/* Page content with ultra-modern glassmorphism and advanced light effects */}
-        <div className="flex-1 p-6 relative overflow-auto pb-16">
-          {/* Top gradient haze - creates soft light atmosphere */}
+        {/* Page content with enhanced container and subtle decoration - optimized */}
+        <div className="flex-1 p-6 relative">
           <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/20 dark:from-slate-800/30 to-transparent pointer-events-none"></div>
           
-          {/* Left edge light beam - subtle side illumination */}
-          <div className="fixed left-0 top-1/4 w-4 h-1/2 bg-gradient-to-r from-tiffany/5 dark:from-tiffany/3 to-transparent pointer-events-none blur-md"></div>
-          
-          {/* Right edge light beam - subtle side illumination */}
-          <div className="fixed right-0 top-1/3 w-4 h-1/3 bg-gradient-to-l from-purple-500/5 dark:from-purple-500/3 to-transparent pointer-events-none blur-md"></div>
-          
-          {/* Content container with light glassmorphism that maintains scrolling */}
           <div className="relative z-10">
-            {/* Subtle highlight edge */}
-            <div className="absolute inset-x-0 -top-1 h-px bg-white/10 dark:bg-white/5 pointer-events-none"></div>
-            
             {children}
           </div>
         </div>

@@ -69,26 +69,14 @@ export default function Footer() {
   ];
   
   return (
-    <footer className="sticky bottom-0 w-full relative bg-slate-50/60 dark:bg-slate-900/60 py-6 border-t backdrop-blur-xl shadow-[0_-4px_30px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_30px_-15px_rgba(0,0,0,0.3)] z-10">
-      {/* خط تزئینی بالای فوتر */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-300/50 dark:via-slate-700/50 to-transparent"></div>
-      
-      {/* افکت‌های نور محیطی سبک‌تر */}
-      <div className="absolute -top-20 -right-20 w-64 h-64 bg-tiffany/5 rounded-full blur-2xl opacity-30 dark:opacity-20 pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-500/5 rounded-full blur-2xl opacity-30 dark:opacity-20 pointer-events-none"></div>
+    <footer className="bg-slate-50/50 dark:bg-slate-900/50 py-12 border-t backdrop-blur-md">
       {/* نوار ویژگی‌های حرفه‌ای */}
-      <div className="container mx-auto mb-8 relative z-10">
-        <div className="relative bg-white/50 dark:bg-slate-800/50 rounded-xl p-4 shadow-md border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-sm">
-          {/* افکت نور بالایی */}
-          <div className="absolute -top-1 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-tiffany/20 to-transparent"></div>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+      <div className="container mx-auto mb-8">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             {featuredItems.map((item, index) => (
-              <div 
-                key={index} 
-                className="flex items-center space-x-2 space-x-reverse text-sm text-slate-600 dark:text-slate-300 hover:text-tiffany transition-colors group cursor-pointer"
-              >
-                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-hover:bg-tiffany/10 border border-transparent group-hover:border-tiffany/20 transition-all duration-300">
+              <div key={index} className="flex items-center space-x-2 space-x-reverse text-sm text-slate-600 dark:text-slate-300 hover:text-tiffany transition-colors group cursor-pointer">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-hover:bg-tiffany/10">
                   <div className="text-slate-500 dark:text-slate-400 group-hover:text-tiffany">
                     {item.icon}
                   </div>
