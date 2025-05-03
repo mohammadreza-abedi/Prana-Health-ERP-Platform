@@ -917,199 +917,772 @@ const PersonalCard = () => {
       <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full bg-aqua/5 dark:bg-aqua/10 blur-3xl"></div>
       <div className="absolute -bottom-32 -right-32 w-64 h-64 rounded-full bg-tiffany/5 dark:bg-tiffany/10 blur-3xl"></div>
       
-      {/* اطلاعات کاربر */}
-      <div className="relative z-10 px-6 pt-6 pb-3">
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* بخش اصلی پروفایل */}
-          <div className="flex">
-            {/* آواتار با افکت خاص */}
-            <div className="flex-shrink-0 relative">
-              <div className="w-[76px] h-[76px] rounded-lg overflow-hidden shadow-lg mr-4">
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-br from-aqua/20 to-tiffany/20 mix-blend-overlay z-10"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 0.8 }}
-                ></motion.div>
-                <img 
-                  src={activeAvatarUrl || userInfo.avatar} 
-                  alt={avatarName || userInfo.name} 
-                  className="w-full h-full object-cover" 
+      {/* اطلاعات کاربر - با طراحی پیشرفته و انیمیشن‌های خاص */}
+      <div className="relative z-10 px-6 pt-6 pb-3 overflow-hidden">
+        {/* افکت‌های پس‌زمینه و تزئینی */}
+        <motion.div
+          className="absolute -top-[150px] -right-[150px] w-[300px] h-[300px] rounded-full bg-gradient-to-br from-tiffany/5 to-aqua/10 dark:from-tiffany/10 dark:to-aqua/20 blur-3xl"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.5, 0.3],
+            rotate: 360 
+          }}
+          transition={{ 
+            duration: 15, 
+            ease: "linear", 
+            repeat: Infinity 
+          }}
+        />
+        
+        <motion.div
+          className="absolute -bottom-[100px] -left-[100px] w-[200px] h-[200px] rounded-full bg-gradient-to-tr from-purple-400/5 to-indigo-500/10 dark:from-purple-400/10 dark:to-indigo-500/20 blur-3xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.4, 0.2],
+            rotate: -360 
+          }}
+          transition={{ 
+            duration: 18, 
+            ease: "linear", 
+            repeat: Infinity 
+          }}
+        />
+        
+        {/* حالت شیشه‌ای و سایه‌های مدرن برای کل بخش */}
+        <motion.div 
+          className="relative backdrop-blur-sm bg-white/30 dark:bg-slate-900/30 rounded-xl border border-white/20 dark:border-slate-700/20 shadow-xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="flex flex-col md:flex-row gap-6 p-4">
+            {/* بخش اصلی پروفایل با افکت‌های پیشرفته */}
+            <div className="flex bg-gradient-to-br from-white/80 to-white/50 dark:from-slate-800/80 dark:to-slate-800/50 p-3 rounded-lg shadow-inner relative overflow-hidden">
+              {/* پترن سایه دکوراتیو */}
+              <div className="absolute inset-0 bg-grid-slate-200/[0.05] dark:bg-grid-slate-50/[0.03]"></div>
+              
+              {/* ذرات معلق متحرک */}
+              <div className="particle-container">
+                <motion.div
+                  className="absolute h-1 w-1 rounded-full bg-tiffany/40"
+                  animate={{
+                    x: [0, 20, 0],
+                    y: [0, 30, 0],
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  style={{ top: '20%', left: '10%' }}
+                />
+                <motion.div
+                  className="absolute h-1 w-1 rounded-full bg-aqua/40"
+                  animate={{
+                    x: [0, -30, 0],
+                    y: [0, 20, 0],
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1
+                  }}
+                  style={{ top: '50%', right: '10%' }}
+                />
+                <motion.div
+                  className="absolute h-0.5 w-0.5 rounded-full bg-indigo-500/60"
+                  animate={{
+                    x: [0, 15, 0],
+                    y: [0, -15, 0],
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 2
+                  }}
+                  style={{ bottom: '30%', left: '30%' }}
                 />
               </div>
-              <motion.div 
-                className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.6, type: "spring", stiffness: 300 }}
-              >
-                <span className="sr-only">آنلاین</span>
-              </motion.div>
-            </div>
-            
-            {/* اطلاعات شخصی */}
-            <div className="pr-2">
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white">{userInfo.name}</h2>
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
+              
+              {/* آواتار با افکت‌های پیشرفته */}
+              <div className="flex-shrink-0 relative z-10">
+                <motion.div 
+                  className="w-[88px] h-[88px] rounded-xl overflow-hidden shadow-2xl ring-2 ring-white/50 dark:ring-slate-700/50 mr-4"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <Badge className="bg-tiffany/90 hover:bg-tiffany text-[10px] py-0 px-2 h-5 font-normal">
-                    {userInfo.accessLevel}
-                  </Badge>
+                  {/* هاله متحرک دور آواتار */}
+                  <motion.div
+                    className="absolute -inset-1 bg-gradient-to-tr from-tiffany to-aqua rounded-xl opacity-30 blur-sm z-0"
+                    animate={{ 
+                      rotate: 360,
+                    }}
+                    transition={{ 
+                      duration: 8, 
+                      ease: "linear", 
+                      repeat: Infinity 
+                    }}
+                  />
+                  
+                  {/* لایه آواتار */}
+                  <div className="absolute inset-[2px] rounded-lg overflow-hidden z-10">
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-br from-aqua/30 to-tiffany/30 mix-blend-overlay z-10"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5, duration: 0.8 }}
+                    />
+                    <img 
+                      src={activeAvatarUrl || userInfo.avatar} 
+                      alt={avatarName || userInfo.name} 
+                      className="w-full h-full object-cover relative z-0" 
+                    />
+                    
+                    {/* افکت شیشه‌ای روی عکس */}
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent z-20"
+                      animate={{ 
+                        opacity: [0.3, 0.5, 0.3],
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity, 
+                        repeatType: "reverse" 
+                      }}
+                    />
+                  </div>
+                </motion.div>
+                
+                {/* نشانگر آنلاین با انیمیشن پالس لایه‌ای */}
+                <div className="absolute -bottom-1 -right-1 flex items-center justify-center z-20">
+                  <motion.div
+                    className="absolute w-7 h-7 rounded-full bg-emerald-500/20"
+                    animate={{ scale: [1, 1.5, 1], opacity: [0.7, 0, 0.7] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                  <motion.div
+                    className="absolute w-5 h-5 rounded-full bg-emerald-500/30"
+                    animate={{ scale: [1, 1.3, 1], opacity: [0.7, 0.2, 0.7] }}
+                    transition={{ duration: 2, delay: 0.3, repeat: Infinity }}
+                  />
+                  <motion.div 
+                    className="w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-800 z-30"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.6, type: "spring", stiffness: 300 }}
+                  >
+                    <span className="sr-only">آنلاین</span>
+                  </motion.div>
+                </div>
+              </div>
+              
+              {/* اطلاعات شخصی با انیمیشن‌های پیشرفته */}
+              <div className="pr-2 relative z-10">
+                <div className="flex items-center gap-2">
+                  <motion.h2 
+                    className="text-xl font-bold text-slate-900 dark:text-white bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {userInfo.name}
+                  </motion.h2>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8, x: -10 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                  >
+                    <Badge className="bg-gradient-to-r from-tiffany to-aqua text-white text-[10px] py-0.5 px-2.5 h-5 font-medium shadow-md">
+                      {userInfo.accessLevel}
+                    </Badge>
+                  </motion.div>
+                </div>
+                
+                <motion.p 
+                  className="text-sm text-slate-500 dark:text-slate-400 mt-1.5 flex items-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <span className="inline-block w-2 h-2 bg-tiffany/50 rounded-full mr-1.5"></span>
+                  {userInfo.position}
+                </motion.p>
+                
+                {/* اطلاعات تکمیلی با افکت‌های مدرن */}
+                <motion.div 
+                  className="flex mt-3 gap-4 text-[11px] text-slate-500 dark:text-slate-400"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <motion.div 
+                    className="flex items-center bg-white/80 dark:bg-slate-800/80 px-2 py-1 rounded-md shadow-sm"
+                    whileHover={{ scale: 1.05, backgroundColor: "rgba(121, 218, 232, 0.1)" }}
+                  >
+                    <div className="w-3.5 h-3.5 rounded-full bg-gradient-to-br from-indigo-500/80 to-blue-600/80 flex items-center justify-center mr-1.5 shadow-sm">
+                      <span className="text-[8px] text-white font-bold">#</span>
+                    </div>
+                    <span className="font-medium">{userInfo.id}</span>
+                  </motion.div>
+                  <motion.div 
+                    className="flex items-center bg-white/80 dark:bg-slate-800/80 px-2 py-1 rounded-md shadow-sm"
+                    whileHover={{ scale: 1.05, backgroundColor: "rgba(121, 218, 232, 0.1)" }}
+                  >
+                    <div className="w-3.5 h-3.5 rounded-full bg-gradient-to-br from-amber-500/80 to-orange-600/80 flex items-center justify-center mr-1.5 shadow-sm">
+                      <span className="text-[8px] text-white font-bold">📅</span>
+                    </div>
+                    <span className="font-medium">{userInfo.joiningDate}</span>
+                  </motion.div>
                 </motion.div>
               </div>
+            </div>
+            
+            {/* شاخص‌های کلیدی عملکرد با طراحی سه بعدی و انیمیشن */}
+            <div className="flex-1 grid grid-cols-4 gap-x-3 gap-y-4 border-t md:border-t-0 md:border-r pt-4 md:pt-1 md:pr-6 mt-4 md:mt-0 border-slate-100 dark:border-slate-700/20 relative">
+              {/* ترسیم خط نور تزئینی */}
+              <motion.div 
+                className="hidden md:block absolute top-[10%] right-0 w-px h-[80%] bg-gradient-to-b from-transparent via-tiffany/30 to-transparent" 
+                animate={{ 
+                  opacity: [0.2, 0.6, 0.2], 
+                  height: ['70%', '80%', '70%'],
+                }}
+                transition={{ 
+                  duration: 3, 
+                  repeat: Infinity 
+                }}
+              />
               
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{userInfo.position}</p>
+              {/* شاخص امتیاز سلامت - طراحی پیشرفته */}
+              <motion.div 
+                className="flex flex-col items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="relative w-14 h-14 mb-2">
+                  {/* سایه پشت دایره */}
+                  <div className="absolute inset-0 rounded-full bg-emerald-500/10 blur-md transform scale-110"></div>
+                  
+                  {/* حلقه خارجی با انیمیشن چرخش */}
+                  <motion.div 
+                    className="absolute inset-0 rounded-full border-2 border-emerald-400/20"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                  />
+                  
+                  {/* دایره پیشرفت */}
+                  <svg className="w-14 h-14 transform -rotate-90" viewBox="0 0 36 36">
+                    {/* دایره پشت زمینه */}
+                    <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeWidth="0.8" className="text-slate-200 dark:text-slate-700" />
+                    
+                    {/* دایره نور پشت پیشرفت */}
+                    <motion.circle 
+                      cx="18" cy="18" r="16" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="3"
+                      strokeDasharray="100" 
+                      strokeDashoffset={100 - userInfo.healthScore}
+                      className="text-emerald-500/20 blur-[1px]" 
+                      strokeLinecap="round"
+                    />
+                    
+                    {/* دایره پیشرفت اصلی */}
+                    <motion.circle 
+                      cx="18" cy="18" r="16" 
+                      fill="none" 
+                      stroke="url(#healthGradient)" 
+                      strokeWidth="2.5"
+                      strokeDasharray="100" 
+                      initial={{ strokeDashoffset: 100 }}
+                      animate={{ strokeDashoffset: 100 - userInfo.healthScore }}
+                      transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+                      className="drop-shadow-md" 
+                      strokeLinecap="round"
+                    />
+                    
+                    {/* گرادیان برای دایره پیشرفت */}
+                    <defs>
+                      <linearGradient id="healthGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#10b981" />
+                        <stop offset="100%" stopColor="#34d399" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  
+                  {/* عدد وسط با انیمیشن شمارش */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <motion.span 
+                      className="text-sm font-bold bg-gradient-to-br from-emerald-600 to-emerald-400 bg-clip-text text-transparent"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 1 }}
+                    >
+                      {userInfo.healthScore}
+                    </motion.span>
+                  </div>
+                </div>
+                
+                {/* عنوان با افکت هاور */}
+                <motion.span 
+                  className="text-[11px] font-medium text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md bg-white/50 dark:bg-slate-800/50 shadow-sm"
+                  whileHover={{ 
+                    backgroundColor: "rgba(16, 185, 129, 0.1)",
+                    color: "#10b981"
+                  }}
+                >
+                  امتیاز سلامت
+                </motion.span>
+              </motion.div>
               
-              {/* اطلاعات تکمیلی */}
-              <div className="flex mt-2 gap-3 text-[10px] text-slate-500 dark:text-slate-400">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center mr-1">
-                    <span className="text-[6px] text-slate-500 dark:text-slate-400">#</span>
-                  </div>
-                  <span>{userInfo.id}</span>
+              {/* شاخص سطح - طراحی پیشرفته */}
+              <motion.div 
+                className="flex flex-col items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="relative w-14 h-14 mb-2 flex items-center justify-center">
+                  {/* افکت هاله پشت */}
+                  <div className="absolute w-11 h-11 rounded-lg bg-tiffany/10 blur-md"></div>
+                  
+                  {/* کادر اصلی */}
+                  <motion.div 
+                    className="relative w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-br from-tiffany/80 to-aqua/80 shadow-lg"
+                    whileHover={{ 
+                      boxShadow: "0 0 15px rgba(121, 218, 232, 0.5)",
+                    }}
+                  >
+                    {/* افکت شیشه‌ای روی عدد */}
+                    <div className="absolute inset-0 rounded-lg bg-white/20 opacity-50"></div>
+                    
+                    {/* شماره سطح */}
+                    <motion.span 
+                      className="text-white font-bold text-lg z-10"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
+                    >
+                      {userInfo.level}
+                    </motion.span>
+                    
+                    {/* ذرات تزئینی اطراف عدد */}
+                    <motion.div
+                      className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-white/80"
+                      animate={{ 
+                        opacity: [0, 1, 0],
+                        scale: [0.8, 1.2, 0.8]
+                      }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: Infinity,
+                        repeatType: "reverse" 
+                      }}
+                    />
+                    <motion.div
+                      className="absolute -bottom-1 -left-1 w-1 h-1 rounded-full bg-white/80"
+                      animate={{ 
+                        opacity: [0, 1, 0],
+                        scale: [0.8, 1.2, 0.8]
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        delay: 0.5,
+                        repeat: Infinity,
+                        repeatType: "reverse" 
+                      }}
+                    />
+                  </motion.div>
                 </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center mr-1">
-                    <span className="text-[6px] text-slate-500 dark:text-slate-400">📅</span>
-                  </div>
-                  <span>{userInfo.joiningDate}</span>
+                
+                {/* عنوان با افکت هاور */}
+                <motion.span 
+                  className="text-[11px] font-medium text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md bg-white/50 dark:bg-slate-800/50 shadow-sm"
+                  whileHover={{ 
+                    backgroundColor: "rgba(121, 218, 232, 0.1)",
+                    color: "#2dd4bf"
+                  }}
+                >
+                  سطح
+                </motion.span>
+              </motion.div>
+              
+              {/* وضعیت آنلاین - طراحی پیشرفته */}
+              <motion.div 
+                className="flex flex-col items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="relative w-14 h-14 mb-2 flex items-center justify-center">
+                  {/* حلقه‌های پالس متحرک */}
+                  <motion.div
+                    className="absolute w-10 h-10 rounded-full border border-emerald-400/30"
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      opacity: [0.7, 0, 0.7]
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      repeat: Infinity,
+                      repeatType: "loop"
+                    }}
+                  />
+                  <motion.div
+                    className="absolute w-7 h-7 rounded-full border border-emerald-400/50"
+                    animate={{ 
+                      scale: [1, 1.3, 1],
+                      opacity: [0.5, 0.2, 0.5]
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      delay: 0.3,
+                      repeat: Infinity,
+                      repeatType: "loop"
+                    }}
+                  />
+                  
+                  {/* نقطه مرکزی */}
+                  <motion.div 
+                    className="relative w-4 h-4 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-400/20"
+                    animate={{ 
+                      boxShadow: [
+                        "0 0 8px rgba(52, 211, 153, 0.4)",
+                        "0 0 16px rgba(52, 211, 153, 0.6)",
+                        "0 0 8px rgba(52, 211, 153, 0.4)"
+                      ]
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  >
+                    {/* افکت درخشش روی نقطه */}
+                    <motion.div 
+                      className="absolute -inset-1 bg-emerald-400/30 rounded-full blur-sm z-0"
+                      animate={{ opacity: [0.4, 0.7, 0.4] }}
+                      transition={{ 
+                        duration: 1.5, 
+                        repeat: Infinity,
+                        repeatType: "reverse"
+                      }}
+                    />
+                  </motion.div>
                 </div>
-              </div>
+                
+                {/* عنوان با افکت هاور */}
+                <motion.span 
+                  className="text-[11px] font-medium text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md bg-white/50 dark:bg-slate-800/50 shadow-sm"
+                  whileHover={{ 
+                    backgroundColor: "rgba(52, 211, 153, 0.1)",
+                    color: "#10b981"
+                  }}
+                >
+                  حاضر
+                </motion.span>
+              </motion.div>
+              
+              {/* بخش کاری - طراحی پیشرفته */}
+              <motion.div 
+                className="flex flex-col items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="relative w-14 h-14 mb-2 flex items-center justify-center">
+                  {/* زمینه آیکون با گرادیان */}
+                  <motion.div 
+                    className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500/10 to-purple-500/5 flex items-center justify-center"
+                    whileHover={{ 
+                      background: "linear-gradient(to bottom right, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1))"
+                    }}
+                  >
+                    {/* افکت نور پشت آیکون */}
+                    <motion.div 
+                      className="absolute w-8 h-8 rounded-full bg-indigo-500/20 blur-sm"
+                      animate={{ opacity: [0.4, 0.8, 0.4] }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity,
+                        repeatType: "reverse"
+                      }}
+                    />
+                    
+                    {/* آیکون با انیمیشن */}
+                    <motion.div
+                      className="relative z-10"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1, rotate: [0, 5, 0, -5, 0] }}
+                      transition={{ 
+                        scale: { type: "spring", stiffness: 300, delay: 0.8 },
+                        rotate: { 
+                          duration: 6, 
+                          repeat: Infinity, 
+                          repeatType: "reverse",
+                          ease: "easeInOut",
+                          delay: 2
+                        }
+                      }}
+                    >
+                      <Users className="w-6 h-6 text-indigo-500" />
+                    </motion.div>
+                  </motion.div>
+                </div>
+                
+                {/* عنوان با افکت هاور */}
+                <motion.span 
+                  className="text-[11px] font-medium text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md bg-white/50 dark:bg-slate-800/50 shadow-sm"
+                  whileHover={{ 
+                    backgroundColor: "rgba(99, 102, 241, 0.1)",
+                    color: "#6366f1"
+                  }}
+                >
+                  منابع انسانی
+                </motion.span>
+              </motion.div>
             </div>
           </div>
           
-          {/* شاخص‌های کلیدی عملکرد */}
-          <div className="flex-1 grid grid-cols-4 gap-2 border-t md:border-t-0 md:border-r pt-4 md:pt-0 md:pr-6 mt-4 md:mt-0 border-slate-100 dark:border-slate-700/20">
-            {/* شاخص امتیاز سلامت - مینیمال و مدرن */}
+          {/* نوار دستاوردها - با طراحی سه بعدی پیشرفته */}
+          <div className="mt-2 px-4 pb-3 pt-1 relative">
+            {/* خط جداکننده با افکت نورانی */}
             <motion.div 
-              className="flex flex-col items-center"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
+              className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"
+              animate={{ opacity: [0.3, 0.7, 0.3] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            />
+            
+            {/* عنوان بخش */}
+            <motion.div 
+              className="flex items-center mb-3"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <div className="relative w-12 h-12 mb-1">
-                <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeWidth="1" className="text-slate-200 dark:text-slate-700" />
-                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="100" strokeDashoffset={100 - userInfo.healthScore} className="text-emerald-500" strokeLinecap="round" />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xs font-bold">{userInfo.healthScore}</span>
-                </div>
-              </div>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400">امتیاز سلامت</span>
+              <Trophy className="w-3.5 h-3.5 text-amber-500 mr-1.5" />
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-300">دستاوردها</span>
             </motion.div>
             
-            {/* شاخص سطح - مینیمال و مدرن */}
+            {/* نوار اسکرول دستاوردها */}
+            <div className="flex items-center overflow-x-auto scrollbar-hide pb-1 relative">
+              {/* سایه کناری برای اسکرول */}
+              <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white/90 to-transparent dark:from-slate-900/90 z-10 pointer-events-none"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white/90 to-transparent dark:from-slate-900/90 z-10 pointer-events-none"></div>
+              
+              {/* دستاوردها */}
+              {userInfo.achievements.map((achievement, index) => (
+                <motion.div
+                  key={index}
+                  className="flex-shrink-0 mr-3 px-3 py-1.5 rounded-full bg-gradient-to-br from-white/90 to-white/50 dark:from-slate-800/90 dark:to-slate-800/50 flex items-center shadow-md relative overflow-hidden backdrop-blur-sm"
+                  initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ 
+                    delay: 0.8 + (index * 0.1),
+                    type: "spring",
+                    stiffness: 200
+                  }}
+                  whileHover={{ 
+                    y: -3, 
+                    boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05)",
+                    scale: 1.05
+                  }}
+                >
+                  {/* افکت گرادیان متحرک */}
+                  <motion.div
+                    className="absolute -inset-1 rounded-full bg-gradient-to-r from-amber-300/10 via-amber-400/30 to-amber-300/10 blur-sm"
+                    animate={{ x: ['-100%', '100%'] }}
+                    transition={{ 
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatType: "loop",
+                      ease: "linear",
+                      delay: index * 0.2
+                    }}
+                  />
+                  
+                  {/* محتوای دستاورد */}
+                  <div className="z-10 flex items-center">
+                    <span className="w-5 h-5 flex items-center justify-center bg-amber-100 dark:bg-amber-500/20 rounded-full mr-2 text-amber-500">
+                      {achievement.icon}
+                    </span>
+                    <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
+                      {achievement.label}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+      
+      {/* نوار پایین - مهارت‌ها و عملکردها (طراحی پیشرفته) */}
+      <div className="relative backdrop-blur-md bg-white/40 dark:bg-slate-800/40 border-t border-white/20 dark:border-slate-700/20 rounded-b-xl overflow-hidden shadow-sm">
+        {/* افکت‌های پس‌زمینه تزئینی */}
+        <div className="absolute inset-0 bg-grid-slate-200/[0.03] dark:bg-grid-slate-50/[0.02]"></div>
+        <motion.div
+          className="absolute -left-32 -bottom-32 w-64 h-64 rounded-full bg-tiffany/5 dark:bg-tiffany/10 blur-3xl"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.1, 0.2, 0.1],
+          }}
+          transition={{ 
+            duration: 8, 
+            ease: "easeInOut", 
+            repeat: Infinity 
+          }}
+        />
+        
+        <div className="px-6 py-4 flex items-center justify-between relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center">
             <motion.div 
-              className="flex flex-col items-center"
+              className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center mb-2 md:mb-0 md:ml-3"
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Trophy className="w-3.5 h-3.5 text-tiffany ml-1.5" />
+              <span className="uppercase tracking-wider">مهارت‌ها</span>
+            </motion.div>
+            
+            <div className="flex flex-wrap gap-2">
+              {userInfo.skills.map((skill, index) => (
+                <motion.div
+                  key={index}
+                  className="relative group"
+                  initial={{ opacity: 0, scale: 0.9, y: 5 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ delay: 0.4 + (index * 0.1) }}
+                >
+                  {/* افکت هاله در حالت هاور */}
+                  <motion.div 
+                    className="absolute -inset-1 rounded-md bg-gradient-to-r from-tiffany/30 to-aqua/30 opacity-0 blur-sm group-hover:opacity-100 transition-opacity duration-300"
+                    initial={false}
+                    whileHover={{ scale: 1.1 }}
+                  />
+                  
+                  {/* محتوای مهارت */}
+                  <div className="relative z-10 text-[11px] py-1 px-2.5 rounded-md bg-gradient-to-br from-white/90 to-white/60 dark:from-slate-800/90 dark:to-slate-800/60 text-slate-700 dark:text-slate-300 border border-white/50 dark:border-slate-700/50 shadow-sm backdrop-blur-sm overflow-hidden">
+                    {/* افکت حرکت گرادیان در حالت هاور */}
+                    <motion.div 
+                      className="absolute -inset-1 bg-gradient-to-r from-transparent via-white/20 dark:via-slate-500/10 to-transparent skew-x-12 opacity-0 group-hover:opacity-100"
+                      initial={false}
+                      animate={{ x: ['-100%', '100%'] }}
+                      transition={{ 
+                        duration: 1.5,
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        ease: "linear",
+                      }}
+                    />
+                    
+                    <span className="relative z-10 font-medium">{skill}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+          
+          {/* آیکون‌های عملکردی پیشرفته */}
+          <div className="flex gap-1">
+            {/* دکمه ایمیل با افکت */}
+            <motion.button 
+              className="relative p-2 rounded-full bg-white/60 dark:bg-slate-700/60 shadow-md overflow-hidden group backdrop-blur-sm"
+              whileHover={{ scale: 1.1, backgroundColor: "rgba(255, 255, 255, 0.8)" }}
+              whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <div className="relative w-12 h-12 mb-1 flex items-center justify-center">
-                <div className="w-8 h-8 flex items-center justify-center rounded-lg bg-tiffany/10 text-tiffany">
-                  <span className="text-sm font-bold">{userInfo.level}</span>
-                </div>
+              {/* افکت هاله در حالت هاور */}
+              <motion.div 
+                className="absolute -inset-1 bg-gradient-to-r from-blue-400/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-200"
+              />
+              
+              {/* افکت درخشش در هاور */}
+              <motion.div 
+                className="absolute -inset-1 bg-gradient-to-tr from-transparent via-blue-400/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse-slow"
+              />
+              
+              <Mail className="w-4 h-4 text-blue-500 dark:text-blue-400 relative z-10" />
+              
+              {/* تولتیپ */}
+              <div className="absolute -top-9 left-1/2 transform -translate-x-1/2 bg-white dark:bg-slate-800 shadow-lg px-2 py-1 rounded text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity scale-0 group-hover:scale-100 duration-200 pointer-events-none">
+                ارسال پیام
               </div>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400">سطح</span>
-            </motion.div>
+            </motion.button>
             
-            {/* وضعیت - مینیمال و مدرن */}
-            <motion.div 
-              className="flex flex-col items-center"
+            {/* دکمه پنل با افکت */}
+            <motion.button 
+              className="relative p-2 rounded-full bg-white/60 dark:bg-slate-700/60 shadow-md overflow-hidden group backdrop-blur-sm"
+              whileHover={{ scale: 1.1, backgroundColor: "rgba(255, 255, 255, 0.8)" }}
+              whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <div className="relative w-12 h-12 mb-1 flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping absolute"></div>
-                <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+              {/* افکت هاله در حالت هاور */}
+              <motion.div 
+                className="absolute -inset-1 bg-gradient-to-r from-purple-400/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-200"
+              />
+              
+              {/* افکت درخشش در هاور */}
+              <motion.div 
+                className="absolute -inset-1 bg-gradient-to-tr from-transparent via-purple-400/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse-slow"
+              />
+              
+              <PanelLeftOpen className="w-4 h-4 text-purple-500 dark:text-purple-400 relative z-10" />
+              
+              {/* تولتیپ */}
+              <div className="absolute -top-9 left-1/2 transform -translate-x-1/2 bg-white dark:bg-slate-800 shadow-lg px-2 py-1 rounded text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity scale-0 group-hover:scale-100 duration-200 pointer-events-none">
+                باز کردن پنل
               </div>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400">حاضر</span>
-            </motion.div>
+            </motion.button>
             
-            {/* بخش - مینیمال و مدرن */}
-            <motion.div 
-              className="flex flex-col items-center"
+            {/* دکمه تنظیمات با افکت */}
+            <motion.button 
+              className="relative p-2 rounded-full bg-white/60 dark:bg-slate-700/60 shadow-md overflow-hidden group backdrop-blur-sm"
+              whileHover={{ scale: 1.1, backgroundColor: "rgba(255, 255, 255, 0.8)" }}
+              whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="relative w-12 h-12 mb-1 flex items-center justify-center">
-                <div className="w-8 h-8 flex items-center justify-center text-indigo-500">
-                  <Users className="w-5 h-5" />
-                </div>
-              </div>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400">منابع انسانی</span>
-            </motion.div>
-          </div>
-        </div>
-        
-        {/* نوار دستاوردها - افکت مینیمال سه بعدی */}
-        <div className="mt-4 flex items-center overflow-x-auto scrollbar-hide pb-2">
-          {userInfo.achievements.map((achievement, index) => (
-            <motion.div
-              key={index}
-              className="flex-shrink-0 mr-3 py-1 px-3 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center shadow-sm"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8 + (index * 0.1) }}
-              whileHover={{ y: -2, boxShadow: "0 4px 12px rgba(0,0,0,0.05)" }}
-            >
-              <span className="text-xs mr-1">{achievement.icon}</span>
-              <span className="text-xs">{achievement.label}</span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-      
-      {/* نوار پایین - مهارت‌ها و عملکردها (مینیمال) */}
-      <div className="px-6 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/30 backdrop-blur-sm flex items-center justify-between">
-        <div className="flex items-center">
-          <div className="text-[10px] text-slate-400 dark:text-slate-500 ml-2 uppercase tracking-wider font-medium">مهارت‌ها</div>
-          <div className="flex gap-1">
-            {userInfo.skills.map((skill, index) => (
-              <motion.div
-                key={index}
-                className="text-[10px] py-0.5 px-2 rounded-sm bg-white/80 dark:bg-slate-700/30 text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50"
-                initial={{ opacity: 0, x: -5 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.9 + (index * 0.1) }}
-                whileHover={{ backgroundColor: "rgba(121, 218, 232, 0.1)", borderColor: "rgba(121, 218, 232, 0.3)" }}
+              {/* افکت هاله در حالت هاور */}
+              <motion.div 
+                className="absolute -inset-1 bg-gradient-to-r from-amber-400/20 to-orange-500/20 opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-200"
+              />
+              
+              {/* افکت درخشش در هاور */}
+              <motion.div 
+                className="absolute -inset-1 bg-gradient-to-tr from-transparent via-amber-400/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-pulse-slow"
+              />
+              
+              {/* آیکون چرخان در هاور */}
+              <motion.div 
+                className="relative z-10"
+                whileHover={{ rotate: 90 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
-                {skill}
+                <Settings className="w-4 h-4 text-amber-500 dark:text-amber-400" />
               </motion.div>
-            ))}
+              
+              {/* تولتیپ */}
+              <div className="absolute -top-9 left-1/2 transform -translate-x-1/2 bg-white dark:bg-slate-800 shadow-lg px-2 py-1 rounded text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity scale-0 group-hover:scale-100 duration-200 pointer-events-none">
+                تنظیمات
+              </div>
+            </motion.button>
           </div>
-        </div>
-        
-        {/* آیکون‌های عملکردی مینیمال */}
-        <div className="flex text-slate-400 dark:text-slate-500">
-          <motion.button 
-            className="p-1.5 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Mail className="w-3.5 h-3.5" />
-          </motion.button>
-          <motion.button 
-            className="p-1.5 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <PanelLeftOpen className="w-3.5 h-3.5" />
-          </motion.button>
-          <motion.button 
-            className="p-1.5 rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Settings className="w-3.5 h-3.5" />
-          </motion.button>
         </div>
       </div>
     </motion.div>
