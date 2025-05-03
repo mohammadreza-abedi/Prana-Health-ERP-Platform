@@ -592,110 +592,247 @@ export default function HealthDashboard() {
           </div>
           
           <TabsContent value="personal" className="pro-tab-content mt-6">
-            <div className="relative">
-              {/* هدر با انیمیشن و افکت */}
-              <div className="relative mb-6 overflow-hidden">
-                <div className="flex items-center space-x-4 space-x-reverse">
-                  <div className="relative">
-                    <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-pink-500 to-rose-600 p-0.5">
-                      <div className="absolute inset-0 rounded-lg bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
-                      <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-pink-500 to-rose-600 rounded-[7px]">
-                        <Heart className="h-6 w-6 text-white" />
-                      </div>
-                      
-                      {/* افکت هاله متحرک */}
-                      <motion.div 
-                        className="absolute inset-0 rounded-lg opacity-40"
-                        animate={{ 
-                          boxShadow: [
-                            '0 0 0 0 rgba(244, 63, 94, 0)',
-                            '0 0 0 6px rgba(244, 63, 94, 0.1)',
-                            '0 0 0 0 rgba(244, 63, 94, 0)'
-                          ]
-                        }}
-                        transition={{ 
-                          duration: 2, 
-                          ease: "easeInOut", 
-                          repeat: Infinity
-                        }}
-                      />
-                    </div>
+            <div className="relative px-1">
+              {/* افکت‌های بصری پس زمینه - عناصر متحرک و هاله‌ها */}
+              <div className="absolute -top-20 -right-10 w-96 h-96 bg-gradient-radial from-rose-500/5 to-transparent rounded-full blur-3xl opacity-60 mix-blend-multiply"></div>
+              <div className="absolute top-40 -left-20 w-80 h-80 bg-gradient-radial from-pink-500/5 to-transparent rounded-full blur-3xl opacity-60 mix-blend-multiply"></div>
+              <div className="absolute -bottom-10 right-1/4 w-60 h-60 bg-gradient-radial from-fuchsia-500/5 to-transparent rounded-full blur-3xl opacity-60 mix-blend-multiply"></div>
+              
+              <div className="relative z-10">
+                {/* هدر با دیزاین پیشرفته */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="bg-gradient-to-br from-white/30 to-white/10 dark:from-slate-900/30 dark:to-slate-900/10 backdrop-blur-lg rounded-2xl p-5 mb-8 shadow-lg relative overflow-hidden"
+                >
+                  {/* افکت پترن پس زمینه */}
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTS0xMyAxM2gyNnYyNmgtMjZ6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wMykiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-50"></div>
+                  
+                  {/* خط تزئینی بالا */}
+                  <div className="absolute top-0 left-0 right-0 h-0.5 overflow-hidden">
+                    <div className="h-full w-full bg-gradient-to-r from-transparent via-rose-500/30 to-transparent"></div>
+                    <motion.div 
+                      className="absolute top-0 h-full w-32 bg-gradient-to-r from-transparent via-rose-500/70 to-transparent"
+                      animate={{ x: ['-100%', '500%'] }}
+                      transition={{ 
+                        duration: 4, 
+                        ease: "easeInOut", 
+                        repeat: Infinity,
+                        repeatDelay: 1
+                      }}
+                    />
                   </div>
                   
-                  <div>
-                    <h2 className="text-2xl font-bold flex items-center bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-500">
-                      وضعیت سلامتی
-                      <motion.div 
-                        animate={{ rotate: [0, 5, 0, -5, 0] }}
-                        transition={{ duration: 5, repeat: Infinity }}
-                        className="mr-2 text-rose-500"
-                      >
-                        <Sparkles className="h-5 w-5" />
-                      </motion.div>
-                    </h2>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
-                      همین الان دیتای سلامتی شما به‌روز شده است
-                    </p>
+                  {/* افکت نقاط پراکنده متحرک */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <motion.div 
+                      className="absolute top-1/4 left-1/4 h-1 w-1 rounded-full bg-rose-400/30"
+                      animate={{ 
+                        y: [0, -20, 0],
+                        opacity: [0, 1, 0] 
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity,
+                        repeatDelay: 1
+                      }}
+                    />
+                    <motion.div 
+                      className="absolute top-2/3 left-1/3 h-1.5 w-1.5 rounded-full bg-pink-400/30"
+                      animate={{ 
+                        y: [0, -30, 0],
+                        opacity: [0, 1, 0] 
+                      }}
+                      transition={{ 
+                        duration: 4, 
+                        repeat: Infinity,
+                        delay: 1,
+                        repeatDelay: 0.5
+                      }}
+                    />
+                    <motion.div 
+                      className="absolute top-1/2 left-2/3 h-1 w-1 rounded-full bg-fuchsia-400/30"
+                      animate={{ 
+                        y: [0, -15, 0],
+                        opacity: [0, 1, 0] 
+                      }}
+                      transition={{ 
+                        duration: 3.5, 
+                        repeat: Infinity,
+                        delay: 0.5
+                      }}
+                    />
                   </div>
-                </div>
-                
-                {/* خط دکوراتیو */}
-                <div className="h-0.5 w-full mt-6 bg-gradient-to-r from-rose-500/30 via-pink-500/0 to-rose-500/0 relative overflow-hidden">
-                  <motion.div 
-                    className="absolute top-0 h-full bg-gradient-to-r from-transparent via-rose-500 to-transparent"
-                    style={{ width: '30%' }}
-                    animate={{ 
-                      left: ['-30%', '100%'],
-                    }}
-                    transition={{ 
-                      duration: 2, 
-                      ease: "easeInOut", 
-                      repeat: Infinity,
-                      repeatDelay: 3
-                    }}
-                  />
-                </div>
+                  
+                  <div className="flex flex-col md:flex-row items-start md:items-center gap-4 relative z-10">
+                    <div className="shrink-0">
+                      <div className="relative">
+                        <div className="h-16 w-16 rounded-2xl p-0.5 bg-gradient-to-br from-rose-500 to-fuchsia-600 relative overflow-hidden shadow-lg shadow-rose-500/10">
+                          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
+                          <div className="absolute inset-0.5 rounded-xl overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-rose-500 to-fuchsia-600"></div>
+                            <motion.div 
+                              className="absolute inset-0 bg-gradient-to-br from-rose-400/80 to-fuchsia-500/80 opacity-0"
+                              animate={{ opacity: [0, 0.5, 0] }}
+                              transition={{ duration: 3, repeat: Infinity }}
+                            />
+                          </div>
+                          <div className="absolute inset-0.5 flex items-center justify-center">
+                            <Heart className="h-8 w-8 text-white drop-shadow-lg" />
+                          </div>
+                          
+                          {/* خطوط شیار دور آیکون */}
+                          <motion.div 
+                            className="absolute inset-0 rounded-2xl border border-white/20"
+                            animate={{ opacity: [0, 1, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          />
+                          
+                          {/* افکت هاله متحرک */}
+                          <motion.div 
+                            className="absolute inset-0 rounded-2xl"
+                            animate={{ 
+                              boxShadow: [
+                                '0 0 0 0 rgba(244, 63, 94, 0)',
+                                '0 0 0 8px rgba(244, 63, 94, 0.1)',
+                                '0 0 0 0 rgba(244, 63, 94, 0)'
+                              ]
+                            }}
+                            transition={{ 
+                              duration: 2.5, 
+                              ease: "easeInOut", 
+                              repeat: Infinity
+                            }}
+                          />
+                        </div>
+                        
+                        {/* افکت نقطه ضربان */}
+                        <motion.div 
+                          className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-rose-500"
+                          animate={{ 
+                            scale: [1, 1.3, 1],
+                            boxShadow: [
+                              '0 0 0 0 rgba(244, 63, 94, 0.5)',
+                              '0 0 0 3px rgba(244, 63, 94, 0)',
+                              '0 0 0 0 rgba(244, 63, 94, 0.5)'
+                            ]
+                          }}
+                          transition={{ 
+                            duration: 1.3, 
+                            repeat: Infinity,
+                          }}
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-rose-500 via-fuchsia-500 to-purple-600 drop-shadow-sm flex items-center">
+                        وضعیت سلامتی شخصی
+                        <motion.div 
+                          className="inline-flex mr-2 text-rose-500 drop-shadow"
+                          animate={{ 
+                            rotate: [0, 10, 0, -10, 0],
+                            scale: [1, 1.1, 1]
+                          }}
+                          transition={{ duration: 5, repeat: Infinity }}
+                        >
+                          <Sparkles className="h-6 w-6" />
+                        </motion.div>
+                      </h2>
+                      
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-slate-500 dark:text-slate-400">
+                        <p className="text-base">
+                          داده‌های سلامتی به‌روز شده
+                        </p>
+                        
+                        <div className="flex items-center">
+                          <span className="mx-2 hidden sm:inline-block h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                          <span className="font-medium text-xs flex items-center px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
+                            <motion.div 
+                              animate={{ scale: [1, 1.3, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                              className="h-1.5 w-1.5 rounded-full bg-green-500 mr-1"
+                            />
+                            <span>فعال</span>
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-1 flex items-center text-xs text-slate-400">
+                        <Clock className="h-3.5 w-3.5 mr-1" />
+                        <span>به‌روزرسانی: دیروز ۱۶:۳۰</span>
+                      </div>
+                    </div>
+                    
+                    {/* نمایش امتیاز سلامت - عنصر جدید */}
+                    <div className="md:mr-auto bg-gradient-to-br from-slate-50/80 to-white/60 dark:from-slate-800/80 dark:to-slate-900/60 rounded-xl p-3 backdrop-blur-sm shadow-sm flex flex-col items-center">
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mb-0.5">امتیاز سلامت</div>
+                      <div className="flex items-end">
+                        <motion.div 
+                          className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-tiffany to-green-500"
+                          initial={{ scale: 0.9, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.2, duration: 0.5 }}
+                        >
+                          8.7
+                        </motion.div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400 ml-1 mb-0.5">/10</div>
+                      </div>
+                      
+                      <div className="mt-1 flex items-center text-xs text-success font-medium">
+                        <svg className="w-3 h-3 mr-0.5" viewBox="0 0 24 24" fill="none">
+                          <path d="M12 5l7 7-1.41 1.41L13 8.83V19h-2V8.83l-4.59 4.58L5 12l7-7z" fill="currentColor"/>
+                        </svg>
+                        <span>+۵% از ماه گذشته</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
               
-              {/* افکت های بصری پس زمینه */}
-              <div className="absolute top-0 right-0 opacity-20 pointer-events-none">
+              {/* عناصر تزئینی متحرک */}
+              <div className="absolute top-5 -right-5 opacity-10 pointer-events-none">
                 <motion.div 
                   className="text-rose-500"
                   animate={{ 
-                    y: [0, -15, 0], 
-                    opacity: [0.2, 0.5, 0.2]
+                    y: [0, -20, 0], 
+                    rotate: [0, 5, 0],
+                    opacity: [0.1, 0.2, 0.1]
                   }}
                   transition={{ 
-                    duration: 4, 
+                    duration: 8, 
                     repeat: Infinity
                   }}
                 >
-                  <Activity className="h-24 w-24" />
+                  <Activity className="h-32 w-32" />
                 </motion.div>
               </div>
               
-              <div className="absolute bottom-0 left-0 opacity-10 pointer-events-none">
+              <div className="absolute bottom-10 -left-12 opacity-10 pointer-events-none">
                 <motion.div 
-                  className="text-pink-400"
+                  className="text-fuchsia-500"
                   animate={{ 
-                    y: [0, 10, 0], 
-                    opacity: [0.1, 0.3, 0.1]
+                    y: [0, 20, 0], 
+                    rotate: [0, -5, 0],
+                    opacity: [0.1, 0.2, 0.1]
                   }}
                   transition={{ 
-                    duration: 5, 
-                    delay: 1,
-                    repeat: Infinity
+                    duration: 10, 
+                    repeat: Infinity,
+                    delay: 2
                   }}
                 >
-                  <Clock className="h-20 w-20" />
+                  <Clock className="h-28 w-28" />
                 </motion.div>
               </div>
               
-              {/* محتوای اصلی با انیمیشن ورود */}
+              {/* محتوای اصلی با انیمیشن ورود پیشرفته */}
               <motion.div
-                initial={{ y: 20, opacity: 0 }}
+                initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative z-10"
               >
                 <HealthMetricsGrid metrics={healthMetrics} />
               </motion.div>
@@ -703,121 +840,246 @@ export default function HealthDashboard() {
           </TabsContent>
           
           <TabsContent value="team" className="pro-tab-content mt-6">
-            <div className="space-y-8 relative">
-              {/* افکت های بصری پس زمینه */}
-              <div className="absolute top-40 right-20 opacity-10 pointer-events-none">
-                <motion.div 
-                  className="text-tiffany"
-                  animate={{ 
-                    y: [0, -10, 0], 
-                    opacity: [0.1, 0.2, 0.1],
-                    rotate: [0, 5, 0]
-                  }}
-                  transition={{ 
-                    duration: 5, 
-                    repeat: Infinity
-                  }}
-                >
-                  <Users className="h-32 w-32" />
-                </motion.div>
-              </div>
+            <div className="relative px-1">
+              {/* افکت‌های بصری پس زمینه - عناصر متحرک و هاله‌ها */}
+              <div className="absolute -top-20 -right-10 w-96 h-96 bg-gradient-radial from-tiffany/5 to-transparent rounded-full blur-3xl opacity-60 mix-blend-multiply"></div>
+              <div className="absolute top-40 -left-20 w-80 h-80 bg-gradient-radial from-aqua/5 to-transparent rounded-full blur-3xl opacity-60 mix-blend-multiply"></div>
+              <div className="absolute -bottom-10 right-1/4 w-60 h-60 bg-gradient-radial from-cyan-500/5 to-transparent rounded-full blur-3xl opacity-60 mix-blend-multiply"></div>
               
-              <div className="absolute bottom-20 left-10 opacity-10 pointer-events-none">
-                <motion.div 
-                  className="text-aqua"
-                  animate={{ 
-                    y: [0, 15, 0], 
-                    opacity: [0.1, 0.25, 0.1]
-                  }}
-                  transition={{ 
-                    duration: 6, 
-                    repeat: Infinity
-                  }}
+              <div className="relative z-10">
+                {/* هدر با دیزاین پیشرفته */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="bg-gradient-to-br from-white/30 to-white/10 dark:from-slate-900/30 dark:to-slate-900/10 backdrop-blur-lg rounded-2xl p-5 mb-8 shadow-lg relative overflow-hidden"
                 >
-                  <Award className="h-24 w-24" />
-                </motion.div>
-              </div>
-              
-              {/* هدر با انیمیشن و افکت */}
-              <div className="relative mb-6">
-                <div className="flex items-center space-x-4 space-x-reverse">
-                  <div className="relative">
-                    <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-tiffany to-aqua p-0.5">
-                      <div className="absolute inset-0 rounded-lg bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
-                      <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-tiffany to-aqua rounded-[7px]">
-                        <Users className="h-6 w-6 text-white" />
-                      </div>
-                      
-                      {/* افکت هاله متحرک */}
-                      <motion.div 
-                        className="absolute inset-0 rounded-lg opacity-40"
-                        animate={{ 
-                          boxShadow: [
-                            '0 0 0 0 rgba(45, 212, 191, 0)',
-                            '0 0 0 6px rgba(45, 212, 191, 0.1)',
-                            '0 0 0 0 rgba(45, 212, 191, 0)'
-                          ]
-                        }}
-                        transition={{ 
-                          duration: 2, 
-                          ease: "easeInOut", 
-                          repeat: Infinity
-                        }}
-                      />
-                    </div>
+                  {/* افکت پترن پس زمینه */}
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTS0xMyAxM2gyNnYyNmgtMjZ6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wMykiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-50"></div>
+                  
+                  {/* خط تزئینی بالا */}
+                  <div className="absolute top-0 left-0 right-0 h-0.5 overflow-hidden">
+                    <div className="h-full w-full bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"></div>
+                    <motion.div 
+                      className="absolute top-0 h-full w-32 bg-gradient-to-r from-transparent via-tiffany/70 to-transparent"
+                      animate={{ x: ['-100%', '500%'] }}
+                      transition={{ 
+                        duration: 4, 
+                        ease: "easeInOut", 
+                        repeat: Infinity,
+                        repeatDelay: 1
+                      }}
+                    />
                   </div>
                   
-                  <div>
-                    <h2 className="text-2xl font-bold flex items-center bg-clip-text text-transparent bg-gradient-to-r from-tiffany to-aqua">
-                      سلامت تیمی
-                      <motion.div 
-                        animate={{ 
-                          scale: [1, 1.1, 1],
-                          rotate: [0, 10, 0] 
-                        }}
-                        transition={{ duration: 4, repeat: Infinity }}
-                        className="mr-2 text-tiffany"
-                      >
-                        <Award className="h-5 w-5" />
-                      </motion.div>
-                    </h2>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
-                      گزارش عملکرد تیمی در هفته اخیر
-                    </p>
+                  {/* افکت نقاط پراکنده متحرک */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    <motion.div 
+                      className="absolute top-1/4 left-1/4 h-1 w-1 rounded-full bg-tiffany/30"
+                      animate={{ 
+                        y: [0, -20, 0],
+                        opacity: [0, 1, 0] 
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity,
+                        repeatDelay: 1
+                      }}
+                    />
+                    <motion.div 
+                      className="absolute top-2/3 left-1/3 h-1.5 w-1.5 rounded-full bg-aqua/30"
+                      animate={{ 
+                        y: [0, -30, 0],
+                        opacity: [0, 1, 0] 
+                      }}
+                      transition={{ 
+                        duration: 4, 
+                        repeat: Infinity,
+                        delay: 1,
+                        repeatDelay: 0.5
+                      }}
+                    />
+                    <motion.div 
+                      className="absolute top-1/2 left-2/3 h-1 w-1 rounded-full bg-cyan-400/30"
+                      animate={{ 
+                        y: [0, -15, 0],
+                        opacity: [0, 1, 0] 
+                      }}
+                      transition={{ 
+                        duration: 3.5, 
+                        repeat: Infinity,
+                        delay: 0.5
+                      }}
+                    />
                   </div>
-                </div>
-                
-                {/* خط دکوراتیو */}
-                <div className="h-0.5 w-full mt-6 bg-gradient-to-r from-tiffany/30 via-aqua/0 to-tiffany/0 relative overflow-hidden">
-                  <motion.div 
-                    className="absolute top-0 h-full bg-gradient-to-r from-transparent via-tiffany to-transparent"
-                    style={{ width: '30%' }}
-                    animate={{ 
-                      left: ['-30%', '100%'],
-                    }}
-                    transition={{ 
-                      duration: 2, 
-                      ease: "easeInOut", 
-                      repeat: Infinity,
-                      repeatDelay: 3
-                    }}
-                  />
-                </div>
+                  
+                  <div className="flex flex-col md:flex-row items-start md:items-center gap-4 relative z-10">
+                    <div className="shrink-0">
+                      <div className="relative">
+                        <div className="h-16 w-16 rounded-2xl p-0.5 bg-gradient-to-br from-tiffany to-aqua relative overflow-hidden shadow-lg shadow-tiffany/10">
+                          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
+                          <div className="absolute inset-0.5 rounded-xl overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-tiffany to-aqua"></div>
+                            <motion.div 
+                              className="absolute inset-0 bg-gradient-to-br from-tiffany/80 to-cyan-500/80 opacity-0"
+                              animate={{ opacity: [0, 0.5, 0] }}
+                              transition={{ duration: 3, repeat: Infinity }}
+                            />
+                          </div>
+                          <div className="absolute inset-0.5 flex items-center justify-center">
+                            <Users className="h-8 w-8 text-white drop-shadow-lg" />
+                          </div>
+                          
+                          {/* خطوط شیار دور آیکون */}
+                          <motion.div 
+                            className="absolute inset-0 rounded-2xl border border-white/20"
+                            animate={{ opacity: [0, 1, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          />
+                          
+                          {/* افکت هاله متحرک */}
+                          <motion.div 
+                            className="absolute inset-0 rounded-2xl"
+                            animate={{ 
+                              boxShadow: [
+                                '0 0 0 0 rgba(45, 212, 191, 0)',
+                                '0 0 0 8px rgba(45, 212, 191, 0.1)',
+                                '0 0 0 0 rgba(45, 212, 191, 0)'
+                              ]
+                            }}
+                            transition={{ 
+                              duration: 2.5, 
+                              ease: "easeInOut", 
+                              repeat: Infinity
+                            }}
+                          />
+                        </div>
+                        
+                        {/* افکت نقطه ضربان */}
+                        <motion.div 
+                          className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-tiffany"
+                          animate={{ 
+                            scale: [1, 1.3, 1],
+                            boxShadow: [
+                              '0 0 0 0 rgba(45, 212, 191, 0.5)',
+                              '0 0 0 3px rgba(45, 212, 191, 0)',
+                              '0 0 0 0 rgba(45, 212, 191, 0.5)'
+                            ]
+                          }}
+                          transition={{ 
+                            duration: 1.3, 
+                            repeat: Infinity,
+                          }}
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-tiffany via-aqua to-cyan-500 drop-shadow-sm flex items-center">
+                        گزارش سلامت تیمی
+                        <motion.div 
+                          className="inline-flex mr-2 text-tiffany drop-shadow"
+                          animate={{ 
+                            rotate: [0, 10, 0, -10, 0],
+                            scale: [1, 1.1, 1]
+                          }}
+                          transition={{ duration: 5, repeat: Infinity }}
+                        >
+                          <Award className="h-6 w-6" />
+                        </motion.div>
+                      </h2>
+                      
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-slate-500 dark:text-slate-400">
+                        <p className="text-base">
+                          آمار عملکرد سلامت تیمی در هفته جاری
+                        </p>
+                        
+                        <div className="flex items-center">
+                          <span className="mx-2 hidden sm:inline-block h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                          <span className="font-medium text-xs flex items-center px-2 py-0.5 rounded-full bg-tiffany/10 dark:bg-tiffany/20 text-tiffany dark:text-tiffany-light">
+                            <motion.div 
+                              animate={{ scale: [1, 1.3, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                              className="h-1.5 w-1.5 rounded-full bg-tiffany mr-1"
+                            />
+                            <span>۱۷ عضو فعال</span>
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-1 flex items-center text-xs text-slate-400">
+                        <Calendar className="h-3.5 w-3.5 mr-1" />
+                        <span>هفته منتهی به ۱۴۰۲/۱۱/۲۸</span>
+                      </div>
+                    </div>
+                    
+                    {/* نمایش امتیاز تیمی - عنصر جدید */}
+                    <div className="md:mr-auto bg-gradient-to-br from-slate-50/80 to-white/60 dark:from-slate-800/80 dark:to-slate-900/60 rounded-xl p-3 backdrop-blur-sm shadow-sm flex flex-col items-center">
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mb-0.5">عملکرد تیمی</div>
+                      <div className="flex items-end">
+                        <motion.div 
+                          className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-500"
+                          initial={{ scale: 0.9, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ delay: 0.2, duration: 0.5 }}
+                        >
+                          76
+                        </motion.div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400 ml-1 mb-0.5">%</div>
+                      </div>
+                      
+                      <div className="mt-1 flex items-center text-xs text-success font-medium">
+                        <svg className="w-3 h-3 mr-0.5" viewBox="0 0 24 24" fill="none">
+                          <path d="M12 5l7 7-1.41 1.41L13 8.83V19h-2V8.83l-4.59 4.58L5 12l7-7z" fill="currentColor"/>
+                        </svg>
+                        <span>+۸% از هفته قبل</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
               
-              {/* کارت‌های بینش‌ها با انیمیشن ورود */}
+              {/* کارت‌های بینش‌های تیمی با انیمیشن ورود پیشرفته */}
               <motion.div
+                className="relative z-10 mb-12"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* عنوان بخش با انیمیشن */}
+                <motion.div 
+                  className="flex items-center mb-5 pb-2 border-b border-slate-200 dark:border-slate-700"
+                  initial={{ x: -10, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <div className="h-7 w-7 mr-2 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                    <Activity className="h-4 w-4 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-500">
+                    آمار و ارقام سلامت تیمی
+                  </h3>
+                  <div className="mr-auto">
+                    <motion.div 
+                      className="relative h-1.5 w-8 bg-amber-500/20 rounded-full overflow-hidden"
+                      whileHover={{ width: '32px' }}
+                    >
+                      <motion.div 
+                        className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
+                        animate={{ x: ['-100%', '100%'] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                      />
+                    </motion.div>
+                  </div>
+                </motion.div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                   {teamInsights.map((insight, index) => (
                     <motion.div
                       key={insight.id}
-                      initial={{ y: 20, opacity: 0 }}
+                      initial={{ y: 30, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.3, delay: 0.1 * index }}
+                      transition={{ duration: 0.35, delay: 0.15 * index }}
                     >
                       <InsightCard insight={insight} />
                     </motion.div>
@@ -825,24 +1087,30 @@ export default function HealthDashboard() {
                 </div>
               </motion.div>
               
-              {/* چالش‌های تیمی */}
+              {/* چالش‌های تیمی - با طراحی پیشرفته‌تر */}
               <motion.div
-                initial={{ y: 20, opacity: 0 }}
+                initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="mt-12"
+                transition={{ duration: 0.7, delay: 0.4 }}
+                className="relative z-10"
               >
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center space-x-2 space-x-reverse">
-                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-                      <Trophy className="h-5 w-5 text-white" />
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6">
+                  <div className="flex flex-col mb-4 sm:mb-0">
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/10">
+                        <Trophy className="h-5 w-5 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-600 mr-3">
+                        چالش‌های فعال تیمی
+                      </h3>
                     </div>
-                    <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-600">
-                      چالش‌های فعال تیمی
-                    </h2>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs mr-12 mt-1">
+                      چالش‌های گروهی برای بهبود سلامت سازمانی
+                    </p>
                   </div>
-                  <Button variant="ghost" className="text-amber-500 dark:text-amber-400 flex items-center group">
-                    <span>مشاهده همه</span>
+                  
+                  <Button variant="ghost" className="text-amber-500 dark:text-amber-400 flex items-center group border border-amber-200 dark:border-amber-900/30 hover:bg-amber-50 dark:hover:bg-amber-900/20 h-9 rounded-lg transition-all duration-300">
+                    <span>مشاهده همه چالش‌ها</span>
                     <motion.div
                       animate={{ x: [0, 4, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
@@ -857,47 +1125,79 @@ export default function HealthDashboard() {
                     whileHover={{ y: -5, transition: { duration: 0.2 } }}
                     className="group"
                   >
-                    <Card className="pro-card tiffany overflow-hidden group-hover:shadow-lg group-hover:shadow-tiffany/10 dark:group-hover:shadow-tiffany/5 transition-all duration-300">
-                      <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-tiffany/40 to-transparent rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                      <div className="absolute top-0 right-0 z-10">
-                        <div className="relative flex items-center bg-tiffany text-white text-xs font-medium py-1 pr-2 pl-3 rounded-bl-lg">
+                    <Card className="pro-card tiffany overflow-hidden border-0 group-hover:shadow-xl transition-all duration-500 bg-gradient-to-br from-white/80 to-white/40 dark:from-slate-900/80 dark:to-slate-900/40 backdrop-blur-md relative">
+                      {/* پس زمینه گرادیانی متحرک */}
+                      <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-tiffany/30 to-transparent rounded-full blur-3xl opacity-30 group-hover:opacity-40 transition-opacity"></div>
+                      <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-tr from-cyan-500/20 to-transparent rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                      
+                      {/* پترن پس زمینه */}
+                      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTS0xMyAxM2gyNnYyNmgtMjZ6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wMykiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-40"></div>
+                      
+                      {/* خط تزئینی بالا */}
+                      <div className="absolute top-0 left-0 right-0 h-0.5 overflow-hidden">
+                        <div className="h-full w-full bg-gradient-to-r from-transparent via-tiffany/40 to-transparent"></div>
+                        <motion.div 
+                          className="absolute top-0 h-full w-20 bg-gradient-to-r from-transparent via-tiffany/80 to-transparent"
+                          animate={{ x: ['-100%', '500%'] }}
+                          transition={{ 
+                            duration: 3, 
+                            ease: "easeInOut", 
+                            repeat: Infinity,
+                            repeatDelay: 1
+                          }}
+                        />
+                      </div>
+                      
+                      {/* برچسب وضعیت */}
+                      <div className="absolute top-0 right-0 z-10 overflow-hidden">
+                        <div className="relative flex items-center bg-gradient-to-l from-tiffany to-cyan-500 text-white text-xs font-medium py-1.5 px-3 rounded-bl-lg shadow-md">
                           <span className="relative z-10 flex items-center">
                             <motion.div
-                              animate={{ scale: [1, 1.2, 1] }}
-                              transition={{ duration: 2, repeat: Infinity }}
-                              className="mr-1"
+                              animate={{ scale: [1, 1.3, 1] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                              className="mr-1.5"
                             >
-                              <div className="h-2 w-2 rounded-full bg-white"></div>
+                              <div className="h-2 w-2 rounded-full bg-white/90 shadow-inner"></div>
                             </motion.div>
                             در حال انجام
                           </span>
-                          <div className="absolute top-0 right-0 h-full w-full bg-gradient-to-l from-tiffany/80 to-tiffany"></div>
+                          <div className="absolute top-0 right-0 h-full w-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
                         </div>
                       </div>
                       
-                      <CardHeader>
-                        <CardTitle className="flex items-start">
-                          <Activity className="h-5 w-5 mr-1 text-tiffany flex-shrink-0 mt-1" />
-                          <span>چالش ۱۰،۰۰۰ قدم روزانه</span>
-                        </CardTitle>
-                        <CardDescription className="flex items-center">
-                          <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
-                          <span>۷ روز باقیمانده</span>
-                        </CardDescription>
+                      <CardHeader className="relative z-10">
+                        <div className="flex items-start">
+                          <div className="mr-3 bg-gradient-to-br from-tiffany/10 to-cyan-500/10 p-2 rounded-lg">
+                            <Activity className="h-6 w-6 text-tiffany" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-100">چالش ۱۰،۰۰۰ قدم روزانه</CardTitle>
+                            <CardDescription className="flex items-center mt-1">
+                              <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                              <span>۷ روز باقیمانده</span>
+                            </CardDescription>
+                          </div>
+                        </div>
                       </CardHeader>
                       
-                      <CardContent>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span>پیشرفت تیمی</span>
-                          <span className="font-medium text-tiffany">۶۸%</span>
+                      <CardContent className="relative z-10">
+                        <div className="mb-4 bg-gradient-to-r from-white/70 to-white/30 dark:from-slate-800/70 dark:to-slate-800/30 rounded-lg p-3 backdrop-blur-sm">
+                          <p className="text-sm text-slate-600 dark:text-slate-300">
+                            این چالش برای افزایش فعالیت روزانه همه اعضای تیم و بهبود سلامت قلبی-عروقی طراحی شده است.
+                          </p>
                         </div>
                         
-                        <div className="h-3 bg-tiffany/10 dark:bg-tiffany/20 rounded-full overflow-hidden backdrop-blur-sm">
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="font-medium">پیشرفت تیمی</span>
+                          <span className="font-bold text-tiffany">۶۸%</span>
+                        </div>
+                        
+                        <div className="h-4 bg-tiffany/10 dark:bg-tiffany/20 rounded-full overflow-hidden backdrop-blur-sm shadow-inner">
                           <motion.div 
                             initial={{ width: '0%' }}
                             animate={{ width: '68%' }}
                             transition={{ duration: 1, ease: "easeOut" }}
-                            className="h-full bg-gradient-to-r from-tiffany to-tiffany-light rounded-full relative"
+                            className="h-full bg-gradient-to-r from-tiffany to-cyan-500 rounded-full relative"
                           >
                             <div className="absolute inset-0 overflow-hidden">
                               <motion.div 
@@ -914,13 +1214,13 @@ export default function HealthDashboard() {
                           </motion.div>
                         </div>
                         
-                        <div className="mt-4 flex justify-between text-sm text-slate-500 dark:text-slate-400">
-                          <div className="flex items-center">
-                            <Users className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                        <div className="mt-5 flex justify-between text-sm text-slate-500 dark:text-slate-400">
+                          <div className="flex items-center bg-white/50 dark:bg-slate-800/50 px-2 py-1 rounded-lg">
+                            <Users className="h-4 w-4 mr-1 text-tiffany" />
                             <span>۱۵ مشارکت‌کننده</span>
                           </div>
-                          <div className="flex items-center">
-                            <Calendar className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                          <div className="flex items-center bg-white/50 dark:bg-slate-800/50 px-2 py-1 rounded-lg">
+                            <Calendar className="h-4 w-4 mr-1 text-tiffany" />
                             <span>شروع: ۱۴۰۲/۱۱/۱۰</span>
                           </div>
                         </div>
@@ -932,47 +1232,79 @@ export default function HealthDashboard() {
                     whileHover={{ y: -5, transition: { duration: 0.2 } }}
                     className="group"
                   >
-                    <Card className="pro-card aqua overflow-hidden group-hover:shadow-lg group-hover:shadow-aqua/10 dark:group-hover:shadow-aqua/5 transition-all duration-300">
-                      <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-aqua/40 to-transparent rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                      <div className="absolute top-0 right-0 z-10">
-                        <div className="relative flex items-center bg-aqua text-white text-xs font-medium py-1 pr-2 pl-3 rounded-bl-lg">
+                    <Card className="pro-card aqua overflow-hidden border-0 group-hover:shadow-xl transition-all duration-500 bg-gradient-to-br from-white/80 to-white/40 dark:from-slate-900/80 dark:to-slate-900/40 backdrop-blur-md relative">
+                      {/* پس زمینه گرادیانی متحرک */}
+                      <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-aqua/30 to-transparent rounded-full blur-3xl opacity-30 group-hover:opacity-40 transition-opacity"></div>
+                      <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-tr from-blue-500/20 to-transparent rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                      
+                      {/* پترن پس زمینه */}
+                      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTS0xMyAxM2gyNnYyNmgtMjZ6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wMykiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-40"></div>
+                      
+                      {/* خط تزئینی بالا */}
+                      <div className="absolute top-0 left-0 right-0 h-0.5 overflow-hidden">
+                        <div className="h-full w-full bg-gradient-to-r from-transparent via-aqua/40 to-transparent"></div>
+                        <motion.div 
+                          className="absolute top-0 h-full w-20 bg-gradient-to-r from-transparent via-aqua/80 to-transparent"
+                          animate={{ x: ['-100%', '500%'] }}
+                          transition={{ 
+                            duration: 3, 
+                            ease: "easeInOut", 
+                            repeat: Infinity,
+                            repeatDelay: 1
+                          }}
+                        />
+                      </div>
+                      
+                      {/* برچسب وضعیت */}
+                      <div className="absolute top-0 right-0 z-10 overflow-hidden">
+                        <div className="relative flex items-center bg-gradient-to-l from-aqua to-blue-500 text-white text-xs font-medium py-1.5 px-3 rounded-bl-lg shadow-md">
                           <span className="relative z-10 flex items-center">
                             <motion.div
-                              animate={{ scale: [1, 1.2, 1] }}
-                              transition={{ duration: 2, repeat: Infinity }}
-                              className="mr-1"
+                              animate={{ scale: [1, 1.3, 1] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                              className="mr-1.5"
                             >
-                              <div className="h-2 w-2 rounded-full bg-white"></div>
+                              <div className="h-2 w-2 rounded-full bg-white/90 shadow-inner"></div>
                             </motion.div>
                             در حال انجام
                           </span>
-                          <div className="absolute top-0 right-0 h-full w-full bg-gradient-to-l from-aqua/80 to-aqua"></div>
+                          <div className="absolute top-0 right-0 h-full w-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxwYXRoIGQ9Ik0tMSAxaDR2NEgtMXoiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjEpIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
                         </div>
                       </div>
                       
-                      <CardHeader>
-                        <CardTitle className="flex items-start">
-                          <Heart className="h-5 w-5 mr-1 text-aqua flex-shrink-0 mt-1" />
-                          <span>چالش نوشیدن ۲.۵ لیتر آب روزانه</span>
-                        </CardTitle>
-                        <CardDescription className="flex items-center">
-                          <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
-                          <span>۱۴ روز باقیمانده</span>
-                        </CardDescription>
+                      <CardHeader className="relative z-10">
+                        <div className="flex items-start">
+                          <div className="mr-3 bg-gradient-to-br from-aqua/10 to-blue-500/10 p-2 rounded-lg">
+                            <Heart className="h-6 w-6 text-aqua" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-100">چالش نوشیدن ۲.۵ لیتر آب روزانه</CardTitle>
+                            <CardDescription className="flex items-center mt-1">
+                              <Clock className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                              <span>۱۴ روز باقیمانده</span>
+                            </CardDescription>
+                          </div>
+                        </div>
                       </CardHeader>
                       
-                      <CardContent>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span>پیشرفت تیمی</span>
-                          <span className="font-medium text-aqua">۴۵%</span>
+                      <CardContent className="relative z-10">
+                        <div className="mb-4 bg-gradient-to-r from-white/70 to-white/30 dark:from-slate-800/70 dark:to-slate-800/30 rounded-lg p-3 backdrop-blur-sm">
+                          <p className="text-sm text-slate-600 dark:text-slate-300">
+                            این چالش برای افزایش هیدراتاسیون مناسب و ترویج عادت نوشیدن آب کافی در طول روز طراحی شده است.
+                          </p>
                         </div>
                         
-                        <div className="h-3 bg-aqua/10 dark:bg-aqua/20 rounded-full overflow-hidden backdrop-blur-sm">
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="font-medium">پیشرفت تیمی</span>
+                          <span className="font-bold text-aqua">۴۵%</span>
+                        </div>
+                        
+                        <div className="h-4 bg-aqua/10 dark:bg-aqua/20 rounded-full overflow-hidden backdrop-blur-sm shadow-inner">
                           <motion.div 
                             initial={{ width: '0%' }}
                             animate={{ width: '45%' }}
                             transition={{ duration: 1, ease: "easeOut" }}
-                            className="h-full bg-gradient-to-r from-aqua to-aqua-light rounded-full relative"
+                            className="h-full bg-gradient-to-r from-aqua to-blue-500 rounded-full relative"
                           >
                             <div className="absolute inset-0 overflow-hidden">
                               <motion.div 
@@ -989,13 +1321,13 @@ export default function HealthDashboard() {
                           </motion.div>
                         </div>
                         
-                        <div className="mt-4 flex justify-between text-sm text-slate-500 dark:text-slate-400">
-                          <div className="flex items-center">
-                            <Users className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                        <div className="mt-5 flex justify-between text-sm text-slate-500 dark:text-slate-400">
+                          <div className="flex items-center bg-white/50 dark:bg-slate-800/50 px-2 py-1 rounded-lg">
+                            <Users className="h-4 w-4 mr-1 text-aqua" />
                             <span>۲۰ مشارکت‌کننده</span>
                           </div>
-                          <div className="flex items-center">
-                            <Calendar className="h-3.5 w-3.5 mr-1 text-slate-400" />
+                          <div className="flex items-center bg-white/50 dark:bg-slate-800/50 px-2 py-1 rounded-lg">
+                            <Calendar className="h-4 w-4 mr-1 text-aqua" />
                             <span>شروع: ۱۴۰۲/۱۱/۱۵</span>
                           </div>
                         </div>
