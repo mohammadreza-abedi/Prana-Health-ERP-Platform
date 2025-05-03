@@ -35,7 +35,8 @@ import {
   Paperclip,
   Share2,
   LogOut,
-  Check
+  Check,
+  Lock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -473,6 +474,593 @@ const UserProfile: React.FC = () => {
     );
   };
   
+  // مجموعه بنرهای قابل انتخاب برای پروفایل
+  const profileBanners = [
+    {
+      id: "default",
+      name: "پیش‌فرض",
+      type: "gradient",
+      description: "بنر پیش‌فرض با گرادیان زیبا",
+      isLocked: false,
+      price: 0,
+      component: () => (
+        <div className="w-full h-full bg-gradient-to-r from-tiffany to-blue-500 relative overflow-hidden">
+          {/* الگوی هندسی متحرک */}
+          <motion.div 
+            className="absolute inset-0 bg-grid-white/[0.05] bg-[size:30px_30px]"
+            animate={{
+              backgroundPosition: ['0% 0%', '100% 100%'],
+            }}
+            transition={{
+              duration: 40,
+              ease: "linear",
+              repeat: Infinity,
+              repeatType: "loop"
+            }}
+          ></motion.div>
+
+          {/* هاله‌های متحرک */}
+          <motion.div
+            className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full bg-white/10 blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.2, 0.3],
+            }}
+            transition={{
+              duration: 8,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "mirror"
+            }}
+          ></motion.div>
+
+          <motion.div
+            className="absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full bg-white/10 blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0.3, 0.2],
+            }}
+            transition={{
+              duration: 8,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "mirror",
+              delay: 1
+            }}
+          ></motion.div>
+        </div>
+      )
+    },
+    {
+      id: "heartbeat",
+      name: "نوار قلب",
+      type: "animated",
+      description: "نمایش ضربان قلب به صورت انیمیشن",
+      isLocked: false,
+      price: 500,
+      component: () => (
+        <div className="w-full h-full bg-gradient-to-br from-purple-600/90 to-indigo-900/90 relative overflow-hidden">
+          {/* پس‌زمینه شبکه‌ای */}
+          <div className="absolute inset-0 bg-grid-white/[0.03] bg-[size:20px_20px]"></div>
+          
+          {/* خط نوار قلب */}
+          <div className="absolute inset-0 flex items-center">
+            <motion.div 
+              className="h-px w-full bg-gradient-to-r from-transparent via-pink-500 to-transparent"
+              initial={{ width: 0, x: 0, opacity: 0 }}
+              animate={{
+                width: ["0%", "100%", "100%", "0%"],
+                x: ["0%", "0%", "0%", "100%"],
+                opacity: [0, 1, 1, 0]
+              }}
+              transition={{
+                duration: 4,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "loop",
+                times: [0, 0.4, 0.6, 1]
+              }}
+            ></motion.div>
+          </div>
+          
+          {/* قلب متحرک و ضربان قلب */}
+          <motion.div
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            animate={{
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 0.8,
+              ease: "easeOut",
+              repeat: Infinity,
+              repeatType: "reverse"
+            }}
+          >
+            <svg width="120" height="120" viewBox="0 0 24 24" className="fill-pink-500 opacity-30">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </motion.div>
+          
+          {/* نوار قلب انیمیشن */}
+          <div className="absolute top-1/2 left-0 right-0">
+            <svg 
+              viewBox="0 0 1200 60" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="w-full h-20 overflow-visible opacity-30"
+            >
+              <motion.path
+                d="M0,30 Q50,30 60,30 T70,30 80,30 90,30 100,30 110,10 120,50 130,0 140,40 150,30 160,30 170,30 180,30 190,30 200,30 210,30 220,30 230,30 240,30 250,30 260,10 270,50 280,0 290,40 300,30 310,30 320,30 330,30 340,30 350,30 360,30 370,30 380,30 390,30 400,30 410,10 420,50 430,0 440,40 450,30 460,30 470,30 480,30 490,30 500,30 510,30 520,30 530,30 540,30 550,30 560,10 570,50 580,0 590,40 600,30 610,30 620,30 630,30 640,30 650,30 660,30 670,30 680,30 690,30 700,30 710,10 720,50 730,0 740,40 750,30 760,30 770,30 780,30 790,30 800,30 810,30 820,30 830,30 840,30 850,30 860,10 870,50 880,0 890,40 900,30 910,30 920,30 930,30 940,30 950,30 960,30 970,30 980,30 990,30 1000,30 1010,10 1020,50 1030,0 1040,40 1050,30 1060,30 1070,30 1080,30 1090,30 1100,30 1110,30 1120,30 1130,30 1140,30 1150,30 1160,10 1170,50 1180,0 1190,40 1200,30"
+                stroke="#ec4899"
+                strokeWidth="1"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ 
+                  pathLength: 1,
+                  opacity: 1,
+                  x: [0, -1200]
+                }}
+                transition={{
+                  pathLength: { duration: 2, ease: "easeInOut" },
+                  opacity: { duration: 0.5 },
+                  x: { duration: 20, ease: "linear", repeat: Infinity }
+                }}
+              />
+            </svg>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: "digital",
+      name: "دیجیتالی",
+      type: "tech",
+      description: "بنر با طراحی فناوری پیشرفته",
+      isLocked: true,
+      price: 1200,
+      component: () => (
+        <div className="w-full h-full bg-gradient-to-r from-slate-900 to-slate-800 relative overflow-hidden">
+          {/* خطوط متحرک افقی */}
+          <div className="absolute inset-0">
+            {[...Array(20)].map((_, index) => (
+              <motion.div 
+                key={`h-line-${index}`}
+                className="absolute h-px bg-tiffany/30"
+                style={{ 
+                  top: `${index * 5}%`, 
+                  left: '0',
+                  right: '0'
+                }}
+                animate={{
+                  opacity: [0, 0.5, 0],
+                  scaleX: [0, 1, 0],
+                }}
+                transition={{
+                  duration: 3,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  delay: index * 0.1,
+                  repeatDelay: 1
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* خطوط متحرک عمودی */}
+          <div className="absolute inset-0">
+            {[...Array(30)].map((_, index) => (
+              <motion.div 
+                key={`v-line-${index}`}
+                className="absolute w-px bg-blue-500/20"
+                style={{ 
+                  left: `${index * 3.33}%`, 
+                  top: '0',
+                  bottom: '0'
+                }}
+                animate={{
+                  opacity: [0, 0.3, 0],
+                  scaleY: [0, 1, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  delay: index * 0.05,
+                  repeatDelay: 3
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* نمودار داده متحرک */}
+          <div className="absolute bottom-0 left-0 right-0 h-20">
+            <svg 
+              viewBox="0 0 1000 100" 
+              className="w-full opacity-50"
+            >
+              <defs>
+                <linearGradient id="digitalGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#5eead4" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#5eead4" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <motion.path
+                d="M0,50 L50,45 L100,60 L150,40 L200,55 L250,35 L300,60 L350,30 L400,45 L450,25 L500,50 L550,35 L600,55 L650,30 L700,50 L750,25 L800,60 L850,40 L900,55 L950,35 L1000,50 L1000,100 L0,100 Z"
+                fill="url(#digitalGradient)"
+                stroke="#5eead4"
+                strokeWidth="2"
+                initial={{ opacity: 0 }}
+                animate={{ 
+                  opacity: 1,
+                  x: [-1000, 0]
+                }}
+                transition={{
+                  opacity: { duration: 0.5 },
+                  x: { duration: 20, ease: "linear", repeat: Infinity }
+                }}
+              />
+            </svg>
+          </div>
+          
+          {/* عناصر کد متحرک */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-xs text-tiffany/20 font-mono flex flex-wrap max-w-lg opacity-20">
+              {Array.from({ length: 50 }, (_, i) => (
+                <motion.div
+                  key={i}
+                  className="m-1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{
+                    duration: 3,
+                    delay: i * 0.05,
+                    repeat: Infinity,
+                    repeatDelay: Math.random() * 5
+                  }}
+                >
+                  {Math.random() > 0.5 ? '01' : Math.random() > 0.5 ? '10' : Math.random() > 0.5 ? '{...}' : '</>'}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: "nature",
+      name: "طبیعت",
+      type: "relax",
+      description: "بنر با طرح طبیعت آرامش‌بخش",
+      isLocked: true,
+      price: 800,
+      component: () => (
+        <div className="w-full h-full bg-gradient-to-r from-green-800 to-emerald-700 relative overflow-hidden">
+          {/* ابرهای متحرک */}
+          <motion.div
+            className="absolute top-2 left-10 w-40 h-10 rounded-full bg-white/40 blur-xl"
+            animate={{
+              x: [0, 10, 0],
+              opacity: [0.4, 0.5, 0.4]
+            }}
+            transition={{
+              duration: 10,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "mirror"
+            }}
+          ></motion.div>
+          
+          <motion.div
+            className="absolute top-10 right-20 w-60 h-8 rounded-full bg-white/30 blur-xl"
+            animate={{
+              x: [0, -15, 0],
+              opacity: [0.3, 0.4, 0.3]
+            }}
+            transition={{
+              duration: 14,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "mirror",
+              delay: 1
+            }}
+          ></motion.div>
+          
+          {/* امواج متحرک */}
+          <div className="absolute bottom-0 left-0 right-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="w-full opacity-30">
+              <motion.path 
+                fill="#ffffff" 
+                d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,218.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+                animate={{
+                  y: [0, -5, 0],
+                }}
+                transition={{
+                  duration: 4,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatType: "mirror"
+                }}
+              ></motion.path>
+            </svg>
+          </div>
+          
+          {/* عناصر درخت */}
+          <div className="absolute bottom-10 right-10">
+            <motion.div 
+              className="w-4 h-20 bg-amber-800 rounded-sm"
+              animate={{ skewX: [-2, 2, -2] }}
+              transition={{
+                duration: 4,
+                ease: "easeInOut",
+                repeat: Infinity
+              }}
+            >
+              <motion.div 
+                className="absolute -top-16 -left-12 w-28 h-28 rounded-full bg-green-500 opacity-70"
+                animate={{ 
+                  scale: [1, 1.05, 1],
+                  rotate: [0, 1, 0]
+                }}
+                transition={{
+                  duration: 3,
+                  ease: "easeInOut",
+                  repeat: Infinity
+                }}
+              ></motion.div>
+            </motion.div>
+          </div>
+          
+          <div className="absolute bottom-15 left-20">
+            <motion.div 
+              className="w-3 h-14 bg-amber-800 rounded-sm"
+              animate={{ skewX: [2, -2, 2] }}
+              transition={{
+                duration: 4,
+                ease: "easeInOut",
+                repeat: Infinity,
+                delay: 0.5
+              }}
+            >
+              <motion.div 
+                className="absolute -top-10 -left-8 w-20 h-20 rounded-full bg-green-600 opacity-70"
+                animate={{ 
+                  scale: [1, 1.03, 1],
+                  rotate: [0, -1, 0]
+                }}
+                transition={{
+                  duration: 3.5,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  delay: 0.5
+                }}
+              ></motion.div>
+            </motion.div>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: "galaxy",
+      name: "کهکشان",
+      type: "premium",
+      description: "بنر ویژه با طرح کهکشانی",
+      isLocked: true,
+      price: 2000,
+      component: () => (
+        <div className="w-full h-full bg-gradient-to-br from-purple-900 via-violet-800 to-indigo-900 relative overflow-hidden">
+          {/* زمینه‌ی ستاره‌ای */}
+          <div className="absolute inset-0">
+            {Array.from({ length: 100 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full bg-white"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  width: `${Math.random() * 2 + 1}px`,
+                  height: `${Math.random() * 2 + 1}px`,
+                }}
+                animate={{
+                  opacity: [0, 1, 0],
+                  scale: [0.5, 1, 0.5]
+                }}
+                transition={{
+                  duration: Math.random() * 3 + 2,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  delay: Math.random() * 5
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* مرکز کهکشان */}
+          <motion.div
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-white/5 blur-3xl"
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.5, 0.7, 0.5],
+              rotate: [0, 360]
+            }}
+            transition={{
+              scale: {
+                duration: 8,
+                ease: "easeInOut",
+                repeat: Infinity,
+              },
+              opacity: {
+                duration: 5,
+                ease: "easeInOut",
+                repeat: Infinity,
+              },
+              rotate: {
+                duration: 60,
+                ease: "linear",
+                repeat: Infinity
+              }
+            }}
+          />
+          
+          {/* دیسک کهکشان */}
+          <motion.div 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-40 rounded-full bg-gradient-radial from-purple-500/30 via-fuchsia-500/20 to-transparent"
+            style={{
+              backgroundImage: "radial-gradient(circle, rgba(147,51,234,0.3) 0%, rgba(217,70,239,0.2) 50%, rgba(0,0,0,0) 100%)"
+            }}
+            animate={{
+              rotate: [0, 360],
+              scale: [1, 1.05, 1]
+            }}
+            transition={{
+              rotate: {
+                duration: 30,
+                ease: "linear",
+                repeat: Infinity
+              },
+              scale: {
+                duration: 6,
+                ease: "easeInOut",
+                repeat: Infinity
+              }
+            }}
+          />
+          
+          {/* بازوهای کهکشان */}
+          <motion.div 
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96"
+            animate={{
+              rotate: [0, 360]
+            }}
+            transition={{
+              duration: 40,
+              ease: "linear",
+              repeat: Infinity
+            }}
+          >
+            <motion.div 
+              className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/40 to-transparent"
+              animate={{
+                scale: [0.8, 1, 0.8],
+                opacity: [0.6, 0.8, 0.6]
+              }}
+              transition={{
+                duration: 5,
+                ease: "easeInOut",
+                repeat: Infinity
+              }}
+            />
+            <motion.div 
+              className="absolute top-0 bottom-0 left-1/2 w-px bg-gradient-to-b from-transparent via-violet-500/40 to-transparent"
+              animate={{
+                scale: [0.8, 1, 0.8],
+                opacity: [0.6, 0.8, 0.6]
+              }}
+              transition={{
+                duration: 5,
+                ease: "easeInOut",
+                repeat: Infinity,
+                delay: 1
+              }}
+            />
+          </motion.div>
+        </div>
+      )
+    }
+  ];
+
+  // حالت فعلی بنر انتخاب شده
+  const [selectedBanner, setSelectedBanner] = useState("default");
+  
+  // رندر کردن مودال انتخاب بنر
+  const [showBannerSelector, setShowBannerSelector] = useState(false);
+  
+  const renderBannerSelector = () => (
+    <Dialog open={showBannerSelector} onOpenChange={setShowBannerSelector}>
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>انتخاب بنر پروفایل</DialogTitle>
+          <DialogDescription>
+            بنر دلخواه خود را انتخاب کنید. برخی بنرها نیاز به خرید با اعتبار دارند.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+          {profileBanners.map((banner) => (
+            <div 
+              key={banner.id} 
+              className={`border rounded-lg overflow-hidden ${selectedBanner === banner.id ? 'ring-2 ring-tiffany' : ''}`}
+            >
+              <div className="h-32 relative">
+                {React.createElement(banner.component)}
+                
+                {banner.isLocked && (
+                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
+                    <div className="flex flex-col items-center">
+                      <Lock className="h-6 w-6 text-white/70" />
+                      <p className="text-xs text-white/70 mt-1">{toPersianNumber(banner.price)} اعتبار</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="p-3 bg-white dark:bg-slate-900">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium">{banner.name}</h3>
+                  <Badge variant="outline" className="text-xs">
+                    {banner.type}
+                  </Badge>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  {banner.description}
+                </p>
+                <div className="mt-3">
+                  {banner.isLocked ? (
+                    <Button 
+                      className="w-full text-xs h-8"
+                      onClick={() => {
+                        if (userData.credits >= banner.price) {
+                          toast({
+                            title: "بنر با موفقیت خریداری شد",
+                            description: `${toPersianNumber(banner.price)} اعتبار از حساب شما کسر شد`,
+                          });
+                          // در یک برنامه واقعی، اینجا با API ارتباط برقرار می‌شود
+                          setSelectedBanner(banner.id);
+                          setShowBannerSelector(false);
+                        } else {
+                          toast({
+                            title: "اعتبار ناکافی",
+                            description: "اعتبار کافی برای خرید این بنر ندارید",
+                            variant: "destructive",
+                          });
+                        }
+                      }}
+                    >
+                      خرید با {toPersianNumber(banner.price)} اعتبار
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant={selectedBanner === banner.id ? "default" : "outline"}
+                      className="w-full text-xs h-8"
+                      onClick={() => {
+                        setSelectedBanner(banner.id);
+                        setShowBannerSelector(false);
+                      }}
+                    >
+                      {selectedBanner === banner.id ? 'انتخاب شده' : 'انتخاب بنر'}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
   // رندر شدن فعالیت‌های اخیر
   const renderRecentActivities = () => {
     return (
@@ -889,6 +1477,8 @@ const UserProfile: React.FC = () => {
   };
   
   // نمای اصلی کامپوننت پروفایل
+  {renderBannerSelector()}
+
   return (
     <div className="bg-slate-50 dark:bg-slate-900 min-h-screen">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -896,27 +1486,18 @@ const UserProfile: React.FC = () => {
         <div className="relative rounded-2xl mb-8 overflow-hidden shadow-lg">
           {/* تصویر کاور */}
           <div className="h-64 bg-slate-200 dark:bg-slate-800 relative">
-            {userData.coverImage ? (
-              <img
-                src={userData.coverImage}
-                alt="Cover"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-r from-tiffany to-blue-500" />
-            )}
-            {/* دکمه ویرایش کاور */}
+            {/* رندر بنر انتخاب شده */}
+            {React.createElement(profileBanners.find(banner => banner.id === selectedBanner)?.component || profileBanners[0].component)}
+            
+            {/* دکمه ویرایش بنر */}
             <Button
               variant="ghost"
               size="sm"
               className="absolute top-4 left-4 bg-black/20 text-white hover:bg-black/30 backdrop-blur-sm"
-              onClick={() => toast({
-                title: "ویرایش تصویر کاور",
-                description: "این قابلیت به زودی اضافه خواهد شد",
-              })}
+              onClick={() => setShowBannerSelector(true)}
             >
               <Camera className="h-4 w-4 ml-2" />
-              تغییر تصویر کاور
+              تغییر بنر پروفایل
             </Button>
           </div>
           
