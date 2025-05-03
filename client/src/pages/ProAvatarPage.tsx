@@ -17,10 +17,12 @@ export default function ProAvatarPage() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("studio");
   const [selectedAvatarId, setSelectedAvatarId] = useState<number>(1);
-  const [userAvatars, setUserAvatars] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8]); // آواتارهای دیفالت قابل انتخاب
+  // آواتارهای آزاد شده که کاربر می‌تواند انتخاب کند
+  const [userAvatars, setUserAvatars] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
   
   // داده‌های آواتارهای پیش‌فرض
   const defaultAvatars = [
+    // آواتارهای اصلی
     {
       id: 1,
       name: "آقای عینکی",
@@ -92,6 +94,109 @@ export default function ProAvatarPage() {
       rarity: "rare",
       description: "آواتار خانم با حجاب و لباس اسپرت",
       isDefault: true
+    },
+    
+    // آواتارهای کره‌ای جدید
+    {
+      id: 9,
+      name: "پسر کلاه‌دار",
+      imagePath: "/avatar-images/korean-style/Korean Boy Pony Hat.png",
+      category: "male",
+      rarity: "epic",
+      description: "آواتار پسر با کلاه سبک کره‌ای",
+      isDefault: false
+    },
+    {
+      id: 10,
+      name: "پسر هودی",
+      imagePath: "/avatar-images/korean-style/Korean Boy Short Hair Jacket.png",
+      category: "male",
+      rarity: "epic",
+      description: "آواتار پسر با هودی خاکستری سبک کره‌ای",
+      isDefault: false
+    },
+    {
+      id: 11,
+      name: "دختر محجبه",
+      imagePath: "/avatar-images/korean-style/Korean Girl Hijab Jacket.png",
+      category: "female",
+      rarity: "epic",
+      description: "آواتار دختر با حجاب زرد و هودی صورتی سبک کره‌ای",
+      isDefault: false
+    },
+    {
+      id: 12,
+      name: "دختر محجبه عینکی",
+      imagePath: "/avatar-images/korean-style/Korean Girl Hijab Long Shirt.png",
+      category: "female",
+      rarity: "legendary",
+      description: "آواتار دختر محجبه با عینک بنفش سبک کره‌ای",
+      isDefault: false
+    },
+    
+    // آواتارهای جدید
+    {
+      id: 13,
+      name: "آقای ریش‌دار",
+      imagePath: "/avatar-images/Pria Keriting Brewokan.png",
+      category: "male",
+      rarity: "rare",
+      description: "آواتار مرد با موهای فرفری و ریش قرمز",
+      isDefault: false
+    },
+    {
+      id: 14,
+      name: "آقای ورزشکار",
+      imagePath: "/avatar-images/Pria Keriting Jaket.png",
+      category: "male",
+      rarity: "rare",
+      description: "آواتار مرد با ژاکت ورزشی سبز",
+      isDefault: false
+    },
+    {
+      id: 15,
+      name: "آقای کلاه قرمز",
+      imagePath: "/avatar-images/Pria Keriting Topi.png",
+      category: "male",
+      rarity: "rare",
+      description: "آواتار مرد با کلاه قرمز اسپرت",
+      isDefault: false
+    },
+    {
+      id: 16,
+      name: "مرد با ریش",
+      imagePath: "/avatar-images/Pria Rambut Pendek Brewokan.png",
+      category: "male",
+      rarity: "epic",
+      description: "آواتار مرد با موی کوتاه و ریش",
+      isDefault: false
+    },
+    {
+      id: 17,
+      name: "پسر کلاه سبز",
+      imagePath: "/avatar-images/Pria Rambut Pendek Topi.png",
+      category: "male",
+      rarity: "epic",
+      description: "آواتار پسر با کلاه سبز و بنفش",
+      isDefault: false
+    },
+    {
+      id: 18,
+      name: "پسر موآبی",
+      imagePath: "/avatar-images/Pria Rambut Pendek.png",
+      category: "male",
+      rarity: "epic",
+      description: "آواتار پسر با موهای آبی و لباس سبز",
+      isDefault: false
+    },
+    {
+      id: 19,
+      name: "خانم محجبه آبی",
+      imagePath: "/avatar-images/Wanita Hijab Kacamata.png",
+      category: "female",
+      rarity: "legendary",
+      description: "آواتار خانم با حجاب زرد و چهره آبی",
+      isDefault: false
     }
   ];
 

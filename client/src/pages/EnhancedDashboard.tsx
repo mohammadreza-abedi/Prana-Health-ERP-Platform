@@ -929,7 +929,11 @@ const PersonalCard = () => {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5, duration: 0.8 }}
                 ></motion.div>
-                <img src={userInfo.avatar} alt={userInfo.name} className="w-full h-full object-cover" />
+                <img 
+                  src={activeAvatarUrl || userInfo.avatar} 
+                  alt={avatarName || userInfo.name} 
+                  className="w-full h-full object-cover" 
+                />
               </div>
               <motion.div 
                 className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-800 flex items-center justify-center"
