@@ -11,12 +11,6 @@ import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/container';
 import AvatarCard from '@/components/ui/avatar-pro-system/AvatarCard';
 
-// واردات تصاویر آواتارها
-import priaGimbalKacamata from '@assets/Pria Gimbal Kacamata.png';
-import wanitaHijabSweater from '@assets/Wanita Hijab Sweater.png';
-import priaPoniBrewokan from '@assets/Pria Poni Brewokan.png';
-import wanitaKuncirTopi from '@assets/Wanita Kuncir Topi.png';
-
 // این صفحه آواتار پیشرفته را نمایش می‌دهد
 export default function ProAvatarPage() {
   const { toast } = useToast();
@@ -29,7 +23,7 @@ export default function ProAvatarPage() {
     {
       id: 1,
       name: "کاراکتر سبز",
-      imagePath: priaGimbalKacamata,
+      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
       category: "male",
       rarity: "common",
       description: "یک آواتار ساده با موهای سبز",
@@ -38,7 +32,7 @@ export default function ProAvatarPage() {
     {
       id: 2,
       name: "کاراکتر بنفش",
-      imagePath: wanitaHijabSweater,
+      imagePath: "/avatar-images/Wanita Hijab Sweater.png",
       category: "female",
       rarity: "common",
       description: "یک آواتار دختر با حجاب",
@@ -47,7 +41,7 @@ export default function ProAvatarPage() {
     {
       id: 3,
       name: "کاراکتر قهوه‌ای",
-      imagePath: priaPoniBrewokan,
+      imagePath: "/avatar-images/Pria Poni Brewokan.png",
       category: "male",
       rarity: "common", 
       description: "یک آواتار پسر با ریش",
@@ -56,7 +50,7 @@ export default function ProAvatarPage() {
     {
       id: 4,
       name: "کاراکتر صورتی",
-      imagePath: wanitaKuncirTopi,
+      imagePath: "/avatar-images/Wanita Kuncir Topi.png",
       category: "female",
       rarity: "common",
       description: "یک آواتار دختر با کلاه",

@@ -72,7 +72,7 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
     {
       id: 1,
       name: "کاراکتر سبز",
-      imagePath: "/attached_assets/Pria Gimbal Kacamata.png",
+      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
       category: "male",
       rarity: "common",
       description: "یک آواتار ساده با موهای سبز",
@@ -81,7 +81,7 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
     {
       id: 2,
       name: "کاراکتر بنفش",
-      imagePath: "/attached_assets/Wanita Hijab Sweater.png",
+      imagePath: "/avatar-images/Wanita Hijab Sweater.png",
       category: "female",
       rarity: "common",
       description: "یک آواتار دختر با حجاب",
@@ -90,7 +90,7 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
     {
       id: 3,
       name: "کاراکتر قهوه‌ای",
-      imagePath: "/attached_assets/Pria Poni Brewokan.png",
+      imagePath: "/avatar-images/Pria Poni Brewokan.png",
       category: "male",
       rarity: "common", 
       description: "یک آواتار پسر با ریش",
@@ -99,7 +99,7 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
     {
       id: 4,
       name: "کاراکتر صورتی",
-      imagePath: "/attached_assets/Wanita Kuncir Topi.png",
+      imagePath: "/avatar-images/Wanita Kuncir Topi.png",
       category: "female",
       rarity: "common",
       description: "یک آواتار دختر با کلاه",
@@ -108,7 +108,7 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
     {
       id: 5,
       name: "کاراکتر آبی",
-      imagePath: "/attached_assets/Pria Mohawk.png",
+      imagePath: "/avatar-images/Pria Mohawk.png",
       category: "male",
       rarity: "rare",
       description: "یک آواتار پسر با موهای خاص",
@@ -117,7 +117,7 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
     {
       id: 6,
       name: "کاراکتر نارنجی",
-      imagePath: "/attached_assets/Wanita Urai Topi.png",
+      imagePath: "/avatar-images/Wanita Urai Topi.png",
       category: "female",
       rarity: "rare",
       description: "یک آواتار ویژه دختر",
@@ -126,7 +126,7 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
     {
       id: 7,
       name: "کاراکتر عینکی",
-      imagePath: "/attached_assets/Wanita Berhijab Berkacamata.png",
+      imagePath: "/avatar-images/Wanita Berhijab Berkacamata.png",
       category: "female",
       rarity: "epic",
       description: "یک آواتار دختر با عینک",
@@ -135,7 +135,7 @@ const AvatarStudio: React.FC<AvatarStudioProps> = ({
     {
       id: 8,
       name: "کاراکتر ویژه",
-      imagePath: "/attached_assets/Pria Gimbal sebelah Kacamata.png",
+      imagePath: "/avatar-images/Pria Gimbal sebelah Kacamata.png",
       category: "male",
       rarity: "legendary",
       description: "یک آواتار فوق‌العاده کمیاب",
