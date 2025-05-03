@@ -995,31 +995,39 @@ export default function PsychologicalTests() {
   
   // Filter tests by tab
   const getTabTests = () => {
-    // ابتدا همه آزمون‌ها را به دو گروه تقسیم می‌کنیم: کامل شده و ناقص
-    const completed = filteredTests.filter(test => completedTests.includes(test.id));
-    const incomplete = filteredTests.filter(test => !completedTests.includes(test.id));
+    // آزمون‌های فعال (کامل شده) باید اول باشند
+    const activeTests = filteredTests.filter(test => completedTests.includes(test.id));
+    const inactiveTests = filteredTests.filter(test => !completedTests.includes(test.id));
     
     // بر اساس تب انتخاب شده فیلتر می‌کنیم
-    let result;
+    let activeFiltered;
+    let inactiveFiltered;
+    
     switch(activeTab) {
       case "popular":
-        result = [...completed.filter(test => test.isPopular), ...incomplete.filter(test => test.isPopular)];
+        activeFiltered = activeTests.filter(test => test.isPopular);
+        inactiveFiltered = inactiveTests.filter(test => test.isPopular);
         break;
       case "recommended":
-        result = [...completed.filter(test => test.isRecommended), ...incomplete.filter(test => test.isRecommended)];
+        activeFiltered = activeTests.filter(test => test.isRecommended);
+        inactiveFiltered = inactiveTests.filter(test => test.isRecommended);
         break;
       case "new":
-        result = [...completed.filter(test => test.isNew), ...incomplete.filter(test => test.isNew)];
+        activeFiltered = activeTests.filter(test => test.isNew);
+        inactiveFiltered = inactiveTests.filter(test => test.isNew);
         break;
       case "free":
-        result = [...completed.filter(test => test.isFree), ...incomplete.filter(test => test.isFree)];
+        activeFiltered = activeTests.filter(test => test.isFree);
+        inactiveFiltered = inactiveTests.filter(test => test.isFree);
         break;
       default:
-        result = [...completed, ...incomplete];
+        activeFiltered = activeTests;
+        inactiveFiltered = inactiveTests;
         break;
     }
     
-    return result;
+    // آزمون‌های فعال اول، سپس غیرفعال‌ها
+    return [...activeFiltered, ...inactiveFiltered];
   };
   
   // Get all unique categories
@@ -1551,7 +1559,8 @@ export default function PsychologicalTests() {
                 };
                 
                 const colors = getCategoryColors();
-                const canStart = test.isFree || (credits !== undefined && credits >= test.creditCost);
+                const isActive = completedTests.includes(test.id);
+                const canStart = isActive && (test.isFree || (credits !== undefined && credits >= test.creditCost));
                 
                 return (
                   <motion.div 
@@ -1560,9 +1569,22 @@ export default function PsychologicalTests() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.08 }}
                     whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                    className="group"
+                    className={cn(
+                      "group",
+                      !completedTests.includes(test.id) ? "opacity-75" : ""
+                    )}
                   >
-                    <GlassCard className="h-full flex flex-col relative overflow-hidden border border-slate-200/60 dark:border-slate-700/60 group-hover:border-slate-300 dark:group-hover:border-slate-600 shadow-lg hover:shadow-xl transition-all duration-500">
+                    <GlassCard 
+                      className={cn(
+                        "h-full flex flex-col relative overflow-hidden border shadow-lg hover:shadow-xl transition-all duration-500",
+                        completedTests.includes(test.id) 
+                          ? "border-tiffany/30 dark:border-tiffany/30 group-hover:border-tiffany/70 dark:group-hover:border-tiffany/50" 
+                          : "border-slate-200/60 dark:border-slate-700/60 group-hover:border-slate-300 dark:group-hover:border-slate-600",
+                        completedTests.includes(test.id) ? "cursor-pointer" : "cursor-not-allowed"
+                      )}
+                    >
+                      {/* Status Indicator Badge */}
+                      {getTestStatusBadge(test.id)}
                       {/* Category-based gradient background effect */}
                       <div className={`absolute -top-32 -right-20 w-64 h-64 bg-gradient-radial from-${test.category === "شخصیت" ? 'violet' : test.category === "هوش هیجانی" ? 'rose' : test.category === "استرس" ? 'amber' : test.category === "سلامت روان" ? 'tiffany' : test.category === "شغلی" ? 'blue' : 'green'}-500/10 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
                       
