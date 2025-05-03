@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { HealthMetricsGrid, type HealthMetricData } from '@/components/dashboards/HealthMetricsCard';
-import { Activity, Calendar, User, Users } from 'lucide-react';
+import { Activity, Calendar, User, Users, Heart, Award, Clock, ChevronRight, Trophy, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
