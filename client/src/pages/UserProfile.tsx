@@ -920,28 +920,225 @@ const UserProfile: React.FC = () => {
           
           {/* اطلاعات پروفایل */}
           <div className="bg-white dark:bg-slate-900 p-6 pt-20 relative">
-            {/* آواتار */}
+            {/* آواتار با افکت‌های پیشرفته */}
             <div className="absolute -top-16 right-8">
               <div className="relative">
-                <Avatar className="w-32 h-32 border-4 border-white dark:border-slate-900 shadow-lg bg-white dark:bg-slate-800">
-                  <AvatarImage src={userData.avatar} alt={userData.displayName} />
-                  <AvatarFallback className="text-3xl">
-                    {userData.displayName.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
+                {/* پس‌زمینه حرفه‌ای با افکت‌های پیشرفته */}
+                <div className="w-32 h-32 relative">
+                  {/* افکت‌های پس‌زمینه آواتار */}
+                  <div className="absolute inset-0 rounded-full overflow-hidden z-0">
+                    {/* لایه گرادیان اصلی و پس‌زمینه */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-tiffany/20 to-aqua/10 z-0"></div>
+                    
+                    {/* الگوی هندسی متحرک */}
+                    <motion.div 
+                      className="absolute inset-0 bg-grid-slate-300/[0.02] dark:bg-grid-slate-100/[0.02] bg-[size:20px_20px] z-0"
+                      animate={{
+                        backgroundPosition: ['0% 0%', '100% 100%'],
+                      }}
+                      transition={{
+                        duration: 20,
+                        ease: "linear",
+                        repeat: Infinity,
+                        repeatType: "loop"
+                      }}
+                    ></motion.div>
+                    
+                    {/* هاله‌های رنگی متحرک */}
+                    <motion.div
+                      className="absolute -top-20 -left-20 w-40 h-40 rounded-full bg-tiffany/20 blur-xl"
+                      animate={{ 
+                        top: ['-5rem', '-3rem', '-5rem'],
+                        left: ['-5rem', '-3rem', '-5rem'],
+                        scale: [1, 1.2, 1],
+                        opacity: [0.2, 0.3, 0.2]
+                      }}
+                      transition={{ 
+                        duration: 8, 
+                        ease: "easeInOut", 
+                        repeat: Infinity,
+                        repeatType: "mirror"
+                      }}
+                    ></motion.div>
+                    
+                    <motion.div
+                      className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full bg-aqua/20 blur-xl"
+                      animate={{ 
+                        bottom: ['-5rem', '-3rem', '-5rem'],
+                        right: ['-5rem', '-3rem', '-5rem'],
+                        scale: [1, 1.2, 1],
+                        opacity: [0.2, 0.3, 0.2]
+                      }}
+                      transition={{ 
+                        duration: 8, 
+                        ease: "easeInOut", 
+                        repeat: Infinity,
+                        repeatType: "mirror",
+                        delay: 0.5
+                      }}
+                    ></motion.div>
+                    
+                    {/* خطوط نور ظریف متحرک */}
+                    <motion.div
+                      className="absolute top-1/2 h-px w-full bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"
+                      animate={{ 
+                        opacity: [0, 0.8, 0],
+                        width: ['0%', '100%', '0%'],
+                        left: ['0%', '0%', '100%']
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        ease: "easeInOut", 
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        repeatDelay: 1
+                      }}
+                    ></motion.div>
+                    
+                    <motion.div
+                      className="absolute left-1/2 w-px h-full bg-gradient-to-b from-transparent via-tiffany/30 to-transparent"
+                      animate={{ 
+                        opacity: [0, 0.8, 0],
+                        height: ['0%', '100%', '0%'],
+                        top: ['0%', '0%', '100%']
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        ease: "easeInOut", 
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        repeatDelay: 1.2,
+                        delay: 0.5
+                      }}
+                    ></motion.div>
+                    
+                    {/* افکت درخشندگی حلقوی */}
+                    <motion.div 
+                      className="absolute inset-1 rounded-full border-2 border-white/20 dark:border-white/10"
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ 
+                        duration: 3, 
+                        ease: "easeInOut", 
+                        repeat: Infinity, 
+                        repeatType: "reverse" 
+                      }}
+                    ></motion.div>
+                    
+                    {/* افکت شیشه‌ای */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent dark:from-white/5 z-0"></div>
+                    
+                    {/* هاله داخلی */}
+                    <div className="absolute inset-2 rounded-full shadow-[inset_0_0_15px_rgba(45,212,191,0.3)] dark:shadow-[inset_0_0_15px_rgba(45,212,191,0.2)]"></div>
+                  </div>
+                  
+                  {/* آواتار اصلی */}
+                  <div className="absolute inset-1 rounded-full overflow-hidden border-4 border-white dark:border-slate-900 z-10 bg-white dark:bg-slate-800 shadow-lg">
+                    <Link href="/avatar-studio">
+                      {userData.avatar ? (
+                        <img 
+                          src={userData.avatar} 
+                          alt={userData.displayName}
+                          className="h-full w-full object-cover relative z-10"
+                        />
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-3xl font-bold z-10">
+                          {userData.displayName.charAt(0)}
+                        </div>
+                      )}
+                      
+                      {/* نقطه‌های درخشان روی آواتار */}
+                      <motion.div
+                        className="absolute top-[15%] left-[15%] w-2 h-2 rounded-full bg-tiffany/60 z-20"
+                        animate={{ 
+                          opacity: [0, 0.8, 0],
+                          scale: [0.8, 1.2, 0.8]
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          ease: "easeInOut", 
+                          repeat: Infinity,
+                          repeatType: "loop"
+                        }}
+                      ></motion.div>
+                      
+                      <motion.div
+                        className="absolute bottom-[20%] right-[20%] w-1 h-1 rounded-full bg-aqua/70 z-20"
+                        animate={{ 
+                          opacity: [0, 0.8, 0],
+                          scale: [0.8, 1.2, 0.8]
+                        }}
+                        transition={{ 
+                          duration: 2, 
+                          ease: "easeInOut", 
+                          repeat: Infinity,
+                          repeatType: "loop",
+                          delay: 0.5
+                        }}
+                      ></motion.div>
+                      
+                      {/* افکت شیشه‌ای روی آواتار */}
+                      <motion.div 
+                        className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent dark:from-white/2 z-30"
+                        animate={{ 
+                          opacity: [0.2, 0.3, 0.2],
+                        }}
+                        transition={{ 
+                          duration: 3, 
+                          repeat: Infinity, 
+                          repeatType: "reverse" 
+                        }}
+                      ></motion.div>
+                    </Link>
+                  </div>
+                </div>
                 
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="absolute -left-2 -bottom-2 h-8 w-8 p-0 rounded-full bg-tiffany text-white hover:bg-tiffany/90"
+                  className="absolute -left-2 -bottom-2 h-8 w-8 p-0 rounded-full bg-tiffany text-white hover:bg-tiffany/90 shadow-lg shadow-tiffany/20 dark:shadow-tiffany/10 z-40"
                   onClick={() => setShowAvatarEditor(true)}
                 >
                   <Edit className="h-4 w-4" />
                 </Button>
                 
-                {/* نشان لول */}
-                <div className="absolute -left-2 -top-2 h-10 w-10 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold border-2 border-white dark:border-slate-900 shadow-md">
-                  {toPersianNumber(userData.level)}
+                {/* نشان لول با افکت‌های جدید */}
+                <div className="absolute -left-2 -top-2 h-10 w-10 overflow-hidden rounded-full z-40">
+                  {/* پس‌زمینه گرادیانی متحرک */}
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-400 z-0"
+                    animate={{ 
+                      background: ['linear-gradient(to right, #f59e0b, #fbbf24)', 'linear-gradient(to right, #fbbf24, #f59e0b)'],
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      ease: "easeInOut", 
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  ></motion.div>
+                  
+                  {/* خطوط درخشان */}
+                  <motion.div 
+                    className="absolute top-1/2 h-px w-full bg-white/50 z-10"
+                    animate={{ 
+                      opacity: [0, 0.5, 0],
+                      x: ['-100%', '100%'],
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      ease: "easeInOut", 
+                      repeat: Infinity,
+                      repeatDelay: 0.5
+                    }}
+                  ></motion.div>
+                  
+                  {/* پترن هندسی ظریف */}
+                  <div className="absolute inset-0 bg-grid-white/10 bg-[size:5px_5px] opacity-20 z-10"></div>
+                  
+                  {/* مقدار لول */}
+                  <div className="absolute inset-0 flex items-center justify-center font-bold text-white border-2 border-white dark:border-slate-900 rounded-full shadow-md z-20">
+                    {toPersianNumber(userData.level)}
+                  </div>
                 </div>
               </div>
             </div>
