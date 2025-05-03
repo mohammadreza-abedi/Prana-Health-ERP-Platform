@@ -1744,7 +1744,134 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <div className="flex-1 p-6 relative">
           <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/20 dark:from-slate-800/30 to-transparent pointer-events-none"></div>
           
-          {/* Background effects completely removed to prevent duplication in nested components */}
+          {/* نوار کاربر فعال در بالای صفحه با افکت‌های پیشرفته */}
+          <div className="absolute top-4 left-4 z-20">
+            <div className="flex items-center">
+              <div className="relative group">
+                {/* پس‌زمینه حرفه‌ای با افکت‌های متحرک */}
+                <div className="relative w-10 h-10">
+                  <div className="absolute inset-0 rounded-full overflow-hidden z-0">
+                    {/* لایه گرادیان اصلی و پس‌زمینه */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-tiffany/20 to-aqua/10 z-0"></div>
+                    
+                    {/* الگوی هندسی متحرک */}
+                    <motion.div 
+                      className="absolute inset-0 bg-grid-slate-300/[0.02] dark:bg-grid-slate-100/[0.02] bg-[size:10px_10px] z-0"
+                      animate={{
+                        backgroundPosition: ['0% 0%', '100% 100%'],
+                      }}
+                      transition={{
+                        duration: 20,
+                        ease: "linear",
+                        repeat: Infinity,
+                        repeatType: "loop"
+                      }}
+                    ></motion.div>
+                    
+                    {/* هاله‌های رنگی متحرک */}
+                    <motion.div
+                      className="absolute -top-6 -left-6 w-10 h-10 rounded-full bg-tiffany/20 blur-md"
+                      animate={{ 
+                        top: ['-1.5rem', '-1rem', '-1.5rem'],
+                        left: ['-1.5rem', '-1rem', '-1.5rem'],
+                        scale: [1, 1.2, 1],
+                        opacity: [0.2, 0.3, 0.2]
+                      }}
+                      transition={{ 
+                        duration: 4, 
+                        ease: "easeInOut", 
+                        repeat: Infinity,
+                        repeatType: "mirror"
+                      }}
+                    ></motion.div>
+                    
+                    <motion.div
+                      className="absolute -bottom-6 -right-6 w-10 h-10 rounded-full bg-aqua/20 blur-md"
+                      animate={{ 
+                        bottom: ['-1.5rem', '-1rem', '-1.5rem'],
+                        right: ['-1.5rem', '-1rem', '-1.5rem'],
+                        scale: [1, 1.2, 1],
+                        opacity: [0.2, 0.3, 0.2]
+                      }}
+                      transition={{ 
+                        duration: 4, 
+                        ease: "easeInOut", 
+                        repeat: Infinity,
+                        repeatType: "mirror",
+                        delay: 0.5
+                      }}
+                    ></motion.div>
+                    
+                    {/* خطوط نور ظریف متحرک */}
+                    <motion.div
+                      className="absolute top-1/2 h-px w-full bg-gradient-to-r from-transparent via-tiffany/30 to-transparent"
+                      animate={{ 
+                        opacity: [0, 0.8, 0],
+                        width: ['0%', '100%', '0%'],
+                        left: ['0%', '0%', '100%']
+                      }}
+                      transition={{ 
+                        duration: 2.5, 
+                        ease: "easeInOut", 
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        repeatDelay: 1
+                      }}
+                    ></motion.div>
+                    
+                    {/* افکت شیشه‌ای */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent dark:from-white/5 z-0"></div>
+                  </div>
+                  
+                  {/* کانتینر اصلی آواتار */}
+                  <div className="absolute inset-0.5 rounded-full bg-white dark:bg-slate-800 z-10 overflow-hidden border border-white/30 dark:border-slate-700/30">
+                    {activeAvatarUrl ? (
+                      <Link href="/avatar-studio">
+                        <img 
+                          src={activeAvatarUrl} 
+                          alt={avatarName || "آواتار کاربر"}
+                          className="w-full h-full object-cover z-20"
+                        />
+                      </Link>
+                    ) : (
+                      <Link href="/avatar-studio">
+                        <div className="w-full h-full flex items-center justify-center text-tiffany font-bold z-20">
+                          <span>م</span>
+                        </div>
+                      </Link>
+                    )}
+                    
+                    {/* افکت شیشه‌ای روی آواتار */}
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent dark:from-white/2 z-30"
+                      animate={{ 
+                        opacity: [0.2, 0.3, 0.2],
+                      }}
+                      transition={{ 
+                        duration: 3, 
+                        repeat: Infinity, 
+                        repeatType: "reverse" 
+                      }}
+                    ></motion.div>
+                  </div>
+                </div>
+                
+                {/* تولتیپ اطلاعات کاربر */}
+                <div className="absolute top-full right-0 mt-2 p-3 bg-white dark:bg-slate-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 w-48">
+                  <div className="text-center mb-2">
+                    <p className="text-sm font-semibold">{avatarName || "مدیر سیستم"}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">کلیک برای تغییر آواتار</p>
+                  </div>
+                </div>
+              </div>
+              
+              <Link href="/user-profile">
+                <button className="ml-2 text-xs bg-tiffany/5 hover:bg-tiffany/10 text-tiffany px-2 py-1 rounded-full transition-colors">
+                  پروفایل من
+                </button>
+              </Link>
+            </div>
+          </div>
           
           <div className="relative z-10">
             {children}
