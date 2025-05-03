@@ -422,7 +422,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </Link>
                 </li>
                 
-                {/* دکمه داشبورد هوشمند HSE */}
+                {/* دکمه داشبورد هوشمند HSE - مسیر اصلاح شده */}
                 <li>
                   <Link href="/hse-smart-dashboard">
                     <div className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 relative group
