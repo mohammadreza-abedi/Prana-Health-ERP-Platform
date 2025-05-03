@@ -422,6 +422,55 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </Link>
                 </li>
                 
+                {/* دکمه داشبورد هوشمند HSE */}
+                <li>
+                  <Link href="/hse-smart-dashboard">
+                    <div className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 relative group
+                      ${location === '/hse-smart-dashboard' 
+                        ? "bg-gradient-to-l from-green-500/90 to-emerald-500 text-white shadow-lg shadow-green-500/20 dark:shadow-green-500/10 ring-1 ring-white/10"
+                        : "hover:bg-white dark:hover:bg-slate-800/80 hover:shadow-md hover:scale-[1.02] dark:hover:shadow-black/5"
+                      }`}
+                    >
+                      <div className={`relative z-10 transition-transform duration-300 group-hover:scale-110 ${
+                        location === '/hse-smart-dashboard' ? "text-white" : "text-slate-500 dark:text-slate-400"
+                      }`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                      </div>
+                      {isExpanded && (
+                        <motion.span
+                          initial={{ opacity: 0, x: -5 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -5 }}
+                          transition={{ duration: 0.3 }}
+                          className={`mr-3 font-medium tracking-wide ${location === '/hse-smart-dashboard' ? "text-white" : "group-hover:text-green-500 dark:group-hover:text-green-300"}`}
+                        >
+                          داشبورد هوشمند HSE
+                        </motion.span>
+                      )}
+                      {location === '/hse-smart-dashboard' && (
+                        <motion.div 
+                          className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-600 to-emerald-400 overflow-hidden"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px]"></div>
+                        </motion.div>
+                      )}
+                      {location !== '/hse-smart-dashboard' && (
+                        <div 
+                          className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ zIndex: -1 }}
+                        >
+                          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-400/5 to-white/30 dark:from-green-500/10 dark:to-slate-800/50"></div>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+                
                 {/* دکمه اطلاعات آب و هوا */}
                 <li>
                   <Link href="/weather-info">
