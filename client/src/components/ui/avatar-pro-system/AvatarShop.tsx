@@ -1,285 +1,592 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest, queryClient } from '@/lib/queryClient';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import AvatarCard from './AvatarCard';
+import { 
+  ShoppingCart, Store, Sparkles, Crown, Trophy, Gift, Search, 
+  Filter, ArrowLeft, User, Tag, Package, Shield, Star, AlertCircle, Undo2
+} from 'lucide-react';
 import { Link } from 'wouter';
-import { Loader2, ShoppingCart, Sparkles, Lock, Star, Coins, ChevronRight, User } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import type { ShopItem, Avatar as AvatarType, UserItem } from '@shared/avatar-schema';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { useToast } from '@/hooks/use-toast';
+import { Progress } from '@/components/ui/progress';
 
-const rarityColors = {
-  common: 'bg-slate-400 text-slate-900',
-  rare: 'bg-blue-500 text-white',
-  epic: 'bg-purple-500 text-white',
-  legendary: 'bg-amber-500 text-black',
-};
+export interface ShopItemData {
+  id: number;
+  name: string;
+  imagePath: string;
+  description: string;
+  type: 'avatar' | 'frame' | 'background' | 'accessory' | 'effect';
+  price: number;
+  xpPrice?: number;
+  category: string;
+  rarity: string;
+  requiredLevel?: number;
+  isAvailable: boolean;
+  isLimited?: boolean;
+  limitedRemaining?: number;
+}
 
-const categoryIcons = {
-  avatar: <Avatar />,
-  frame: <div className="border-2 rounded-lg w-5 h-5" />,
-  background: <div className="bg-gradient-to-r from-indigo-500 to-purple-500 w-5 h-5 rounded" />,
-  effect: <Sparkles className="w-5 h-5" />,
-  accessory: <span className="text-lg">👓</span>,
-};
+export interface AvatarShopProps {
+  initialData?: {
+    userLevel: number;
+    userXP: number;
+    nextLevelXP: number;
+    userCredits: number;
+  };
+  className?: string;
+  onPurchase?: (item: ShopItemData) => Promise<boolean>;
+}
 
-type ShopItemCardProps = {
-  item: ShopItem;
-  userCredits: number;
-  userLevel: number;
-  userItems: UserItem[];
-  onPurchase: (itemId: number) => void;
-};
-
-const ShopItemCard: React.FC<ShopItemCardProps> = ({ 
-  item, 
-  userCredits, 
-  userLevel, 
-  userItems,
-  onPurchase 
+const AvatarShop: React.FC<AvatarShopProps> = ({
+  initialData = {
+    userLevel: 5,
+    userXP: 2500,
+    nextLevelXP: 5000,
+    userCredits: 1200
+  },
+  className,
+  onPurchase
 }) => {
-  const isOwned = userItems.some(userItem => userItem.itemId === item.id);
-  const canAfford = userCredits >= (item.price || 0);
-  const hasLevel = userLevel >= (item.requiredLevel || 1);
-  
-  const rarityStyling = rarityColors[item.rarity as keyof typeof rarityColors] || rarityColors.common;
-  
-  return (
-    <Card className="overflow-hidden transition-all hover:shadow-xl hover:scale-102 backdrop-blur-sm bg-background/60">
-      <CardHeader className="p-4 pb-2">
-        <div className="flex justify-between items-center">
-          <Badge variant="outline" className={`${rarityStyling}`}>
-            {item.rarity.toUpperCase()}
-          </Badge>
-          {item.isLimited && (
-            <Badge variant="secondary">محدود: {item.limitedRemaining}/{item.limitedQuantity}</Badge>
-          )}
-        </div>
-        <CardTitle className="text-lg mt-2 leading-tight">{item.name}</CardTitle>
-        <CardDescription className="text-xs">
-          {item.description}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="p-4 pt-0">
-        <div className="rounded-lg overflow-hidden h-40 bg-black/10 flex items-center justify-center">
-          <img 
-            src={item.imagePath} 
-            alt={item.name} 
-            className="w-full h-full object-contain"
-          />
-        </div>
-        <div className="mt-3 flex flex-wrap gap-1">
-          {item.tags?.map(tag => (
-            <Badge key={tag} variant="outline" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-between items-center p-4 pt-0 gap-2">
-        <div className="flex items-center gap-1">
-          <Coins className="w-4 h-4 text-yellow-500" />
-          <span className="font-bold">
-            {item.price.toLocaleString('fa-IR')}
-          </span>
-        </div>
-        {item.requiredLevel && item.requiredLevel > 1 && (
-          <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 text-blue-500" />
-            <span className="text-sm">سطح {item.requiredLevel}</span>
-          </div>
-        )}
-        <Button 
-          variant={isOwned ? "secondary" : (canAfford && hasLevel ? "default" : "outline")}
-          size="sm"
-          className="ml-auto"
-          disabled={isOwned || !canAfford || !hasLevel}
-          onClick={() => onPurchase(item.id)}
-        >
-          {isOwned ? (
-            'خریداری شده'
-          ) : !hasLevel ? (
-            <><Lock className="w-3 h-3 mr-1" /> قفل</>
-          ) : !canAfford ? (
-            'اعتبار ناکافی'
-          ) : (
-            'خرید'
-          )}
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-};
-
-export function AvatarShop() {
   const { toast } = useToast();
-  const [selectedTab, setSelectedTab] = useState('all');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [userItems, setUserItems] = useState<number[]>([]);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [filterRarity, setFilterRarity] = useState<string | null>(null);
 
-  // دریافت آیتم‌های فروشگاه
-  const { data: shopItems, isLoading: isLoadingShop } = useQuery<ShopItem[]>({
-    queryKey: ['/api/avatar-shop/items'],
-    queryFn: async () => {
-      const res = await apiRequest('GET', '/api/avatar-shop/items');
-      return await res.json();
+  // داده‌های فروشگاه (در یک اپلیکیشن واقعی باید از API گرفته شود)
+  const shopItems: ShopItemData[] = [
+    // آواتارها
+    {
+      id: 101,
+      name: "آواتار آبی",
+      imagePath: "/attached_assets/Pria Mohawk.png",
+      description: "آواتار پسر با موهای آبی و طرح خاص",
+      type: 'avatar',
+      price: 500,
+      category: "male",
+      rarity: "rare",
+      requiredLevel: 3,
+      isAvailable: true
     },
-  });
+    {
+      id: 102,
+      name: "آواتار صورتی",
+      imagePath: "/attached_assets/Wanita Urai Topi.png",
+      description: "آواتار دختر با کلاه و طرح ویژه",
+      type: 'avatar',
+      price: 500,
+      category: "female",
+      rarity: "rare",
+      requiredLevel: 3,
+      isAvailable: true
+    },
+    {
+      id: 103,
+      name: "آواتار با حجاب و عینک",
+      imagePath: "/attached_assets/Wanita Berhijab Berkacamata.png",
+      description: "آواتار ویژه و کمیاب دختر با حجاب و عینک",
+      type: 'avatar',
+      price: 1200,
+      category: "female",
+      rarity: "epic",
+      requiredLevel: 7,
+      isAvailable: true
+    },
+    {
+      id: 104,
+      name: "آواتار افسانه‌ای",
+      imagePath: "/attached_assets/Pria Gimbal sebelah Kacamata.png",
+      description: "آواتار پسر با طراحی فوق‌العاده خاص",
+      type: 'avatar',
+      price: 3000,
+      category: "male",
+      rarity: "legendary",
+      requiredLevel: 12,
+      isAvailable: true,
+      isLimited: true,
+      limitedRemaining: 5
+    },
+    // فریم‌ها - قاب‌ها
+    {
+      id: 201,
+      name: "قاب طلایی",
+      imagePath: "/placeholders/frame-gold.png",
+      description: "قاب درخشان طلایی برای آواتار شما",
+      type: 'frame',
+      price: 300,
+      category: "common",
+      rarity: "rare",
+      isAvailable: true
+    },
+    {
+      id: 202,
+      name: "قاب الماسی",
+      imagePath: "/placeholders/frame-diamond.png",
+      description: "قاب الماسی کمیاب با درخشش ویژه",
+      type: 'frame',
+      price: 800,
+      category: "premium",
+      rarity: "epic",
+      requiredLevel: 5,
+      isAvailable: true
+    },
+    // پس‌زمینه‌ها
+    {
+      id: 301,
+      name: "پس‌زمینه آسمان",
+      imagePath: "/placeholders/bg-sky.png",
+      description: "پس‌زمینه آسمان آبی برای آواتار شما",
+      type: 'background',
+      price: 200,
+      category: "nature",
+      rarity: "rare",
+      isAvailable: true
+    },
+    {
+      id: 302,
+      name: "پس‌زمینه کهکشانی",
+      imagePath: "/placeholders/bg-galaxy.png",
+      description: "پس‌زمینه فضایی با طرح کهکشان",
+      type: 'background',
+      price: 600,
+      category: "space",
+      rarity: "epic",
+      isAvailable: true
+    },
+    // افکت‌ها
+    {
+      id: 401,
+      name: "افکت آتش",
+      imagePath: "/placeholders/effect-fire.png",
+      description: "افکت شعله‌های آتش برای دور آواتار",
+      type: 'effect',
+      price: 450,
+      category: "elements",
+      rarity: "rare",
+      isAvailable: true
+    },
+    {
+      id: 402,
+      name: "افکت رعد و برق",
+      imagePath: "/placeholders/effect-lightning.png",
+      description: "افکت رعد و برق با درخشش خیره‌کننده",
+      type: 'effect',
+      price: 950,
+      category: "elements",
+      rarity: "epic",
+      requiredLevel: 8,
+      isAvailable: true
+    },
+    // اکسسوری‌ها
+    {
+      id: 501,
+      name: "تاج سلامتی",
+      imagePath: "/placeholders/accessory-crown.png",
+      description: "تاج مخصوص فعالان سلامت",
+      type: 'accessory',
+      price: 400,
+      category: "head",
+      rarity: "rare",
+      isAvailable: true
+    },
+    {
+      id: 502,
+      name: "نشان قهرمان",
+      imagePath: "/placeholders/accessory-badge.png",
+      description: "نشان ویژه قهرمانان سازمان",
+      type: 'accessory',
+      price: 700,
+      category: "neck",
+      rarity: "epic",
+      requiredLevel: 6,
+      isAvailable: true
+    }
+  ];
 
-  // دریافت اطلاعات کاربر
-  const { data: userData, isLoading: isLoadingUser } = useQuery({
-    queryKey: ['/api/user'],
-    queryFn: async () => {
-      const res = await apiRequest('GET', '/api/user');
-      return await res.json();
-    },
-  });
+  // فیلتر آیتم‌ها بر اساس تب فعال و جستجو
+  const getFilteredItems = () => {
+    let items = shopItems;
 
-  // دریافت آیتم‌های خریداری شده کاربر
-  const { data: userItems, isLoading: isLoadingUserItems } = useQuery<UserItem[]>({
-    queryKey: ['/api/avatar-shop/user-items'],
-    queryFn: async () => {
-      const res = await apiRequest('GET', '/api/avatar-shop/user-items');
-      return await res.json();
-    },
-  });
+    // فیلتر براساس نوع
+    if (activeTab !== 'all') {
+      items = items.filter(item => item.type === activeTab);
+    }
+
+    // فیلتر براساس کمیابی
+    if (filterRarity) {
+      items = items.filter(item => item.rarity === filterRarity);
+    }
+
+    // فیلتر براساس جستجو
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      items = items.filter(item => 
+        item.name.toLowerCase().includes(query) || 
+        item.description.toLowerCase().includes(query) || 
+        item.category.toLowerCase().includes(query)
+      );
+    }
+
+    return items;
+  };
 
   // خرید آیتم
-  const handlePurchase = async (itemId: number) => {
-    try {
-      const res = await apiRequest('POST', '/api/avatar-shop/purchase', { itemId });
-      const result = await res.json();
-      
+  const handlePurchase = async (item: ShopItemData) => {
+    if (initialData.userCredits < item.price) {
       toast({
-        title: 'خرید موفقیت‌آمیز',
-        description: `${result.itemName} با موفقیت خریداری شد!`,
+        title: "اعتبار ناکافی",
+        description: `شما به ${item.price - initialData.userCredits} اعتبار بیشتر نیاز دارید`,
+        variant: "destructive",
       });
+      return;
+    }
+
+    if (item.requiredLevel && initialData.userLevel < item.requiredLevel) {
+      toast({
+        title: "سطح ناکافی",
+        description: `برای خرید این آیتم به سطح ${item.requiredLevel} نیاز دارید`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (userItems.includes(item.id)) {
+      toast({
+        title: "قبلاً خریداری شده",
+        description: "شما این آیتم را قبلاً خریداری کرده‌اید",
+        variant: "default",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    setSelectedItemId(item.id);
+
+    try {
+      // در یک نسخه واقعی، اینجا API call انجام می‌شود
+      const success = onPurchase ? await onPurchase(item) : true;
       
-      // به‌روزرسانی داده‌ها
-      queryClient.invalidateQueries({ queryKey: ['/api/avatar-shop/user-items'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+      // شبیه‌سازی تأخیر شبکه
+      await new Promise(r => setTimeout(r, 1000));
+      
+      if (success) {
+        // افزودن آیتم به لیست آیتم‌های کاربر
+        setUserItems(prev => [...prev, item.id]);
+        
+        toast({
+          title: "خرید موفق",
+          description: `آیتم ${item.name} با موفقیت خریداری شد`,
+          variant: "success",
+        });
+      }
     } catch (error) {
       toast({
-        title: 'خطا در خرید',
-        description: 'مشکلی در خرید آیتم رخ داد. لطفا مجددا تلاش کنید.',
-        variant: 'destructive',
+        title: "خطا در خرید",
+        description: "متأسفانه مشکلی در فرایند خرید رخ داد",
+        variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
+      setSelectedItemId(null);
     }
   };
 
-  // فیلتر کردن آیتم‌ها بر اساس دسته‌بندی
-  const filteredItems = shopItems?.filter(item => {
-    if (selectedTab === 'owned' && userItems) {
-      return userItems.some(userItem => userItem.itemId === item.id);
-    }
-    
-    if (selectedTab === 'available') {
-      return item.isAvailable;
-    }
-    
-    if (selectedCategory && item.category !== selectedCategory) {
-      return false;
-    }
-    
-    return true;
-  });
+  // پیشرفت XP
+  const xpProgress = Math.min(100, (initialData.userXP / initialData.nextLevelXP) * 100);
 
-  // استخراج همه دسته‌بندی‌های موجود
-  const categories = React.useMemo(() => {
-    if (!shopItems) return [];
-    const uniqueCategories = new Set(shopItems.map(item => item.category));
-    return Array.from(uniqueCategories);
-  }, [shopItems]);
+  // شبیه‌سازی لود اطلاعات کاربر
+  useEffect(() => {
+    // در یک نسخه واقعی، اینجا API call انجام می‌شود
+    setUserItems([101, 201]); // فرض کنیم کاربر قبلاً این آیتم‌ها را خریده است
+  }, []);
 
-  const isLoading = isLoadingShop || isLoadingUser || isLoadingUserItems;
-
-  if (isLoading) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
+  const filteredItems = getFilteredItems();
+  const selectedItem = selectedItemId ? shopItems.find(item => item.id === selectedItemId) : null;
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex items-center justify-between mb-6">
+    <div className={className}>
+      <div className="mb-6 flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">فروشگاه آواتار</h1>
-          <p className="text-muted-foreground">آیتم‌های جدید و ویژه را کشف کنید</p>
+          <h2 className="text-2xl font-bold">فروشگاه آواتار</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">آیتم‌های ویژه برای شخصی‌سازی آواتار</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-tiffany/30 text-tiffany" asChild>
-            <Link href="/avatar-studio">
-              <User className="h-5 w-5 ml-1" />
-              استودیوی آواتار
-            </Link>
-          </Button>
-          <div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm p-2 rounded-lg border">
-            <Coins className="w-5 h-5 text-yellow-500" />
-            <span className="font-bold text-lg">{userData?.credits?.toLocaleString('fa-IR') || 0}</span>
-          </div>
-          <div className="flex items-center gap-2 bg-background/50 backdrop-blur-sm p-2 rounded-lg border">
-            <Star className="w-5 h-5 text-blue-500" />
-            <span className="font-bold text-lg">سطح {userData?.level || 1}</span>
-          </div>
+        
+        <Button variant="outline" className="border-tiffany/30 text-tiffany" asChild>
+          <Link href="/avatar-studio">
+            <User className="h-5 w-5 ml-1" />
+            استودیوی آواتار
+          </Link>
+        </Button>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* پنل جستجو و فیلتر */}
+        <div className="lg:col-span-3">
+          <Card className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-slate-200/60 dark:border-slate-800/60 shadow-md">
+            <CardContent className="p-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute right-3 top-3 h-4 w-4 text-slate-400" />
+                  <Input
+                    placeholder="جستجو در فروشگاه..."
+                    className="pr-9"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                
+                <div className="flex gap-2">
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-10">
+                        <Filter className="h-4 w-4 ml-1" />
+                        کمیابی
+                      </Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent align="end" className="w-60">
+                      <div className="grid grid-cols-2 gap-2">
+                        <Button 
+                          size="sm" 
+                          variant={filterRarity === null ? "default" : "outline"}
+                          className="w-full text-xs"
+                          onClick={() => setFilterRarity(null)}
+                        >
+                          همه
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={filterRarity === "common" ? "default" : "outline"}
+                          className="w-full text-xs"
+                          onClick={() => setFilterRarity("common")}
+                        >
+                          معمولی
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={filterRarity === "rare" ? "default" : "outline"}
+                          className="w-full text-xs bg-blue-500 text-white hover:bg-blue-600"
+                          onClick={() => setFilterRarity("rare")}
+                        >
+                          کمیاب
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={filterRarity === "epic" ? "default" : "outline"}
+                          className="w-full text-xs bg-purple-500 text-white hover:bg-purple-600"
+                          onClick={() => setFilterRarity("epic")}
+                        >
+                          حماسی
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant={filterRarity === "legendary" ? "default" : "outline"}
+                          className="w-full text-xs bg-amber-500 text-white hover:bg-amber-600"
+                          onClick={() => setFilterRarity("legendary")}
+                        >
+                          افسانه‌ای
+                        </Button>
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                  
+                  {filterRarity && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-10"
+                      onClick={() => setFilterRarity(null)}
+                    >
+                      <Undo2 className="h-4 w-4 ml-1" />
+                      حذف فیلتر
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* پنل اطلاعات کاربر */}
+        <div className="lg:col-span-1">
+          <Card className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-slate-200/60 dark:border-slate-800/60 shadow-xl sticky top-4">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">کیف پول شما</CardTitle>
+              <CardDescription>اطلاعات اعتبار و سطح شما</CardDescription>
+            </CardHeader>
+            
+            <CardContent className="space-y-4">
+              <div className="flex justify-between items-center p-3 bg-amber-50 dark:bg-amber-950/20 rounded-md">
+                <div className="flex items-center">
+                  <Sparkles className="h-5 w-5 ml-2 text-amber-500" />
+                  <span className="font-bold">اعتبار</span>
+                </div>
+                <span className="text-lg font-bold text-amber-600 dark:text-amber-400">
+                  {initialData.userCredits.toLocaleString('fa-IR')}
+                </span>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between items-center mb-1">
+                  <div className="flex items-center">
+                    <Trophy className="h-4 w-4 ml-1 text-tiffany" />
+                    <span className="text-sm font-medium">سطح {initialData.userLevel}</span>
+                  </div>
+                  <span className="text-xs text-slate-500">
+                    {initialData.userXP.toLocaleString('fa-IR')} / {initialData.nextLevelXP.toLocaleString('fa-IR')} XP
+                  </span>
+                </div>
+                <Progress value={xpProgress} className="h-2" />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3 mt-4">
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link href="/challenges">
+                    <Crown className="h-4 w-4 ml-1" />
+                    چالش‌ها
+                  </Link>
+                </Button>
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link href="/wallet">
+                    <ShoppingCart className="h-4 w-4 ml-1" />
+                    تراکنش‌ها
+                  </Link>
+                </Button>
+              </div>
+              
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <Button variant="ghost" size="sm" className="w-full mt-2 text-slate-500">
+                    <AlertCircle className="h-4 w-4 ml-1" />
+                    راهنمای فروشگاه
+                  </Button>
+                </HoverCardTrigger>
+                <HoverCardContent align="center" className="w-80">
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-semibold">راهنمای فروشگاه آواتار</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      در فروشگاه آواتار پرانا، شما می‌توانید آواتارهای جدید، قاب‌ها، پس‌زمینه‌ها و موارد دیگر را خریداری کنید. برای خرید آیتم‌ها نیاز به اعتبار دارید که از طریق فعالیت‌های سلامت و تکمیل چالش‌ها به دست می‌آورید.
+                    </p>
+                    <Separator className="my-2" />
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center">
+                        <Shield className="h-3 w-3 ml-1 text-blue-500" />
+                        <span className="text-xs">کمیاب = 500-300</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Shield className="h-3 w-3 ml-1 text-purple-500" />
+                        <span className="text-xs">حماسی = 1500-800</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Shield className="h-3 w-3 ml-1 text-amber-500" />
+                        <span className="text-xs">افسانه‌ای = 5000-2000</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Star className="h-3 w-3 ml-1 text-tiffany" />
+                        <span className="text-xs">آیتم ویژه = محدود</span>
+                      </div>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* پنل نمایش محصولات */}
+        <div className="lg:col-span-2">
+          <Card className="bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-slate-200/60 dark:border-slate-800/60 shadow-xl">
+            <CardContent className="p-6">
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="mb-6 bg-slate-100 dark:bg-slate-900">
+                  <TabsTrigger value="all" className="flex gap-2 items-center">
+                    <Store className="h-4 w-4" />
+                    <span>همه</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="avatar" className="flex gap-2 items-center">
+                    <User className="h-4 w-4" />
+                    <span>آواتارها</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="frame" className="flex gap-2 items-center">
+                    <Package className="h-4 w-4" />
+                    <span>قاب‌ها</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="background" className="flex gap-2 items-center">
+                    <Tag className="h-4 w-4" />
+                    <span>پس‌زمینه‌ها</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="effect" className="flex gap-2 items-center">
+                    <Gift className="h-4 w-4" />
+                    <span>افکت‌ها</span>
+                  </TabsTrigger>
+                </TabsList>
+                
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold">
+                    {activeTab === 'all' && 'همه آیتم‌ها'}
+                    {activeTab === 'avatar' && 'آواتارها'}
+                    {activeTab === 'frame' && 'قاب‌ها'}
+                    {activeTab === 'background' && 'پس‌زمینه‌ها'}
+                    {activeTab === 'effect' && 'افکت‌ها'}
+                    {activeTab === 'accessory' && 'اکسسوری‌ها'}
+                  </h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    {filteredItems.length} آیتم یافت شد
+                  </p>
+                </div>
+                
+                {filteredItems.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <Search className="h-12 w-12 text-slate-300 dark:text-slate-700 mb-4" />
+                    <h3 className="text-lg font-medium">نتیجه‌ای یافت نشد</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">لطفاً معیارهای جستجو را تغییر دهید یا فیلترها را حذف کنید</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <AnimatePresence>
+                      {filteredItems.map((item) => (
+                        <motion.div
+                          key={item.id}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <AvatarCard
+                            id={item.id}
+                            name={item.name}
+                            imagePath={item.type === 'avatar' ? item.imagePath : `/placeholders/${item.type}-${item.rarity}.png`}
+                            category={item.category}
+                            rarity={item.rarity}
+                            price={item.price}
+                            isLocked={!userItems.includes(item.id)}
+                            isPurchaseable={true}
+                            onClick={() => handlePurchase(item)}
+                            className={isLoading && selectedItemId === item.id ? "opacity-70 pointer-events-none" : ""}
+                          />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                )}
+              </Tabs>
+            </CardContent>
+          </Card>
         </div>
       </div>
-
-      <Tabs defaultValue="all" className="w-full" value={selectedTab} onValueChange={setSelectedTab}>
-        <div className="flex justify-between items-center mb-4">
-          <TabsList>
-            <TabsTrigger value="all">همه</TabsTrigger>
-            <TabsTrigger value="available">موجود</TabsTrigger>
-            <TabsTrigger value="owned">خریداری شده</TabsTrigger>
-          </TabsList>
-          
-          <div className="flex gap-2">
-            {categories.map(category => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                size="sm"
-                className="flex items-center gap-1"
-                onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-              >
-                {categoryIcons[category as keyof typeof categoryIcons] || null}
-                {category}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        <ScrollArea className="flex-grow h-[calc(100%-120px)]">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-6">
-            {filteredItems?.map(item => (
-              <ShopItemCard
-                key={item.id}
-                item={item}
-                userCredits={userData?.credits || 0}
-                userLevel={userData?.level || 1}
-                userItems={userItems || []}
-                onPurchase={handlePurchase}
-              />
-            ))}
-            
-            {(!filteredItems || filteredItems.length === 0) && (
-              <div className="col-span-full flex flex-col items-center justify-center p-12 rounded-lg border border-dashed text-center">
-                <ShoppingCart className="w-12 h-12 mb-4 text-muted-foreground" strokeWidth={1} />
-                <h3 className="text-lg font-medium">هیچ آیتمی یافت نشد</h3>
-                <p className="text-muted-foreground">
-                  {selectedTab === 'owned' 
-                    ? 'شما هنوز هیچ آیتمی خریداری نکرده‌اید.'
-                    : 'هیچ آیتمی با فیلترهای انتخاب شده یافت نشد.'}
-                </p>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
-      </Tabs>
     </div>
   );
-}
+};
+
+export default AvatarShop;
