@@ -3,6 +3,8 @@ import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import PWAInstallButton from "@/components/pwa/PWAInstallButton";
 import { useAvatar } from "@/contexts/AvatarContext";
+import LeaderboardCard from "@/components/dashboard/LeaderboardCard";
+import DailyChallengeCard from "@/components/dashboard/DailyChallengeCard";
 import {
   Home,
   Award,
@@ -1745,7 +1747,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white/20 dark:from-slate-800/30 to-transparent pointer-events-none"></div>
           
           <div className="relative z-10">
-            {children}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              <div className="lg:col-span-2">
+                {children}
+              </div>
+              <div className="lg:col-span-1 space-y-6">
+                <DailyChallengeCard />
+                <LeaderboardCard />
+              </div>
+            </div>
           </div>
         </div>
         
