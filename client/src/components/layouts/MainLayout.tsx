@@ -1257,7 +1257,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   <button className="relative focus:outline-none group">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/20 to-aqua/10 flex items-center justify-center text-tiffany font-bold relative border-2 border-white dark:border-slate-800 transition-all duration-300 group-hover:ring-2 group-hover:ring-offset-2 group-hover:ring-tiffany/20 dark:group-hover:ring-offset-slate-900 group-hover:scale-105 overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-tiffany/10 via-aqua/5 to-tiffany/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <span className="relative z-10 group-hover:animate-breathe-soft">{user?.displayName?.charAt(0) || "م"}</span>
+                      {activeAvatarUrl ? (
+                        <img 
+                          src={activeAvatarUrl} 
+                          alt={avatarName || "آواتار کاربر"}
+                          className="w-full h-full object-cover relative z-10"
+                        />
+                      ) : (
+                        <span className="relative z-10 group-hover:animate-breathe-soft">{user?.displayName?.charAt(0) || "م"}</span>
+                      )}
                       <div className="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white dark:border-slate-800 shadow-sm">
                         <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-75 duration-1000"></div>
                       </div>
@@ -1266,11 +1274,19 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-60 rounded-xl p-1.5 mt-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 shadow-lg">
                   <div className="px-4 py-3.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/15 to-navy/10 flex items-center justify-center text-tiffany font-bold relative border border-white/60 dark:border-slate-800/60">
-                      <span>{user?.displayName?.charAt(0) || "م"}</span>
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tiffany/15 to-navy/10 flex items-center justify-center text-tiffany font-bold relative border border-white/60 dark:border-slate-800/60 overflow-hidden">
+                      {activeAvatarUrl ? (
+                        <img 
+                          src={activeAvatarUrl} 
+                          alt={avatarName || "آواتار کاربر"}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span>{user?.displayName?.charAt(0) || "م"}</span>
+                      )}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{user?.displayName || "کاربر"}</p>
+                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{avatarName || user?.displayName || "کاربر"}</p>
                       <p className="text-xs text-slate-500 dark:text-slate-400">{user?.username || "کاربر پرانا"}</p>
                     </div>
                     <Badge variant="outline" className="mr-auto h-5 bg-tiffany/5 dark:bg-tiffany/10 text-tiffany-dark dark:text-tiffany-light text-[10px] px-1.5 border-tiffany/20">
@@ -1279,18 +1295,31 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </div>
                   
                   <div className="p-1.5 space-y-0.5">
-                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
-                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-tiffany/10 to-aqua/10 dark:from-tiffany/15 dark:to-aqua/15 group-hover/item:bg-gradient-to-r group-hover/item:from-tiffany/20 group-hover/item:to-aqua/20 dark:group-hover/item:from-tiffany/25 dark:group-hover/item:to-aqua/25 transition-all duration-200">
-                        <User className="h-4 w-4 text-tiffany/70 dark:text-tiffany-light/70 group-hover/item:text-tiffany dark:group-hover/item:text-tiffany-light transition-all duration-200" />
-                      </div>
-                      <span className="font-medium">پروفایل</span>
+                    <DropdownMenuItem asChild className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
+                      <Link href="/user-profile" className="flex items-center w-full">
+                        <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-tiffany/10 to-aqua/10 dark:from-tiffany/15 dark:to-aqua/15 group-hover/item:bg-gradient-to-r group-hover/item:from-tiffany/20 group-hover/item:to-aqua/20 dark:group-hover/item:from-tiffany/25 dark:group-hover/item:to-aqua/25 transition-all duration-200">
+                          <User className="h-4 w-4 text-tiffany/70 dark:text-tiffany-light/70 group-hover/item:text-tiffany dark:group-hover/item:text-tiffany-light transition-all duration-200" />
+                        </div>
+                        <span className="font-medium">پروفایل</span>
+                      </Link>
                     </DropdownMenuItem>
                     
-                    <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
-                      <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-navy/10 to-blue/10 dark:from-navy/15 dark:to-blue/15 group-hover/item:bg-gradient-to-r group-hover/item:from-navy/20 group-hover/item:to-blue/20 dark:group-hover/item:from-navy/25 dark:group-hover/item:to-blue/25 transition-all duration-200">
-                        <Settings className="h-4 w-4 text-navy/70 dark:text-blue/70 group-hover/item:text-navy dark:group-hover/item:text-blue transition-all duration-200" />
-                      </div>
-                      <span className="font-medium">تنظیمات</span>
+                    <DropdownMenuItem asChild className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
+                      <Link href="/avatar-studio" className="flex items-center w-full">
+                        <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-purple-500/10 to-indigo-400/10 dark:from-purple-500/15 dark:to-indigo-400/15 group-hover/item:bg-gradient-to-r group-hover/item:from-purple-500/20 group-hover/item:to-indigo-400/20 dark:group-hover/item:from-purple-500/25 dark:group-hover/item:to-indigo-400/25 transition-all duration-200">
+                          <UserRound className="h-4 w-4 text-purple-500/70 dark:text-indigo-400/70 group-hover/item:text-purple-500 dark:group-hover/item:text-indigo-400 transition-all duration-200" />
+                        </div>
+                        <span className="font-medium">سیستم آواتار</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuItem asChild className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">
+                      <Link href="/settings" className="flex items-center w-full">
+                        <div className="p-1.5 rounded-md mr-0 ml-2.5 bg-gradient-to-r from-navy/10 to-blue/10 dark:from-navy/15 dark:to-blue/15 group-hover/item:bg-gradient-to-r group-hover/item:from-navy/20 group-hover/item:to-blue/20 dark:group-hover/item:from-navy/25 dark:group-hover/item:to-blue/25 transition-all duration-200">
+                          <Settings className="h-4 w-4 text-navy/70 dark:text-blue/70 group-hover/item:text-navy dark:group-hover/item:text-blue transition-all duration-200" />
+                        </div>
+                        <span className="font-medium">تنظیمات</span>
+                      </Link>
                     </DropdownMenuItem>
                     
                     <DropdownMenuItem className="flex items-center cursor-pointer rounded-lg py-2.5 px-3 transition-colors duration-200 group/item">

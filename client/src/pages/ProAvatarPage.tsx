@@ -10,63 +10,143 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { Container } from '@/components/ui/container';
 import AvatarCard from '@/components/ui/avatar-pro-system/AvatarCard';
+import { useAvatar } from '@/contexts/AvatarContext';
 
 // این صفحه آواتار پیشرفته را نمایش می‌دهد
 export default function ProAvatarPage() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("studio");
   const [selectedAvatarId, setSelectedAvatarId] = useState<number>(1);
-  const [userAvatars, setUserAvatars] = useState<number[]>([1, 2, 3, 4]); // آواتارهای دیفالت
+  const [userAvatars, setUserAvatars] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8]); // آواتارهای دیفالت قابل انتخاب
   
   // داده‌های آواتارهای پیش‌فرض
   const defaultAvatars = [
     {
       id: 1,
-      name: "کاراکتر سبز",
+      name: "آقای عینکی",
       imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
       category: "male",
       rarity: "common",
-      description: "یک آواتار ساده با موهای سبز",
+      description: "آواتار مرد با موهای فر و عینک",
       isDefault: true
     },
     {
       id: 2,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
+      name: "آقای مو فرفری",
+      imagePath: "/avatar-images/Pria Keriting Kacamata.png",
       category: "male",
       rarity: "common",
-      description: "یک آواتار ساده با موهای سبز",
+      description: "آواتار مرد با موهای فرفری و عینک",
       isDefault: true
     },
     {
       id: 3,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
+      name: "آقای خاص",
+      imagePath: "/avatar-images/Pria Mohawk.png",
       category: "male",
-      rarity: "common", 
-      description: "یک آواتار ساده با موهای سبز",
+      rarity: "rare", 
+      description: "آواتار مرد با استایل موهاک",
       isDefault: true
     },
     {
       id: 4,
-      name: "کاراکتر سبز",
-      imagePath: "/avatar-images/Pria Gimbal Kacamata.png",
+      name: "آقای کلاه به سر",
+      imagePath: "/avatar-images/Pria Rambut Lepek Topi.png",
       category: "male",
       rarity: "common",
-      description: "یک آواتار ساده با موهای سبز",
+      description: "آواتار مرد با کلاه اسپرت",
+      isDefault: true
+    },
+    {
+      id: 5,
+      name: "خانم محجبه",
+      imagePath: "/avatar-images/Wanita Berhijab Berkacamata.png",
+      category: "female",
+      rarity: "rare",
+      description: "آواتار خانم محجبه با عینک",
+      isDefault: true
+    },
+    {
+      id: 6,
+      name: "خانم اسپرت",
+      imagePath: "/avatar-images/Wanita Kuncir Topi.png",
+      category: "female",
+      rarity: "common",
+      description: "آواتار خانم با موی بسته و کلاه",
+      isDefault: true
+    },
+    {
+      id: 7,
+      name: "خانم کلاه دار",
+      imagePath: "/avatar-images/Wanita Urai Topi.png",
+      category: "female",
+      rarity: "common",
+      description: "آواتار خانم با موهای باز و کلاه",
+      isDefault: true
+    },
+    {
+      id: 8,
+      name: "خانم با حجاب",
+      imagePath: "/avatar-images/Wanita Hijab Sweater.png",
+      category: "female",
+      rarity: "rare",
+      description: "آواتار خانم با حجاب و لباس اسپرت",
       isDefault: true
     }
   ];
 
-  // فعال‌سازی آواتار
+  // استفاده از کانتکست آواتار
+  const { activeAvatarUrl, avatarName, setActiveAvatarUrl, setAvatarName } = useAvatar();
+  
+  // اثر ابتدایی برای تنظیم آواتار فعال فقط در اولین بارگذاری صفحه
+  useEffect(() => {
+    // اثر یک‌بار اجرا برای تنظیم اولیه آواتار
+    function initializeAvatar() {
+      if (!activeAvatarUrl && defaultAvatars.length > 0) {
+        // اگر آواتار فعالی از قبل وجود نداشته باشد، آواتار پیش‌فرض را تنظیم کن
+        const defaultAvatar = defaultAvatars[0];
+        setActiveAvatarUrl(defaultAvatar.imagePath);
+        setAvatarName(defaultAvatar.name);
+        setSelectedAvatarId(defaultAvatar.id);
+      } else if (activeAvatarUrl) {
+        // پیدا کردن آواتار فعلی از لیست بر اساس آدرس تصویر
+        const currentAvatar = defaultAvatars.find(avatar => avatar.imagePath === activeAvatarUrl);
+        if (currentAvatar) {
+          setSelectedAvatarId(currentAvatar.id);
+        }
+      }
+    }
+    
+    initializeAvatar();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
+  // تابع به‌روزشده برای انتخاب و ذخیره آواتار در کانتکست
   const handleActivateAvatar = (avatarId: number) => {
     setSelectedAvatarId(avatarId);
     
-    toast({
-      title: "آواتار فعال شد",
-      description: "آواتار انتخابی شما با موفقیت فعال شد.",
-      variant: "success",
-    });
+    // پیدا کردن آواتار انتخاب شده از لیست
+    const selectedAvatar = defaultAvatars.find(avatar => avatar.id === avatarId);
+    
+    if (selectedAvatar) {
+      // ذخیره مسیر تصویر آواتار در کانتکست
+      setActiveAvatarUrl(selectedAvatar.imagePath);
+      
+      // ذخیره نام آواتار در کانتکست
+      setAvatarName(selectedAvatar.name);
+      
+      toast({
+        title: "آواتار فعال شد",
+        description: `${selectedAvatar.name} با موفقیت به عنوان آواتار شما فعال شد.`,
+        variant: "success",
+      });
+    } else {
+      toast({
+        title: "خطا در فعال‌سازی آواتار",
+        description: "متأسفانه آواتار انتخابی یافت نشد.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
